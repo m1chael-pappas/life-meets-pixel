@@ -6,7 +6,7 @@ import {
   Geist_Mono,
 } from 'next/font/google';
 
-import { ThemeProvider } from '@/components/theme-provider';
+import { ThemeProvider } from '@/components/ui/theme-provider';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -18,6 +18,7 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+// Remove homepage-specific metadata from here - it's now in (home)/layout.tsx
 export const metadata: Metadata = {
   title: {
     default: "Life Meets Pixel - Gaming Reviews",
@@ -39,34 +40,6 @@ export const metadata: Metadata = {
   metadataBase: new URL(
     process.env.NEXT_PUBLIC_SITE_URL || "https://lifemeetspixel.com"
   ),
-  alternates: {
-    canonical: "/",
-  },
-  openGraph: {
-    type: "website",
-    locale: "en_US",
-    url: "/",
-    siteName: "Life Meets Pixel",
-    title: "Life Meets Pixel - Gaming Reviews",
-    description:
-      "Your source for honest game reviews and pixel-perfect insights.",
-    images: [
-      {
-        url: "/og-image.png", // You'll need to create this
-        width: 1200,
-        height: 630,
-        alt: "Life Meets Pixel - Gaming Reviews",
-      },
-    ],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Life Meets Pixel - Gaming Reviews",
-    description:
-      "Your source for honest game reviews and pixel-perfect insights.",
-    images: ["/og-image.png"],
-    creator: "@lifemeetspixel", // Replace with your Twitter handle
-  },
   robots: {
     index: true,
     follow: true,
@@ -117,7 +90,7 @@ export default function RootLayout({
       >
         <ThemeProvider
           attribute="class"
-          defaultTheme="light" // Set to light as you prefer light mode
+          defaultTheme="light"
           enableSystem
           disableTransitionOnChange
         >

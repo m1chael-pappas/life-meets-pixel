@@ -5,7 +5,6 @@ import { type SanityDocument } from 'next-sanity';
 import Image from 'next/image';
 import Link from 'next/link';
 
-import PixelHeartRating from '@/components/pixel-heart-rating';
 import {
   Avatar,
   AvatarFallback,
@@ -18,6 +17,7 @@ import {
   CardFooter,
   CardHeader,
 } from '@/components/ui/card';
+import PixelHeartRating from '@/components/ui/pixel-heart-rating';
 
 // Types based on your Sanity schema
 interface Author {

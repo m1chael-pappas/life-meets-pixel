@@ -15,7 +15,6 @@ import {
 import Image from 'next/image';
 import Link from 'next/link';
 
-import PixelHeartRating from '@/components/pixel-heart-rating';
 import {
   Avatar,
   AvatarFallback,
@@ -28,6 +27,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
+import PixelHeartRating from '@/components/ui/pixel-heart-rating';
 import { client } from '@/sanity/client';
 import imageUrlBuilder from '@sanity/image-url';
 import type { SanityImageSource } from '@sanity/image-url/lib/types/types';
