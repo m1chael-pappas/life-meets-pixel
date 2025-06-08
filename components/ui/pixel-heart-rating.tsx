@@ -1,5 +1,7 @@
 import React from 'react';
 
+import Image from 'next/image';
+
 type HeartSize = "sm" | "md" | "lg" | "xl";
 type HeartState = "empty" | "half" | "full";
 
@@ -26,7 +28,6 @@ interface SizeClasses {
 
 const PixelHeartRating: React.FC<PixelHeartRatingProps> = ({
   reviewScore,
-  readonly = true,
   size = "md",
   className = "",
   showScore = false,
@@ -72,9 +73,11 @@ const PixelHeartRating: React.FC<PixelHeartRatingProps> = ({
         aria-label={`Heart ${index + 1}: ${state}`}
       >
         {state === "full" && (
-          <img
+          <Image
             src="/heart.svg"
             alt="Full heart"
+            width={32}
+            height={32}
             className="w-full h-full [image-rendering:pixelated]"
             draggable={false}
           />
@@ -82,10 +85,12 @@ const PixelHeartRating: React.FC<PixelHeartRatingProps> = ({
 
         {state === "half" && (
           <>
-            <img
+            <Image
               src="/heart.svg"
               alt="Half heart background"
               className="w-full h-full [image-rendering:pixelated] opacity-30"
+              width={32}
+              height={32}
               style={{ filter: "grayscale(1) brightness(0.5)" }}
               draggable={false}
             />
@@ -93,9 +98,11 @@ const PixelHeartRating: React.FC<PixelHeartRatingProps> = ({
               className="absolute inset-0 overflow-hidden"
               style={{ clipPath: "polygon(0 0, 50% 0, 50% 100%, 0 100%)" }}
             >
-              <img
+              <Image
                 src="/heart.svg"
                 alt="Half heart filled"
+                width={32}
+                height={32}
                 className="w-full h-full [image-rendering:pixelated]"
                 draggable={false}
               />
@@ -104,9 +111,11 @@ const PixelHeartRating: React.FC<PixelHeartRatingProps> = ({
         )}
 
         {state === "empty" && (
-          <img
+          <Image
             src="/heart.svg"
             alt="Empty heart"
+            width={32}
+            height={32}
             className="w-full h-full [image-rendering:pixelated] opacity-30"
             style={{ filter: "grayscale(1) brightness(0.5)" }}
             draggable={false}
