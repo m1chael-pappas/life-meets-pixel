@@ -1,5 +1,4 @@
 import { formatDistanceToNow } from 'date-fns';
-// components/universal-review-card.tsx
 import { type SanityDocument } from 'next-sanity';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -17,6 +16,7 @@ import {
   CardHeader,
 } from '@/components/ui/card';
 import PixelHeartRating from '@/components/ui/pixel-heart-rating';
+import { Category } from '@/lib/types';
 
 interface UniversalReviewCardProps {
   review: SanityDocument;
@@ -76,7 +76,6 @@ export default function UniversalReviewCard({
   className = "",
 }: UniversalReviewCardProps) {
   const {
-    _id,
     title,
     slug,
     reviewScore,
@@ -93,7 +92,7 @@ export default function UniversalReviewCard({
   }
 
   const typeInfo = getItemTypeInfo(reviewableItem.itemType);
-  const primaryCategory = categories?.[0];
+  const primaryCategory = categories?.[0] as Category | undefined;
   const relativeDate = formatDistanceToNow(new Date(publishedAt), {
     addSuffix: true,
   });

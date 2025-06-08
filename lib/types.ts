@@ -1,4 +1,4 @@
-import { type SanityDocument } from 'next-sanity';
+import { PortableTextBlock } from '@portabletext/types';
 
 export interface Author {
   _id: string;
@@ -6,39 +6,17 @@ export interface Author {
   slug: {
     current: string;
   };
+  bio?: string;
   avatar?: {
     asset: {
       url: string;
     };
     alt?: string;
   };
-  bio?: string;
   socialLinks?: {
     twitter?: string;
-    youtube?: string;
-    twitch?: string;
+    website?: string;
   };
-}
-
-export interface Game {
-  _id: string;
-  title: string;
-  slug: {
-    current: string;
-  };
-  developer?: string;
-  publisher?: string;
-  releaseDate?: string;
-  coverImage: {
-    asset: {
-      url: string;
-    };
-    alt?: string;
-  };
-  platforms?: Platform[];
-  genres?: Genre[];
-  esrbRating?: string;
-  officialWebsite?: string;
 }
 
 export interface Category {
@@ -48,24 +26,6 @@ export interface Category {
     current: string;
   };
   color?: string;
-  description?: string;
-}
-
-export interface Platform {
-  _id: string;
-  title: string;
-  slug: {
-    current: string;
-  };
-  manufacturer?: string;
-}
-
-export interface Genre {
-  _id: string;
-  title: string;
-  slug: {
-    current: string;
-  };
 }
 
 export interface Tag {
@@ -76,22 +36,89 @@ export interface Tag {
   };
 }
 
-export interface GameReview extends SanityDocument {
+export interface Platform {
+  _id: string;
   title: string;
   slug: {
     current: string;
   };
-  game: Game;
+}
+
+export interface Genre {
+  _id: string;
+  title: string;
+  slug: {
+    current: string;
+  };
+  color?: string;
+}
+
+export interface ReviewableItem {
+  _id: string;
+  title: string;
+  slug: {
+    current: string;
+  };
+  itemType:
+    | "videogame"
+    | "boardgame"
+    | "movie"
+    | "tvseries"
+    | "anime"
+    | "book"
+    | "comic"
+    | "gadget";
+  coverImage: {
+    asset: {
+      url: string;
+    };
+    alt?: string;
+  };
+  description?: string;
+  releaseDate?: string;
+  creator?: string;
+  publisher?: string;
+
+  // Video game fields
+  platforms?: Platform[];
+  esrbRating?: string;
+
+  // Board game fields
+  playerCount?: string;
+  playTime?: string;
+
+  // Movie/TV/Anime fields
+  runtime?: string;
+  seasons?: number;
+  episodes?: number;
+
+  // Book/Comic fields
+  pageCount?: number;
+  isbn?: string;
+
+  // Common fields
+  genres?: Genre[];
+  officialWebsite?: string;
+}
+
+export interface Review {
+  _id: string;
+  title: string;
+  slug: {
+    current: string;
+  };
   reviewScore: number;
   summary: string;
-  content?: any[]; // Portable Text
+  content?: PortableTextBlock[]; // Properly typed Portable Text content
   pros?: string[];
   cons?: string[];
+  verdict?: string;
   publishedAt: string;
+  featured: boolean;
+  reviewableItem: ReviewableItem;
   author: Author;
   categories?: Category[];
   tags?: Tag[];
-  featured?: boolean;
   seo?: {
     metaTitle?: string;
     metaDescription?: string;
@@ -99,29 +126,23 @@ export interface GameReview extends SanityDocument {
   };
 }
 
-export interface NewsArticle extends SanityDocument {
+export interface NewsPost {
+  _id: string;
   title: string;
   slug: {
     current: string;
   };
-  summary?: string;
-  content?: any[]; // Portable Text
+  excerpt: string;
   publishedAt: string;
-  author: Author;
-  categories?: Category[];
-  tags?: Tag[];
-  featured?: boolean;
-  coverImage?: {
+  breaking: boolean;
+  featuredImage: {
     asset: {
       url: string;
     };
     alt?: string;
   };
-  seo?: {
-    metaTitle?: string;
-    metaDescription?: string;
-    keywords?: string[];
-  };
+  author: Author;
+  categories?: Category[];
 }
 
 export interface SiteStats {
@@ -129,4 +150,14 @@ export interface SiteStats {
   featuredReviews: number;
   averageScore: number;
   totalNews: number;
+  reviewsByType: {
+    videogames: number;
+    boardgames: number;
+    movies: number;
+    tvseries: number;
+    anime: number;
+    books: number;
+    comics: number;
+    gadgets: number;
+  };
 }

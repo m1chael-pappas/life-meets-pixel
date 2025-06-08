@@ -26,7 +26,7 @@ export default async function FeaturedSection() {
         </h3>
         <div className="h-px bg-primary/30 flex-1"></div>
         <span className="text-xs bg-accent text-accent-foreground px-2 py-1 rounded font-mono">
-          EDITOR'S CHOICE
+          EDITOR&apos;S CHOICE
         </span>
       </div>
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">

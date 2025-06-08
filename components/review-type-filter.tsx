@@ -2,11 +2,12 @@
 
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { SiteStats } from '@/lib/types';
 
 interface ReviewTypeFilterProps {
   activeType: string;
   onTypeChange: (type: string) => void;
-  stats?: any;
+  stats?: SiteStats;
 }
 
 const reviewTypes = [
@@ -40,8 +41,10 @@ export default function ReviewTypeFilter({
         {reviewTypes.map((type) => {
           const count =
             type.id === "all"
-              ? stats?.totalReviews
-              : stats?.reviewsByType?.[type.id + "s"] || 0;
+              ? stats?.totalReviews ?? 0
+              : stats?.reviewsByType?.[
+                  type.id as keyof SiteStats["reviewsByType"]
+                ] ?? 0;
 
           const isActive = activeType === type.id;
 

@@ -10,7 +10,6 @@ import { Metadata } from 'next';
 import {
   PortableText,
   type PortableTextComponents,
-  type SanityDocument,
 } from 'next-sanity';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -32,6 +31,13 @@ import {
   fetchOptions,
   REVIEW_QUERY,
 } from '@/lib/queries';
+import {
+  Category,
+  Genre,
+  Platform,
+  Review,
+  Tag,
+} from '@/lib/types';
 import { client } from '@/sanity/client';
 import imageUrlBuilder from '@sanity/image-url';
 import type { SanityImageSource } from '@sanity/image-url/lib/types/types';
@@ -48,7 +54,7 @@ export async function generateMetadata({
 }: {
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
-  const review = await client.fetch<SanityDocument>(
+  const review = await client.fetch<Review>(
     REVIEW_QUERY,
     await params,
     fetchOptions
@@ -77,22 +83,8 @@ export async function generateMetadata({
     review.reviewableItem?.title,
     `${review.reviewableItem?.itemType} review`,
     "review",
-    ...(review.categories?.map((cat: any) => cat.title) || []),
+    ...(review.categories?.map((cat: Category) => cat.title) || []),
   ];
-
-  const getItemTypeEmoji = (itemType: string) => {
-    const typeMap: Record<string, string> = {
-      videogame: "🎮",
-      boardgame: "🎲",
-      movie: "🎬",
-      tvseries: "📺",
-      anime: "🍥",
-      book: "📚",
-      comic: "📖",
-      gadget: "📱",
-    };
-    return typeMap[itemType] || "📦";
-  };
 
   return {
     title: seoTitle,
@@ -122,7 +114,7 @@ export async function generateMetadata({
             },
           ]
         : [],
-      tags: review.categories?.map((cat: any) => cat.title) || [],
+      tags: review.categories?.map((cat: Category) => cat.title) || [],
     },
     twitter: {
       card: "summary_large_image",
@@ -136,7 +128,8 @@ export async function generateMetadata({
       "article:published_time": review.publishedAt,
       "article:section": review.reviewableItem?.itemType || "Review",
       "article:tag":
-        review.categories?.map((cat: any) => cat.title).join(", ") || "Review",
+        review.categories?.map((cat: Category) => cat.title).join(", ") ||
+        "Review",
     },
   };
 }
@@ -207,12 +200,83 @@ const portableTextComponents: PortableTextComponents = {
   },
 };
 
+// Helper functions
+const getAuthorInitials = (name: string): string => {
+  return name
+    .split(" ")
+    .map((word) => word[0])
+    .join("")
+    .toUpperCase()
+    .slice(0, 2);
+};
+
+const getScoreColor = (score: number): string => {
+  if (score >= 8.5) return "text-green-600";
+  if (score >= 7.0) return "text-primary";
+  if (score >= 5.0) return "text-yellow-600";
+  return "text-red-600";
+};
+
+const getScoreLabel = (score: number): string => {
+  if (score >= 9.0) return "MASTERPIECE";
+  if (score >= 8.5) return "EXCELLENT";
+  if (score >= 7.5) return "GREAT";
+  if (score >= 6.5) return "GOOD";
+  if (score >= 5.0) return "AVERAGE";
+  return "POOR";
+};
+
+const getItemTypeInfo = (itemType: string) => {
+  const typeMap = {
+    videogame: { emoji: "🎮", label: "Game" },
+    boardgame: { emoji: "🎲", label: "Board Game" },
+    movie: { emoji: "🎬", label: "Movie" },
+    tvseries: { emoji: "📺", label: "TV Series" },
+    anime: { emoji: "🍥", label: "Anime" },
+    book: { emoji: "📚", label: "Book" },
+    comic: { emoji: "📖", label: "Comic" },
+    gadget: { emoji: "📱", label: "Tech" },
+  };
+  return (
+    typeMap[itemType as keyof typeof typeMap] || {
+      emoji: "📦",
+      label: "Item",
+    }
+  );
+};
+
+const getCreatorLabel = (itemType: string): string => {
+  switch (itemType) {
+    case "book":
+      return "Author";
+    case "movie":
+    case "tvseries":
+    case "anime":
+      return "Director";
+    default:
+      return "Creator";
+  }
+};
+
+const getPublisherLabel = (itemType: string): string => {
+  switch (itemType) {
+    case "book":
+      return "Publisher";
+    case "movie":
+    case "tvseries":
+    case "anime":
+      return "Studio";
+    default:
+      return "Publisher";
+  }
+};
+
 export default async function ReviewPage({
   params,
 }: {
   params: Promise<{ slug: string }>;
 }) {
-  const review = await client.fetch<SanityDocument>(
+  const review = await client.fetch<Review>(
     REVIEW_QUERY,
     await params,
     fetchOptions
@@ -244,52 +308,8 @@ export default async function ReviewPage({
   const publishDate = new Date(review.publishedAt);
   const relativeDate = formatDistanceToNow(publishDate, { addSuffix: true });
 
-  const getAuthorInitials = (name: string): string => {
-    return name
-      .split(" ")
-      .map((word) => word[0])
-      .join("")
-      .toUpperCase()
-      .slice(0, 2);
-  };
-
-  const getScoreColor = (score: number): string => {
-    if (score >= 8.5) return "text-green-600";
-    if (score >= 7.0) return "text-primary";
-    if (score >= 5.0) return "text-yellow-600";
-    return "text-red-600";
-  };
-
-  const getScoreLabel = (score: number): string => {
-    if (score >= 9.0) return "MASTERPIECE";
-    if (score >= 8.5) return "EXCELLENT";
-    if (score >= 7.5) return "GREAT";
-    if (score >= 6.5) return "GOOD";
-    if (score >= 5.0) return "AVERAGE";
-    return "POOR";
-  };
-
-  const getItemTypeInfo = (itemType: string) => {
-    const typeMap = {
-      videogame: { emoji: "🎮", label: "Game" },
-      boardgame: { emoji: "🎲", label: "Board Game" },
-      movie: { emoji: "🎬", label: "Movie" },
-      tvseries: { emoji: "📺", label: "TV Series" },
-      anime: { emoji: "🍥", label: "Anime" },
-      book: { emoji: "📚", label: "Book" },
-      comic: { emoji: "📖", label: "Comic" },
-      gadget: { emoji: "📱", label: "Tech" },
-    };
-    return (
-      typeMap[itemType as keyof typeof typeMap] || {
-        emoji: "📦",
-        label: "Item",
-      }
-    );
-  };
-
   const itemType = review.reviewableItem?.itemType;
-  const typeInfo = getItemTypeInfo(itemType);
+  const typeInfo = getItemTypeInfo(itemType || "");
 
   return (
     <div className="min-h-screen bg-background">
@@ -378,26 +398,14 @@ export default async function ReviewPage({
                 <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
                   {review.reviewableItem.creator && (
                     <span>
-                      {itemType === "book"
-                        ? "Author"
-                        : itemType === "movie" ||
-                          itemType === "tvseries" ||
-                          itemType === "anime"
-                        ? "Director"
-                        : "Creator"}
-                      : {review.reviewableItem.creator}
+                      {getCreatorLabel(itemType || "")}:{" "}
+                      {review.reviewableItem.creator}
                     </span>
                   )}
                   {review.reviewableItem.publisher && (
                     <span>
-                      {itemType === "book"
-                        ? "Publisher"
-                        : itemType === "movie" ||
-                          itemType === "tvseries" ||
-                          itemType === "anime"
-                        ? "Studio"
-                        : "Publisher"}
-                      : {review.reviewableItem.publisher}
+                      {getPublisherLabel(itemType || "")}:{" "}
+                      {review.reviewableItem.publisher}
                     </span>
                   )}
                   {review.reviewableItem.releaseDate && (
@@ -414,7 +422,7 @@ export default async function ReviewPage({
 
             {/* Categories and Tags */}
             <div className="flex flex-wrap gap-2 mb-4">
-              {review.categories?.map((category: any) => (
+              {review.categories?.map((category: Category) => (
                 <Badge
                   key={category._id || category.slug?.current || category.title}
                   variant="outline"
@@ -431,7 +439,7 @@ export default async function ReviewPage({
                   {category.title}
                 </Badge>
               ))}
-              {review.tags?.map((tag: any) => (
+              {review.tags?.map((tag: Tag) => (
                 <Badge
                   key={tag._id || tag.slug?.current || tag.title}
                   variant="secondary"
@@ -525,13 +533,13 @@ export default async function ReviewPage({
             </Card>
 
             {/* Pros and Cons */}
-            {(review.pros?.length > 0 || review.cons?.length > 0) && (
+            {(review.pros?.length || review.cons?.length) && (
               <Card>
                 <CardHeader>
                   <CardTitle className="font-mono">PROS & CONS</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  {review.pros?.length > 0 && (
+                  {review.pros?.length && (
                     <div>
                       <div className="flex items-center gap-2 mb-2">
                         <ThumbsUp className="w-4 h-4 text-green-600" />
@@ -552,7 +560,7 @@ export default async function ReviewPage({
                     </div>
                   )}
 
-                  {review.cons?.length > 0 && (
+                  {review.cons?.length && (
                     <div>
                       <div className="flex items-center gap-2 mb-2">
                         <ThumbsDown className="w-4 h-4 text-red-600" />
@@ -588,12 +596,12 @@ export default async function ReviewPage({
                   {/* Video Game specific fields */}
                   {itemType === "videogame" && (
                     <>
-                      {review.reviewableItem.platforms?.length > 0 && (
+                      {review.reviewableItem.platforms?.length && (
                         <div>
                           <span className="font-semibold">Platforms:</span>
                           <div className="flex flex-wrap gap-1 mt-1">
                             {review.reviewableItem.platforms.map(
-                              (platform: any) => (
+                              (platform: Platform) => (
                                 <Badge
                                   key={
                                     platform._id ||
@@ -698,11 +706,11 @@ export default async function ReviewPage({
                   )}
 
                   {/* Common fields for all types */}
-                  {review.reviewableItem.genres?.length > 0 && (
+                  {review.reviewableItem.genres?.length && (
                     <div>
                       <span className="font-semibold">Genres:</span>
                       <div className="flex flex-wrap gap-1 mt-1">
-                        {review.reviewableItem.genres.map((genre: any) => (
+                        {review.reviewableItem.genres.map((genre: Genre) => (
                           <Badge
                             key={
                               genre._id || genre.slug?.current || genre.title
