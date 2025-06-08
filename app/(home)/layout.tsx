@@ -1,28 +1,31 @@
 import { Suspense } from 'react';
 
+// app/(home)/layout.tsx
 import { Metadata } from 'next';
+import Link from 'next/link';
 
 import { ModeToggle } from '@/components/ui/mode-toggle';
 
 // Homepage metadata
 export const metadata: Metadata = {
-  title: "Life Meets Pixel - Gaming Reviews",
+  title: "Life Meets Pixel - Geeky Reviews & News",
   description:
-    "Discover the best games worth your time with our in-depth reviews and honest ratings from the pixel world. Latest game reviews, ratings, and gaming insights.",
+    "Your source for honest reviews of games, movies, books, anime, board games, and more. Plus the latest gaming and geek culture news.",
   keywords: [
     "gaming",
     "game reviews",
-    "video games",
-    "pixel art",
-    "indie games",
-    "game ratings",
-    "gaming blog",
+    "movie reviews",
+    "book reviews",
+    "anime reviews",
+    "board game reviews",
+    "geek culture",
+    "entertainment reviews",
   ],
   openGraph: {
     type: "website",
-    title: "Life Meets Pixel - Gaming Reviews",
+    title: "Life Meets Pixel - Geeky Reviews & News",
     description:
-      "Discover the best games worth your time with our in-depth reviews and honest ratings from the pixel world.",
+      "Your source for honest reviews of games, movies, books, anime, board games, and more.",
     url: "/",
     siteName: "Life Meets Pixel",
     images: [
@@ -30,15 +33,15 @@ export const metadata: Metadata = {
         url: "/og-home.png",
         width: 1200,
         height: 630,
-        alt: "Life Meets Pixel - Gaming Reviews Homepage",
+        alt: "Life Meets Pixel - Geeky Reviews & News",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Life Meets Pixel - Gaming Reviews",
+    title: "Life Meets Pixel - Geeky Reviews & News",
     description:
-      "Discover the best games worth your time with our in-depth reviews and honest ratings.",
+      "Your source for honest reviews of games, movies, books, anime, and more.",
     images: ["/og-home.png"],
   },
   alternates: {
@@ -102,16 +105,64 @@ export default function HomeLayout({
     <div className="min-h-screen bg-background">
       {/* Header */}
       <header className="bg-background/95 backdrop-blur-sm border-b border-primary/20 sticky top-0 z-10">
-        <div className="container mx-auto max-w-6xl px-4 py-4 flex justify-between items-center">
-          <div>
-            <h1 className="text-3xl font-bold text-primary font-mono">
-              LIFE MEETS PIXEL
-            </h1>
-            <p className="text-muted-foreground text-sm">
-              Your source for honest game reviews
-            </p>
+        <div className="container mx-auto max-w-6xl px-4 py-4">
+          <div className="flex justify-between items-center mb-4">
+            <div>
+              <h1 className="text-3xl font-bold text-primary font-mono">
+                LIFE MEETS PIXEL
+              </h1>
+              <p className="text-muted-foreground text-sm">
+                Geeky reviews & pixel-perfect insights
+              </p>
+            </div>
+            <ModeToggle />
           </div>
-          <ModeToggle />
+
+          {/* Navigation */}
+          <nav className="flex flex-wrap gap-4 text-sm">
+            <Link
+              href="/"
+              className="text-primary hover:text-primary/80 font-mono transition-colors"
+            >
+              🏠 HOME
+            </Link>
+            <Link
+              href="/reviews"
+              className="text-foreground hover:text-primary font-mono transition-colors"
+            >
+              📝 ALL REVIEWS
+            </Link>
+            <Link
+              href="/reviews?type=videogame"
+              className="text-foreground hover:text-primary font-mono transition-colors"
+            >
+              🎮 GAMES
+            </Link>
+            <Link
+              href="/reviews?type=movie"
+              className="text-foreground hover:text-primary font-mono transition-colors"
+            >
+              🎬 MOVIES
+            </Link>
+            <Link
+              href="/reviews?type=book"
+              className="text-foreground hover:text-primary font-mono transition-colors"
+            >
+              📚 BOOKS
+            </Link>
+            <Link
+              href="/reviews?type=anime"
+              className="text-foreground hover:text-primary font-mono transition-colors"
+            >
+              🍥 ANIME
+            </Link>
+            <Link
+              href="/news"
+              className="text-foreground hover:text-primary font-mono transition-colors"
+            >
+              📰 NEWS
+            </Link>
+          </nav>
         </div>
       </header>
 
@@ -126,7 +177,7 @@ export default function HomeLayout({
         </Suspense>
 
         {/* Gaming News */}
-        <Suspense fallback={<SectionSkeleton title="GAMING NEWS" />}>
+        <Suspense fallback={<SectionSkeleton title="LATEST NEWS" />}>
           {news}
         </Suspense>
 
@@ -140,12 +191,12 @@ export default function HomeLayout({
         </Suspense>
 
         {/* Gaming Gear */}
-        <Suspense fallback={<SectionSkeleton title="GAMING GEAR WE LOVE" />}>
+        <Suspense fallback={<SectionSkeleton title="GEAR WE LOVE" />}>
           {gear}
         </Suspense>
 
         {/* All Reviews */}
-        <Suspense fallback={<SectionSkeleton title="ALL REVIEWS" />}>
+        <Suspense fallback={<SectionSkeleton title="LATEST REVIEWS" />}>
           {reviews}
         </Suspense>
 

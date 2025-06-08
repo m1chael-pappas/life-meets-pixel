@@ -28,80 +28,19 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import PixelHeartRating from '@/components/ui/pixel-heart-rating';
+import {
+  fetchOptions,
+  REVIEW_QUERY,
+} from '@/lib/queries';
 import { client } from '@/sanity/client';
 import imageUrlBuilder from '@sanity/image-url';
 import type { SanityImageSource } from '@sanity/image-url/lib/types/types';
-
-// Updated query for game reviews with all related data
-const GAME_REVIEW_QUERY = `*[_type == "gameReview" && slug.current == $slug][0]{
-  _id,
-  title,
-  slug,
-  reviewScore,
-  summary,
-  content,
-  pros,
-  cons,
-  publishedAt,
-  featured,
-  game->{
-    title,
-    slug,
-    developer,
-    publisher,
-    releaseDate,
-    platforms[]->{
-      title,
-      slug
-    },
-    genres[]->{
-      title,
-      slug
-    },
-    esrbRating,
-    coverImage{
-      asset->{
-        url
-      },
-      alt
-    },
-    officialWebsite
-  },
-  author->{
-    name,
-    slug,
-    bio,
-    avatar{
-      asset->{
-        url
-      },
-      alt
-    },
-    socialLinks
-  },
-  categories[]->{
-    title,
-    slug,
-    color
-  },
-  tags[]->{
-    title,
-    slug
-  },
-  seo{
-    metaTitle,
-    metaDescription,
-    keywords
-  }
-}`;
 
 const { projectId, dataset } = client.config();
 const urlFor = (source: SanityImageSource) =>
   projectId && dataset
     ? imageUrlBuilder({ projectId, dataset }).image(source)
     : null;
-
-const options = { next: { revalidate: 30 } };
 
 // Generate metadata for SEO
 export async function generateMetadata({
@@ -110,35 +49,50 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const review = await client.fetch<SanityDocument>(
-    GAME_REVIEW_QUERY,
+    REVIEW_QUERY,
     await params,
-    options
+    fetchOptions
   );
 
   if (!review) {
     return {
       title: "Review Not Found",
-      description: "The requested game review could not be found.",
+      description: "The requested review could not be found.",
     };
   }
 
-  const gameImageUrl = review.game?.coverImage
-    ? urlFor(review.game.coverImage)?.width(1200).height(630).url()
+  const itemImageUrl = review.reviewableItem?.coverImage
+    ? urlFor(review.reviewableItem.coverImage)?.width(1200).height(630).url()
     : null;
 
   // Use SEO data from CMS if available, otherwise fall back to review data
   const seoTitle =
-    review.seo?.metaTitle || `${review.title} | ${review.game?.title} Review`;
+    review.seo?.metaTitle ||
+    `${review.title} | ${review.reviewableItem?.title} Review`;
   const seoDescription =
     review.seo?.metaDescription ||
     review.summary ||
-    `Read our review of ${review.game?.title}. Score: ${review.reviewScore}/10`;
+    `Read our review of ${review.reviewableItem?.title}. Score: ${review.reviewScore}/10`;
   const seoKeywords = review.seo?.keywords || [
-    review.game?.title,
-    "game review",
-    "gaming",
+    review.reviewableItem?.title,
+    `${review.reviewableItem?.itemType} review`,
+    "review",
     ...(review.categories?.map((cat: any) => cat.title) || []),
   ];
+
+  const getItemTypeEmoji = (itemType: string) => {
+    const typeMap: Record<string, string> = {
+      videogame: "🎮",
+      boardgame: "🎲",
+      movie: "🎬",
+      tvseries: "📺",
+      anime: "🍥",
+      book: "📚",
+      comic: "📖",
+      gadget: "📱",
+    };
+    return typeMap[itemType] || "📦";
+  };
 
   return {
     title: seoTitle,
@@ -156,14 +110,15 @@ export async function generateMetadata({
       siteName: "Life Meets Pixel",
       publishedTime: review.publishedAt,
       authors: [review.author?.name || "Life Meets Pixel"],
-      images: gameImageUrl
+      images: itemImageUrl
         ? [
             {
-              url: gameImageUrl,
+              url: itemImageUrl,
               width: 1200,
               height: 630,
               alt:
-                review.game?.coverImage?.alt || `${review.game?.title} cover`,
+                review.reviewableItem?.coverImage?.alt ||
+                `${review.reviewableItem?.title} cover`,
             },
           ]
         : [],
@@ -173,15 +128,15 @@ export async function generateMetadata({
       card: "summary_large_image",
       title: seoTitle,
       description: seoDescription,
-      images: gameImageUrl ? [gameImageUrl] : [],
+      images: itemImageUrl ? [itemImageUrl] : [],
       creator: review.author?.socialLinks?.twitter || "@lifemeetspixel",
     },
     other: {
       "article:author": review.author?.name || "Life Meets Pixel",
       "article:published_time": review.publishedAt,
-      "article:section": "Gaming",
+      "article:section": review.reviewableItem?.itemType || "Review",
       "article:tag":
-        review.categories?.map((cat: any) => cat.title).join(", ") || "Gaming",
+        review.categories?.map((cat: any) => cat.title).join(", ") || "Review",
     },
   };
 }
@@ -252,15 +207,15 @@ const portableTextComponents: PortableTextComponents = {
   },
 };
 
-export default async function GameReviewPage({
+export default async function ReviewPage({
   params,
 }: {
   params: Promise<{ slug: string }>;
 }) {
   const review = await client.fetch<SanityDocument>(
-    GAME_REVIEW_QUERY,
+    REVIEW_QUERY,
     await params,
-    options
+    fetchOptions
   );
 
   if (!review) {
@@ -278,8 +233,8 @@ export default async function GameReviewPage({
     );
   }
 
-  const gameImageUrl = review.game?.coverImage
-    ? urlFor(review.game.coverImage)?.width(800).height(450).url()
+  const itemImageUrl = review.reviewableItem?.coverImage
+    ? urlFor(review.reviewableItem.coverImage)?.width(800).height(450).url()
     : null;
 
   const authorImageUrl = review.author?.avatar
@@ -314,6 +269,28 @@ export default async function GameReviewPage({
     return "POOR";
   };
 
+  const getItemTypeInfo = (itemType: string) => {
+    const typeMap = {
+      videogame: { emoji: "🎮", label: "Game" },
+      boardgame: { emoji: "🎲", label: "Board Game" },
+      movie: { emoji: "🎬", label: "Movie" },
+      tvseries: { emoji: "📺", label: "TV Series" },
+      anime: { emoji: "🍥", label: "Anime" },
+      book: { emoji: "📚", label: "Book" },
+      comic: { emoji: "📖", label: "Comic" },
+      gadget: { emoji: "📱", label: "Tech" },
+    };
+    return (
+      typeMap[itemType as keyof typeof typeMap] || {
+        emoji: "📦",
+        label: "Item",
+      }
+    );
+  };
+
+  const itemType = review.reviewableItem?.itemType;
+  const typeInfo = getItemTypeInfo(itemType);
+
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
@@ -332,13 +309,13 @@ export default async function GameReviewPage({
       <main className="container mx-auto max-w-4xl px-4 py-8">
         {/* Hero Section */}
         <section className="mb-8">
-          {gameImageUrl && (
+          {itemImageUrl && (
             <div className="relative aspect-video mb-6 rounded-lg overflow-hidden shadow-lg">
               <Image
-                src={gameImageUrl}
+                src={itemImageUrl}
                 alt={
-                  review.game?.coverImage?.alt ||
-                  review.game?.title ||
+                  review.reviewableItem?.coverImage?.alt ||
+                  review.reviewableItem?.title ||
                   review.title
                 }
                 fill
@@ -346,6 +323,13 @@ export default async function GameReviewPage({
                 priority
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+
+              {/* Item Type Badge */}
+              <div className="absolute top-6 left-6">
+                <Badge className="bg-primary text-primary-foreground font-mono">
+                  {typeInfo.emoji} {typeInfo.label}
+                </Badge>
+              </div>
 
               {/* Score Overlay */}
               <div className="absolute bottom-6 right-6 bg-background/90 backdrop-blur-sm rounded-lg p-4">
@@ -371,7 +355,7 @@ export default async function GameReviewPage({
 
               {/* Featured Badge */}
               {review.featured && (
-                <div className="absolute top-6 left-6">
+                <div className="absolute top-6 right-6">
                   <Badge className="bg-accent text-accent-foreground font-mono">
                     FEATURED
                   </Badge>
@@ -386,22 +370,42 @@ export default async function GameReviewPage({
               {review.title}
             </h1>
 
-            {review.game && (
+            {review.reviewableItem && (
               <div className="mb-4">
                 <h2 className="text-xl text-primary font-semibold mb-2">
-                  {review.game.title}
+                  {review.reviewableItem.title}
                 </h2>
                 <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
-                  {review.game.developer && (
-                    <span>Developer: {review.game.developer}</span>
+                  {review.reviewableItem.creator && (
+                    <span>
+                      {itemType === "book"
+                        ? "Author"
+                        : itemType === "movie" ||
+                          itemType === "tvseries" ||
+                          itemType === "anime"
+                        ? "Director"
+                        : "Creator"}
+                      : {review.reviewableItem.creator}
+                    </span>
                   )}
-                  {review.game.publisher && (
-                    <span>Publisher: {review.game.publisher}</span>
+                  {review.reviewableItem.publisher && (
+                    <span>
+                      {itemType === "book"
+                        ? "Publisher"
+                        : itemType === "movie" ||
+                          itemType === "tvseries" ||
+                          itemType === "anime"
+                        ? "Studio"
+                        : "Publisher"}
+                      : {review.reviewableItem.publisher}
+                    </span>
                   )}
-                  {review.game.releaseDate && (
+                  {review.reviewableItem.releaseDate && (
                     <span>
                       Released:{" "}
-                      {new Date(review.game.releaseDate).getFullYear()}
+                      {new Date(
+                        review.reviewableItem.releaseDate
+                      ).getFullYear()}
                     </span>
                   )}
                 </div>
@@ -482,6 +486,18 @@ export default async function GameReviewPage({
                 />
               </div>
             )}
+
+            {/* Verdict */}
+            {review.verdict && (
+              <div className="mt-8 bg-muted/20 rounded-lg p-6 border-l-4 border-primary">
+                <h3 className="text-xl font-bold text-foreground mb-3 font-mono">
+                  FINAL VERDICT
+                </h3>
+                <p className="text-foreground leading-relaxed">
+                  {review.verdict}
+                </p>
+              </div>
+            )}
           </div>
 
           {/* Sidebar */}
@@ -560,39 +576,133 @@ export default async function GameReviewPage({
               </Card>
             )}
 
-            {/* Game Info */}
-            {review.game && (
+            {/* Item Info - Dynamic based on type */}
+            {review.reviewableItem && (
               <Card>
                 <CardHeader>
-                  <CardTitle className="font-mono">GAME INFO</CardTitle>
+                  <CardTitle className="font-mono">
+                    {typeInfo.emoji} {typeInfo.label.toUpperCase()} INFO
+                  </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-3 text-sm">
-                  {review.game.platforms?.length > 0 && (
-                    <div>
-                      <span className="font-semibold">Platforms:</span>
-                      <div className="flex flex-wrap gap-1 mt-1">
-                        {review.game.platforms.map((platform: any) => (
-                          <Badge
-                            key={
-                              platform._id ||
-                              platform.slug?.current ||
-                              platform.title
-                            }
-                            variant="outline"
-                            className="text-xs"
-                          >
-                            {platform.title}
-                          </Badge>
-                        ))}
-                      </div>
-                    </div>
+                  {/* Video Game specific fields */}
+                  {itemType === "videogame" && (
+                    <>
+                      {review.reviewableItem.platforms?.length > 0 && (
+                        <div>
+                          <span className="font-semibold">Platforms:</span>
+                          <div className="flex flex-wrap gap-1 mt-1">
+                            {review.reviewableItem.platforms.map(
+                              (platform: any) => (
+                                <Badge
+                                  key={
+                                    platform._id ||
+                                    platform.slug?.current ||
+                                    platform.title
+                                  }
+                                  variant="outline"
+                                  className="text-xs"
+                                >
+                                  {platform.title}
+                                </Badge>
+                              )
+                            )}
+                          </div>
+                        </div>
+                      )}
+                      {review.reviewableItem.esrbRating && (
+                        <div>
+                          <span className="font-semibold">ESRB Rating:</span>
+                          <span className="ml-2">
+                            {review.reviewableItem.esrbRating}
+                          </span>
+                        </div>
+                      )}
+                    </>
                   )}
 
-                  {review.game.genres?.length > 0 && (
+                  {/* Board Game specific fields */}
+                  {itemType === "boardgame" && (
+                    <>
+                      {review.reviewableItem.playerCount && (
+                        <div>
+                          <span className="font-semibold">Players:</span>
+                          <span className="ml-2">
+                            {review.reviewableItem.playerCount}
+                          </span>
+                        </div>
+                      )}
+                      {review.reviewableItem.playTime && (
+                        <div>
+                          <span className="font-semibold">Play Time:</span>
+                          <span className="ml-2">
+                            {review.reviewableItem.playTime}
+                          </span>
+                        </div>
+                      )}
+                    </>
+                  )}
+
+                  {/* Movie/TV/Anime specific fields */}
+                  {(itemType === "movie" ||
+                    itemType === "tvseries" ||
+                    itemType === "anime") && (
+                    <>
+                      {review.reviewableItem.runtime && (
+                        <div>
+                          <span className="font-semibold">Runtime:</span>
+                          <span className="ml-2">
+                            {review.reviewableItem.runtime}
+                          </span>
+                        </div>
+                      )}
+                      {review.reviewableItem.seasons && (
+                        <div>
+                          <span className="font-semibold">Seasons:</span>
+                          <span className="ml-2">
+                            {review.reviewableItem.seasons}
+                          </span>
+                        </div>
+                      )}
+                      {review.reviewableItem.episodes && (
+                        <div>
+                          <span className="font-semibold">Episodes:</span>
+                          <span className="ml-2">
+                            {review.reviewableItem.episodes}
+                          </span>
+                        </div>
+                      )}
+                    </>
+                  )}
+
+                  {/* Book/Comic specific fields */}
+                  {(itemType === "book" || itemType === "comic") && (
+                    <>
+                      {review.reviewableItem.pageCount && (
+                        <div>
+                          <span className="font-semibold">Pages:</span>
+                          <span className="ml-2">
+                            {review.reviewableItem.pageCount}
+                          </span>
+                        </div>
+                      )}
+                      {review.reviewableItem.isbn && (
+                        <div>
+                          <span className="font-semibold">ISBN:</span>
+                          <span className="ml-2">
+                            {review.reviewableItem.isbn}
+                          </span>
+                        </div>
+                      )}
+                    </>
+                  )}
+
+                  {/* Common fields for all types */}
+                  {review.reviewableItem.genres?.length > 0 && (
                     <div>
                       <span className="font-semibold">Genres:</span>
                       <div className="flex flex-wrap gap-1 mt-1">
-                        {review.game.genres.map((genre: any) => (
+                        {review.reviewableItem.genres.map((genre: any) => (
                           <Badge
                             key={
                               genre._id || genre.slug?.current || genre.title
@@ -607,17 +717,10 @@ export default async function GameReviewPage({
                     </div>
                   )}
 
-                  {review.game.esrbRating && (
-                    <div>
-                      <span className="font-semibold">ESRB Rating:</span>
-                      <span className="ml-2">{review.game.esrbRating}</span>
-                    </div>
-                  )}
-
-                  {review.game.officialWebsite && (
+                  {review.reviewableItem.officialWebsite && (
                     <div>
                       <a
-                        href={review.game.officialWebsite}
+                        href={review.reviewableItem.officialWebsite}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="text-primary hover:text-primary-alt underline"

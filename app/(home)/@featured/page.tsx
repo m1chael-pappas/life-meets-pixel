@@ -1,6 +1,6 @@
 import { type SanityDocument } from 'next-sanity';
 
-import GameReviewCard from '@/components/ui/game-review-card';
+import UniversalReviewCard from '@/components/universal-review-card';
 import {
   FEATURED_REVIEWS_QUERY,
   fetchOptions,
@@ -25,10 +25,13 @@ export default async function FeaturedSection() {
           FEATURED REVIEWS
         </h3>
         <div className="h-px bg-primary/30 flex-1"></div>
+        <span className="text-xs bg-accent text-accent-foreground px-2 py-1 rounded font-mono">
+          EDITOR'S CHOICE
+        </span>
       </div>
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {featuredReviews.map((review, index) => (
-          <GameReviewCard
+          <UniversalReviewCard
             key={review._id}
             review={review}
             priority={index < 3}

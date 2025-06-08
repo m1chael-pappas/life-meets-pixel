@@ -15,10 +15,6 @@ export default async function NewsSection() {
     fetchOptions
   );
 
-  // Debug: Log the news data
-  console.log("News data:", news);
-  console.log("News length:", news.length);
-
   if (news.length === 0) {
     return (
       <section className="mb-12">
