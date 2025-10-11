@@ -2,6 +2,7 @@ import { Suspense } from 'react';
 import { type SanityDocument } from 'next-sanity';
 import { Metadata } from 'next';
 import Link from 'next/link';
+import Image from 'next/image';
 
 import UniversalReviewCard from '@/components/universal-review-card';
 import { ModeToggle } from '@/components/ui/mode-toggle';
@@ -141,7 +142,14 @@ export default async function ReviewsPage({ searchParams }: ReviewsPageProps) {
         <div className="container mx-auto max-w-6xl px-4 py-4">
           <div className="flex justify-between items-center">
             {/* Logo */}
-            <Link href="/" className="hover:opacity-80 transition-opacity">
+            <Link href="/" className="hover:opacity-80 transition-opacity flex items-center gap-3">
+              <Image
+                src="/logo.png"
+                alt="Life Meets Pixel"
+                width={40}
+                height={40}
+                className="w-10 h-10"
+              />
               <h1 className="text-3xl font-bold text-primary font-mono">
                 LIFE MEETS PIXEL
               </h1>

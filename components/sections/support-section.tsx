@@ -1,7 +1,7 @@
 export default function SupportSection() {
   return (
     <section className="mb-12">
-      <div className="bg-muted/20 rounded-lg p-6 text-center border border-primary/10">
+      <div className="bg-muted/20 rounded-lg p-6 text-center border border-border">
         <h3 className="text-lg font-bold text-foreground mb-2 font-mono">
           SUPPORT LIFE MEETS PIXEL
         </h3>

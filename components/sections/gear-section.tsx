@@ -43,26 +43,24 @@ export default function GearSection() {
       </div>
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         {gearItems.map((item) => (
-          <div
+          <a
             key={item.id}
-            className="bg-card border border-border rounded-lg p-4 hover:shadow-md transition-shadow"
+            href={item.link}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="bg-card border border-border rounded-lg p-4 hover:shadow-lg transition-all duration-300 hover:scale-[1.02] group block"
           >
             <div className="aspect-square bg-muted/20 rounded-md mb-3 flex items-center justify-center">
               <span className="text-2xl">{item.emoji}</span>
             </div>
-            <h4 className="font-semibold text-sm mb-1">{item.name}</h4>
+            <h4 className="font-semibold text-sm mb-1 group-hover:text-primary transition-colors">{item.name}</h4>
             <p className="text-xs text-muted-foreground mb-2">
               {item.description}
             </p>
-            <a
-              href={item.link}
-              className="text-xs text-primary hover:text-primary/80 font-mono"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
+            <span className="text-xs text-primary hover:text-primary/80 font-mono">
               Check Price →
-            </a>
-          </div>
+            </span>
+          </a>
         ))}
       </div>
     </section>

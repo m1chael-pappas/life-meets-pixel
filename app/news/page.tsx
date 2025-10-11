@@ -124,7 +124,14 @@ async function NewsList() {
                   {article.author && (
                     <div className="flex items-center gap-2 pt-3 border-t border-border">
                       <span className="text-xs text-muted-foreground">
-                        By {article.author.name}
+                        By{' '}
+                        <Link
+                          href="/author"
+                          className="text-primary hover:text-primary/80 transition-colors"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          {article.author.name}
+                        </Link>
                       </span>
                     </div>
                   )}
@@ -156,7 +163,14 @@ export default function NewsPage() {
         <div className="container mx-auto max-w-6xl px-4 py-4">
           <div className="flex justify-between items-center">
             {/* Logo */}
-            <Link href="/" className="hover:opacity-80 transition-opacity">
+            <Link href="/" className="hover:opacity-80 transition-opacity flex items-center gap-3">
+              <Image
+                src="/logo.png"
+                alt="Life Meets Pixel"
+                width={40}
+                height={40}
+                className="w-10 h-10"
+              />
               <h1 className="text-3xl font-bold text-primary font-mono">
                 LIFE MEETS PIXEL
               </h1>

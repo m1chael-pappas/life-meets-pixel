@@ -1,6 +1,7 @@
 import { Suspense } from 'react';
 
 import { Metadata } from 'next';
+import Image from 'next/image';
 import Link from 'next/link';
 
 import FeaturedSection from '@/components/sections/featured-section';
@@ -36,7 +37,7 @@ export const metadata: Metadata = {
     siteName: "Life Meets Pixel",
     images: [
       {
-        url: "/og-home.png",
+        url: "/logo.png",
         width: 1200,
         height: 630,
         alt: "Life Meets Pixel - Geeky Reviews & News",
@@ -48,7 +49,7 @@ export const metadata: Metadata = {
     title: "Life Meets Pixel - Geeky Reviews & News",
     description:
       "Your source for honest reviews of games, movies, books, anime, and more.",
-    images: ["/og-home.png"],
+    images: ["/logo.png"],
   },
   alternates: {
     canonical: "/",
@@ -94,7 +95,14 @@ export default function HomePage() {
         <div className="container mx-auto max-w-6xl px-4 py-4">
           <div className="flex justify-between items-center">
             {/* Logo */}
-            <Link href="/" className="hover:opacity-80 transition-opacity">
+            <Link href="/" className="hover:opacity-80 transition-opacity flex items-center gap-3">
+              <Image
+                src="/logo.png"
+                alt="Life Meets Pixel"
+                width={40}
+                height={40}
+                className="w-10 h-10"
+              />
               <h1 className="text-3xl font-bold text-primary font-mono">
                 LIFE MEETS PIXEL
               </h1>

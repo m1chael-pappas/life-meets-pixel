@@ -146,10 +146,10 @@ async function deleteDocument() {
 
 // Delete multiple documents
 async function deleteAllDrafts() {
-  const drafts = await client.fetch(`*[_id in path("drafts.**")]._id`);
+  const drafts = await client.fetch<string[]>(`*[_id in path("drafts.**")]._id`);
 
   const transaction = client.transaction();
-  drafts.forEach(id => transaction.delete(id));
+  drafts.forEach((id: string) => transaction.delete(id));
   await transaction.commit();
 }
 
@@ -223,7 +223,7 @@ async function importFromCSV() {
   const lines = csv.split('\n').slice(1); // Skip header
   const transaction = client.transaction();
 
-  lines.forEach(line => {
+  lines.forEach((line: string) => {
     const [title, genre, platform, releaseDate] = line.split(',');
 
     transaction.create({
@@ -270,11 +270,9 @@ async function renameField() {
   const transaction = client.transaction();
 
   docs.forEach((doc: any) => {
-    transaction
-      .patch(doc._id)
-      .set({ newFieldName: doc.oldFieldName })
-      .unset(['oldFieldName'])
-      .commit();
+    transaction.patch(doc._id, (p) =>
+      p.set({ newFieldName: doc.oldFieldName }).unset(['oldFieldName'])
+    );
   });
 
   await transaction.commit();
@@ -325,10 +323,10 @@ async function uploadImageFromFile() {
 }
 
 export {
-  createAuthor,
-  fetchAllReviews,
-  updateReviewScore,
-  deleteDocument,
   bulkCreate,
+  createAuthor,
+  deleteDocument,
+  fetchAllReviews,
   importFromJSON,
+  updateReviewScore,
 };

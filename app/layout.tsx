@@ -51,7 +51,7 @@ export const metadata: Metadata = {
       "Your source for honest game reviews and pixel-perfect insights.",
     images: [
       {
-        url: "/og-image.png",
+        url: "/logo.png",
         width: 1200,
         height: 630,
         alt: "Life Meets Pixel - Gaming Reviews & News",
@@ -63,7 +63,7 @@ export const metadata: Metadata = {
     title: "Life Meets Pixel - Gaming Reviews & News",
     description:
       "Your source for honest game reviews and pixel-perfect insights.",
-    images: ["/og-image.png"],
+    images: ["/logo.png"],
     creator: "@lifemeetspixel",
   },
   robots: {

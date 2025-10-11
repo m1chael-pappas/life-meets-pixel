@@ -468,7 +468,7 @@ export default async function ReviewPage({
                 <div className="flex items-center gap-2">
                   <User className="w-4 h-4" />
                   <Link
-                    href={`/authors/${review.author.slug.current}`}
+                    href="/author"
                     className="hover:text-primary transition-colors"
                   >
                     {review.author.name}
@@ -749,38 +749,37 @@ export default async function ReviewPage({
 
             {/* Author Card */}
             {review.author && (
-              <Card>
-                <CardHeader>
-                  <CardTitle className="font-mono">AUTHOR</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="flex items-start gap-3">
-                    <Avatar className="w-12 h-12">
-                      {authorImageUrl ? (
-                        <AvatarImage
-                          src={authorImageUrl}
-                          alt={review.author.name}
-                        />
-                      ) : null}
-                      <AvatarFallback className="bg-primary text-primary-foreground font-mono">
-                        {getAuthorInitials(review.author.name)}
-                      </AvatarFallback>
-                    </Avatar>
-                    <div>
-                      <Link
-                        href={`/authors/${review.author.slug.current}`}
-                        className="font-semibold text-foreground hover:text-primary transition-colors"
-                      >
-                        {review.author.name}
-                      </Link>
-                      {review.author.bio && (
-                        <p className="text-sm text-muted-foreground mt-1">
-                          {review.author.bio}
-                        </p>
-                      )}
+              <Card className="group hover:shadow-lg transition-all duration-300 hover:scale-[1.02] cursor-pointer">
+                <Link href="/author" className="block">
+                  <CardHeader>
+                    <CardTitle className="font-mono">AUTHOR</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="flex items-start gap-3">
+                      <Avatar className="w-12 h-12">
+                        {authorImageUrl ? (
+                          <AvatarImage
+                            src={authorImageUrl}
+                            alt={review.author.name}
+                          />
+                        ) : null}
+                        <AvatarFallback className="bg-primary text-primary-foreground font-mono">
+                          {getAuthorInitials(review.author.name)}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div>
+                        <div className="font-semibold text-foreground group-hover:text-primary transition-colors">
+                          {review.author.name}
+                        </div>
+                        {review.author.bio && (
+                          <p className="text-sm text-muted-foreground mt-1">
+                            {review.author.bio}
+                          </p>
+                        )}
+                      </div>
                     </div>
-                  </div>
-                </CardContent>
+                  </CardContent>
+                </Link>
               </Card>
             )}
           </div>

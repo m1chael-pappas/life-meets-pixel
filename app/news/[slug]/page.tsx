@@ -10,6 +10,7 @@ import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { client } from '@/sanity/client';
 import { NEWS_POST_QUERY, fetchOptions } from '@/lib/queries';
+import { Category } from '@/lib/types';
 
 interface NewsPostPageProps {
   params: Promise<{ slug: string }>;
@@ -89,7 +90,14 @@ export default async function NewsPostPage({ params }: NewsPostPageProps) {
         <div className="container mx-auto max-w-6xl px-4 py-4">
           <div className="flex justify-between items-center">
             {/* Logo */}
-            <Link href="/" className="hover:opacity-80 transition-opacity">
+            <Link href="/" className="hover:opacity-80 transition-opacity flex items-center gap-3">
+              <Image
+                src="/logo.png"
+                alt="Life Meets Pixel"
+                width={40}
+                height={40}
+                className="w-10 h-10"
+              />
               <h1 className="text-3xl font-bold text-primary font-mono">
                 LIFE MEETS PIXEL
               </h1>
@@ -147,7 +155,7 @@ export default async function NewsPostPage({ params }: NewsPostPageProps) {
           {/* Categories */}
           {post.categories && post.categories.length > 0 && (
             <div className="flex flex-wrap gap-2 mb-4">
-              {post.categories.map((cat: any) => (
+              {post.categories.map((cat: Category) => (
                 <Badge
                   key={cat._id}
                   variant="secondary"
@@ -196,9 +204,12 @@ export default async function NewsPostPage({ params }: NewsPostPageProps) {
                   </AvatarFallback>
                 </Avatar>
                 <div>
-                  <div className="text-sm font-medium text-foreground">
+                  <Link
+                    href="/author"
+                    className="text-sm font-medium text-foreground hover:text-primary transition-colors"
+                  >
                     {post.author.name}
-                  </div>
+                  </Link>
                   <div className="text-xs text-muted-foreground font-mono">
                     {publishedDate} • {relativeDate}
                   </div>
@@ -252,7 +263,9 @@ export default async function NewsPostPage({ params }: NewsPostPageProps) {
                 </Avatar>
                 <div className="flex-1">
                   <h3 className="text-lg font-bold text-foreground mb-2 font-mono">
-                    About {post.author.name}
+                    <Link href="/author" className="hover:text-primary transition-colors">
+                      About {post.author.name}
+                    </Link>
                   </h3>
                   <p className="text-sm text-muted-foreground leading-relaxed">
                     {post.author.bio}
