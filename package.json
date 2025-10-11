@@ -6,7 +6,12 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "studio": "cd studio && npm run dev",
+    "studio:build": "cd studio && npm run build",
+    "studio:deploy": "cd studio && npm run deploy",
+    "seed": "tsx scripts/seed-sanity.ts",
+    "seed:dry-run": "tsx scripts/seed-sanity.ts --dry-run"
   },
   "dependencies": {
     "@radix-ui/react-avatar": "^1.1.10",
@@ -26,15 +31,18 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
+    "@sanity/client": "^6.15.0",
     "@tailwindcss/postcss": "^4",
     "@tailwindcss/typography": "^0.5.16",
     "@types/node": "^22.15.29",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "date-fns": "4.1.0",
+    "dotenv": "^16.4.5",
     "eslint": "^9",
     "eslint-config-next": "15.3.3",
     "tailwindcss": "^4",
+    "tsx": "^4.7.1",
     "tw-animate-css": "^1.3.3",
     "typescript": "^5"
   }

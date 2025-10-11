@@ -41,3 +41,8 @@ yarn-error.log*
 next-env.d.ts
 .env.local
 .env
+
+# sanity studio
+/studio/node_modules
+/studio/dist
+/studio/.sanity

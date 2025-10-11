@@ -118,6 +118,18 @@ export default function UniversalReviewCard({
             </Badge>
           </div>
 
+          {/* Featured Badge - Top Center (higher than hearts) */}
+          {featured && (
+            <div className="absolute -top-5 left-1/2 transform -translate-x-1/2 z-10">
+              <Badge
+                variant="default"
+                className="bg-accent text-accent-foreground font-mono text-xs px-3 py-1 shadow-sm"
+              >
+                FEATURED
+              </Badge>
+            </div>
+          )}
+
           {/* Rating - Top Right */}
           <div className="absolute top-4 right-4 z-10">
             <div className="bg-background/90 backdrop-blur-sm rounded-lg px-3 py-2 shadow-sm">
@@ -129,31 +141,27 @@ export default function UniversalReviewCard({
             </div>
           </div>
 
-          {/* Featured Badge */}
-          {featured && (
-            <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-10">
-              <Badge
-                variant="default"
-                className="bg-accent text-accent-foreground font-mono text-xs px-3 py-1 shadow-sm"
-              >
-                FEATURED
-              </Badge>
-            </div>
-          )}
-
           {/* Cover Image */}
-          <div className="relative aspect-video overflow-hidden">
-            <Image
-              src={reviewableItem.coverImage.asset.url}
-              alt={
-                reviewableItem.coverImage.alt || `${reviewableItem.title} cover`
-              }
-              fill
-              className="object-cover transition-transform duration-300 group-hover:scale-105"
-              priority={priority}
-              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
+          <div className="relative aspect-video overflow-hidden bg-muted">
+            {reviewableItem.coverImage?.asset?.url ? (
+              <>
+                <Image
+                  src={reviewableItem.coverImage.asset.url}
+                  alt={
+                    reviewableItem.coverImage.alt || `${reviewableItem.title} cover`
+                  }
+                  fill
+                  className="object-cover transition-transform duration-300 group-hover:scale-105"
+                  priority={priority}
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
+              </>
+            ) : (
+              <div className="absolute inset-0 flex items-center justify-center">
+                <span className="text-6xl opacity-20">{typeInfo.emoji}</span>
+              </div>
+            )}
           </div>
         </CardHeader>
 

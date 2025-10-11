@@ -202,11 +202,11 @@ export const REVIEW_QUERY = `*[
   seo
 }`;
 
-// News Query (keeping existing)
+// News Query
 export const NEWS_QUERY = `*[
   _type == "newsPost"
   && defined(slug.current)
-]|order(publishedAt desc)[0...6]{
+]|order(publishedAt desc)[0...20]{
   _id,
   title,
   slug,
@@ -234,6 +234,44 @@ export const NEWS_QUERY = `*[
     slug,
     color
   }
+}`;
+
+// Single News Post Query
+export const NEWS_POST_QUERY = `*[
+  _type == "newsPost"
+  && slug.current == $slug
+][0]{
+  _id,
+  title,
+  slug,
+  excerpt,
+  content,
+  publishedAt,
+  breaking,
+  featuredImage{
+    asset->{
+      url
+    },
+    alt
+  },
+  author->{
+    name,
+    slug,
+    bio,
+    avatar{
+      asset->{
+        url
+      },
+      alt
+    },
+    socialLinks
+  },
+  categories[]->{
+    title,
+    slug,
+    color
+  },
+  seo
 }`;
 
 // Stats Query

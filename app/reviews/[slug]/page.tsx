@@ -156,6 +156,9 @@ const portableTextComponents: PortableTextComponents = {
         </div>
       ) : null;
     },
+    divider: () => (
+      <hr className="my-8 border-t-2 border-primary/30" />
+    ),
   },
   block: {
     h1: ({ children }) => (
@@ -180,6 +183,9 @@ const portableTextComponents: PortableTextComponents = {
       <blockquote className="border-l-4 border-primary pl-6 my-6 italic text-muted-foreground bg-muted/30 p-4 rounded-r-lg">
         {children}
       </blockquote>
+    ),
+    hr: () => (
+      <hr className="my-8 border-t-2 border-primary/30" />
     ),
   },
   marks: {
@@ -317,7 +323,7 @@ export default async function ReviewPage({
       <header className="bg-background/95 backdrop-blur-sm border-b border-primary/20 sticky top-0 z-10">
         <div className="container mx-auto max-w-6xl px-4 py-4">
           <Link
-            href="/"
+            href="/reviews"
             className="inline-flex items-center gap-2 text-primary hover:text-primary-alt transition-colors font-mono"
           >
             <ArrowLeft className="w-4 h-4" />
@@ -497,7 +503,7 @@ export default async function ReviewPage({
 
             {/* Verdict */}
             {review.verdict && (
-              <div className="mt-8 bg-muted/20 rounded-lg p-6 border-l-4 border-primary">
+              <div className="mt-8 bg-muted/20 rounded-lg p-6 border border-border border-l-4 border-l-primary">
                 <h3 className="text-xl font-bold text-foreground mb-3 font-mono">
                   FINAL VERDICT
                 </h3>

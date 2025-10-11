@@ -18,10 +18,9 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-// Remove homepage-specific metadata from here - it's now in (home)/layout.tsx
 export const metadata: Metadata = {
   title: {
-    default: "Life Meets Pixel - Gaming Reviews",
+    default: "Life Meets Pixel - Gaming Reviews & News",
     template: "%s | Life Meets Pixel",
   },
   description:
@@ -33,6 +32,8 @@ export const metadata: Metadata = {
     "pixel art",
     "indie games",
     "game ratings",
+    "gaming news",
+    "geek culture",
   ],
   authors: [{ name: "Life Meets Pixel Team" }],
   creator: "Life Meets Pixel",
@@ -40,6 +41,31 @@ export const metadata: Metadata = {
   metadataBase: new URL(
     process.env.NEXT_PUBLIC_SITE_URL || "https://lifemeetspixel.com"
   ),
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    url: "/",
+    siteName: "Life Meets Pixel",
+    title: "Life Meets Pixel - Gaming Reviews & News",
+    description:
+      "Your source for honest game reviews and pixel-perfect insights.",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Life Meets Pixel - Gaming Reviews & News",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Life Meets Pixel - Gaming Reviews & News",
+    description:
+      "Your source for honest game reviews and pixel-perfect insights.",
+    images: ["/og-image.png"],
+    creator: "@lifemeetspixel",
+  },
   robots: {
     index: true,
     follow: true,
