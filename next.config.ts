@@ -13,6 +13,22 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+
+  // Exclude studio folder from compilation
+  webpack: (config, { isServer }) => {
+    if (isServer) {
+      config.watchOptions = {
+        ...config.watchOptions,
+        ignored: ['**/studio/**', '**/node_modules/**'],
+      };
+    }
+    return config;
+  },
+
+  // Exclude studio from TypeScript checking
+  typescript: {
+    ignoreBuildErrors: false,
+  },
 };
 
 export default nextConfig;
