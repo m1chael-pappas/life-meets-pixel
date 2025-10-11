@@ -138,7 +138,7 @@ export default async function ReviewsPage({ searchParams }: ReviewsPageProps) {
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="bg-background/95 backdrop-blur-sm border-b border-primary/20 sticky top-0 z-10">
+      <header className="bg-background/95 backdrop-blur-sm border-b border-primary/20 sticky top-0 z-50">
         <div className="container mx-auto max-w-6xl px-4 py-4">
           <div className="flex justify-between items-center">
             {/* Logo */}

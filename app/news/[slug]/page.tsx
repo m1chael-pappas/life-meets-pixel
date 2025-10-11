@@ -86,7 +86,7 @@ export default async function NewsPostPage({ params }: NewsPostPageProps) {
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="bg-background/95 backdrop-blur-sm border-b border-primary/20 sticky top-0 z-10">
+      <header className="bg-background/95 backdrop-blur-sm border-b border-primary/20 sticky top-0 z-50">
         <div className="container mx-auto max-w-6xl px-4 py-4">
           <div className="flex justify-between items-center">
             {/* Logo */}
@@ -246,32 +246,32 @@ export default async function NewsPostPage({ params }: NewsPostPageProps) {
             )}
           </div>
 
-          {/* Author Bio (if available) */}
-          {post.author?.bio && (
-            <div className="mt-12 p-6 bg-muted/30 rounded-lg border border-border">
-              <div className="flex items-start gap-4">
-                <Avatar className="w-16 h-16">
-                  {post.author.avatar?.asset?.url ? (
-                    <AvatarImage
-                      src={post.author.avatar.asset.url}
-                      alt={post.author.name}
-                    />
-                  ) : null}
-                  <AvatarFallback className="bg-primary text-primary-foreground font-mono">
-                    {getAuthorInitials(post.author.name)}
-                  </AvatarFallback>
-                </Avatar>
-                <div className="flex-1">
-                  <h3 className="text-lg font-bold text-foreground mb-2 font-mono">
-                    <Link href="/author" className="hover:text-primary transition-colors">
-                      About {post.author.name}
-                    </Link>
-                  </h3>
-                  <p className="text-sm text-muted-foreground leading-relaxed">
-                    {post.author.bio}
-                  </p>
+          {/* Author Card */}
+          {post.author && (
+            <div className="mt-12 p-6 bg-muted/30 rounded-lg border border-border hover:shadow-lg transition-all duration-300 cursor-pointer">
+              <Link href="/author" className="block">
+                <div className="flex items-start gap-4">
+                  <Avatar className="w-16 h-16">
+                    {post.author.avatar?.asset?.url ? (
+                      <AvatarImage
+                        src={post.author.avatar.asset.url}
+                        alt={post.author.name}
+                      />
+                    ) : null}
+                    <AvatarFallback className="bg-primary text-primary-foreground font-mono">
+                      {getAuthorInitials(post.author.name)}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="flex-1">
+                    <h3 className="text-lg font-bold text-foreground mb-1 font-mono hover:text-primary transition-colors">
+                      {post.author.name}
+                    </h3>
+                    <p className="text-xs text-muted-foreground font-mono">
+                      // Click to view author profile
+                    </p>
+                  </div>
                 </div>
-              </div>
+              </Link>
             </div>
           )}
         </article>

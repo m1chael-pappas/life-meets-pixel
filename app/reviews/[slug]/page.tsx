@@ -1,46 +1,19 @@
-import { formatDistanceToNow } from 'date-fns';
-import {
-  ArrowLeft,
-  Calendar,
-  ThumbsDown,
-  ThumbsUp,
-  User,
-} from 'lucide-react';
-import { Metadata } from 'next';
-import {
-  PortableText,
-  type PortableTextComponents,
-} from 'next-sanity';
-import Image from 'next/image';
-import Link from 'next/link';
+import { formatDistanceToNow } from "date-fns";
+import { ArrowLeft, Calendar, ThumbsDown, ThumbsUp, User } from "lucide-react";
+import { Metadata } from "next";
+import { PortableText, type PortableTextComponents } from "next-sanity";
+import Image from "next/image";
+import Link from "next/link";
 
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from '@/components/ui/avatar';
-import { Badge } from '@/components/ui/badge';
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
-import PixelHeartRating from '@/components/ui/pixel-heart-rating';
-import {
-  fetchOptions,
-  REVIEW_QUERY,
-} from '@/lib/queries';
-import {
-  Category,
-  Genre,
-  Platform,
-  Review,
-  Tag,
-} from '@/lib/types';
-import { client } from '@/sanity/client';
-import imageUrlBuilder from '@sanity/image-url';
-import type { SanityImageSource } from '@sanity/image-url/lib/types/types';
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import PixelHeartRating from "@/components/ui/pixel-heart-rating";
+import { fetchOptions, REVIEW_QUERY } from "@/lib/queries";
+import { Category, Genre, Platform, Review, Tag } from "@/lib/types";
+import { client } from "@/sanity/client";
+import imageUrlBuilder from "@sanity/image-url";
+import type { SanityImageSource } from "@sanity/image-url/lib/types/types";
 
 const { projectId, dataset } = client.config();
 const urlFor = (source: SanityImageSource) =>
@@ -156,9 +129,7 @@ const portableTextComponents: PortableTextComponents = {
         </div>
       ) : null;
     },
-    divider: () => (
-      <hr className="my-8 border-t-2 border-primary/30" />
-    ),
+    divider: () => <hr className="my-8 border-t-2 border-primary/30" />,
   },
   block: {
     h1: ({ children }) => (
@@ -184,9 +155,7 @@ const portableTextComponents: PortableTextComponents = {
         {children}
       </blockquote>
     ),
-    hr: () => (
-      <hr className="my-8 border-t-2 border-primary/30" />
-    ),
+    hr: () => <hr className="my-8 border-t-2 border-primary/30" />,
   },
   marks: {
     strong: ({ children }) => (
@@ -320,7 +289,7 @@ export default async function ReviewPage({
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="bg-background/95 backdrop-blur-sm border-b border-primary/20 sticky top-0 z-10">
+      <header className="bg-background/95 backdrop-blur-sm border-b border-primary/20 sticky top-0 z-50">
         <div className="container mx-auto max-w-6xl px-4 py-4">
           <Link
             href="/reviews"
@@ -752,7 +721,7 @@ export default async function ReviewPage({
               <Card className="group hover:shadow-lg transition-all duration-300 hover:scale-[1.02] cursor-pointer">
                 <Link href="/author" className="block">
                   <CardHeader>
-                    <CardTitle className="font-mono">AUTHOR</CardTitle>
+                    <CardTitle className="font-mono">WRITTEN BY</CardTitle>
                   </CardHeader>
                   <CardContent>
                     <div className="flex items-start gap-3">
@@ -771,11 +740,9 @@ export default async function ReviewPage({
                         <div className="font-semibold text-foreground group-hover:text-primary transition-colors">
                           {review.author.name}
                         </div>
-                        {review.author.bio && (
-                          <p className="text-sm text-muted-foreground mt-1">
-                            {review.author.bio}
-                          </p>
-                        )}
+                        <p className="text-xs text-muted-foreground mt-1 font-mono">
+                          // Click to view profile
+                        </p>
                       </div>
                     </div>
                   </CardContent>

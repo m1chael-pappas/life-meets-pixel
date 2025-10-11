@@ -1,35 +1,28 @@
-import { Suspense } from 'react';
+import { Suspense } from "react";
 
-import { Metadata } from 'next';
-import { type SanityDocument } from 'next-sanity';
-import Image from 'next/image';
-import Link from 'next/link';
+import { Metadata } from "next";
+import { type SanityDocument } from "next-sanity";
+import Image from "next/image";
+import Link from "next/link";
 
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from '@/components/ui/avatar';
-import {
-  Card,
-  CardContent,
-} from '@/components/ui/card';
-import { ModeToggle } from '@/components/ui/mode-toggle';
-import UniversalReviewCard from '@/components/universal-review-card';
-import { fetchOptions } from '@/lib/queries';
-import { client } from '@/sanity/client';
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Card, CardContent } from "@/components/ui/card";
+import { ModeToggle } from "@/components/ui/mode-toggle";
+import UniversalReviewCard from "@/components/universal-review-card";
+import { fetchOptions } from "@/lib/queries";
+import { client } from "@/sanity/client";
 
 export const metadata: Metadata = {
-  title: 'About the Author',
-  description: 'Meet Michael Pappas, the creator of Life Meets Pixel.',
+  title: "About the Author",
+  description: "Meet Michael Pappas, the creator of Life Meets Pixel.",
   alternates: {
-    canonical: '/author',
+    canonical: "/author",
   },
 };
 
 const getAuthorInitials = (name: string) => {
-  const words = name.split(' ');
-  const initials = words.reduce((acc, word) => acc + (word[0] || ''), '');
+  const words = name.split(" ");
+  const initials = words.reduce((acc, word) => acc + (word[0] || ""), "");
   return initials.toUpperCase().slice(0, 2);
 };
 
@@ -192,7 +185,9 @@ async function AuthorContent() {
                     <div className="text-3xl font-bold text-primary font-mono">
                       {newsCount || 0}
                     </div>
-                    <div className="text-sm text-muted-foreground">News Posts</div>
+                    <div className="text-sm text-muted-foreground">
+                      News Posts
+                    </div>
                   </div>
                 </div>
 
@@ -351,11 +346,14 @@ export default function AuthorPage() {
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="bg-background/95 backdrop-blur-sm border-b border-primary/20 sticky top-0 z-10">
+      <header className="bg-background/95 backdrop-blur-sm border-b border-primary/20 sticky top-0 z-50">
         <div className="container mx-auto max-w-6xl px-4 py-4">
           <div className="flex justify-between items-center">
             {/* Logo */}
-            <Link href="/" className="hover:opacity-80 transition-opacity flex items-center gap-3">
+            <Link
+              href="/"
+              className="hover:opacity-80 transition-opacity flex items-center gap-3"
+            >
               <Image
                 src="/logo.png"
                 alt="Life Meets Pixel"

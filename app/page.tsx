@@ -1,17 +1,17 @@
-import { Suspense } from 'react';
+import { Suspense } from "react";
 
-import { Metadata } from 'next';
-import Image from 'next/image';
-import Link from 'next/link';
+import { Metadata } from "next";
+import Image from "next/image";
+import Link from "next/link";
 
-import FeaturedSection from '@/components/sections/featured-section';
-import GearSection from '@/components/sections/gear-section';
-import HeroSection from '@/components/sections/hero-section';
-import NewsSection from '@/components/sections/news-section';
-import ReviewsSection from '@/components/sections/reviews-section';
-import StatsSection from '@/components/sections/stats-section';
-import SupportSection from '@/components/sections/support-section';
-import { ModeToggle } from '@/components/ui/mode-toggle';
+import FeaturedSection from "@/components/sections/featured-section";
+import GearSection from "@/components/sections/gear-section";
+import HeroSection from "@/components/sections/hero-section";
+import NewsSection from "@/components/sections/news-section";
+import ReviewsSection from "@/components/sections/reviews-section";
+import StatsSection from "@/components/sections/stats-section";
+import SupportSection from "@/components/sections/support-section";
+import { ModeToggle } from "@/components/ui/mode-toggle";
 
 // Homepage metadata
 export const metadata: Metadata = {
@@ -91,11 +91,14 @@ export default function HomePage() {
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="bg-background/95 backdrop-blur-sm border-b border-primary/20 sticky top-0 z-10">
+      <header className="bg-background/95 backdrop-blur-sm border-b border-primary/20 sticky top-0 z-50">
         <div className="container mx-auto max-w-6xl px-4 py-4">
           <div className="flex justify-between items-center">
             {/* Logo */}
-            <Link href="/" className="hover:opacity-80 transition-opacity flex items-center gap-3">
+            <Link
+              href="/"
+              className="hover:opacity-80 transition-opacity flex items-center gap-3"
+            >
               <Image
                 src="/logo.png"
                 alt="Life Meets Pixel"
@@ -162,14 +165,14 @@ export default function HomePage() {
           <SupportSection />
         </Suspense>
 
-        {/* Gaming Gear */}
-        <Suspense fallback={<SectionSkeleton title="GEAR WE LOVE" />}>
-          <GearSection />
-        </Suspense>
-
         {/* All Reviews */}
         <Suspense fallback={<SectionSkeleton title="LATEST REVIEWS" />}>
           <ReviewsSection />
+        </Suspense>
+
+        {/* Gaming Gear */}
+        <Suspense fallback={<SectionSkeleton title="GEAR WE LOVE" />}>
+          <GearSection />
         </Suspense>
 
         {/* Stats */}
