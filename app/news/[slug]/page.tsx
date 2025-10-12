@@ -267,7 +267,7 @@ export default async function NewsPostPage({ params }: NewsPostPageProps) {
                       {post.author.name}
                     </h3>
                     <p className="text-xs text-muted-foreground font-mono">
-                      // Click to view author profile
+                      {'//'} Click to view author profile
                     </p>
                   </div>
                 </div>

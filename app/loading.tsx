@@ -31,7 +31,7 @@ export default function Loading() {
 
         {/* Nerdy Loading Messages */}
         <p className="text-sm text-muted-foreground font-mono">
-          // Compiling awesome content...
+          {'//'} Compiling awesome content...
         </p>
       </div>
     </div>

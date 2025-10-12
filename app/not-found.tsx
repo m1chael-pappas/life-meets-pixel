@@ -83,8 +83,8 @@ export default function NotFound() {
             OOPS! LOOKS LIKE THIS PIXEL GLITCHED OUT
           </h1>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            The page you're looking for has either been moved, deleted, or never existed in this reality.
-            Maybe it's in another dimension? 🌌
+            The page you&apos;re looking for has either been moved, deleted, or never existed in this reality.
+            Maybe it&apos;s in another dimension? 🌌
           </p>
         </div>
 
@@ -92,16 +92,16 @@ export default function NotFound() {
         <div className="bg-muted/20 rounded-lg p-6 mb-8 max-w-2xl mx-auto border border-border">
           <div className="font-mono text-left space-y-2 text-sm">
             <div className="text-red-500">
-              <span className="text-muted-foreground">{'>'}</span> console.error(<span className="text-yellow-500">"Route not found"</span>);
+              <span className="text-muted-foreground">{'>'}</span> console.error(<span className="text-yellow-500">&quot;Route not found&quot;</span>);
             </div>
             <div className="text-muted-foreground">
               <span className="text-muted-foreground">{'>'}</span> Status: <span className="text-primary">404</span>
             </div>
             <div className="text-muted-foreground">
-              <span className="text-muted-foreground">{'>'}</span> Message: <span className="text-orange-500">"The requested pixel does not exist"</span>
+              <span className="text-muted-foreground">{'>'}</span> Message: <span className="text-orange-500">&quot;The requested pixel does not exist&quot;</span>
             </div>
             <div className="text-muted-foreground">
-              <span className="text-muted-foreground">{'>'}</span> Suggestion: <span className="text-green-500">"Try navigating back home"</span>
+              <span className="text-muted-foreground">{'>'}</span> Suggestion: <span className="text-green-500">&quot;Try navigating back home&quot;</span>
             </div>
           </div>
         </div>
@@ -130,8 +130,8 @@ export default function NotFound() {
 
         {/* Easter Egg */}
         <div className="mt-12 text-xs text-muted-foreground font-mono">
-          <p>// Debug Info: If this keeps happening, the simulation might be broken 🤖</p>
-          <p>// Error Code: 0x80040404 | Stack Trace: nowhere_to_be_found.tsx</p>
+          <p>{'//'} Debug Info: If this keeps happening, the simulation might be broken 🤖</p>
+          <p>{'//'} Error Code: 0x80040404 | Stack Trace: nowhere_to_be_found.tsx</p>
         </div>
       </main>
     </div>

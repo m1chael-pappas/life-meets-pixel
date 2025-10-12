@@ -45,9 +45,9 @@ export default function GearSection() {
           WORK IN PROGRESS
         </h4>
         <p className="text-sm text-muted-foreground font-mono">
-          // We're building something awesome here...
+          {'//'} We&apos;re building something awesome here...
           <br />
-          // Check back later for our gear recommendations!
+          {'//'} Check back later for our gear recommendations!
         </p>
       </div>
 

@@ -741,7 +741,7 @@ export default async function ReviewPage({
                           {review.author.name}
                         </div>
                         <p className="text-xs text-muted-foreground mt-1 font-mono">
-                          // Click to view profile
+                          {'//'} Click to view profile
                         </p>
                       </div>
                     </div>
