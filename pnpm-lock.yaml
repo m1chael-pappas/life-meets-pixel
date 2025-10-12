@@ -23,6 +23,9 @@ importers:
       '@sanity/image-url':
         specifier: ^1.1.0
         version: 1.1.0
+      '@vercel/analytics':
+        specifier: ^1.5.0
+        version: 1.5.0(next@15.3.3(@babel/core@7.27.4)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react@19.1.0)
       class-variance-authority:
         specifier: ^0.7.1
         version: 0.7.1
@@ -2442,6 +2445,32 @@ packages:
     resolution: {integrity: sha512-hORofIRZCm85+TUZ9OmHQJNlgtOmK/TPfvYeSplKAl+zQvAwMGyy6DZcSbrF+KdB1EDoGISwU7dX7PE92haOXg==}
     cpu: [x64]
     os: [win32]
+
+  '@vercel/analytics@1.5.0':
+    resolution: {integrity: sha512-MYsBzfPki4gthY5HnYN7jgInhAZ7Ac1cYDoRWFomwGHWEX7odTEzbtg9kf/QSo7XEsEAqlQugA6gJ2WS2DEa3g==}
+    peerDependencies:
+      '@remix-run/react': ^2
+      '@sveltejs/kit': ^1 || ^2
+      next: '>= 13'
+      react: ^18 || ^19 || ^19.0.0-rc
+      svelte: '>= 4'
+      vue: ^3
+      vue-router: ^4
+    peerDependenciesMeta:
+      '@remix-run/react':
+        optional: true
+      '@sveltejs/kit':
+        optional: true
+      next:
+        optional: true
+      react:
+        optional: true
+      svelte:
+        optional: true
+      vue:
+        optional: true
+      vue-router:
+        optional: true
 
   '@vercel/stega@0.1.2':
     resolution: {integrity: sha512-P7mafQXjkrsoyTRppnt0N21udKS9wUmLXHRyP9saLXLHw32j/FgUJ3FscSWgvSqRs4cj7wKZtwqJEvWJ2jbGmA==}
@@ -8052,7 +8081,7 @@ snapshots:
     dependencies:
       '@sanity/client': 7.4.0(debug@4.4.1)
       '@sanity/comlink': 3.0.5
-      '@sanity/visual-editing-types': 1.1.0(@sanity/client@7.4.0(debug@4.4.1))(@sanity/types@3.90.0(@types/react@19.1.6))
+      '@sanity/visual-editing-types': 1.1.0(@sanity/client@7.4.0)(@sanity/types@3.90.0(@types/react@19.1.6))
     transitivePeerDependencies:
       - '@sanity/types'
 
@@ -8060,7 +8089,7 @@ snapshots:
     dependencies:
       '@sanity/client': 7.4.0(debug@4.4.1)
       '@sanity/comlink': 3.0.5
-      '@sanity/visual-editing-types': 1.1.0(@sanity/client@7.4.0(debug@4.4.1))(@sanity/types@3.90.0(@types/react@19.1.6))
+      '@sanity/visual-editing-types': 1.1.0(@sanity/client@7.4.0)(@sanity/types@3.90.0(@types/react@19.1.6))
     transitivePeerDependencies:
       - '@sanity/types'
 
@@ -8242,7 +8271,7 @@ snapshots:
     optionalDependencies:
       '@sanity/types': 3.90.0(@types/react@19.1.6)(debug@4.4.1)
 
-  '@sanity/visual-editing-types@1.1.0(@sanity/client@7.4.0(debug@4.4.1))(@sanity/types@3.90.0(@types/react@19.1.6))':
+  '@sanity/visual-editing-types@1.1.0(@sanity/client@7.4.0)(@sanity/types@3.90.0(@types/react@19.1.6))':
     dependencies:
       '@sanity/client': 7.4.0(debug@4.4.1)
     optionalDependencies:
@@ -8650,6 +8679,11 @@ snapshots:
 
   '@unrs/resolver-binding-win32-x64-msvc@1.7.9':
     optional: true
+
+  '@vercel/analytics@1.5.0(next@15.3.3(@babel/core@7.27.4)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react@19.1.0)':
+    optionalDependencies:
+      next: 15.3.3(@babel/core@7.27.4)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      react: 19.1.0
 
   '@vercel/stega@0.1.2': {}
 
