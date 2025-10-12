@@ -140,7 +140,7 @@ async function AuthorContent() {
   return (
     <div className="space-y-12">
       {/* Author Hero Section */}
-      <Card className="border-2 group hover:shadow-lg transition-all duration-300 hover:scale-[1.01] cursor-pointer">
+      <Card className="border-2 group hover:shadow-lg transition-all duration-300 hover:scale-[1.01]">
         <Link href="/author" className="block">
           <CardContent className="p-8">
             <div className="flex flex-col md:flex-row gap-8 items-start">

@@ -248,7 +248,7 @@ export default async function NewsPostPage({ params }: NewsPostPageProps) {
 
           {/* Author Card */}
           {post.author && (
-            <div className="mt-12 p-6 bg-muted/30 rounded-lg border border-border hover:shadow-lg transition-all duration-300 cursor-pointer">
+            <div className="mt-12 p-6 bg-muted/30 rounded-lg border border-border hover:shadow-lg transition-all duration-300">
               <Link href="/author" className="block">
                 <div className="flex items-start gap-4">
                   <Avatar className="w-16 h-16">

@@ -718,7 +718,7 @@ export default async function ReviewPage({
 
             {/* Author Card */}
             {review.author && (
-              <Card className="group hover:shadow-lg transition-all duration-300 hover:scale-[1.02] cursor-pointer">
+              <Card className="group hover:shadow-lg transition-all duration-300 hover:scale-[1.02]">
                 <Link href="/author" className="block">
                   <CardHeader>
                     <CardTitle className="font-mono">WRITTEN BY</CardTitle>
