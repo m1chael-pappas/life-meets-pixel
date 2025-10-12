@@ -111,16 +111,18 @@ export async function generateMetadata({
 const portableTextComponents: PortableTextComponents = {
   types: {
     image: ({ value }) => {
-      const imageUrl = urlFor(value)?.width(800).height(450).url();
+      const imageUrl = urlFor(value)?.width(800).url();
       return imageUrl ? (
         <div className="my-8">
-          <Image
-            src={imageUrl}
-            alt={value.caption || "Review image"}
-            width={800}
-            height={450}
-            className="rounded-lg shadow-md"
-          />
+          <div className="relative w-full max-w-[800px] mx-auto">
+            <Image
+              src={imageUrl}
+              alt={value.caption || "Review image"}
+              width={800}
+              height={450}
+              className="rounded-lg shadow-md w-full h-auto"
+            />
+          </div>
           {value.caption && (
             <p className="text-center text-sm text-muted-foreground mt-2">
               {value.caption}
@@ -448,11 +450,14 @@ export default async function ReviewPage({
             </div>
           </div>
 
-          {/* Summary */}
-          {review.summary && (
-            <div className="bg-muted/30 rounded-lg p-6 mb-8">
-              <p className="text-lg text-foreground leading-relaxed font-medium">
-                {review.summary}
+          {/* Verdict */}
+          {review.verdict && (
+            <div className="mt-8 bg-muted/20 rounded-lg p-6 border border-border border-l-4 border-l-primary">
+              <h3 className="text-xl font-bold text-foreground mb-3 font-mono">
+                TL;DR
+              </h3>
+              <p className="text-foreground leading-relaxed">
+                {review.verdict}
               </p>
             </div>
           )}
@@ -468,18 +473,6 @@ export default async function ReviewPage({
                   value={review.content}
                   components={portableTextComponents}
                 />
-              </div>
-            )}
-
-            {/* Verdict */}
-            {review.verdict && (
-              <div className="mt-8 bg-muted/20 rounded-lg p-6 border border-border border-l-4 border-l-primary">
-                <h3 className="text-xl font-bold text-foreground mb-3 font-mono">
-                  FINAL VERDICT
-                </h3>
-                <p className="text-foreground leading-relaxed">
-                  {review.verdict}
-                </p>
               </div>
             )}
           </div>
