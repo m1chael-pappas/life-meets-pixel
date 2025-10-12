@@ -7,7 +7,7 @@ import Link from "next/link";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent } from "@/components/ui/card";
-import { ModeToggle } from "@/components/ui/mode-toggle";
+import { SiteHeader } from "@/components/site-header";
 import UniversalReviewCard from "@/components/universal-review-card";
 import { fetchOptions } from "@/lib/queries";
 import { client } from "@/sanity/client";
@@ -340,54 +340,7 @@ function AuthorSkeleton() {
 export default function AuthorPage() {
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="bg-background/95 backdrop-blur-sm border-b border-primary/20 sticky top-0 z-50">
-        <div className="container mx-auto max-w-6xl px-4 py-4">
-          <div className="flex justify-between items-center">
-            {/* Logo */}
-            <Link
-              href="/"
-              className="hover:opacity-80 transition-opacity flex items-center gap-3"
-            >
-              <Image
-                src="/logo.png"
-                alt="Life Meets Pixel"
-                width={40}
-                height={40}
-                className="w-10 h-10"
-              />
-              <h1 className="text-3xl font-bold text-primary font-mono">
-                LIFE MEETS PIXEL
-              </h1>
-            </Link>
-
-            {/* Navigation */}
-            <nav className="flex items-center gap-6">
-              <Link
-                href="/"
-                className="text-foreground hover:text-primary font-mono text-sm transition-colors"
-              >
-                🏠 HOME
-              </Link>
-              <Link
-                href="/reviews"
-                className="text-foreground hover:text-primary font-mono text-sm transition-colors"
-              >
-                📝 REVIEWS
-              </Link>
-              <Link
-                href="/news"
-                className="text-foreground hover:text-primary font-mono text-sm transition-colors"
-              >
-                📰 NEWS
-              </Link>
-              <div className="ml-2">
-                <ModeToggle />
-              </div>
-            </nav>
-          </div>
-        </div>
-      </header>
+      <SiteHeader currentPage="author" />
 
       {/* Main Content */}
       <main className="container mx-auto max-w-7xl p-6 py-12">

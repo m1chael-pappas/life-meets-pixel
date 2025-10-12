@@ -4,13 +4,18 @@ export default function HeroSection() {
   return (
     <section className="text-center mb-12 py-8">
       <h2 className="text-5xl font-bold text-foreground mb-4 font-mono">
-        Geeky <span className="text-primary">Reviews</span> & More
+        <span className="text-primary">Reviews</span> & Stuff;
       </h2>
       <div className="flex items-center justify-center gap-4 mb-4">
         <span className="text-2xl">🎮</span>
         <PixelHeartRating reviewScore={7} showScore={false} size="md" />
-        <span className="text-2xl">🎬</span>
-        <PixelHeartRating reviewScore={7} showScore={false} size="md" />
+        <span className="text-2xl hidden md:inline">🎬</span>
+        <PixelHeartRating
+          reviewScore={7}
+          showScore={false}
+          size="md"
+          className="hidden md:flex"
+        />
         <span className="text-2xl">📚</span>
       </div>
       <p className="text-muted-foreground text-lg max-w-3xl mx-auto">
