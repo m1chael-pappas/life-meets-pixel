@@ -140,81 +140,76 @@ async function AuthorContent() {
   return (
     <div className="space-y-12">
       {/* Author Hero Section */}
-      <Card className="border-2 group hover:shadow-lg transition-all duration-300 hover:scale-[1.01]">
-        <Link href="/author" className="block">
-          <CardContent className="p-8">
-            <div className="flex flex-col md:flex-row gap-8 items-start">
-              {/* Avatar */}
+      <Card className="border-2">
+        <CardContent className="p-8">
+          <div className="flex flex-col md:flex-row gap-8 items-start">
+            {/* Avatar */}
+            {author?.name && (
+              <Avatar className="w-32 h-32">
+                {author.avatar?.asset?.url ? (
+                  <AvatarImage
+                    src={author.avatar?.asset.url}
+                    alt={author.name}
+                  />
+                ) : null}
+                <AvatarFallback className="bg-primary text-primary-foreground text-3xl font-mono">
+                  {getAuthorInitials(author.name)}
+                </AvatarFallback>
+              </Avatar>
+            )}
+
+            {/* Author Info */}
+            <div className="flex-1">
               {author?.name && (
-                <Avatar className="w-32 h-32">
-                  {author.avatar?.asset?.url ? (
-                    <AvatarImage
-                      src={author.avatar?.asset.url}
-                      alt={author.name}
-                    />
-                  ) : null}
-                  <AvatarFallback className="bg-primary text-primary-foreground text-3xl font-mono">
-                    {getAuthorInitials(author.name)}
-                  </AvatarFallback>
-                </Avatar>
+                <h1 className="text-4xl font-bold text-foreground mb-4 font-mono">
+                  {author.name}
+                </h1>
               )}
 
-              {/* Author Info */}
-              <div className="flex-1">
-                {author?.name && (
-                  <h1 className="text-4xl font-bold text-foreground mb-4 font-mono group-hover:text-primary transition-colors">
-                    {author.name}
-                  </h1>
-                )}
+              {author?.bio && (
+                <p className="text-lg text-muted-foreground leading-relaxed mb-6">
+                  {author.bio}
+                </p>
+              )}
 
-                {author?.bio && (
-                  <p className="text-lg text-muted-foreground leading-relaxed mb-6">
-                    {author.bio}
-                  </p>
-                )}
-
-                {/* Stats */}
-                <div className="flex flex-wrap gap-6 mb-6">
-                  <div>
-                    <div className="text-3xl font-bold text-primary font-mono">
-                      {reviewCount || 0}
-                    </div>
-                    <div className="text-sm text-muted-foreground">Reviews</div>
+              {/* Stats */}
+              <div className="flex flex-wrap gap-6 mb-6">
+                <div>
+                  <div className="text-3xl font-bold text-primary font-mono">
+                    {reviewCount || 0}
                   </div>
-                  <div>
-                    <div className="text-3xl font-bold text-primary font-mono">
-                      {newsCount || 0}
-                    </div>
-                    <div className="text-sm text-muted-foreground">
-                      News Posts
-                    </div>
+                  <div className="text-sm text-muted-foreground">Reviews</div>
+                </div>
+                <div>
+                  <div className="text-3xl font-bold text-primary font-mono">
+                    {newsCount || 0}
+                  </div>
+                  <div className="text-sm text-muted-foreground">
+                    News Posts
                   </div>
                 </div>
+              </div>
 
-                {/* Social Links */}
-                {author?.socialLinks && (
-                  <div className="flex flex-wrap gap-3">
-                    {author.socialLinks.twitter && (
-                      <span className="text-sm text-primary hover:text-primary/80 transition-colors font-mono">
-                        🐦 Twitter
-                      </span>
-                    )}
-                    {author.socialLinks.website && (
-                      <span className="text-sm text-primary hover:text-primary/80 transition-colors font-mono">
-                        🌐 Website
-                      </span>
-                    )}
-                    {author.socialLinks.github && (
-                      <span className="text-sm text-primary hover:text-primary/80 transition-colors font-mono">
-                        💻 GitHub
-                      </span>
-                    )}
-                  </div>
-                )}
+              {/* Contact & Links */}
+              <div className="flex flex-wrap gap-4">
+                <a
+                  href="https://github.com//m1chael-pappas"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-sm text-primary hover:text-primary/80 transition-colors font-mono"
+                >
+                  💻 GitHub
+                </a>
+                <a
+                  href="mailto:michael@lifemeetspixel.com"
+                  className="text-sm text-primary hover:text-primary/80 transition-colors font-mono"
+                >
+                  📧 Drop a line (or don't, cool cool cool)
+                </a>
               </div>
             </div>
-          </CardContent>
-        </Link>
+          </div>
+        </CardContent>
       </Card>
 
       {/* Support Section */}

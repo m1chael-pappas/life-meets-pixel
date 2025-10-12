@@ -98,12 +98,13 @@ export default function UniversalReviewCard({
   });
 
   return (
-    <Link href={`/reviews/${slug.current}`} className="block group">
+    <Link href={`/reviews/${slug.current}`} className="block group h-full">
       <Card
         className={`
-          overflow-hidden transition-all duration-300 
-          hover:shadow-lg hover:scale-[1.02] 
-          bg-card border-border 
+          overflow-hidden transition-all duration-300
+          hover:shadow-lg hover:scale-[1.02]
+          bg-card border border-border
+          flex flex-col h-full
           ${featured ? "ring-2 ring-primary/20" : ""}
           ${className}
         `}
@@ -165,7 +166,7 @@ export default function UniversalReviewCard({
           </div>
         </CardHeader>
 
-        <CardContent className="p-6">
+        <CardContent className="p-6 flex-1">
           {/* Date */}
           <time
             dateTime={publishedAt}

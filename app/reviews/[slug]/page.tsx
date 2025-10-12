@@ -316,6 +316,7 @@ export default async function ReviewPage({
                 fill
                 className="object-cover"
                 priority
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 896px, 896px"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
 
@@ -741,7 +742,7 @@ export default async function ReviewPage({
                           {review.author.name}
                         </div>
                         <p className="text-xs text-muted-foreground mt-1 font-mono">
-                          {'//'} Click to view profile
+                          {"//"} Click to view profile
                         </p>
                       </div>
                     </div>

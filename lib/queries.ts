@@ -38,7 +38,7 @@ export const REVIEWS_QUERY = `*[
   categories[]->{
     title,
     slug,
-    color
+    "color": color.hex
   }
 }`;
 
@@ -81,7 +81,7 @@ export const FEATURED_REVIEWS_QUERY = `*[
   categories[]->{
     title,
     slug,
-    color
+    "color": color.hex
   }
 }`;
 
@@ -124,7 +124,7 @@ export const REVIEWS_BY_TYPE_QUERY = `*[
   categories[]->{
     title,
     slug,
-    color
+    "color": color.hex
   }
 }`;
 
@@ -166,7 +166,7 @@ export const REVIEW_QUERY = `*[
     genres[]->{
       title,
       slug,
-      color
+      "color": color.hex
     },
     esrbRating,
     playerCount,
@@ -193,7 +193,7 @@ export const REVIEW_QUERY = `*[
   categories[]->{
     title,
     slug,
-    color
+    "color": color.hex
   },
   tags[]->{
     title,
@@ -232,7 +232,7 @@ export const NEWS_QUERY = `*[
   categories[]->{
     title,
     slug,
-    color
+    "color": color.hex
   }
 }`;
 
@@ -269,7 +269,7 @@ export const NEWS_POST_QUERY = `*[
   categories[]->{
     title,
     slug,
-    color
+    "color": color.hex
   },
   seo
 }`;
