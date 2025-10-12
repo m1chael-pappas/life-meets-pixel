@@ -204,7 +204,7 @@ async function AuthorContent() {
                   href="mailto:michael@lifemeetspixel.com"
                   className="text-sm text-primary hover:text-primary/80 transition-colors font-mono"
                 >
-                  📧 Drop a line (or don't, cool cool cool)
+                  📧 Drop a line (or don&apos;t, cool cool cool)
                 </a>
               </div>
             </div>
