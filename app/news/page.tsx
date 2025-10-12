@@ -124,14 +124,7 @@ async function NewsList() {
                   {article.author && (
                     <div className="flex items-center gap-2 pt-3 border-t border-border">
                       <span className="text-xs text-muted-foreground">
-                        By{' '}
-                        <Link
-                          href="/author"
-                          className="text-primary hover:text-primary/80 transition-colors"
-                          onClick={(e) => e.stopPropagation()}
-                        >
-                          {article.author.name}
-                        </Link>
+                        By <span className="text-primary">{article.author.name}</span>
                       </span>
                     </div>
                   )}
