@@ -4,6 +4,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { formatDistanceToNow } from 'date-fns';
+import { PortableText, type PortableTextComponents } from 'next-sanity';
 
 import { ModeToggle } from '@/components/ui/mode-toggle';
 import { Badge } from '@/components/ui/badge';
@@ -11,10 +12,88 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { client } from '@/sanity/client';
 import { NEWS_POST_QUERY, fetchOptions } from '@/lib/queries';
 import { Category } from '@/lib/types';
+import imageUrlBuilder from '@sanity/image-url';
+import type { SanityImageSource } from '@sanity/image-url/lib/types/types';
 
 interface NewsPostPageProps {
   params: Promise<{ slug: string }>;
 }
+
+const { projectId, dataset } = client.config();
+const urlFor = (source: SanityImageSource) =>
+  projectId && dataset
+    ? imageUrlBuilder({ projectId, dataset }).image(source)
+    : null;
+
+// Custom Portable Text components
+const portableTextComponents: PortableTextComponents = {
+  types: {
+    image: ({ value }) => {
+      const imageUrl = urlFor(value)?.width(800).url();
+      return imageUrl ? (
+        <div className="my-8">
+          <div className="relative w-full max-w-[800px] mx-auto">
+            <Image
+              src={imageUrl}
+              alt={value.caption || "Article image"}
+              width={800}
+              height={450}
+              className="rounded-lg shadow-md w-full h-auto"
+            />
+          </div>
+          {value.caption && (
+            <p className="text-center text-sm text-muted-foreground mt-2">
+              {value.caption}
+            </p>
+          )}
+        </div>
+      ) : null;
+    },
+    divider: () => <hr className="my-8 border-t-2 border-primary/30" />,
+  },
+  block: {
+    h1: ({ children }) => (
+      <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-6 font-mono">
+        {children}
+      </h1>
+    ),
+    h2: ({ children }) => (
+      <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-5 font-mono">
+        {children}
+      </h2>
+    ),
+    h3: ({ children }) => (
+      <h3 className="text-2xl md:text-3xl font-bold text-foreground mb-4 font-mono">
+        {children}
+      </h3>
+    ),
+    normal: ({ children }) => (
+      <p className="text-foreground leading-relaxed mb-4">{children}</p>
+    ),
+    blockquote: ({ children }) => (
+      <blockquote className="border-l-4 border-primary pl-6 my-6 italic text-muted-foreground bg-muted/30 p-4 rounded-r-lg">
+        {children}
+      </blockquote>
+    ),
+    hr: () => <hr className="my-8 border-t-2 border-primary/30" />,
+  },
+  marks: {
+    strong: ({ children }) => (
+      <strong className="font-bold text-primary">{children}</strong>
+    ),
+    em: ({ children }) => <em className="italic">{children}</em>,
+    link: ({ children, value }) => (
+      <a
+        href={value?.href}
+        className="text-primary hover:text-primary-alt underline"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        {children}
+      </a>
+    ),
+  },
+};
 
 // Generate metadata
 export async function generateMetadata({ params }: NewsPostPageProps): Promise<Metadata> {
@@ -132,7 +211,7 @@ export default async function NewsPostPage({ params }: NewsPostPageProps) {
       </header>
 
       {/* Main Content */}
-      <main className="container mx-auto max-w-4xl p-6 py-12">
+      <main className="container mx-auto max-w-3xl p-6 py-12">
         {/* Back Link */}
         <Link
           href="/news"
@@ -155,9 +234,9 @@ export default async function NewsPostPage({ params }: NewsPostPageProps) {
           {/* Categories */}
           {post.categories && post.categories.length > 0 && (
             <div className="flex flex-wrap gap-2 mb-4">
-              {post.categories.map((cat: Category) => (
+              {post.categories.map((cat: Category, index: number) => (
                 <Badge
-                  key={cat._id}
+                  key={cat.slug?.current || cat.title || index}
                   variant="secondary"
                   style={
                     cat.color
@@ -234,13 +313,11 @@ export default async function NewsPostPage({ params }: NewsPostPageProps) {
 
           {/* Content */}
           <div className="prose prose-lg dark:prose-invert max-w-none">
-            {post.content ? (
-              <div className="text-foreground leading-relaxed space-y-4">
-                {/* For now, just show excerpt as we don't have portable text renderer */}
-                <p className="text-muted-foreground italic">
-                  Full article content rendering coming soon. Portable Text integration needed.
-                </p>
-              </div>
+            {Array.isArray(post.content) ? (
+              <PortableText
+                value={post.content}
+                components={portableTextComponents}
+              />
             ) : (
               <p className="text-muted-foreground">No content available.</p>
             )}
