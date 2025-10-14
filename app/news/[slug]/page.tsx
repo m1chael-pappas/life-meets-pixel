@@ -77,6 +77,26 @@ const portableTextComponents: PortableTextComponents = {
     ),
     hr: () => <hr className="my-8 border-t-2 border-primary/30" />,
   },
+  list: {
+    bullet: ({ children }) => (
+      <ul className="list-disc list-outside ml-6 mb-4 space-y-2 text-foreground">
+        {children}
+      </ul>
+    ),
+    number: ({ children }) => (
+      <ol className="list-decimal list-outside ml-6 mb-4 space-y-2 text-foreground">
+        {children}
+      </ol>
+    ),
+  },
+  listItem: {
+    bullet: ({ children }) => (
+      <li className="text-foreground leading-relaxed">{children}</li>
+    ),
+    number: ({ children }) => (
+      <li className="text-foreground leading-relaxed">{children}</li>
+    ),
+  },
   marks: {
     strong: ({ children }) => (
       <strong className="font-bold text-primary">{children}</strong>
