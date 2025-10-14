@@ -90,9 +90,7 @@ export default function UniversalReviewCard({
   if (!reviewableItem || !slug?.current) {
     return null;
   }
-
   const typeInfo = getItemTypeInfo(reviewableItem.itemType);
-  const primaryCategory = categories?.[0] as Category | undefined;
   const relativeDate = formatDistanceToNow(new Date(publishedAt), {
     addSuffix: true,
   });
@@ -149,7 +147,8 @@ export default function UniversalReviewCard({
                 <Image
                   src={reviewableItem.coverImage.asset.url}
                   alt={
-                    reviewableItem.coverImage.alt || `${reviewableItem.title} cover`
+                    reviewableItem.coverImage.alt ||
+                    `${reviewableItem.title} cover`
                   }
                   fill
                   className="object-cover transition-transform duration-300 group-hover:scale-105"
@@ -198,23 +197,26 @@ export default function UniversalReviewCard({
           </p>
 
           {/* Categories */}
-          {primaryCategory && (
-            <div className="mb-3">
-              <Badge
-                variant={getBadgeVariant(primaryCategory.color)}
-                className="text-xs"
-                style={
-                  primaryCategory.color
-                    ? {
-                        backgroundColor: primaryCategory.color,
-                        color: "#ffffff",
-                        border: "none",
-                      }
-                    : {}
-                }
-              >
-                {primaryCategory.title}
-              </Badge>
+          {categories && categories.length > 0 && (
+            <div className="mb-3 flex flex-wrap gap-2">
+              {(categories as Category[]).map((category) => (
+                <Badge
+                  key={category.slug?.current || category.title}
+                  variant={getBadgeVariant(category.color)}
+                  className="text-xs"
+                  style={
+                    category.color
+                      ? {
+                          backgroundColor: category.color,
+                          color: "#ffffff",
+                          border: "none",
+                        }
+                      : {}
+                  }
+                >
+                  {category.title}
+                </Badge>
+              ))}
             </div>
           )}
         </CardContent>
