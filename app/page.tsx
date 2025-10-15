@@ -1,19 +1,19 @@
-import { Suspense } from "react";
+import { Suspense } from 'react';
 
-import { Metadata } from "next";
+import { Metadata } from 'next';
 
-import FeaturedSection from "@/components/sections/featured-section";
-import GearSection from "@/components/sections/gear-section";
-import HeroSection from "@/components/sections/hero-section";
-import NewsSection from "@/components/sections/news-section";
-import ReviewsSection from "@/components/sections/reviews-section";
-import StatsSection from "@/components/sections/stats-section";
-import SupportSection from "@/components/sections/support-section";
-import { SiteHeader } from "@/components/site-header";
+import FeaturedSection from '@/components/sections/featured-section';
+import GearSection from '@/components/sections/gear-section';
+import HeroSection from '@/components/sections/hero-section';
+import NewsSection from '@/components/sections/news-section';
+import ReviewsSection from '@/components/sections/reviews-section';
+import StatsSection from '@/components/sections/stats-section';
+import SupportSection from '@/components/sections/support-section';
+import { SiteHeader } from '@/components/site-header';
 
 // Homepage metadata
 export const metadata: Metadata = {
-  title: "Life Meets Pixel - Geeky Reviews & News",
+  title: "Life Meets Pixel - Reviews & News",
   description:
     "Your source for honest reviews of games, movies, books, anime, board games, and more. Plus the latest gaming and geek culture news.",
   keywords: [
@@ -28,7 +28,7 @@ export const metadata: Metadata = {
   ],
   openGraph: {
     type: "website",
-    title: "Life Meets Pixel - Geeky Reviews & News",
+    title: "Life Meets Pixel - Reviews & News",
     description:
       "Your source for honest reviews of games, movies, books, anime, board games, and more.",
     url: "/",
@@ -38,13 +38,13 @@ export const metadata: Metadata = {
         url: "/logo.png",
         width: 1200,
         height: 630,
-        alt: "Life Meets Pixel - Geeky Reviews & News",
+        alt: "Life Meets Pixel - Reviews & News",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Life Meets Pixel - Geeky Reviews & News",
+    title: "Life Meets Pixel - Reviews & News",
     description:
       "Your source for honest reviews of games, movies, books, anime, and more.",
     images: ["/logo.png"],

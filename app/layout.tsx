@@ -1,10 +1,13 @@
-import "./globals.css";
+import './globals.css';
 
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import type { Metadata } from 'next';
+import {
+  Geist,
+  Geist_Mono,
+} from 'next/font/google';
 
-import { ThemeProvider } from "@/components/ui/theme-provider";
-import { Analytics } from "@vercel/analytics/next";
+import { ThemeProvider } from '@/components/ui/theme-provider';
+import { Analytics } from '@vercel/analytics/next';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -18,20 +21,21 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "Life Meets Pixel - Gaming Reviews & News",
+    default: "Life Meets Pixel - Reviews & News",
     template: "%s | Life Meets Pixel",
   },
   description:
-    "Your source for honest game reviews and pixel-perfect insights. Discover the best games worth your time with our in-depth reviews and ratings.",
+    "Honest reviews of games, movies, books, anime, board games, and tech. No sponsors. No PR fluff. Just real reviews from a fellow nerd.",
   keywords: [
     "gaming",
     "game reviews",
-    "video games",
-    "pixel art",
-    "indie games",
-    "game ratings",
-    "gaming news",
+    "movie reviews",
+    "book reviews",
+    "anime reviews",
+    "board game reviews",
+    "gadget reviews",
     "geek culture",
+    "entertainment reviews",
   ],
   authors: [{ name: "Life Meets Pixel Team" }],
   creator: "Life Meets Pixel",
@@ -44,23 +48,23 @@ export const metadata: Metadata = {
     locale: "en_US",
     url: "/",
     siteName: "Life Meets Pixel",
-    title: "Life Meets Pixel - Gaming Reviews & News",
+    title: "Life Meets Pixel - Reviews & News",
     description:
-      "Your source for honest game reviews and pixel-perfect insights.",
+      "Honest reviews of games, movies, books, anime, board games, and more. No sponsors. No PR fluff. Just real reviews from a fellow nerd.",
     images: [
       {
         url: "/logo.png",
         width: 1200,
         height: 630,
-        alt: "Life Meets Pixel - Gaming Reviews & News",
+        alt: "Life Meets Pixel - Reviews & News",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Life Meets Pixel - Gaming Reviews & News",
+    title: "Life Meets Pixel - Reviews & News",
     description:
-      "Your source for honest game reviews and pixel-perfect insights.",
+      "Honest reviews of games, movies, books, anime, and more. No sponsors. No PR fluff.",
     images: ["/logo.png"],
     creator: "@lifemeetspixel",
   },

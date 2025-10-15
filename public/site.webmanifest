@@ -1,12 +1,17 @@
 {
     "name": "Life Meets Pixel",
     "short_name": "LMP",
-    "description": "Gaming Reviews & Pixel Perfect Insights",
+    "description": "Honest reviews of games, movies, books, anime, board games, and more",
     "start_url": "/",
     "display": "standalone",
     "background_color": "#fff0e5",
     "theme_color": "#975af9",
     "icons": [
+        {
+            "src": "/favicon-16x16.png",
+            "sizes": "16x16",
+            "type": "image/png"
+        },
         {
             "src": "/favicon-32x32.png",
             "sizes": "32x32",
@@ -16,6 +21,18 @@
             "src": "/apple-touch-icon.png",
             "sizes": "180x180",
             "type": "image/png"
+        },
+        {
+            "src": "/logo.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "any maskable"
+        },
+        {
+            "src": "/logo.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any maskable"
         }
     ]
 }

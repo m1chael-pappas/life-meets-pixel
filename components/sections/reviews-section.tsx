@@ -40,7 +40,7 @@ export default async function ReviewsSection() {
             No reviews yet
           </h3>
           <p className="text-muted-foreground">
-            Check back soon for the latest geeky reviews!
+            Check back soon for the latest reviews!
           </p>
         </div>
       )}
