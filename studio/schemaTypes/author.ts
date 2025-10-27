@@ -25,6 +25,14 @@ export const authorType = defineType({
       title: 'Profile Picture',
       type: 'image',
       options: {hotspot: true},
+      fields: [
+        {
+          name: 'alt',
+          type: 'string',
+          title: 'Alternative Text',
+          description: 'Usually just the author name works well for profile pictures',
+        },
+      ],
     }),
     defineField({
       name: 'bio',
@@ -33,14 +41,25 @@ export const authorType = defineType({
       rows: 4,
     }),
     defineField({
+      name: 'email',
+      title: 'Contact Email',
+      type: 'string',
+      validation: (rule) => rule.email(),
+    }),
+    defineField({
       name: 'socialLinks',
       title: 'Social Links',
       type: 'object',
       fields: [
-        {name: 'twitter', title: 'Twitter', type: 'url'},
+        {name: 'x', title: 'X (Twitter)', type: 'url'},
+        {name: 'github', title: 'GitHub', type: 'url'},
+        {name: 'etsy', title: 'Etsy', type: 'url'},
         {name: 'twitch', title: 'Twitch', type: 'url'},
         {name: 'youtube', title: 'YouTube', type: 'url'},
-        {name: 'discord', title: 'Discord', type: 'string'},
+        {name: 'instagram', title: 'Instagram', type: 'url'},
+        {name: 'linkedin', title: 'LinkedIn', type: 'url'},
+        {name: 'website', title: 'Personal Website', type: 'url'},
+        {name: 'discord', title: 'Discord Username', type: 'string'},
       ],
     }),
   ],

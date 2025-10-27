@@ -67,6 +67,13 @@ export const newsPostType = defineType({
           options: {hotspot: true},
           fields: [
             {
+              name: 'alt',
+              type: 'string',
+              title: 'Alternative Text',
+              description: 'Describe the image for SEO and accessibility',
+              validation: (rule: any) => rule.required(),
+            },
+            {
               name: 'caption',
               type: 'string',
               title: 'Caption',
@@ -104,6 +111,15 @@ export const newsPostType = defineType({
       title: 'Featured Image',
       type: 'image',
       options: {hotspot: true},
+      fields: [
+        {
+          name: 'alt',
+          type: 'string',
+          title: 'Alternative Text',
+          description: 'Important for SEO and accessibility. Describe what is in the image.',
+          validation: (rule) => rule.required(),
+        },
+      ],
       validation: (rule) => rule.required(),
     }),
     defineField({

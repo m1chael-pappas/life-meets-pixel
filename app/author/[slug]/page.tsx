@@ -4,6 +4,7 @@ import { Metadata } from "next";
 import { type SanityDocument } from "next-sanity";
 import Image from "next/image";
 import Link from "next/link";
+import { notFound } from "next/navigation";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent } from "@/components/ui/card";
@@ -12,13 +13,36 @@ import UniversalReviewCard from "@/components/universal-review-card";
 import { fetchOptions } from "@/lib/queries";
 import { client } from "@/sanity/client";
 
-export const metadata: Metadata = {
-  title: "About the Author",
-  description: "Meet Michael Pappas, the creator of Life Meets Pixel.",
-  alternates: {
-    canonical: "/author",
-  },
+type Props = {
+  params: Promise<{ slug: string }>;
 };
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { slug } = await params;
+
+  const author = await client.fetch<SanityDocument>(
+    `*[_type == "author" && slug.current == $slug][0]{
+      name,
+      bio
+    }`,
+    { slug },
+    fetchOptions
+  );
+
+  if (!author) {
+    return {
+      title: "Author Not Found",
+    };
+  }
+
+  return {
+    title: `${author.name} - Author`,
+    description: author.bio || `Meet ${author.name}, a writer at Life Meets Pixel.`,
+    alternates: {
+      canonical: `/author/${slug}`,
+    },
+  };
+}
 
 const getAuthorInitials = (name: string) => {
   const words = name.split(" ");
@@ -26,14 +50,15 @@ const getAuthorInitials = (name: string) => {
   return initials.toUpperCase().slice(0, 2);
 };
 
-async function AuthorContent() {
-  // Fetch Michael Pappas's author profile
+async function AuthorContent({ slug }: { slug: string }) {
+  // Fetch author profile by slug
   const author = await client.fetch<SanityDocument>(
-    `*[_type == "author" && name match "Michael*"][0]{
+    `*[_type == "author" && slug.current == $slug][0]{
       _id,
       name,
       slug,
       bio,
+      email,
       avatar{
         asset->{
           url
@@ -42,9 +67,13 @@ async function AuthorContent() {
       },
       socialLinks
     }`,
-    {},
+    { slug },
     fetchOptions
   );
+
+  if (!author) {
+    notFound();
+  }
 
   // Fetch author's reviews
   const reviews = await client.fetch<SanityDocument[]>(
@@ -115,16 +144,6 @@ async function AuthorContent() {
     fetchOptions
   );
 
-  if (!author) {
-    return (
-      <div className="text-center py-16">
-        <h2 className="text-2xl font-bold text-muted-foreground font-mono">
-          Author not found
-        </h2>
-      </div>
-    );
-  }
-
   const reviewCount = await client.fetch<number>(
     `count(*[_type == "review" && author._ref == $authorId])`,
     { authorId: author._id },
@@ -191,22 +210,103 @@ async function AuthorContent() {
               </div>
 
               {/* Contact & Links */}
-              <div className="flex flex-wrap gap-4">
-                <a
-                  href="https://github.com//m1chael-pappas"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-sm text-primary hover:text-primary/80 transition-colors font-mono"
-                >
-                  💻 GitHub
-                </a>
-                <a
-                  href="mailto:michael@lifemeetspixel.com"
-                  className="text-sm text-primary hover:text-primary/80 transition-colors font-mono"
-                >
-                  📧 Drop a line (or don&apos;t, cool cool cool)
-                </a>
-              </div>
+              {(author?.email || author?.socialLinks) && (
+                <div className="flex flex-wrap gap-4">
+                  {author.email && (
+                    <a
+                      href={`mailto:${author.email}`}
+                      className="text-sm text-primary hover:text-primary/80 transition-colors font-mono"
+                    >
+                      📧 {author.email}
+                    </a>
+                  )}
+                  {author.socialLinks?.x && (
+                    <a
+                      href={author.socialLinks.x}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-sm text-primary hover:text-primary/80 transition-colors font-mono"
+                    >
+                      𝕏 X
+                    </a>
+                  )}
+                  {author.socialLinks?.github && (
+                    <a
+                      href={author.socialLinks.github}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-sm text-primary hover:text-primary/80 transition-colors font-mono"
+                    >
+                      💻 GitHub
+                    </a>
+                  )}
+                  {author.socialLinks?.etsy && (
+                    <a
+                      href={author.socialLinks.etsy}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-sm text-primary hover:text-primary/80 transition-colors font-mono"
+                    >
+                      🛍️ Etsy
+                    </a>
+                  )}
+                  {author.socialLinks?.twitch && (
+                    <a
+                      href={author.socialLinks.twitch}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-sm text-primary hover:text-primary/80 transition-colors font-mono"
+                    >
+                      🎮 Twitch
+                    </a>
+                  )}
+                  {author.socialLinks?.youtube && (
+                    <a
+                      href={author.socialLinks.youtube}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-sm text-primary hover:text-primary/80 transition-colors font-mono"
+                    >
+                      📺 YouTube
+                    </a>
+                  )}
+                  {author.socialLinks?.instagram && (
+                    <a
+                      href={author.socialLinks.instagram}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-sm text-primary hover:text-primary/80 transition-colors font-mono"
+                    >
+                      📸 Instagram
+                    </a>
+                  )}
+                  {author.socialLinks?.linkedin && (
+                    <a
+                      href={author.socialLinks.linkedin}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-sm text-primary hover:text-primary/80 transition-colors font-mono"
+                    >
+                      💼 LinkedIn
+                    </a>
+                  )}
+                  {author.socialLinks?.website && (
+                    <a
+                      href={author.socialLinks.website}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-sm text-primary hover:text-primary/80 transition-colors font-mono"
+                    >
+                      🌐 Website
+                    </a>
+                  )}
+                  {author.socialLinks?.discord && (
+                    <span className="text-sm text-primary font-mono">
+                      💬 Discord: {author.socialLinks.discord}
+                    </span>
+                  )}
+                </div>
+              )}
             </div>
           </div>
         </CardContent>
@@ -337,7 +437,9 @@ function AuthorSkeleton() {
   );
 }
 
-export default function AuthorPage() {
+export default async function AuthorPage({ params }: Props) {
+  const { slug } = await params;
+
   return (
     <div className="min-h-screen bg-background">
       <SiteHeader currentPage="author" />
@@ -345,7 +447,7 @@ export default function AuthorPage() {
       {/* Main Content */}
       <main className="container mx-auto max-w-7xl p-6 py-12">
         <Suspense fallback={<AuthorSkeleton />}>
-          <AuthorContent />
+          <AuthorContent slug={slug} />
         </Suspense>
       </main>
     </div>

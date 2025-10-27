@@ -1,9 +1,9 @@
 import { MetadataRoute } from 'next';
 import { client } from '@/sanity/client';
 
-// Fetch all reviews and news for sitemap
+// Fetch all reviews, news, and authors for sitemap
 async function getContent() {
-  const [reviews, news] = await Promise.all([
+  const [reviews, news, authors] = await Promise.all([
     client.fetch<Array<{ slug: { current: string }; publishedAt: string }>>(
       `*[_type == "review" && defined(slug.current)]{
         "slug": slug,
@@ -16,14 +16,20 @@ async function getContent() {
         publishedAt
       }`
     ),
+    client.fetch<Array<{ slug: { current: string }; _updatedAt: string }>>(
+      `*[_type == "author" && defined(slug.current)]{
+        "slug": slug,
+        _updatedAt
+      }`
+    ),
   ]);
 
-  return { reviews, news };
+  return { reviews, news, authors };
 }
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://lifemeetspixel.com';
-  const { reviews, news } = await getContent();
+  const { reviews, news, authors } = await getContent();
 
   // Static pages
   const staticPages: MetadataRoute.Sitemap = [
@@ -63,5 +69,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.7,
   }));
 
-  return [...staticPages, ...reviewPages, ...newsPages];
+  // Author pages
+  const authorPages: MetadataRoute.Sitemap = authors.map((author) => ({
+    url: `${baseUrl}/author/${author.slug.current}`,
+    lastModified: new Date(author._updatedAt),
+    changeFrequency: 'monthly',
+    priority: 0.6,
+  }));
+
+  return [...staticPages, ...reviewPages, ...newsPages, ...authorPages];
 }

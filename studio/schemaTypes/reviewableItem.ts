@@ -43,6 +43,15 @@ export const reviewableItemType = defineType({
       title: 'Cover Image',
       type: 'image',
       options: {hotspot: true},
+      fields: [
+        {
+          name: 'alt',
+          type: 'string',
+          title: 'Alternative Text',
+          description: 'Important for SEO and accessibility. Describe what is in the image.',
+          validation: (rule) => rule.required(),
+        },
+      ],
       validation: (rule) => rule.required(),
     }),
     defineField({

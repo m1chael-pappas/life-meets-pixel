@@ -182,8 +182,75 @@ export default async function NewsPostPage({ params }: NewsPostPageProps) {
     day: 'numeric',
   });
 
+  // Structured data for SEO and AI search engines
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": post.breaking ? "NewsArticle" : "BlogPosting",
+    "headline": post.title,
+    "description": post.excerpt || "",
+    "image": post.featuredImage?.asset?.url ? [post.featuredImage.asset.url] : [],
+    "datePublished": post.publishedAt,
+    "dateModified": post._updatedAt || post.publishedAt,
+    "author": {
+      "@type": "Person",
+      "name": post.author?.name || "Life Meets Pixel",
+      "url": post.author?.slug?.current ? `https://lifemeetspixel.com/author/${post.author.slug.current}` : undefined
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Life Meets Pixel",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://lifemeetspixel.com/logo.png"
+      }
+    },
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": `https://lifemeetspixel.com/news/${post.slug.current}`
+    },
+    "articleSection": post.categories?.[0]?.title || "News",
+    "keywords": post.categories?.map((cat: { title: string }) => cat.title).join(", ") || "",
+    "inLanguage": "en-US"
+  };
+
+  // Breadcrumb structured data
+  const breadcrumbData = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://lifemeetspixel.com"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "News",
+        "item": "https://lifemeetspixel.com/news"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": post.title,
+        "item": `https://lifemeetspixel.com/news/${post.slug.current}`
+      }
+    ]
+  };
+
   return (
     <div className="min-h-screen bg-background">
+      {/* Structured Data for SEO */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbData) }}
+      />
+
       {/* Header */}
       <header className="bg-background/95 backdrop-blur-sm border-b border-primary/20 sticky top-0 z-50">
         <div className="container mx-auto max-w-6xl px-4 py-4">
@@ -304,7 +371,7 @@ export default async function NewsPostPage({ params }: NewsPostPageProps) {
                 </Avatar>
                 <div>
                   <Link
-                    href="/author"
+                    href={`/author/${post.author.slug.current}`}
                     className="text-sm font-medium text-foreground hover:text-primary transition-colors"
                   >
                     {post.author.name}
@@ -346,7 +413,7 @@ export default async function NewsPostPage({ params }: NewsPostPageProps) {
           {/* Author Card */}
           {post.author && (
             <div className="mt-12 p-6 bg-muted/30 rounded-lg border border-border hover:shadow-lg transition-all duration-300">
-              <Link href="/author" className="block">
+              <Link href={`/author/${post.author.slug.current}`} className="block">
                 <div className="flex items-start gap-4">
                   <Avatar className="w-16 h-16">
                     {post.author.avatar?.asset?.url ? (

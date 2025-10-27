@@ -78,7 +78,7 @@ const PixelHeartRating: React.FC<PixelHeartRatingProps> = ({
             alt="Full heart"
             width={32}
             height={32}
-            className="w-full h-full [image-rendering:pixelated]"
+            className="w-full h-full [image-rendering:pixelated] dark:[filter:drop-shadow(0_0_1px_white)_drop-shadow(0_0_1px_white)]"
             draggable={false}
           />
         )}
@@ -88,10 +88,9 @@ const PixelHeartRating: React.FC<PixelHeartRatingProps> = ({
             <Image
               src="/heart.svg"
               alt="Half heart background"
-              className="w-full h-full [image-rendering:pixelated] opacity-30"
+              className="w-full h-full [image-rendering:pixelated] opacity-30 [filter:grayscale(1)_brightness(0.5)] dark:[filter:grayscale(1)_brightness(0.5)_drop-shadow(0_0_2px_white)_drop-shadow(0_0_2px_white)_drop-shadow(0_0_1px_white)] dark:opacity-50"
               width={32}
               height={32}
-              style={{ filter: "grayscale(1) brightness(0.5)" }}
               draggable={false}
             />
             <div
@@ -103,7 +102,7 @@ const PixelHeartRating: React.FC<PixelHeartRatingProps> = ({
                 alt="Half heart filled"
                 width={32}
                 height={32}
-                className="w-full h-full [image-rendering:pixelated]"
+                className="w-full h-full [image-rendering:pixelated] dark:[filter:drop-shadow(0_0_1px_white)_drop-shadow(0_0_1px_white)]"
                 draggable={false}
               />
             </div>
@@ -116,8 +115,7 @@ const PixelHeartRating: React.FC<PixelHeartRatingProps> = ({
             alt="Empty heart"
             width={32}
             height={32}
-            className="w-full h-full [image-rendering:pixelated] opacity-30"
-            style={{ filter: "grayscale(1) brightness(0.5)" }}
+            className="w-full h-full [image-rendering:pixelated] opacity-30 [filter:grayscale(1)_brightness(0.5)] dark:[filter:grayscale(1)_brightness(0.5)_drop-shadow(0_0_2px_white)_drop-shadow(0_0_2px_white)_drop-shadow(0_0_1px_white)] dark:opacity-50"
             draggable={false}
           />
         )}

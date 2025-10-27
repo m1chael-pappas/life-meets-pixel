@@ -94,7 +94,7 @@ export async function generateMetadata({
       title: seoTitle,
       description: seoDescription,
       images: itemImageUrl ? [itemImageUrl] : [],
-      creator: review.author?.socialLinks?.twitter || "@lifemeetspixel",
+      creator: review.author?.socialLinks?.x || "@lifemeetspixel",
     },
     other: {
       "article:author": review.author?.name || "Life Meets Pixel",
@@ -288,8 +288,92 @@ export default async function ReviewPage({
   const itemType = review.reviewableItem?.itemType;
   const typeInfo = getItemTypeInfo(itemType || "");
 
+  // Structured data for SEO and AI search engines
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "Review",
+    "itemReviewed": {
+      "@type": itemType === "videogame" || itemType === "boardgame" ? "Game" :
+               itemType === "movie" ? "Movie" :
+               itemType === "tvseries" || itemType === "anime" ? "TVSeries" :
+               itemType === "book" || itemType === "comic" ? "Book" :
+               itemType === "gadget" ? "Product" : "CreativeWork",
+      "name": review.reviewableItem?.title || review.title,
+      "image": itemImageUrl || undefined,
+      "description": review.reviewableItem?.description || review.summary,
+      "author": review.reviewableItem?.creator ? {
+        "@type": "Person",
+        "name": review.reviewableItem.creator
+      } : undefined,
+      "publisher": review.reviewableItem?.publisher ? {
+        "@type": "Organization",
+        "name": review.reviewableItem.publisher
+      } : undefined,
+      "datePublished": review.reviewableItem?.releaseDate || undefined,
+    },
+    "reviewRating": {
+      "@type": "Rating",
+      "ratingValue": review.reviewScore,
+      "bestRating": 10,
+      "worstRating": 0
+    },
+    "author": {
+      "@type": "Person",
+      "name": review.author?.name || "Life Meets Pixel",
+      "url": review.author?.slug?.current ? `https://lifemeetspixel.com/author/${review.author.slug.current}` : undefined
+    },
+    "datePublished": review.publishedAt,
+    "publisher": {
+      "@type": "Organization",
+      "name": "Life Meets Pixel",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://lifemeetspixel.com/logo.png"
+      }
+    },
+    "headline": review.title,
+    "reviewBody": review.summary || "",
+    "inLanguage": "en-US"
+  };
+
+  // Breadcrumb structured data
+  const breadcrumbData = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://lifemeetspixel.com"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Reviews",
+        "item": "https://lifemeetspixel.com/reviews"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": review.title,
+        "item": `https://lifemeetspixel.com/reviews/${review.slug.current}`
+      }
+    ]
+  };
+
   return (
     <div className="min-h-screen bg-background">
+      {/* Structured Data for SEO */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbData) }}
+      />
+
       {/* Header */}
       <header className="bg-background/95 backdrop-blur-sm border-b border-primary/20 sticky top-0 z-50">
         <div className="container mx-auto max-w-6xl px-4 py-4">
@@ -440,7 +524,7 @@ export default async function ReviewPage({
                 <div className="flex items-center gap-2">
                   <User className="w-4 h-4" />
                   <Link
-                    href="/author"
+                    href={`/author/${review.author.slug.current}`}
                     className="hover:text-primary transition-colors"
                   >
                     {review.author.name}
@@ -713,7 +797,7 @@ export default async function ReviewPage({
             {/* Author Card */}
             {review.author && (
               <Card className="group hover:shadow-lg transition-all duration-300 hover:scale-[1.02]">
-                <Link href="/author" className="block">
+                <Link href={`/author/${review.author.slug.current}`} className="block">
                   <CardHeader>
                     <CardTitle className="font-mono">WRITTEN BY</CardTitle>
                   </CardHeader>

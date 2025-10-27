@@ -7,6 +7,7 @@ export interface Author {
     current: string;
   };
   bio?: string;
+  email?: string;
   avatar?: {
     asset: {
       url: string;
@@ -14,8 +15,15 @@ export interface Author {
     alt?: string;
   };
   socialLinks?: {
-    twitter?: string;
+    x?: string;
+    github?: string;
+    etsy?: string;
+    twitch?: string;
+    youtube?: string;
+    instagram?: string;
+    linkedin?: string;
     website?: string;
+    discord?: string;
   };
 }
 
