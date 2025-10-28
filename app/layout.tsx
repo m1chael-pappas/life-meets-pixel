@@ -8,6 +8,7 @@ import {
 
 import { ThemeProvider } from '@/components/ui/theme-provider';
 import { Analytics } from '@vercel/analytics/next';
+import { GoogleAnalytics } from '@next/third-parties/google';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -125,6 +126,7 @@ export default function RootLayout({
           <Analytics />
         </ThemeProvider>
       </body>
+      <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GOOGLE_ADS_ID || 'AW-17684733929'} />
     </html>
   );
 }

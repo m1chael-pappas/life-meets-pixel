@@ -10,16 +10,18 @@ import { Badge } from '@/components/ui/badge';
 import { client } from '@/sanity/client';
 import { NEWS_QUERY, fetchOptions } from '@/lib/queries';
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://lifemeetspixel.com';
+
 export const metadata: Metadata = {
   title: 'Gaming News',
   description: 'Stay up to date with the latest gaming and geek culture news.',
   alternates: {
-    canonical: '/news',
+    canonical: `${siteUrl}/news`,
   },
   openGraph: {
     title: 'Gaming News | Life Meets Pixel',
     description: 'Stay up to date with the latest gaming and geek culture news.',
-    url: '/news',
+    url: `${siteUrl}/news`,
     type: 'website',
   },
 };

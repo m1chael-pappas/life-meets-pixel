@@ -12,6 +12,8 @@ import SupportSection from '@/components/sections/support-section';
 import { SiteHeader } from '@/components/site-header';
 
 // Homepage metadata
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://lifemeetspixel.com";
+
 export const metadata: Metadata = {
   title: "Life Meets Pixel - Reviews & News",
   description:
@@ -31,11 +33,11 @@ export const metadata: Metadata = {
     title: "Life Meets Pixel - Reviews & News",
     description:
       "Your source for honest reviews of games, movies, books, anime, board games, and more.",
-    url: "/",
+    url: siteUrl,
     siteName: "Life Meets Pixel",
     images: [
       {
-        url: "/logo.png",
+        url: `${siteUrl}/logo.png`,
         width: 1200,
         height: 630,
         alt: "Life Meets Pixel - Reviews & News",
@@ -47,10 +49,10 @@ export const metadata: Metadata = {
     title: "Life Meets Pixel - Reviews & News",
     description:
       "Your source for honest reviews of games, movies, books, anime, and more.",
-    images: ["/logo.png"],
+    images: [`${siteUrl}/logo.png`],
   },
   alternates: {
-    canonical: "/",
+    canonical: siteUrl,
   },
 };
 

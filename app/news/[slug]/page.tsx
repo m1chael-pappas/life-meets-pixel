@@ -118,6 +118,8 @@ const portableTextComponents: PortableTextComponents = {
 // Generate metadata
 export async function generateMetadata({ params }: NewsPostPageProps): Promise<Metadata> {
   const { slug } = await params;
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://lifemeetspixel.com';
+
   const post = await client.fetch<SanityDocument>(
     NEWS_POST_QUERY,
     { slug },
@@ -130,17 +132,19 @@ export async function generateMetadata({ params }: NewsPostPageProps): Promise<M
     };
   }
 
+  const canonicalUrl = `${siteUrl}/news/${slug}`;
+
   return {
     title: `${post.title}`,
     description: post.excerpt || post.seo?.metaDescription || 'Read the latest gaming and geek culture news.',
     alternates: {
-      canonical: `/news/${slug}`,
+      canonical: canonicalUrl,
     },
     openGraph: {
       type: 'article',
       title: post.title,
       description: post.excerpt,
-      url: `/news/${slug}`,
+      url: canonicalUrl,
       publishedTime: post.publishedAt,
       authors: [post.author?.name || 'Life Meets Pixel'],
       images: post.featuredImage?.asset?.url ? [post.featuredImage.asset.url] : [],

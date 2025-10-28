@@ -40,6 +40,7 @@ export async function generateMetadata({
     };
   }
 
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://lifemeetspixel.com";
   const itemImageUrl = review.reviewableItem?.coverImage
     ? urlFor(review.reviewableItem.coverImage)?.width(1200).height(630).url()
     : null;
@@ -59,19 +60,21 @@ export async function generateMetadata({
     ...(review.categories?.map((cat: Category) => cat.title) || []),
   ];
 
+  const canonicalUrl = `${siteUrl}/reviews/${review.slug.current}`;
+
   return {
     title: seoTitle,
     description: seoDescription,
     keywords: seoKeywords,
     authors: [{ name: review.author?.name || "Life Meets Pixel" }],
     alternates: {
-      canonical: `/reviews/${review.slug.current}`,
+      canonical: canonicalUrl,
     },
     openGraph: {
       type: "article",
       title: seoTitle,
       description: seoDescription,
-      url: `/reviews/${review.slug.current}`,
+      url: canonicalUrl,
       siteName: "Life Meets Pixel",
       publishedTime: review.publishedAt,
       authors: [review.author?.name || "Life Meets Pixel"],

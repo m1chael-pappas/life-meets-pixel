@@ -19,6 +19,8 @@ export async function generateMetadata({ searchParams }: ReviewsPageProps): Prom
   const params = await searchParams;
   const type = params.type as string | undefined;
 
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://lifemeetspixel.com';
+
   const typeMetadata: Record<string, { title: string; description: string }> = {
     videogame: {
       title: 'Video Game Reviews',
@@ -53,7 +55,8 @@ export async function generateMetadata({ searchParams }: ReviewsPageProps): Prom
         description: 'Browse all our reviews of games, movies, books, anime, and more.',
       };
 
-  const canonicalUrl = type ? `/reviews?type=${type}` : '/reviews';
+  const canonicalPath = type ? `/reviews?type=${type}` : '/reviews';
+  const canonicalUrl = `${siteUrl}${canonicalPath}`;
 
   return {
     title: meta.title,

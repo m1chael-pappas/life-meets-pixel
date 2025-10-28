@@ -19,6 +19,7 @@ type Props = {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://lifemeetspixel.com';
 
   const author = await client.fetch<SanityDocument>(
     `*[_type == "author" && slug.current == $slug][0]{
@@ -35,11 +36,19 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     };
   }
 
+  const canonicalUrl = `${siteUrl}/author/${slug}`;
+
   return {
     title: `${author.name} - Author`,
     description: author.bio || `Meet ${author.name}, a writer at Life Meets Pixel.`,
     alternates: {
-      canonical: `/author/${slug}`,
+      canonical: canonicalUrl,
+    },
+    openGraph: {
+      title: `${author.name} - Author | Life Meets Pixel`,
+      description: author.bio || `Meet ${author.name}, a writer at Life Meets Pixel.`,
+      url: canonicalUrl,
+      type: 'profile',
     },
   };
 }
