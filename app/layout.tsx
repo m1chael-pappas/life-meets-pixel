@@ -5,10 +5,12 @@ import {
   Geist,
   Geist_Mono,
 } from 'next/font/google';
+import Script from 'next/script';
 
+import { SiteFooter } from '@/components/site-footer';
 import { ThemeProvider } from '@/components/ui/theme-provider';
-import { Analytics } from '@vercel/analytics/next';
 import { GoogleAnalytics } from '@next/third-parties/google';
+import { Analytics } from '@vercel/analytics/next';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -123,10 +125,33 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           {children}
+          <SiteFooter />
           <Analytics />
         </ThemeProvider>
       </body>
-      <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GOOGLE_ADS_ID || 'AW-17684733929'} />
+
+      {/* Google Analytics 4 */}
+      {process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID && (
+        <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID} />
+      )}
+
+      {/* Google Ads Conversion Tracking */}
+      {process.env.NEXT_PUBLIC_GOOGLE_ADS_ID && (
+        <>
+          <Script
+            src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GOOGLE_ADS_ID}`}
+            strategy="afterInteractive"
+          />
+          <Script id="google-ads" strategy="afterInteractive">
+            {`
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', '${process.env.NEXT_PUBLIC_GOOGLE_ADS_ID}');
+            `}
+          </Script>
+        </>
+      )}
     </html>
   );
 }

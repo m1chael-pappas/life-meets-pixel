@@ -1,5 +1,7 @@
 import { type SanityDocument } from 'next-sanity';
+import Link from 'next/link';
 
+import { Button } from '@/components/ui/button';
 import UniversalReviewCard from '@/components/universal-review-card';
 import {
   FEATURED_REVIEWS_QUERY,
@@ -37,6 +39,13 @@ export default async function FeaturedSection() {
             priority={index < 3}
           />
         ))}
+      </div>
+      <div className="text-center mt-6">
+        <Link href="/reviews">
+          <Button variant="outline" className="font-mono">
+            SEE ALL REVIEWS →
+          </Button>
+        </Link>
       </div>
     </section>
   );

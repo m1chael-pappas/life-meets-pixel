@@ -2,6 +2,7 @@ import { type SanityDocument } from 'next-sanity';
 import Image from 'next/image';
 import Link from 'next/link';
 
+import { Button } from '@/components/ui/button';
 import {
   fetchOptions,
   NEWS_QUERY,
@@ -102,11 +103,10 @@ export default async function NewsSection() {
         ))}
       </div>
       <div className="text-center mt-6">
-        <Link
-          href="/news"
-          className="inline-flex items-center gap-2 text-secondary hover:text-secondary/80 font-mono text-sm transition-colors"
-        >
-          VIEW ALL NEWS →
+        <Link href="/news">
+          <Button variant="outline" className="font-mono">
+            VIEW ALL NEWS →
+          </Button>
         </Link>
       </div>
     </section>

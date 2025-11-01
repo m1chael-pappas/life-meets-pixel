@@ -1,5 +1,7 @@
 import { type SanityDocument } from 'next-sanity';
+import Link from 'next/link';
 
+import { Button } from '@/components/ui/button';
 import UniversalReviewCard from '@/components/universal-review-card';
 import {
   fetchOptions,
@@ -24,15 +26,24 @@ export default async function ReviewsSection() {
       </div>
 
       {reviews.length > 0 ? (
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {reviews.map((review, index) => (
-            <UniversalReviewCard
-              key={review._id}
-              review={review}
-              priority={index < 4} // Prioritize first row
-            />
-          ))}
-        </div>
+        <>
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            {reviews.map((review, index) => (
+              <UniversalReviewCard
+                key={review._id}
+                review={review}
+                priority={index < 4} // Prioritize first row
+              />
+            ))}
+          </div>
+          <div className="text-center mt-6">
+            <Link href="/reviews">
+              <Button variant="outline" className="font-mono">
+                SEE ALL REVIEWS →
+              </Button>
+            </Link>
+          </div>
+        </>
       ) : (
         <div className="text-center py-12">
           <div className="text-6xl mb-4">📝</div>

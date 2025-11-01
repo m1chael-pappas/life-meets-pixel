@@ -1,15 +1,18 @@
 "use client";
 
-import { useState } from "react";
+import { useState } from 'react';
 
-import { Menu, X } from "lucide-react";
-import Image from "next/image";
-import Link from "next/link";
+import {
+  Menu,
+  X,
+} from 'lucide-react';
+import Image from 'next/image';
+import Link from 'next/link';
 
-import { ModeToggle } from "@/components/ui/mode-toggle";
+import { ModeToggle } from '@/components/ui/mode-toggle';
 
 interface SiteHeaderProps {
-  currentPage?: "home" | "reviews" | "news" | "author";
+  currentPage?: "home" | "reviews" | "news" | "author" | "contact";
 }
 
 export function SiteHeader({ currentPage }: SiteHeaderProps) {
@@ -19,6 +22,7 @@ export function SiteHeader({ currentPage }: SiteHeaderProps) {
     { href: "/", label: "🏠 HOME", key: "home" },
     { href: "/reviews", label: "📝 REVIEWS", key: "reviews" },
     { href: "/news", label: "📰 NEWS", key: "news" },
+    { href: "/contact", label: "✉️ CONTACT", key: "contact" },
   ];
 
   return (
