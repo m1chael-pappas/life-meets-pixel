@@ -131,7 +131,7 @@ export default function ContactPage() {
                 For review submissions and general inquiries:
               </p>
               <a
-                href="mailto:contact@lifemeetspixel.com"
+                href="mailto:michael@lifemeetspixel.com"
                 className="text-primary hover:text-primary/80 font-mono transition-colors"
               >
                 michael@lifemeetspixel.com

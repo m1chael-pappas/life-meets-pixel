@@ -242,10 +242,10 @@ export default function AffiliateDisclosurePage() {
             </p>
             <p className="text-muted-foreground mb-4">
               <a
-                href="mailto:contact@lifemeetspixel.com"
+                href="mailto:michael@lifemeetspixel.com"
                 className="text-primary hover:text-primary/80"
               >
-                contact@lifemeetspixel.com
+                michael@lifemeetspixel.com
               </a>
             </p>
             <p className="text-muted-foreground leading-relaxed mb-4">
