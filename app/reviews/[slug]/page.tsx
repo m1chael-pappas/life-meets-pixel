@@ -565,7 +565,7 @@ export default async function ReviewPage({
           </div>
 
           {/* Sidebar */}
-          <div className="space-y-6">
+          <div className="space-y-6 sticky top-24 self-start">
             {/* Score Card */}
             <Card>
               <CardHeader>

@@ -5,11 +5,13 @@ import { type SanityDocument } from "next-sanity";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { SiDiscord } from "react-icons/si";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent } from "@/components/ui/card";
 import { SiteHeader } from "@/components/site-header";
 import UniversalReviewCard from "@/components/universal-review-card";
+import { SITE_CONFIG } from "@/lib/constants";
 import { fetchOptions } from "@/lib/queries";
 import { client } from "@/sanity/client";
 
@@ -310,9 +312,14 @@ async function AuthorContent({ slug }: { slug: string }) {
                     </a>
                   )}
                   {author.socialLinks?.discord && (
-                    <span className="text-sm text-primary font-mono">
-                      💬 Discord: {author.socialLinks.discord}
-                    </span>
+                    <a
+                      href={SITE_CONFIG.social.discord}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-sm text-primary hover:text-primary/80 transition-colors font-mono inline-flex items-center gap-1"
+                    >
+                      <SiDiscord className="h-4 w-4" /> Discord
+                    </a>
                   )}
                 </div>
               )}

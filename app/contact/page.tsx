@@ -1,8 +1,11 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
+import { Facebook, Instagram } from 'lucide-react';
+import { SiDiscord } from 'react-icons/si';
 
 import { SiteHeader } from '@/components/site-header';
 import { Button } from '@/components/ui/button';
+import { SITE_CONFIG } from '@/lib/constants';
 
 const siteUrl =
   process.env.NEXT_PUBLIC_SITE_URL || "https://lifemeetspixel.com";
@@ -131,11 +134,54 @@ export default function ContactPage() {
                 For review submissions and general inquiries:
               </p>
               <a
-                href="mailto:michael@lifemeetspixel.com"
+                href={`mailto:${SITE_CONFIG.contact.email}`}
                 className="text-primary hover:text-primary/80 font-mono transition-colors"
               >
-                michael@lifemeetspixel.com
+                {SITE_CONFIG.contact.email}
               </a>
+            </div>
+
+            <div className="border-t border-border pt-6">
+              <h4 className="font-bold text-foreground mb-2 flex items-center gap-2">
+                <span className="text-primary">🌐</span>
+                Follow Us
+              </h4>
+              <p className="text-muted-foreground mb-3">
+                Stay updated with our latest reviews and news, and join our
+                community:
+              </p>
+              <div className="flex flex-wrap gap-3">
+                <a
+                  href={SITE_CONFIG.social.facebook}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-card border border-border rounded-lg text-muted-foreground hover:text-primary hover:border-primary transition-colors"
+                  aria-label="Follow us on Facebook"
+                >
+                  <Facebook className="h-5 w-5" />
+                  <span className="text-sm font-medium">Facebook</span>
+                </a>
+                <a
+                  href={SITE_CONFIG.social.instagram}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-card border border-border rounded-lg text-muted-foreground hover:text-primary hover:border-primary transition-colors"
+                  aria-label="Follow us on Instagram"
+                >
+                  <Instagram className="h-5 w-5" />
+                  <span className="text-sm font-medium">Instagram</span>
+                </a>
+                <a
+                  href={SITE_CONFIG.social.discord}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-card border border-border rounded-lg text-muted-foreground hover:text-primary hover:border-primary transition-colors"
+                  aria-label="Join our Discord server"
+                >
+                  <SiDiscord className="h-5 w-5" />
+                  <span className="text-sm font-medium">Discord</span>
+                </a>
+              </div>
             </div>
 
             <div className="border-t border-border pt-6">

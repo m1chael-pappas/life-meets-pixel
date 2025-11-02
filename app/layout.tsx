@@ -63,6 +63,19 @@ export const metadata: Metadata = {
       },
     ],
   },
+  alternates: {
+    types: {
+      'application/rss+xml': [
+        {
+          url: '/feed.xml',
+          title: 'Life Meets Pixel RSS Feed',
+        },
+      ],
+    },
+  },
+  other: {
+    'facebook:profile_id': '61582819127746',
+  },
   twitter: {
     card: "summary_large_image",
     title: "Life Meets Pixel - Reviews & News",
