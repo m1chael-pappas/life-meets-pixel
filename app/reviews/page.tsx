@@ -1,12 +1,20 @@
 import { Suspense } from 'react';
-import { type SanityDocument } from 'next-sanity';
-import { Metadata } from 'next';
 
-import UniversalReviewCard from '@/components/universal-review-card';
-import { SiteHeader } from '@/components/site-header';
-import { client } from '@/sanity/client';
-import { REVIEWS_QUERY, REVIEWS_BY_TYPE_QUERY, fetchOptions } from '@/lib/queries';
+import { Metadata } from 'next';
+import { type SanityDocument } from 'next-sanity';
+
 import ReviewTypeTabs from '@/components/review-type-tabs';
+import { SiteHeader } from '@/components/site-header';
+import Pagination from '@/components/ui/pagination';
+import UniversalReviewCard from '@/components/universal-review-card';
+import {
+  fetchOptions,
+  REVIEWS_BY_TYPE_PAGINATED_QUERY,
+  REVIEWS_COUNT_BY_TYPE_QUERY,
+  REVIEWS_COUNT_QUERY,
+  REVIEWS_PAGINATED_QUERY,
+} from '@/lib/queries';
+import { client } from '@/sanity/client';
 
 type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>;
 
@@ -15,55 +23,65 @@ interface ReviewsPageProps {
 }
 
 // Generate metadata based on filter
-export async function generateMetadata({ searchParams }: ReviewsPageProps): Promise<Metadata> {
+export async function generateMetadata({
+  searchParams,
+}: ReviewsPageProps): Promise<Metadata> {
   const params = await searchParams;
   const type = params.type as string | undefined;
 
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://lifemeetspixel.com';
+  const siteUrl =
+    process.env.NEXT_PUBLIC_SITE_URL || "https://lifemeetspixel.com";
 
   const typeMetadata: Record<string, { title: string; description: string }> = {
     videogame: {
-      title: 'Video Game Reviews',
-      description: 'Honest reviews of the latest and greatest video games across all platforms.',
+      title: "Video Game Reviews",
+      description:
+        "Honest reviews of the latest and greatest video games across all platforms.",
     },
     movie: {
-      title: 'Movie Reviews',
-      description: 'In-depth movie reviews covering the latest releases and classic films.',
+      title: "Movie Reviews",
+      description:
+        "In-depth movie reviews covering the latest releases and classic films.",
     },
     anime: {
-      title: 'Anime Reviews',
-      description: 'Reviews of anime series and films from seasoned fans.',
+      title: "Anime Reviews",
+      description: "Reviews of anime series and films from seasoned fans.",
     },
     book: {
-      title: 'Book Reviews',
-      description: 'In-depth reviews of books spanning fiction, non-fiction, and more.',
+      title: "Book Reviews",
+      description:
+        "In-depth reviews of books spanning fiction, non-fiction, and more.",
     },
     comic: {
-      title: 'Comic & Manga Reviews',
-      description: 'Reviews of comics, graphic novels, and manga for enthusiasts.',
+      title: "Comic & Manga Reviews",
+      description:
+        "Reviews of comics, graphic novels, and manga for enthusiasts.",
     },
     boardgame: {
-      title: 'Board Game Reviews',
-      description: 'Detailed reviews of board games, card games, and tabletop experiences.',
+      title: "Board Game Reviews",
+      description:
+        "Detailed reviews of board games, card games, and tabletop experiences.",
     },
     tvseries: {
-      title: 'TV Series Reviews',
-      description: 'Reviews of TV shows and streaming series worth your time.',
+      title: "TV Series Reviews",
+      description: "Reviews of TV shows and streaming series worth your time.",
     },
     gadget: {
-      title: 'Tech & Gadget Reviews',
-      description: 'Reviews of the latest tech gadgets and gaming peripherals.',
+      title: "Tech & Gadget Reviews",
+      description: "Reviews of the latest tech gadgets and gaming peripherals.",
     },
   };
 
-  const meta = type && typeMetadata[type]
-    ? typeMetadata[type]
-    : {
-        title: 'All Reviews',
-        description: 'Browse all our reviews of games, movies, books, anime, and more.',
-      };
+  const meta =
+    type && typeMetadata[type]
+      ? typeMetadata[type]
+      : {
+          title: "All Reviews",
+          description:
+            "Browse all our reviews of games, movies, books, anime, and more.",
+        };
 
-  const canonicalPath = type ? `/reviews?type=${type}` : '/reviews';
+  const canonicalPath = type ? `/reviews?type=${type}` : "/reviews";
   const canonicalUrl = `${siteUrl}${canonicalPath}`;
 
   return {
@@ -76,15 +94,40 @@ export async function generateMetadata({ searchParams }: ReviewsPageProps): Prom
       title: `${meta.title} | Life Meets Pixel`,
       description: meta.description,
       url: canonicalUrl,
-      type: 'website',
+      type: "website",
     },
   };
 }
 
-async function ReviewsList({ type }: { type?: string }) {
-  const reviews = type
-    ? await client.fetch<SanityDocument[]>(REVIEWS_BY_TYPE_QUERY, { itemType: type }, fetchOptions)
-    : await client.fetch<SanityDocument[]>(REVIEWS_QUERY, {}, fetchOptions);
+const ITEMS_PER_PAGE = 12;
+
+async function ReviewsList({ type, page }: { type?: string; page: number }) {
+  const start = (page - 1) * ITEMS_PER_PAGE;
+  const end = start + ITEMS_PER_PAGE;
+
+  const [reviews, totalCount] = type
+    ? await Promise.all([
+        client.fetch<SanityDocument[]>(
+          REVIEWS_BY_TYPE_PAGINATED_QUERY,
+          { itemType: type, start, end },
+          fetchOptions
+        ),
+        client.fetch<number>(
+          REVIEWS_COUNT_BY_TYPE_QUERY,
+          { itemType: type },
+          fetchOptions
+        ),
+      ])
+    : await Promise.all([
+        client.fetch<SanityDocument[]>(
+          REVIEWS_PAGINATED_QUERY,
+          { start, end },
+          fetchOptions
+        ),
+        client.fetch<number>(REVIEWS_COUNT_QUERY, {}, fetchOptions),
+      ]);
+
+  const totalPages = Math.ceil(totalCount / ITEMS_PER_PAGE);
 
   if (reviews.length === 0) {
     return (
@@ -94,7 +137,9 @@ async function ReviewsList({ type }: { type?: string }) {
           No reviews found
         </h3>
         <p className="text-muted-foreground">
-          {type ? `No ${type} reviews available yet. ` : 'No reviews available yet. '}
+          {type
+            ? `No ${type} reviews available yet. `
+            : "No reviews available yet. "}
           Check back soon!
         </p>
       </div>
@@ -102,15 +147,18 @@ async function ReviewsList({ type }: { type?: string }) {
   }
 
   return (
-    <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-      {reviews.map((review, index) => (
-        <UniversalReviewCard
-          key={review._id}
-          review={review}
-          priority={index < 4}
-        />
-      ))}
-    </div>
+    <>
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        {reviews.map((review, index) => (
+          <UniversalReviewCard
+            key={review._id}
+            review={review}
+            priority={index < 4}
+          />
+        ))}
+      </div>
+      <Pagination currentPage={page} totalPages={totalPages} />
+    </>
   );
 }
 
@@ -118,10 +166,7 @@ function ReviewsListSkeleton() {
   return (
     <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
       {[...Array(8)].map((_, i) => (
-        <div
-          key={i}
-          className="h-96 bg-muted/20 rounded-lg animate-pulse"
-        />
+        <div key={i} className="h-96 bg-muted/20 rounded-lg animate-pulse" />
       ))}
     </div>
   );
@@ -130,21 +175,21 @@ function ReviewsListSkeleton() {
 export default async function ReviewsPage({ searchParams }: ReviewsPageProps) {
   const params = await searchParams;
   const type = params.type as string | undefined;
+  const currentPage = Number(params.page) || 1;
 
   const typeLabels: Record<string, string> = {
-    videogame: 'Video Games',
-    movie: 'Movies',
-    anime: 'Anime',
-    book: 'Books',
-    comic: 'Comics/Manga',
-    boardgame: 'Board Games',
-    tvseries: 'TV Series',
-    gadget: 'Tech & Gadgets',
+    videogame: "Video Games",
+    movie: "Movies",
+    anime: "Anime",
+    book: "Books",
+    comic: "Comics/Manga",
+    boardgame: "Board Games",
+    tvseries: "TV Series",
+    gadget: "Tech & Gadgets",
   };
 
-  const pageTitle = type && typeLabels[type]
-    ? `${typeLabels[type]} Reviews`
-    : 'All Reviews';
+  const pageTitle =
+    type && typeLabels[type] ? `${typeLabels[type]} Reviews` : "All Reviews";
 
   return (
     <div className="min-h-screen bg-background">
@@ -167,7 +212,7 @@ export default async function ReviewsPage({ searchParams }: ReviewsPageProps) {
 
         {/* Reviews Grid */}
         <Suspense fallback={<ReviewsListSkeleton />}>
-          <ReviewsList type={type} />
+          <ReviewsList type={type} page={currentPage} />
         </Suspense>
       </main>
     </div>

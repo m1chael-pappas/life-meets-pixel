@@ -52,54 +52,56 @@ export default async function NewsSection() {
         )}
       </div>
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-        {news.slice(0, 6).map((article, index) => (
+        {news.slice(0, 3).map((article, index) => (
           <AnimatedCardWrapper key={article._id} index={index}>
             <article className="group">
               <Link href={`/news/${article.slug.current}`} className="block">
-              <div
-                className={`bg-card border overflow-hidden hover:shadow-lg transition-all duration-300 hover:scale-[1.02] rounded-lg ${
-                  article.breaking ? "border-red-500 border-2" : "border-border"
-                }`}
-              >
-                {/* Breaking News Badge */}
-                {article.breaking && (
-                  <div className="bg-red-500 text-white text-xs font-mono px-2 py-1">
-                    🚨 BREAKING NEWS
-                  </div>
-                )}
-
-                {article.featuredImage && (
-                  <div className="relative aspect-video overflow-hidden">
-                    <Image
-                      src={article.featuredImage.asset.url}
-                      alt={article.title}
-                      fill
-                      className="object-cover transition-transform duration-300 group-hover:scale-105"
-                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                    />
-                  </div>
-                )}
-                <div className="p-4">
-                  <time className="text-xs text-muted-foreground font-mono mb-2 block">
-                    {new Date(article.publishedAt).toLocaleDateString()}
-                  </time>
-                  <h4 className="font-bold text-foreground mb-2 line-clamp-2 group-hover:text-primary transition-colors">
-                    {article.title}
-                  </h4>
-                  {article.excerpt && (
-                    <p className="text-sm text-muted-foreground line-clamp-2">
-                      {article.excerpt}
-                    </p>
-                  )}
-                  {article.author && (
-                    <div className="flex items-center gap-2 mt-3 pt-2 border-t border-border">
-                      <span className="text-xs text-muted-foreground">
-                        By {article.author.name}
-                      </span>
+                <div
+                  className={`bg-card border overflow-hidden hover:shadow-lg transition-all duration-300 hover:scale-[1.02] rounded-lg ${
+                    article.breaking
+                      ? "border-red-500 border-2"
+                      : "border-border"
+                  }`}
+                >
+                  {/* Breaking News Badge */}
+                  {article.breaking && (
+                    <div className="bg-red-500 text-white text-xs font-mono px-2 py-1">
+                      🚨 BREAKING NEWS
                     </div>
                   )}
+
+                  {article.featuredImage && (
+                    <div className="relative aspect-video overflow-hidden">
+                      <Image
+                        src={article.featuredImage.asset.url}
+                        alt={article.title}
+                        fill
+                        className="object-cover transition-transform duration-300 group-hover:scale-105"
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                      />
+                    </div>
+                  )}
+                  <div className="p-4">
+                    <time className="text-xs text-muted-foreground font-mono mb-2 block">
+                      {new Date(article.publishedAt).toLocaleDateString()}
+                    </time>
+                    <h4 className="font-bold text-foreground mb-2 line-clamp-2 group-hover:text-primary transition-colors">
+                      {article.title}
+                    </h4>
+                    {article.excerpt && (
+                      <p className="text-sm text-muted-foreground line-clamp-2">
+                        {article.excerpt}
+                      </p>
+                    )}
+                    {article.author && (
+                      <div className="flex items-center gap-2 mt-3 pt-2 border-t border-border">
+                        <span className="text-xs text-muted-foreground">
+                          By {article.author.name}
+                        </span>
+                      </div>
+                    )}
+                  </div>
                 </div>
-              </div>
               </Link>
             </article>
           </AnimatedCardWrapper>

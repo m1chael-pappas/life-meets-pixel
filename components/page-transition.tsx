@@ -55,7 +55,7 @@ export default function PageTransition({
             {/* Zooming Heart - Smooth Overflow */}
             <motion.div
               initial={{ scale: 0.3, opacity: 1 }}
-              animate={{ scale: 50, opacity: 0 }}
+              animate={{ scale: 8, opacity: 0 }}
               transition={{
                 duration: 4,
                 ease: [0.22, 0.61, 0.36, 1],
