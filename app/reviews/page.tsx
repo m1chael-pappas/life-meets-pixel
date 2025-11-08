@@ -34,6 +34,14 @@ export async function generateMetadata({ searchParams }: ReviewsPageProps): Prom
       title: 'Anime Reviews',
       description: 'Reviews of anime series and films from seasoned fans.',
     },
+    book: {
+      title: 'Book Reviews',
+      description: 'In-depth reviews of books spanning fiction, non-fiction, and more.',
+    },
+    comic: {
+      title: 'Comic & Manga Reviews',
+      description: 'Reviews of comics, graphic novels, and manga for enthusiasts.',
+    },
     boardgame: {
       title: 'Board Game Reviews',
       description: 'Detailed reviews of board games, card games, and tabletop experiences.',
@@ -127,6 +135,8 @@ export default async function ReviewsPage({ searchParams }: ReviewsPageProps) {
     videogame: 'Video Games',
     movie: 'Movies',
     anime: 'Anime',
+    book: 'Books',
+    comic: 'Comics/Manga',
     boardgame: 'Board Games',
     tvseries: 'TV Series',
     gadget: 'Tech & Gadgets',

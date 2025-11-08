@@ -16,7 +16,7 @@ import {
   CardHeader,
 } from '@/components/ui/card';
 import PixelHeartRating from '@/components/ui/pixel-heart-rating';
-import { Category } from '@/lib/types';
+import { Genre } from '@/lib/types';
 
 interface UniversalReviewCardProps {
   review: SanityDocument;
@@ -84,7 +84,6 @@ export default function UniversalReviewCard({
     featured,
     reviewableItem,
     author,
-    categories,
   } = review;
 
   if (!reviewableItem || !slug?.current) {
@@ -196,25 +195,25 @@ export default function UniversalReviewCard({
             {summary}
           </p>
 
-          {/* Categories */}
-          {categories && categories.length > 0 && (
+          {/* Genres */}
+          {reviewableItem.genres && reviewableItem.genres.length > 0 && (
             <div className="mb-3 flex flex-wrap gap-2">
-              {(categories as Category[]).map((category) => (
+              {(reviewableItem.genres as Genre[]).map((genre) => (
                 <Badge
-                  key={category.slug?.current || category.title}
-                  variant={getBadgeVariant(category.color)}
+                  key={genre.slug?.current || genre.title}
+                  variant={getBadgeVariant(genre.color)}
                   className="text-xs"
                   style={
-                    category.color
+                    genre.color
                       ? {
-                          backgroundColor: category.color,
+                          backgroundColor: genre.color,
                           color: "#ffffff",
                           border: "none",
                         }
                       : {}
                   }
                 >
-                  {category.title}
+                  {genre.title}
                 </Badge>
               ))}
             </div>

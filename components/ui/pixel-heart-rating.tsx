@@ -1,5 +1,8 @@
+'use client';
+
 import React from 'react';
 
+import { motion } from 'motion/react';
 import Image from 'next/image';
 
 type HeartSize = "sm" | "md" | "lg" | "xl";
@@ -11,12 +14,16 @@ interface PixelHeartRatingProps {
   size?: HeartSize;
   className?: string;
   showScore?: boolean;
+  animate?: boolean;
+  animationDelay?: number;
 }
 
 interface PixelHeartProps {
   state: HeartState;
   index: number;
   size: HeartSize;
+  animate?: boolean;
+  animationDelay?: number;
 }
 
 interface SizeClasses {
@@ -31,6 +38,8 @@ const PixelHeartRating: React.FC<PixelHeartRatingProps> = ({
   size = "md",
   className = "",
   showScore = false,
+  animate = false,
+  animationDelay = 0,
 }) => {
   const sizeClasses: SizeClasses = {
     sm: "w-6 h-6",
@@ -61,11 +70,11 @@ const PixelHeartRating: React.FC<PixelHeartRatingProps> = ({
 
   const heartStates = getHeartStates(reviewScore);
 
-  const PixelHeart: React.FC<PixelHeartProps> = ({ state, index, size }) => {
-    return (
+  const PixelHeart: React.FC<PixelHeartProps> = ({ state, index, size, animate, animationDelay }) => {
+    const heartContent = (
       <div
         className={`
-          ${sizeClasses[size]} 
+          ${sizeClasses[size]}
           [image-rendering:pixelated]
           relative
         `}
@@ -121,6 +130,27 @@ const PixelHeartRating: React.FC<PixelHeartRatingProps> = ({
         )}
       </div>
     );
+
+    if (animate) {
+      return (
+        <motion.div
+          animate={{
+            scale: [1, 1.15, 1],
+          }}
+          transition={{
+            duration: 2.4,
+            repeat: Infinity,
+            ease: "easeInOut",
+            repeatDelay: 0.5,
+            delay: (animationDelay || 0) + (index * 0.3),
+          }}
+        >
+          {heartContent}
+        </motion.div>
+      );
+    }
+
+    return heartContent;
   };
 
   return (
@@ -130,7 +160,14 @@ const PixelHeartRating: React.FC<PixelHeartRatingProps> = ({
       aria-label={`Rating: ${reviewScore} out of 10`}
     >
       {heartStates.map((state, index) => (
-        <PixelHeart key={index} state={state} index={index} size={size} />
+        <PixelHeart
+          key={index}
+          state={state}
+          index={index}
+          size={size}
+          animate={animate}
+          animationDelay={animationDelay}
+        />
       ))}
       {showScore && (
         <span className="ml-2 text-sm font-mono text-muted-foreground">

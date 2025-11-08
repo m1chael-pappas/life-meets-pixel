@@ -1,6 +1,7 @@
 import { type SanityDocument } from 'next-sanity';
 import Link from 'next/link';
 
+import AnimatedCardWrapper from '@/components/animated-card-wrapper';
 import { Button } from '@/components/ui/button';
 import UniversalReviewCard from '@/components/universal-review-card';
 import {
@@ -33,11 +34,12 @@ export default async function FeaturedSection() {
       </div>
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {featuredReviews.map((review, index) => (
-          <UniversalReviewCard
-            key={review._id}
-            review={review}
-            priority={index < 3}
-          />
+          <AnimatedCardWrapper key={review._id} index={index}>
+            <UniversalReviewCard
+              review={review}
+              priority={index < 3}
+            />
+          </AnimatedCardWrapper>
         ))}
       </div>
       <div className="text-center mt-6">

@@ -23,7 +23,12 @@ export const REVIEWS_QUERY = `*[
     },
     creator,
     publisher,
-    releaseDate
+    releaseDate,
+    genres[]->{
+      title,
+      slug,
+      "color": color.hex
+    }
   },
   author->{
     name,
@@ -66,7 +71,12 @@ export const FEATURED_REVIEWS_QUERY = `*[
       alt
     },
     creator,
-    publisher
+    publisher,
+    genres[]->{
+      title,
+      slug,
+      "color": color.hex
+    }
   },
   author->{
     name,
@@ -109,7 +119,12 @@ export const REVIEWS_BY_TYPE_QUERY = `*[
       alt
     },
     creator,
-    publisher
+    publisher,
+    genres[]->{
+      title,
+      slug,
+      "color": color.hex
+    }
   },
   author->{
     name,

@@ -1,3 +1,7 @@
+"use client";
+
+import AnimatedCardWrapper from '@/components/animated-card-wrapper';
+
 export default function GearSection() {
   const gearItems = [
     {
@@ -52,11 +56,11 @@ export default function GearSection() {
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        {gearItems.map((item) => (
-          <div
-            key={item.id}
-            className="bg-card border border-border rounded-lg p-4 opacity-50 cursor-not-allowed relative overflow-hidden"
-          >
+        {gearItems.map((item, index) => (
+          <AnimatedCardWrapper key={item.id} index={index}>
+            <div
+              className="bg-card border border-border rounded-lg p-4 opacity-50 cursor-not-allowed relative overflow-hidden"
+            >
             {/* Disabled Overlay */}
             <div className="absolute inset-0 bg-muted/10 backdrop-blur-[1px] flex items-center justify-center z-10">
               <span className="text-3xl">🚧</span>
@@ -72,7 +76,8 @@ export default function GearSection() {
             <span className="text-xs text-muted-foreground font-mono">
               Coming Soon...
             </span>
-          </div>
+            </div>
+          </AnimatedCardWrapper>
         ))}
       </div>
     </section>

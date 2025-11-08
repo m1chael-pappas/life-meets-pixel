@@ -2,6 +2,7 @@ import { type SanityDocument } from 'next-sanity';
 import Image from 'next/image';
 import Link from 'next/link';
 
+import AnimatedCardWrapper from '@/components/animated-card-wrapper';
 import { Button } from '@/components/ui/button';
 import {
   fetchOptions,
@@ -51,9 +52,10 @@ export default async function NewsSection() {
         )}
       </div>
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-        {news.slice(0, 6).map((article) => (
-          <article key={article._id} className="group">
-            <Link href={`/news/${article.slug.current}`} className="block">
+        {news.slice(0, 6).map((article, index) => (
+          <AnimatedCardWrapper key={article._id} index={index}>
+            <article className="group">
+              <Link href={`/news/${article.slug.current}`} className="block">
               <div
                 className={`bg-card border overflow-hidden hover:shadow-lg transition-all duration-300 hover:scale-[1.02] rounded-lg ${
                   article.breaking ? "border-red-500 border-2" : "border-border"
@@ -98,8 +100,9 @@ export default async function NewsSection() {
                   )}
                 </div>
               </div>
-            </Link>
-          </article>
+              </Link>
+            </article>
+          </AnimatedCardWrapper>
         ))}
       </div>
       <div className="text-center mt-6">

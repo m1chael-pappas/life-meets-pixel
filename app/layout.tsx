@@ -8,6 +8,7 @@ import {
 import Script from 'next/script';
 
 import { SiteFooter } from '@/components/site-footer';
+import PageTransition from '@/components/page-transition';
 import { ThemeProvider } from '@/components/ui/theme-provider';
 import { GoogleAnalytics } from '@next/third-parties/google';
 import { Analytics } from '@vercel/analytics/next';
@@ -137,8 +138,10 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          {children}
-          <SiteFooter />
+          <PageTransition>
+            {children}
+            <SiteFooter />
+          </PageTransition>
           <Analytics />
         </ThemeProvider>
       </body>
