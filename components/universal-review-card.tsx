@@ -44,22 +44,22 @@ const getItemTypeInfo = (itemType: string) => {
   );
 };
 
-const getBadgeVariant = (
-  color?: string
-): "default" | "secondary" | "outline" | "destructive" => {
-  if (!color) return "default";
+// const getBadgeVariant = (
+//   color?: string
+// ): "default" | "secondary" | "outline" | "destructive" => {
+//   if (!color) return "default";
 
-  const colorMap: {
-    [key: string]: "default" | "secondary" | "outline" | "destructive";
-  } = {
-    "#975af9": "default",
-    "#81f5c6": "secondary",
-    "#ffee93": "outline",
-    "#ad79fa": "default",
-  };
+//   const colorMap: {
+//     [key: string]: "default" | "secondary" | "outline" | "destructive";
+//   } = {
+//     "#975af9": "default",
+//     "#81f5c6": "secondary",
+//     "#ffee93": "outline",
+//     "#ad79fa": "default",
+//   };
 
-  return colorMap[color] || "default";
-};
+//   return colorMap[color] || "default";
+// };
 
 const getAuthorInitials = (name: string) => {
   return name
@@ -150,7 +150,7 @@ export default function UniversalReviewCard({
                     `${reviewableItem.title} cover`
                   }
                   fill
-                  className="object-cover transition-transform duration-300 group-hover:scale-105"
+                  className="object-cover object-center transition-transform duration-300 group-hover:scale-105"
                   priority={priority}
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                 />
@@ -201,17 +201,7 @@ export default function UniversalReviewCard({
               {(reviewableItem.genres as Genre[]).map((genre) => (
                 <Badge
                   key={genre.slug?.current || genre.title}
-                  variant={getBadgeVariant(genre.color)}
-                  className="text-xs"
-                  style={
-                    genre.color
-                      ? {
-                          backgroundColor: genre.color,
-                          color: "#ffffff",
-                          border: "none",
-                        }
-                      : {}
-                  }
+                  className="text-xs bg-secondary text-black border-none hover:bg-secondary/90 px-3 py-1.5"
                 >
                   {genre.title}
                 </Badge>

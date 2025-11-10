@@ -1,8 +1,9 @@
 "use client";
 
-import { motion } from "motion/react";
-import PixelHeartRating from "@/components/ui/pixel-heart-rating";
-import PixelCursorFollower from "@/components/pixel-cursor-follower";
+import { motion } from 'motion/react';
+
+import PixelCursorFollower from '@/components/pixel-cursor-follower';
+import PixelHeartRating from '@/components/ui/pixel-heart-rating';
 
 export default function HeroSection() {
   return (
@@ -65,10 +66,11 @@ export default function HeroSection() {
         >
           👋
         </motion.span>
-        (oops wrong universe) - welcome to my
-        little corner of the internet. It&apos;s just me here, sharing honest
-        thoughts on the games, movies, books, and tech I love (or sometimes
-        don&apos;t). No sponsors. No PR fluff. Just real reviews from a fellow nerd.
+        (oops wrong universe) <br /> Welcome to our little corner of the
+        internet. It&apos;s just me here and my partner Jenna, sharing honest
+        thoughts on the games, movies, books, and tech we love (or sometimes
+        don&apos;t). <br /> No sponsors. No PR fluff. <br /> Just real reviews
+        from a fellow nerd and his sidekick.
       </motion.p>
       <motion.div
         className="flex justify-center gap-4 mt-6 flex-wrap"

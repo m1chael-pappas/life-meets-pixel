@@ -328,16 +328,7 @@ export default async function NewsPostPage({ params }: NewsPostPageProps) {
               {post.categories.map((cat: Category, index: number) => (
                 <Badge
                   key={cat.slug?.current || cat.title || index}
-                  variant="secondary"
-                  style={
-                    cat.color
-                      ? {
-                          backgroundColor: cat.color,
-                          color: '#ffffff',
-                          border: 'none',
-                        }
-                      : {}
-                  }
+                  className="bg-accent text-black border-none hover:bg-accent/90 px-3 py-1.5"
                 >
                   {cat.title}
                 </Badge>
@@ -395,7 +386,7 @@ export default async function NewsPostPage({ params }: NewsPostPageProps) {
                 src={post.featuredImage.asset.url}
                 alt={post.featuredImage.alt || post.title}
                 fill
-                className="object-cover"
+                className="object-cover object-center"
                 priority
                 sizes="(max-width: 896px) 100vw, 896px"
               />

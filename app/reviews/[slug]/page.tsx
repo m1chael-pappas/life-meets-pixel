@@ -403,7 +403,7 @@ export default async function ReviewPage({
                   review.title
                 }
                 fill
-                className="object-cover"
+                className="object-cover object-center"
                 priority
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 896px, 896px"
               />
@@ -490,16 +490,7 @@ export default async function ReviewPage({
               {review.categories?.map((category: Category) => (
                 <Badge
                   key={category._id || category.slug?.current || category.title}
-                  variant="outline"
-                  style={
-                    category.color
-                      ? {
-                          backgroundColor: category.color,
-                          color: "#ffffff",
-                          borderColor: category.color,
-                        }
-                      : {}
-                  }
+                  className="bg-accent text-black border-none hover:bg-accent/90 px-3 py-1.5"
                 >
                   {category.title}
                 </Badge>
@@ -508,7 +499,7 @@ export default async function ReviewPage({
                 <Badge
                   key={tag._id || tag.slug?.current || tag.title}
                   variant="secondary"
-                  className="font-mono"
+                  className="font-mono px-3 py-1.5"
                 >
                   {tag.title}
                 </Badge>
@@ -771,8 +762,7 @@ export default async function ReviewPage({
                             key={
                               genre._id || genre.slug?.current || genre.title
                             }
-                            variant="outline"
-                            className="text-xs"
+                            className="text-xs bg-secondary text-black border-none hover:bg-secondary/90 px-3 py-1.5"
                           >
                             {genre.title}
                           </Badge>
