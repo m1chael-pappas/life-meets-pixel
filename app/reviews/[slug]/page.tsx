@@ -110,6 +110,30 @@ export async function generateMetadata({
   };
 }
 
+// Helper function to get video embed URL
+const getVideoEmbedUrl = (url: string): string | null => {
+  // YouTube
+  const youtubeMatch = url.match(
+    /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/
+  );
+  if (youtubeMatch) {
+    return `https://www.youtube.com/embed/${youtubeMatch[1]}`;
+  }
+
+  // Vimeo
+  const vimeoMatch = url.match(/(?:vimeo\.com\/)(\d+)/);
+  if (vimeoMatch) {
+    return `https://player.vimeo.com/video/${vimeoMatch[1]}`;
+  }
+
+  // Direct video files
+  if (url.match(/\.(mp4|webm|ogg)$/i)) {
+    return url;
+  }
+
+  return null;
+};
+
 // Custom Portable Text components
 const portableTextComponents: PortableTextComponents = {
   types: {
@@ -133,6 +157,51 @@ const portableTextComponents: PortableTextComponents = {
           )}
         </div>
       ) : null;
+    },
+    videoEmbed: ({ value }) => {
+      const embedUrl = getVideoEmbedUrl(value.url);
+
+      if (!embedUrl) {
+        return (
+          <div className="my-8 p-4 bg-muted/30 rounded-lg">
+            <p className="text-sm text-muted-foreground">
+              Invalid video URL: {value.url}
+            </p>
+          </div>
+        );
+      }
+
+      const isDirectVideo = embedUrl.match(/\.(mp4|webm|ogg)$/i);
+
+      return (
+        <div className="my-8">
+          <div className="relative w-full max-w-[800px] mx-auto aspect-video rounded-lg overflow-hidden shadow-md">
+            {isDirectVideo ? (
+              <video
+                src={embedUrl}
+                controls
+                className="w-full h-full"
+                preload="metadata"
+              >
+                Your browser does not support the video tag.
+              </video>
+            ) : (
+              <iframe
+                src={embedUrl}
+                className="w-full h-full"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+                title={value.caption || "Embedded video"}
+              />
+            )}
+          </div>
+          {value.caption && (
+            <p className="text-center text-sm text-muted-foreground mt-2">
+              {value.caption}
+            </p>
+          )}
+        </div>
+      );
     },
     divider: () => <hr className="my-8 border-t-2 border-primary/30" />,
   },
@@ -161,6 +230,26 @@ const portableTextComponents: PortableTextComponents = {
       </blockquote>
     ),
     hr: () => <hr className="my-8 border-t-2 border-primary/30" />,
+  },
+  list: {
+    bullet: ({ children }) => (
+      <ul className="list-disc list-outside ml-6 mb-4 space-y-2 text-foreground">
+        {children}
+      </ul>
+    ),
+    number: ({ children }) => (
+      <ol className="list-decimal list-outside ml-6 mb-4 space-y-2 text-foreground">
+        {children}
+      </ol>
+    ),
+  },
+  listItem: {
+    bullet: ({ children }) => (
+      <li className="text-foreground leading-relaxed">{children}</li>
+    ),
+    number: ({ children }) => (
+      <li className="text-foreground leading-relaxed">{children}</li>
+    ),
   },
   marks: {
     strong: ({ children }) => (

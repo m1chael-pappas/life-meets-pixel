@@ -109,6 +109,37 @@ export const reviewType = defineType({
             },
           },
         },
+        {
+          type: 'object',
+          name: 'videoEmbed',
+          title: 'Video Embed',
+          fields: [
+            {
+              name: 'url',
+              type: 'url',
+              title: 'Video URL',
+              description: 'YouTube, Vimeo, or direct video file URL',
+              validation: (rule) => rule.required(),
+            },
+            {
+              name: 'caption',
+              type: 'string',
+              title: 'Caption',
+            },
+          ],
+          preview: {
+            select: {
+              url: 'url',
+              caption: 'caption',
+            },
+            prepare({url, caption}) {
+              return {
+                title: caption || 'Video Embed',
+                subtitle: url,
+              }
+            },
+          },
+        },
       ],
       validation: (rule) => rule.required(),
     }),

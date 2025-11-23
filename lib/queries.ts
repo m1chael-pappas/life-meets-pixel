@@ -100,7 +100,7 @@ export const FEATURED_REVIEWS_QUERY = `*[
   _type == "review"
   && featured == true
   && defined(slug.current)
-]|order(publishedAt desc)[0...6]{
+]|order(publishedAt desc)[0...3]{
   _id,
   title,
   slug,

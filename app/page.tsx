@@ -7,6 +7,7 @@ import GearSection from '@/components/sections/gear-section';
 import HeroSection from '@/components/sections/hero-section';
 import NewsSection from '@/components/sections/news-section';
 import ReviewsSection from '@/components/sections/reviews-section';
+import SocialSection from '@/components/sections/social-section';
 import StatsSection from '@/components/sections/stats-section';
 import SupportSection from '@/components/sections/support-section';
 import { SiteHeader } from '@/components/site-header';
@@ -102,6 +103,15 @@ export default function HomePage() {
         {/* Featured Reviews */}
         <Suspense fallback={<SectionSkeleton title="FEATURED REVIEWS" />}>
           <FeaturedSection />
+        </Suspense>
+
+        {/* Social Media Section */}
+        <Suspense
+          fallback={
+            <div className="h-32 bg-muted/20 rounded-lg mb-12 animate-pulse"></div>
+          }
+        >
+          <SocialSection />
         </Suspense>
 
         {/* Gaming News */}
