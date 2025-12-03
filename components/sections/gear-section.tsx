@@ -49,33 +49,31 @@ export default function GearSection() {
           WORK IN PROGRESS
         </h4>
         <p className="text-sm text-muted-foreground font-mono">
-          {'//'} We&apos;re building something awesome here...
+          {"//"} We&apos;re building something awesome here...
           <br />
-          {'//'} Check back later for our gear recommendations!
+          {"//"} Check back later for our gear recommendations!
         </p>
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         {gearItems.map((item, index) => (
           <AnimatedCardWrapper key={item.id} index={index}>
-            <div
-              className="bg-card border border-border rounded-lg p-4 opacity-50 cursor-not-allowed relative overflow-hidden"
-            >
-            {/* Disabled Overlay */}
-            <div className="absolute inset-0 bg-muted/10 backdrop-blur-[1px] flex items-center justify-center z-10">
-              <span className="text-3xl">🚧</span>
-            </div>
+            <div className="bg-card border border-border rounded-lg p-4 opacity-50 cursor-not-allowed relative overflow-hidden">
+              {/* Disabled Overlay */}
+              <div className="absolute inset-0 bg-muted/10 backdrop-blur-[1px] flex items-center justify-center z-10">
+                <span className="text-3xl">🚧</span>
+              </div>
 
-            <div className="aspect-square bg-muted/20 rounded-md mb-3 flex items-center justify-center">
-              <span className="text-2xl grayscale">{item.emoji}</span>
-            </div>
-            <h4 className="font-semibold text-sm mb-1">{item.name}</h4>
-            <p className="text-xs text-muted-foreground mb-2">
-              {item.description}
-            </p>
-            <span className="text-xs text-muted-foreground font-mono">
-              Coming Soon...
-            </span>
+              <div className="aspect-square bg-muted/20 rounded-md mb-3 flex items-center justify-center">
+                <span className="text-2xl grayscale">{item.emoji}</span>
+              </div>
+              <h4 className="font-semibold text-sm mb-1">{item.name}</h4>
+              <p className="text-xs text-muted-foreground mb-2">
+                {item.description}
+              </p>
+              <span className="text-xs text-muted-foreground font-mono">
+                Coming Soon...
+              </span>
             </div>
           </AnimatedCardWrapper>
         ))}

@@ -225,7 +225,7 @@ const portableTextComponents: PortableTextComponents = {
       <p className="text-foreground leading-relaxed mb-4">{children}</p>
     ),
     blockquote: ({ children }) => (
-      <blockquote className="border-l-4 border-primary pl-6 my-6 italic text-muted-foreground bg-muted/30 p-4 rounded-r-lg">
+      <blockquote className="border-l-4 border-primary pl-6 my-6 italic text-muted-foreground bg-[whitesmoke] dark:bg-[#2a2a2a] p-4 rounded-r-lg">
         {children}
       </blockquote>
     ),
@@ -353,7 +353,7 @@ export default async function ReviewPage({
 
   if (!review) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <h1 className="text-2xl font-bold text-foreground mb-4">
             Review Not Found
@@ -455,7 +455,7 @@ export default async function ReviewPage({
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen">
       {/* Structured Data for SEO */}
       <script
         type="application/ld+json"
@@ -480,6 +480,7 @@ export default async function ReviewPage({
       </header>
 
       <main className="container mx-auto max-w-4xl px-4 py-8">
+        <div className="bg-card border border-border rounded-xl p-6 md:p-8 card-shadow-static">
         {/* Hero Section */}
         <section className="mb-8">
           {itemImageUrl && (
@@ -540,7 +541,7 @@ export default async function ReviewPage({
 
           {/* Title and Meta */}
           <div className="mb-6">
-            <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-4 font-mono">
+            <h1 className="text-4xl md:text-5xl font-bold text-primary mb-4 font-mono">
               {review.title}
             </h1>
 
@@ -619,7 +620,7 @@ export default async function ReviewPage({
 
           {/* Verdict */}
           {review.verdict && (
-            <div className="mt-8 bg-muted/20 rounded-lg p-6 border border-border border-l-4 border-l-primary">
+            <div className="mt-8 bg-[whitesmoke] dark:bg-[#2a2a2a] rounded-lg p-6 border border-border border-l-4 border-l-primary">
               <h3 className="text-xl font-bold text-foreground mb-3 font-mono">
                 TL;DR
               </h3>
@@ -645,7 +646,7 @@ export default async function ReviewPage({
           </div>
 
           {/* Sidebar */}
-          <div className="space-y-6 sticky top-24 self-start">
+          <div className="space-y-6 sticky top-16 self-start">
             {/* Score Card */}
             <Card>
               <CardHeader>
@@ -671,9 +672,6 @@ export default async function ReviewPage({
             {/* Pros and Cons */}
             {(review.pros?.length || review.cons?.length) && (
               <Card>
-                <CardHeader>
-                  <CardTitle className="font-mono">PROS & CONS</CardTitle>
-                </CardHeader>
                 <CardContent className="space-y-4">
                   {review.pros?.length && (
                     <div>
@@ -722,7 +720,7 @@ export default async function ReviewPage({
 
             {/* Item Info - Dynamic based on type */}
             {review.reviewableItem && (
-              <Card>
+              <Card className="gap-3">
                 <CardHeader>
                   <CardTitle className="font-mono">
                     {typeInfo.emoji} {typeInfo.label.toUpperCase()} INFO
@@ -744,8 +742,7 @@ export default async function ReviewPage({
                                     platform.slug?.current ||
                                     platform.title
                                   }
-                                  variant="outline"
-                                  className="text-xs"
+                                  className="text-xs bg-accent text-black border-none"
                                 >
                                   {platform.title}
                                 </Badge>
@@ -910,6 +907,7 @@ export default async function ReviewPage({
               </Card>
             )}
           </div>
+        </div>
         </div>
       </main>
     </div>

@@ -192,17 +192,17 @@ export default async function ReviewsPage({ searchParams }: ReviewsPageProps) {
     type && typeLabels[type] ? `${typeLabels[type]} Reviews` : "All Reviews";
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen">
       <SiteHeader currentPage="reviews" />
 
       {/* Main Content */}
       <main className="container mx-auto max-w-7xl p-6">
         {/* Page Header */}
         <div className="mb-8">
-          <h1 className="text-4xl font-bold text-foreground mb-2 font-mono">
+          <h1 className="text-4xl font-bold text-white drop-shadow-md mb-2 font-mono">
             {pageTitle}
           </h1>
-          <p className="text-muted-foreground">
+          <p className="text-white/80">
             Browse our collection of honest, in-depth reviews
           </p>
         </div>

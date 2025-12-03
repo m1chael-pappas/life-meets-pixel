@@ -1,6 +1,9 @@
+import {
+  Facebook,
+  Instagram,
+} from 'lucide-react';
 import { Metadata } from 'next';
 import Link from 'next/link';
-import { Facebook, Instagram } from 'lucide-react';
 import { SiDiscord } from 'react-icons/si';
 
 import { SiteHeader } from '@/components/site-header';
@@ -28,17 +31,17 @@ export const metadata: Metadata = {
 
 export default function ContactPage() {
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen">
       <SiteHeader currentPage="contact" />
 
       {/* Main Content */}
       <main className="container mx-auto max-w-4xl p-6">
         {/* Page Header */}
         <div className="mb-12 text-center">
-          <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4 font-mono">
+          <h2 className="text-4xl md:text-5xl font-bold text-white drop-shadow-md mb-4 font-mono">
             GET IN TOUCH
           </h2>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+          <p className="text-lg text-white/80 max-w-2xl mx-auto">
             Want us to review your latest creation? We&apos;d love to hear from
             you!
           </p>
@@ -47,7 +50,7 @@ export default function ContactPage() {
         {/* Contact Info Cards */}
         <div className="grid gap-8 md:grid-cols-2 mb-12">
           {/* Review Submissions */}
-          <div className="bg-card border border-border rounded-lg p-6 hover:shadow-lg transition-shadow">
+          <div className="bg-card border border-border rounded-lg p-6 card-shadow">
             <div className="text-4xl mb-4">🎮</div>
             <h3 className="text-xl font-bold text-foreground mb-3 font-mono">
               GAME REVIEWS
@@ -74,7 +77,7 @@ export default function ContactPage() {
           </div>
 
           {/* Other Reviews */}
-          <div className="bg-card border border-border rounded-lg p-6 hover:shadow-lg transition-shadow">
+          <div className="bg-card border border-border rounded-lg p-6 card-shadow">
             <div className="text-4xl mb-4">📚</div>
             <h3 className="text-xl font-bold text-foreground mb-3 font-mono">
               OTHER CONTENT
@@ -101,12 +104,12 @@ export default function ContactPage() {
         </div>
 
         {/* Before You Reach Out */}
-        <div className="bg-accent/20 border border-accent rounded-lg p-8 mb-12">
+        <div className="bg-accent/20 border border-accent rounded-lg p-8 mb-12 card-shadow">
           <h3 className="text-2xl font-bold text-foreground mb-4 font-mono flex items-center gap-2">
             <span>✨</span>
             BEFORE YOU REACH OUT
           </h3>
-          <p className="text-muted-foreground mb-4 leading-relaxed">
+          <p className="text-white/80 mb-4 leading-relaxed">
             We want to make sure we&apos;re a good fit for your content. Please
             take a moment to explore our website first to get a feel for our
             review style, tone, and the types of content we cover.
@@ -119,7 +122,7 @@ export default function ContactPage() {
         </div>
 
         {/* Contact Methods */}
-        <div className="bg-card border border-border rounded-lg p-8">
+        <div className="bg-card border border-border rounded-lg p-8 card-shadow">
           <h3 className="text-2xl font-bold text-foreground mb-6 font-mono">
             HOW TO REACH US
           </h3>
@@ -224,7 +227,7 @@ export default function ContactPage() {
         </div>
 
         {/* Footer Note */}
-        <div className="mt-12 text-center text-sm text-muted-foreground">
+        <div className="mt-12 text-center text-sm text-white/80">
           <p>
             We appreciate your interest in Life Meets Pixel and look forward to
             hearing from you!

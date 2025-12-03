@@ -195,17 +195,17 @@ export default async function NewsPage({ searchParams }: NewsPageProps) {
   const currentPage = Number(params.page) || 1;
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen">
       <SiteHeader currentPage="news" />
 
       {/* Main Content */}
       <main className="container mx-auto max-w-7xl p-6">
         {/* Page Header */}
         <div className="mb-8">
-          <h2 className="text-4xl font-bold text-foreground mb-2 font-mono">
+          <h2 className="text-4xl font-bold text-white drop-shadow-md mb-2 font-mono">
             Gaming & Geek News
           </h2>
-          <p className="text-muted-foreground">
+          <p className="text-white/80">
             Stay up to date with the latest news from the gaming and geek
             culture world
           </p>

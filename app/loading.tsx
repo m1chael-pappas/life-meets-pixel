@@ -1,12 +1,10 @@
 export default function Loading() {
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center">
+    <div className="min-h-screen flex items-center justify-center">
       <div className="text-center space-y-8">
         {/* Pixel Heart Loading Animation */}
         <div className="relative">
-          <div className="text-6xl animate-pulse">
-            ❤️
-          </div>
+          <div className="text-6xl animate-pulse">❤️</div>
           <div className="absolute inset-0 flex items-center justify-center">
             <div className="w-20 h-20 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
           </div>
@@ -31,7 +29,7 @@ export default function Loading() {
 
         {/* Nerdy Loading Messages */}
         <p className="text-sm text-muted-foreground font-mono">
-          {'//'} Compiling awesome content...
+          {"//"} Compiling awesome content...
         </p>
       </div>
     </div>

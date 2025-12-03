@@ -20,24 +20,36 @@ export default async function ReviewsSection() {
   return (
     <section>
       <div className="flex items-center gap-3 mb-6">
-        <h3 className="text-2xl font-bold text-foreground font-mono">
+        <h3 className="text-2xl font-bold text-white drop-shadow-md font-mono">
           LATEST REVIEWS
         </h3>
-        <div className="h-px bg-primary/30 flex-1"></div>
+        <div className="h-px bg-white/30 flex-1"></div>
       </div>
 
       {reviews.length > 0 ? (
         <>
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          {/* Mobile: Stacking cards */}
+          <div className="stacking-cards-container md:hidden">
+            {reviews.map((review, index) => (
+              <div
+                key={review._id}
+                className="stacking-card"
+                style={{ zIndex: index + 1 }}
+              >
+                <UniversalReviewCard review={review} priority={index < 3} />
+              </div>
+            ))}
+          </div>
+
+          {/* Desktop: Regular grid */}
+          <div className="hidden md:grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {reviews.map((review, index) => (
               <AnimatedCardWrapper key={review._id} index={index}>
-                <UniversalReviewCard
-                  review={review}
-                  priority={index < 4} // Prioritize first row
-                />
+                <UniversalReviewCard review={review} priority={index < 3} />
               </AnimatedCardWrapper>
             ))}
           </div>
+
           <div className="text-center mt-6">
             <Link href="/reviews">
               <Button variant="outline" className="font-mono">

@@ -1,19 +1,26 @@
-import { Suspense } from "react";
+import { Suspense } from 'react';
 
-import { Metadata } from "next";
-import { type SanityDocument } from "next-sanity";
-import Image from "next/image";
-import Link from "next/link";
-import { notFound } from "next/navigation";
-import { SiDiscord } from "react-icons/si";
+import { Metadata } from 'next';
+import { type SanityDocument } from 'next-sanity';
+import Image from 'next/image';
+import Link from 'next/link';
+import { notFound } from 'next/navigation';
+import { SiDiscord } from 'react-icons/si';
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Card, CardContent } from "@/components/ui/card";
-import { SiteHeader } from "@/components/site-header";
-import UniversalReviewCard from "@/components/universal-review-card";
-import { SITE_CONFIG } from "@/lib/constants";
-import { fetchOptions } from "@/lib/queries";
-import { client } from "@/sanity/client";
+import { SiteHeader } from '@/components/site-header';
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from '@/components/ui/avatar';
+import {
+  Card,
+  CardContent,
+} from '@/components/ui/card';
+import UniversalReviewCard from '@/components/universal-review-card';
+import { SITE_CONFIG } from '@/lib/constants';
+import { fetchOptions } from '@/lib/queries';
+import { client } from '@/sanity/client';
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -21,7 +28,8 @@ type Props = {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://lifemeetspixel.com';
+  const siteUrl =
+    process.env.NEXT_PUBLIC_SITE_URL || "https://lifemeetspixel.com";
 
   const author = await client.fetch<SanityDocument>(
     `*[_type == "author" && slug.current == $slug][0]{
@@ -42,15 +50,17 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   return {
     title: `${author.name} - Author`,
-    description: author.bio || `Meet ${author.name}, a writer at Life Meets Pixel.`,
+    description:
+      author.bio || `Meet ${author.name}, a writer at Life Meets Pixel.`,
     alternates: {
       canonical: canonicalUrl,
     },
     openGraph: {
       title: `${author.name} - Author | Life Meets Pixel`,
-      description: author.bio || `Meet ${author.name}, a writer at Life Meets Pixel.`,
+      description:
+        author.bio || `Meet ${author.name}, a writer at Life Meets Pixel.`,
       url: canonicalUrl,
-      type: 'profile',
+      type: "profile",
     },
   };
 }
@@ -457,7 +467,7 @@ export default async function AuthorPage({ params }: Props) {
   const { slug } = await params;
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen">
       <SiteHeader currentPage="author" />
 
       {/* Main Content */}

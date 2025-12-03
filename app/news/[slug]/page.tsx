@@ -1,17 +1,27 @@
-import { type SanityDocument } from 'next-sanity';
-import { Metadata } from 'next';
-import Link from 'next/link';
-import Image from 'next/image';
-import { notFound } from 'next/navigation';
 import { formatDistanceToNow } from 'date-fns';
-import { PortableText, type PortableTextComponents } from 'next-sanity';
+import { Metadata } from 'next';
+import {
+  PortableText,
+  type PortableTextComponents,
+  type SanityDocument,
+} from 'next-sanity';
+import Image from 'next/image';
+import Link from 'next/link';
+import { notFound } from 'next/navigation';
 
-import { ModeToggle } from '@/components/ui/mode-toggle';
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { client } from '@/sanity/client';
-import { NEWS_POST_QUERY, fetchOptions } from '@/lib/queries';
+import { ModeToggle } from '@/components/ui/mode-toggle';
+import {
+  fetchOptions,
+  NEWS_POST_QUERY,
+} from '@/lib/queries';
 import { Category } from '@/lib/types';
+import { client } from '@/sanity/client';
 import imageUrlBuilder from '@sanity/image-url';
 import type { SanityImageSource } from '@sanity/image-url/lib/types/types';
 
@@ -140,7 +150,7 @@ const portableTextComponents: PortableTextComponents = {
       <p className="text-foreground leading-relaxed mb-4">{children}</p>
     ),
     blockquote: ({ children }) => (
-      <blockquote className="border-l-4 border-primary pl-6 my-6 italic text-muted-foreground bg-muted/30 p-4 rounded-r-lg">
+      <blockquote className="border-l-4 border-primary pl-6 my-6 italic text-muted-foreground bg-[whitesmoke] dark:bg-[#2a2a2a] p-4 rounded-r-lg">
         {children}
       </blockquote>
     ),
@@ -185,9 +195,12 @@ const portableTextComponents: PortableTextComponents = {
 };
 
 // Generate metadata
-export async function generateMetadata({ params }: NewsPostPageProps): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: NewsPostPageProps): Promise<Metadata> {
   const { slug } = await params;
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://lifemeetspixel.com';
+  const siteUrl =
+    process.env.NEXT_PUBLIC_SITE_URL || "https://lifemeetspixel.com";
 
   const post = await client.fetch<SanityDocument>(
     NEWS_POST_QUERY,
@@ -197,7 +210,7 @@ export async function generateMetadata({ params }: NewsPostPageProps): Promise<M
 
   if (!post) {
     return {
-      title: 'News Not Found | Life Meets Pixel',
+      title: "News Not Found | Life Meets Pixel",
     };
   }
 
@@ -205,31 +218,38 @@ export async function generateMetadata({ params }: NewsPostPageProps): Promise<M
 
   return {
     title: `${post.title}`,
-    description: post.excerpt || post.seo?.metaDescription || 'Read the latest gaming and geek culture news.',
+    description:
+      post.excerpt ||
+      post.seo?.metaDescription ||
+      "Read the latest gaming and geek culture news.",
     alternates: {
       canonical: canonicalUrl,
     },
     openGraph: {
-      type: 'article',
+      type: "article",
       title: post.title,
       description: post.excerpt,
       url: canonicalUrl,
       publishedTime: post.publishedAt,
-      authors: [post.author?.name || 'Life Meets Pixel'],
-      images: post.featuredImage?.asset?.url ? [post.featuredImage.asset.url] : [],
+      authors: [post.author?.name || "Life Meets Pixel"],
+      images: post.featuredImage?.asset?.url
+        ? [post.featuredImage.asset.url]
+        : [],
     },
     twitter: {
-      card: 'summary_large_image',
+      card: "summary_large_image",
       title: post.title,
       description: post.excerpt,
-      images: post.featuredImage?.asset?.url ? [post.featuredImage.asset.url] : [],
+      images: post.featuredImage?.asset?.url
+        ? [post.featuredImage.asset.url]
+        : [],
     },
   };
 }
 
 const getAuthorInitials = (name: string) => {
-  const words = name.split(' ');
-  const initials = words.reduce((acc, word) => acc + (word[0] || ''), '');
+  const words = name.split(" ");
+  const initials = words.reduce((acc, word) => acc + (word[0] || ""), "");
   return initials.toUpperCase().slice(0, 2);
 };
 
@@ -249,71 +269,75 @@ export default async function NewsPostPage({ params }: NewsPostPageProps) {
     addSuffix: true,
   });
 
-  const publishedDate = new Date(post.publishedAt).toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
+  const publishedDate = new Date(post.publishedAt).toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
   });
 
   // Structured data for SEO and AI search engines
   const structuredData = {
     "@context": "https://schema.org",
     "@type": post.breaking ? "NewsArticle" : "BlogPosting",
-    "headline": post.title,
-    "description": post.excerpt || "",
-    "image": post.featuredImage?.asset?.url ? [post.featuredImage.asset.url] : [],
-    "datePublished": post.publishedAt,
-    "dateModified": post._updatedAt || post.publishedAt,
-    "author": {
+    headline: post.title,
+    description: post.excerpt || "",
+    image: post.featuredImage?.asset?.url ? [post.featuredImage.asset.url] : [],
+    datePublished: post.publishedAt,
+    dateModified: post._updatedAt || post.publishedAt,
+    author: {
       "@type": "Person",
-      "name": post.author?.name || "Life Meets Pixel",
-      "url": post.author?.slug?.current ? `https://lifemeetspixel.com/author/${post.author.slug.current}` : undefined
+      name: post.author?.name || "Life Meets Pixel",
+      url: post.author?.slug?.current
+        ? `https://lifemeetspixel.com/author/${post.author.slug.current}`
+        : undefined,
     },
-    "publisher": {
+    publisher: {
       "@type": "Organization",
-      "name": "Life Meets Pixel",
-      "logo": {
+      name: "Life Meets Pixel",
+      logo: {
         "@type": "ImageObject",
-        "url": "https://lifemeetspixel.com/logo.png"
-      }
+        url: "https://lifemeetspixel.com/logo.png",
+      },
     },
-    "mainEntityOfPage": {
+    mainEntityOfPage: {
       "@type": "WebPage",
-      "@id": `https://lifemeetspixel.com/news/${post.slug.current}`
+      "@id": `https://lifemeetspixel.com/news/${post.slug.current}`,
     },
-    "articleSection": post.categories?.[0]?.title || "News",
-    "keywords": post.categories?.map((cat: { title: string }) => cat.title).join(", ") || "",
-    "inLanguage": "en-US"
+    articleSection: post.categories?.[0]?.title || "News",
+    keywords:
+      post.categories?.map((cat: { title: string }) => cat.title).join(", ") ||
+      "",
+    inLanguage: "en-US",
   };
 
   // Breadcrumb structured data
   const breadcrumbData = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
-    "itemListElement": [
+    itemListElement: [
       {
         "@type": "ListItem",
-        "position": 1,
-        "name": "Home",
-        "item": "https://lifemeetspixel.com"
+        position: 1,
+        name: "Home",
+        item: "https://lifemeetspixel.com",
       },
       {
         "@type": "ListItem",
-        "position": 2,
-        "name": "News",
-        "item": "https://lifemeetspixel.com/news"
+        position: 2,
+        name: "News",
+        item: "https://lifemeetspixel.com/news",
       },
       {
         "@type": "ListItem",
-        "position": 3,
-        "name": post.title,
-        "item": `https://lifemeetspixel.com/news/${post.slug.current}`
-      }
-    ]
+        position: 3,
+        name: post.title,
+        item: `https://lifemeetspixel.com/news/${post.slug.current}`,
+      },
+    ],
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen">
       {/* Structured Data for SEO */}
       <script
         type="application/ld+json"
@@ -329,7 +353,10 @@ export default async function NewsPostPage({ params }: NewsPostPageProps) {
         <div className="container mx-auto max-w-6xl px-4 py-4">
           <div className="flex justify-between items-center">
             {/* Logo */}
-            <Link href="/" className="hover:opacity-80 transition-opacity flex items-center gap-3">
+            <Link
+              href="/"
+              className="hover:opacity-80 transition-opacity flex items-center gap-3"
+            >
               <Image
                 src="/logo.png"
                 alt="Life Meets Pixel"
@@ -372,146 +399,151 @@ export default async function NewsPostPage({ params }: NewsPostPageProps) {
 
       {/* Main Content */}
       <main className="container mx-auto max-w-3xl p-6 py-12">
-        {/* Back Link */}
-        <Link
-          href="/news"
-          className="inline-flex items-center text-sm text-muted-foreground hover:text-primary transition-colors mb-8 font-mono"
-        >
-          ← Back to News
-        </Link>
+        <div className="bg-card border border-border rounded-xl p-6 md:p-8 card-shadow-static">
+          {/* Back Link */}
+          <Link
+            href="/news"
+            className="inline-flex items-center text-sm text-muted-foreground hover:text-primary transition-colors mb-8 font-mono"
+          >
+            ← Back to News
+          </Link>
 
-        {/* Article Header */}
-        <article>
-          {/* Breaking Badge */}
-          {post.breaking && (
-            <div className="mb-4">
-              <Badge className="bg-red-500 text-white border-none">
-                🚨 BREAKING NEWS
-              </Badge>
-            </div>
-          )}
-
-          {/* Categories */}
-          {post.categories && post.categories.length > 0 && (
-            <div className="flex flex-wrap gap-2 mb-4">
-              {post.categories.map((cat: Category, index: number) => (
-                <Badge
-                  key={cat.slug?.current || cat.title || index}
-                  className="bg-accent text-black border-none hover:bg-accent/90 px-3 py-1.5"
-                >
-                  {cat.title}
+          {/* Article Header */}
+          <article>
+            {/* Breaking Badge */}
+            {post.breaking && (
+              <div className="mb-4">
+                <Badge className="bg-red-500 text-white border-none">
+                  🚨 BREAKING NEWS
                 </Badge>
-              ))}
-            </div>
-          )}
-
-          {/* Title */}
-          <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-4 font-mono leading-tight">
-            {post.title}
-          </h1>
-
-          {/* Excerpt */}
-          {post.excerpt && (
-            <p className="text-xl text-muted-foreground mb-6 leading-relaxed">
-              {post.excerpt}
-            </p>
-          )}
-
-          {/* Meta Info */}
-          <div className="flex items-center gap-4 mb-8 pb-8 border-b border-border">
-            {/* Author */}
-            {post.author && (
-              <div className="flex items-center gap-3">
-                <Avatar className="w-10 h-10">
-                  {post.author.avatar?.asset?.url ? (
-                    <AvatarImage
-                      src={post.author.avatar.asset.url}
-                      alt={post.author.name}
-                    />
-                  ) : null}
-                  <AvatarFallback className="bg-primary text-primary-foreground text-sm font-mono">
-                    {getAuthorInitials(post.author.name)}
-                  </AvatarFallback>
-                </Avatar>
-                <div>
-                  <Link
-                    href={`/author/${post.author.slug.current}`}
-                    className="text-sm font-medium text-foreground hover:text-primary transition-colors"
-                  >
-                    {post.author.name}
-                  </Link>
-                  <div className="text-xs text-muted-foreground font-mono">
-                    {publishedDate} • {relativeDate}
-                  </div>
-                </div>
               </div>
             )}
-          </div>
 
-          {/* Featured Image */}
-          {post.featuredImage?.asset?.url && (
-            <div className="relative aspect-video mb-8 rounded-lg overflow-hidden">
-              <Image
-                src={post.featuredImage.asset.url}
-                alt={post.featuredImage.alt || post.title}
-                fill
-                className="object-cover object-center"
-                priority
-                sizes="(max-width: 896px) 100vw, 896px"
-              />
-            </div>
-          )}
-
-          {/* Content */}
-          <div className="prose prose-lg dark:prose-invert max-w-none">
-            {Array.isArray(post.content) ? (
-              <PortableText
-                value={post.content}
-                components={portableTextComponents}
-              />
-            ) : (
-              <p className="text-muted-foreground">No content available.</p>
+            {/* Categories */}
+            {post.categories && post.categories.length > 0 && (
+              <div className="flex flex-wrap gap-2 mb-4">
+                {post.categories.map((cat: Category, index: number) => (
+                  <Badge
+                    key={cat.slug?.current || cat.title || index}
+                    className="bg-accent text-black border-none hover:bg-accent/90 px-3 py-1.5"
+                  >
+                    {cat.title}
+                  </Badge>
+                ))}
+              </div>
             )}
-          </div>
 
-          {/* Author Card */}
-          {post.author && (
-            <div className="mt-12 p-6 bg-muted/30 rounded-lg border border-border hover:shadow-lg transition-all duration-300">
-              <Link href={`/author/${post.author.slug.current}`} className="block">
-                <div className="flex items-start gap-4">
-                  <Avatar className="w-16 h-16">
+            {/* Title */}
+            <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-4 font-mono leading-tight">
+              {post.title}
+            </h1>
+
+            {/* Excerpt */}
+            {post.excerpt && (
+              <p className="text-xl text-muted-foreground mb-6 leading-relaxed">
+                {post.excerpt}
+              </p>
+            )}
+
+            {/* Meta Info */}
+            <div className="flex items-center gap-4 mb-8 pb-8 border-b border-border">
+              {/* Author */}
+              {post.author && (
+                <div className="flex items-center gap-3">
+                  <Avatar className="w-10 h-10">
                     {post.author.avatar?.asset?.url ? (
                       <AvatarImage
                         src={post.author.avatar.asset.url}
                         alt={post.author.name}
                       />
                     ) : null}
-                    <AvatarFallback className="bg-primary text-primary-foreground font-mono">
+                    <AvatarFallback className="bg-primary text-primary-foreground text-sm font-mono">
                       {getAuthorInitials(post.author.name)}
                     </AvatarFallback>
                   </Avatar>
-                  <div className="flex-1">
-                    <h3 className="text-lg font-bold text-foreground mb-1 font-mono hover:text-primary transition-colors">
+                  <div>
+                    <Link
+                      href={`/author/${post.author.slug.current}`}
+                      className="text-sm font-medium text-foreground hover:text-primary transition-colors"
+                    >
                       {post.author.name}
-                    </h3>
-                    <p className="text-xs text-muted-foreground font-mono">
-                      {'//'} Click to view author profile
-                    </p>
+                    </Link>
+                    <div className="text-xs text-muted-foreground font-mono">
+                      {publishedDate} • {relativeDate}
+                    </div>
                   </div>
                 </div>
-              </Link>
+              )}
             </div>
-          )}
-        </article>
 
-        {/* Back to News */}
-        <div className="mt-12 pt-8 border-t border-border">
-          <Link
-            href="/news"
-            className="inline-flex items-center text-sm text-primary hover:text-primary/80 transition-colors font-mono"
-          >
-            ← Back to all news
-          </Link>
+            {/* Featured Image */}
+            {post.featuredImage?.asset?.url && (
+              <div className="relative aspect-video mb-8 rounded-lg overflow-hidden">
+                <Image
+                  src={post.featuredImage.asset.url}
+                  alt={post.featuredImage.alt || post.title}
+                  fill
+                  className="object-cover object-center"
+                  priority
+                  sizes="(max-width: 896px) 100vw, 896px"
+                />
+              </div>
+            )}
+
+            {/* Content */}
+            <div className="prose prose-lg dark:prose-invert max-w-none">
+              {Array.isArray(post.content) ? (
+                <PortableText
+                  value={post.content}
+                  components={portableTextComponents}
+                />
+              ) : (
+                <p className="text-muted-foreground">No content available.</p>
+              )}
+            </div>
+
+            {/* Author Card */}
+            {post.author && (
+              <div className="mt-12 p-6 bg-card rounded-lg border border-border card-shadow">
+                <Link
+                  href={`/author/${post.author.slug.current}`}
+                  className="block"
+                >
+                  <div className="flex items-start gap-4">
+                    <Avatar className="w-16 h-16">
+                      {post.author.avatar?.asset?.url ? (
+                        <AvatarImage
+                          src={post.author.avatar.asset.url}
+                          alt={post.author.name}
+                        />
+                      ) : null}
+                      <AvatarFallback className="bg-primary text-primary-foreground font-mono">
+                        {getAuthorInitials(post.author.name)}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="flex-1">
+                      <h3 className="text-lg font-bold text-foreground mb-1 font-mono hover:text-primary transition-colors">
+                        {post.author.name}
+                      </h3>
+                      <p className="text-xs text-muted-foreground font-mono">
+                        {"//"} Click to view author profile
+                      </p>
+                    </div>
+                  </div>
+                </Link>
+              </div>
+            )}
+          </article>
+
+          {/* Back to News */}
+          <div className="mt-12 pt-8 border-t border-border">
+            <Link
+              href="/news"
+              className="inline-flex items-center text-sm text-primary hover:text-primary/80 transition-colors font-mono"
+            >
+              ← Back to all news
+            </Link>
+          </div>
         </div>
       </main>
     </div>

@@ -2,6 +2,7 @@ import { Suspense } from 'react';
 
 import { Metadata } from 'next';
 
+import ScenicBackground from '@/components/scenic-background';
 import FeaturedSection from '@/components/sections/featured-section';
 import GearSection from '@/components/sections/gear-section';
 import HeroSection from '@/components/sections/hero-section';
@@ -13,7 +14,8 @@ import SupportSection from '@/components/sections/support-section';
 import { SiteHeader } from '@/components/site-header';
 
 // Homepage metadata
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://lifemeetspixel.com";
+const siteUrl =
+  process.env.NEXT_PUBLIC_SITE_URL || "https://lifemeetspixel.com";
 
 export const metadata: Metadata = {
   title: "Life Meets Pixel - Reviews & News",
@@ -90,7 +92,8 @@ function SectionSkeleton({ title }: { title: string }) {
 
 export default function HomePage() {
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen relative">
+      <ScenicBackground />
       <SiteHeader currentPage="home" />
 
       {/* Main Content */}

@@ -84,26 +84,37 @@ export function SiteHeader({ currentPage }: SiteHeaderProps) {
         </div>
 
         {/* Mobile Menu */}
-        {mobileMenuOpen && (
-          <nav className="md:hidden mt-4 pt-4 border-t border-border">
-            <div className="flex flex-col gap-4">
-              {navItems.map((item) => (
-                <Link
-                  key={item.key}
-                  href={item.href}
-                  onClick={() => setMobileMenuOpen(false)}
-                  className={`font-mono text-md transition-colors py-2 ${
-                    currentPage === item.key
-                      ? "text-primary hover:text-primary/80"
-                      : "text-foreground hover:text-primary"
-                  }`}
-                >
-                  {item.label}
-                </Link>
-              ))}
-            </div>
-          </nav>
-        )}
+        <nav
+          className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out ${
+            mobileMenuOpen
+              ? "max-h-64 opacity-100 mt-4 pt-4 border-t border-border"
+              : "max-h-0 opacity-0"
+          }`}
+        >
+          <div className="flex flex-col gap-4">
+            {navItems.map((item, index) => (
+              <Link
+                key={item.key}
+                href={item.href}
+                onClick={() => setMobileMenuOpen(false)}
+                className={`font-mono text-md transition-all py-2 ${
+                  currentPage === item.key
+                    ? "text-primary hover:text-primary/80"
+                    : "text-foreground hover:text-primary"
+                }`}
+                style={{
+                  transitionDelay: mobileMenuOpen ? `${index * 50}ms` : "0ms",
+                  transform: mobileMenuOpen
+                    ? "translateX(0)"
+                    : "translateX(-10px)",
+                  opacity: mobileMenuOpen ? 1 : 0,
+                }}
+              >
+                {item.label}
+              </Link>
+            ))}
+          </div>
+        </nav>
       </div>
     </header>
   );

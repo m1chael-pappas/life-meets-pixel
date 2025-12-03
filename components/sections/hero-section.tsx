@@ -13,12 +13,13 @@ export default function HeroSection() {
         <PixelCursorFollower />
       </div>
       <motion.h2
-        className="text-5xl font-bold text-foreground mb-4 font-mono"
+        className="text-5xl font-bold text-white mb-4 font-mono drop-shadow-lg"
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, ease: "easeOut" }}
       >
-        <span className="text-primary">Reviews</span> & Stuff;
+        <span className="text-primary">Reviews</span>{" "}
+        <span className="text-white/90">&</span> Stuff;
       </motion.h2>
       <motion.div
         className="flex items-center justify-center gap-4 mb-4"
@@ -46,7 +47,7 @@ export default function HeroSection() {
         <span className="text-2xl">📚</span>
       </motion.div>
       <motion.p
-        className="text-muted-foreground text-lg max-w-3xl mx-auto"
+        className="text-white/80 text-lg max-w-3xl mx-auto drop-shadow-md"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.6, delay: 0.4 }}
@@ -78,15 +79,15 @@ export default function HeroSection() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.6 }}
       >
-        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+        <div className="flex items-center gap-2 text-sm text-white/70">
           <span className="text-lg">🎯</span>
           <span>Honest Reviews</span>
         </div>
-        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+        <div className="flex items-center gap-2 text-sm text-white/70">
           <span className="text-lg">🧠</span>
           <span>Personal Insights</span>
         </div>
-        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+        <div className="flex items-center gap-2 text-sm text-white/70">
           <span className="text-lg">🔥</span>
           <span>Geek-Centric Picks</span>
         </div>

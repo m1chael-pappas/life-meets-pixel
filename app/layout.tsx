@@ -7,8 +7,9 @@ import {
 } from 'next/font/google';
 import Script from 'next/script';
 
-import { SiteFooter } from '@/components/site-footer';
 import PageTransition from '@/components/page-transition';
+import ScenicBackground from '@/components/scenic-background';
+import { SiteFooter } from '@/components/site-footer';
 import { ThemeProvider } from '@/components/ui/theme-provider';
 import { GoogleAnalytics } from '@next/third-parties/google';
 import { Analytics } from '@vercel/analytics/next';
@@ -66,16 +67,16 @@ export const metadata: Metadata = {
   },
   alternates: {
     types: {
-      'application/rss+xml': [
+      "application/rss+xml": [
         {
-          url: '/feed.xml',
-          title: 'Life Meets Pixel RSS Feed',
+          url: "/feed.xml",
+          title: "Life Meets Pixel RSS Feed",
         },
       ],
     },
   },
   other: {
-    'facebook:profile_id': '61582819127746',
+    "facebook:profile_id": "61582819127746",
   },
   twitter: {
     card: "summary_large_image",
@@ -138,6 +139,7 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
+          <ScenicBackground simplified />
           <PageTransition>
             {children}
             <SiteFooter />

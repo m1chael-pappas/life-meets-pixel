@@ -24,10 +24,10 @@ export default async function FeaturedSection() {
   return (
     <section className="mb-12">
       <div className="flex items-center gap-3 mb-6">
-        <h3 className="text-2xl font-bold text-foreground font-mono">
+        <h3 className="text-2xl font-bold text-white drop-shadow-md font-mono">
           FEATURED REVIEWS
         </h3>
-        <div className="h-px bg-primary/30 flex-1"></div>
+        <div className="h-px bg-white/30 flex-1"></div>
         <span className="text-xs bg-accent text-accent-foreground px-2 py-1 rounded font-mono">
           EDITOR&apos;S CHOICE
         </span>
@@ -35,10 +35,7 @@ export default async function FeaturedSection() {
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {featuredReviews.map((review, index) => (
           <AnimatedCardWrapper key={review._id} index={index}>
-            <UniversalReviewCard
-              review={review}
-              priority={index < 3}
-            />
+            <UniversalReviewCard review={review} priority={index < 3} />
           </AnimatedCardWrapper>
         ))}
       </div>

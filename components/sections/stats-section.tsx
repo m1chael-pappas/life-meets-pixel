@@ -17,31 +17,31 @@ export default async function StatsSection() {
   }
 
   return (
-    <section className="mt-16 py-8 border-t border-primary/20">
+    <section className="mt-16 py-8 border-t border-white/30">
       <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
         <div>
-          <div className="text-3xl font-bold text-primary font-mono">
+          <div className="text-3xl font-bold text-primary font-mono stat-text-shadow">
             {stats.totalReviews}
           </div>
-          <div className="text-sm text-muted-foreground">Total Reviews</div>
+          <div className="text-md text-white/80">Total Reviews</div>
         </div>
         <div>
-          <div className="text-3xl font-bold text-primary font-mono">
+          <div className="text-3xl font-bold text-primary font-mono stat-text-shadow">
             {stats.featuredReviews}
           </div>
-          <div className="text-sm text-muted-foreground">Featured</div>
+          <div className="text-md text-white/80">Featured</div>
         </div>
         <div>
-          <div className="text-3xl font-bold text-primary font-mono">
+          <div className="text-3xl font-bold text-primary font-mono stat-text-shadow">
             {stats.averageScore?.toFixed(1) || "0.0"}
           </div>
-          <div className="text-sm text-muted-foreground">Avg Rating</div>
+          <div className="text-md text-white/80">Avg Rating</div>
         </div>
         <div>
-          <div className="text-3xl font-bold text-primary font-mono">
+          <div className="text-3xl font-bold text-primary font-mono stat-text-shadow">
             {new Date().getFullYear()}
           </div>
-          <div className="text-sm text-muted-foreground">Est.</div>
+          <div className="text-md text-white/80">Est.</div>
         </div>
       </div>
     </section>

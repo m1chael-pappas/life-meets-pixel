@@ -21,10 +21,10 @@ export default async function NewsSection() {
     return (
       <section className="mb-12">
         <div className="flex items-center gap-3 mb-6">
-          <h3 className="text-2xl font-bold text-foreground font-mono">
+          <h3 className="text-2xl font-bold text-white drop-shadow-md font-mono">
             GAMING NEWS
           </h3>
-          <div className="h-px bg-secondary/30 flex-1"></div>
+          <div className="h-px bg-white/30 flex-1"></div>
         </div>
         <div className="text-center py-8 bg-muted/20 rounded-lg">
           <div className="text-4xl mb-2">📰</div>
@@ -40,10 +40,10 @@ export default async function NewsSection() {
   return (
     <section className="mb-12">
       <div className="flex items-center gap-3 mb-6">
-        <h3 className="text-2xl font-bold text-foreground font-mono">
+        <h3 className="text-2xl font-bold text-white drop-shadow-md font-mono">
           GAMING NEWS
         </h3>
-        <div className="h-px bg-secondary/30 flex-1"></div>
+        <div className="h-px bg-white/30 flex-1"></div>
         {/* Show breaking news indicator if any breaking news exists */}
         {news.some((article) => article.breaking) && (
           <span className="text-xs bg-red-500 text-white px-2 py-1 rounded font-mono">
