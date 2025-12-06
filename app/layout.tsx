@@ -1,18 +1,15 @@
-import './globals.css';
+import "./globals.css";
 
-import type { Metadata } from 'next';
-import {
-  Geist,
-  Geist_Mono,
-} from 'next/font/google';
-import Script from 'next/script';
+import type { Metadata } from "next";
+import { Geist, Geist_Mono } from "next/font/google";
+import Script from "next/script";
 
-import PageTransition from '@/components/page-transition';
-import ScenicBackground from '@/components/scenic-background';
-import { SiteFooter } from '@/components/site-footer';
-import { ThemeProvider } from '@/components/ui/theme-provider';
-import { GoogleAnalytics } from '@next/third-parties/google';
-import { Analytics } from '@vercel/analytics/next';
+import PageTransition from "@/components/page-transition";
+import ScenicBackground from "@/components/scenic-background";
+import { SiteFooter } from "@/components/site-footer";
+import { ThemeProvider } from "@/components/ui/theme-provider";
+import { GoogleAnalytics } from "@next/third-parties/google";
+import { Analytics } from "@vercel/analytics/next";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -58,7 +55,7 @@ export const metadata: Metadata = {
       "Honest reviews of games, movies, books, anime, board games, and more. No sponsors. No PR fluff. Just real reviews from a fellow nerd.",
     images: [
       {
-        url: "/logo.png",
+        url: "/logo.svg",
         width: 1200,
         height: 630,
         alt: "Life Meets Pixel - Reviews & News",
@@ -83,7 +80,7 @@ export const metadata: Metadata = {
     title: "Life Meets Pixel - Reviews & News",
     description:
       "Honest reviews of games, movies, books, anime, and more. No sponsors. No PR fluff.",
-    images: ["/logo.png"],
+    images: ["/logo.svg"],
     creator: "@lifemeetspixel",
   },
   robots: {
@@ -110,24 +107,8 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        <link rel="icon" href="/favicon.ico" />
-        <link
-          rel="apple-touch-icon"
-          sizes="180x180"
-          href="/apple-touch-icon.png"
-        />
-        <link
-          rel="icon"
-          type="image/png"
-          sizes="32x32"
-          href="/favicon-32x32.png"
-        />
-        <link
-          rel="icon"
-          type="image/png"
-          sizes="16x16"
-          href="/favicon-16x16.png"
-        />
+        <link rel="icon" href="/logo.svg" type="image/svg+xml" />
+        <link rel="apple-touch-icon" href="/logo.svg" />
         <link rel="manifest" href="/site.webmanifest" />
       </head>
       <body

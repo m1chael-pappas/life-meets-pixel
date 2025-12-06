@@ -1,15 +1,12 @@
 "use client";
 
-import { useState } from 'react';
+import { useState } from "react";
 
-import {
-  Menu,
-  X,
-} from 'lucide-react';
-import Image from 'next/image';
-import Link from 'next/link';
+import { Menu, X } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
 
-import { ModeToggle } from '@/components/ui/mode-toggle';
+import { ModeToggle } from "@/components/ui/mode-toggle";
 
 interface SiteHeaderProps {
   currentPage?: "home" | "reviews" | "news" | "author" | "contact";
@@ -35,7 +32,7 @@ export function SiteHeader({ currentPage }: SiteHeaderProps) {
             className="hover:opacity-80 transition-opacity flex items-center gap-3"
           >
             <Image
-              src="/logo.png"
+              src="/logo.svg"
               alt="Life Meets Pixel"
               width={40}
               height={40}

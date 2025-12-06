@@ -1,7 +1,7 @@
-import Image from 'next/image';
-import Link from 'next/link';
+import Image from "next/image";
+import Link from "next/link";
 
-import { ModeToggle } from '@/components/ui/mode-toggle';
+import { ModeToggle } from "@/components/ui/mode-toggle";
 
 export default function NotFound() {
   return (
@@ -16,7 +16,7 @@ export default function NotFound() {
               className="hover:opacity-80 transition-opacity flex items-center gap-3"
             >
               <Image
-                src="/logo.png"
+                src="/logo.svg"
                 alt="Life Meets Pixel"
                 width={40}
                 height={40}

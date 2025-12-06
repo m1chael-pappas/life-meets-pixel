@@ -1,20 +1,20 @@
-import { Suspense } from 'react';
+import { Suspense } from "react";
 
-import { Metadata } from 'next';
-import { type SanityDocument } from 'next-sanity';
+import { Metadata } from "next";
+import { type SanityDocument } from "next-sanity";
 
-import ReviewTypeTabs from '@/components/review-type-tabs';
-import { SiteHeader } from '@/components/site-header';
-import Pagination from '@/components/ui/pagination';
-import UniversalReviewCard from '@/components/universal-review-card';
+import ReviewTypeTabs from "@/components/review-type-tabs";
+import { SiteHeader } from "@/components/site-header";
+import Pagination from "@/components/ui/pagination";
+import UniversalReviewCard from "@/components/universal-review-card";
 import {
   fetchOptions,
   REVIEWS_BY_TYPE_PAGINATED_QUERY,
   REVIEWS_COUNT_BY_TYPE_QUERY,
   REVIEWS_COUNT_QUERY,
   REVIEWS_PAGINATED_QUERY,
-} from '@/lib/queries';
-import { client } from '@/sanity/client';
+} from "@/lib/queries";
+import { client } from "@/sanity/client";
 
 type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>;
 
@@ -148,7 +148,7 @@ async function ReviewsList({ type, page }: { type?: string; page: number }) {
 
   return (
     <>
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {reviews.map((review, index) => (
           <UniversalReviewCard
             key={review._id}
@@ -164,7 +164,7 @@ async function ReviewsList({ type, page }: { type?: string; page: number }) {
 
 function ReviewsListSkeleton() {
   return (
-    <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+    <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
       {[...Array(8)].map((_, i) => (
         <div key={i} className="h-96 bg-muted/20 rounded-lg animate-pulse" />
       ))}

@@ -1,29 +1,22 @@
-import { formatDistanceToNow } from 'date-fns';
-import { Metadata } from 'next';
+import { formatDistanceToNow } from "date-fns";
+import { Metadata } from "next";
 import {
   PortableText,
   type PortableTextComponents,
   type SanityDocument,
-} from 'next-sanity';
-import Image from 'next/image';
-import Link from 'next/link';
-import { notFound } from 'next/navigation';
+} from "next-sanity";
+import Image from "next/image";
+import Link from "next/link";
+import { notFound } from "next/navigation";
 
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from '@/components/ui/avatar';
-import { Badge } from '@/components/ui/badge';
-import { ModeToggle } from '@/components/ui/mode-toggle';
-import {
-  fetchOptions,
-  NEWS_POST_QUERY,
-} from '@/lib/queries';
-import { Category } from '@/lib/types';
-import { client } from '@/sanity/client';
-import imageUrlBuilder from '@sanity/image-url';
-import type { SanityImageSource } from '@sanity/image-url/lib/types/types';
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { ModeToggle } from "@/components/ui/mode-toggle";
+import { fetchOptions, NEWS_POST_QUERY } from "@/lib/queries";
+import { Category } from "@/lib/types";
+import { client } from "@/sanity/client";
+import imageUrlBuilder from "@sanity/image-url";
+import type { SanityImageSource } from "@sanity/image-url/lib/types/types";
 
 interface NewsPostPageProps {
   params: Promise<{ slug: string }>;
@@ -296,7 +289,7 @@ export default async function NewsPostPage({ params }: NewsPostPageProps) {
       name: "Life Meets Pixel",
       logo: {
         "@type": "ImageObject",
-        url: "https://lifemeetspixel.com/logo.png",
+        url: "https://lifemeetspixel.com/logo.svg",
       },
     },
     mainEntityOfPage: {
@@ -358,7 +351,7 @@ export default async function NewsPostPage({ params }: NewsPostPageProps) {
               className="hover:opacity-80 transition-opacity flex items-center gap-3"
             >
               <Image
-                src="/logo.png"
+                src="/logo.svg"
                 alt="Life Meets Pixel"
                 width={40}
                 height={40}
