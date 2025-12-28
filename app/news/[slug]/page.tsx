@@ -56,6 +56,10 @@ const getVideoEmbedUrl = (url: string): string | null => {
 const portableTextComponents: PortableTextComponents = {
   types: {
     image: ({ value }) => {
+      // Check if the image has a valid asset reference before trying to build URL
+      if (!value?.asset) {
+        return null;
+      }
       const imageUrl = urlFor(value)?.width(800).url();
       return imageUrl ? (
         <div className="my-8">

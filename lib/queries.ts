@@ -262,7 +262,13 @@ export const REVIEW_QUERY = `*[
   slug,
   reviewScore,
   summary,
-  content,
+  content[]{
+    ...,
+    _type == "image" => {
+      ...,
+      asset->
+    }
+  },
   pros,
   cons,
   verdict,
@@ -409,7 +415,13 @@ export const NEWS_POST_QUERY = `*[
   title,
   slug,
   excerpt,
-  content,
+  content[]{
+    ...,
+    _type == "image" => {
+      ...,
+      asset->
+    }
+  },
   publishedAt,
   breaking,
   featuredImage{
