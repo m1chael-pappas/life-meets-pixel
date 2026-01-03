@@ -1,0 +1,50 @@
+# Life Meets Pixel
+
+> A geek culture review website covering video games, movies, TV series, anime, books, comics, board games, and gadgets. Reviews include scores from 1-10 with detailed analysis, pros/cons, and structured metadata.
+
+Life Meets Pixel provides in-depth reviews and news for gaming and entertainment enthusiasts. Each review includes a numerical score (1-10), editorial analysis, and type-specific metadata (platforms, runtime, page count, etc.).
+
+## Content Types
+
+- Video Games: Reviews of PC, PlayStation, Xbox, Nintendo, and mobile games
+- Movies: Film reviews with runtime, director, and cast information
+- TV Series: Television show reviews with episode and season details
+- Anime: Japanese animation reviews
+- Books: Book reviews with page count and author information
+- Comics: Comic and graphic novel reviews
+- Board Games: Tabletop game reviews with player count and playtime
+- Gadgets: Tech and gaming accessory reviews
+
+## Main Sections
+
+- [Home](https://lifemeetspixel.com/): Featured reviews, latest news, and site highlights
+- [All Reviews](https://lifemeetspixel.com/reviews): Browse all reviews with filtering by content type
+- [News](https://lifemeetspixel.com/news): Latest gaming and entertainment news articles
+- [Contact](https://lifemeetspixel.com/contact): Get in touch with the team
+
+## Reviews by Category
+
+- [Video Game Reviews](https://lifemeetspixel.com/reviews?type=videogame): All video game reviews
+- [Movie Reviews](https://lifemeetspixel.com/reviews?type=movie): All movie reviews
+- [TV Series Reviews](https://lifemeetspixel.com/reviews?type=tvseries): All TV series reviews
+- [Anime Reviews](https://lifemeetspixel.com/reviews?type=anime): All anime reviews
+- [Book Reviews](https://lifemeetspixel.com/reviews?type=book): All book reviews
+- [Comic Reviews](https://lifemeetspixel.com/reviews?type=comic): All comic reviews
+- [Board Game Reviews](https://lifemeetspixel.com/reviews?type=boardgame): All board game reviews
+- [Gadget Reviews](https://lifemeetspixel.com/reviews?type=gadget): All gadget reviews
+
+## Review Score Guide
+
+Reviews use a 1-10 scoring system:
+- 9-10: Masterpiece - Essential, genre-defining content
+- 8-8.9: Excellent - Highly recommended with minor flaws
+- 7-7.9: Great - Solid content worth experiencing
+- 6-6.9: Good - Enjoyable but with notable issues
+- 5-5.9: Average - Mediocre, for dedicated fans only
+- Below 5: Not Recommended - Significant problems
+
+## Optional
+
+- [Legal](https://lifemeetspixel.com/legal): Terms of service and legal information
+- [Privacy Policy](https://lifemeetspixel.com/legal/privacy): Privacy policy details
+- [Affiliate Disclosure](https://lifemeetspixel.com/legal/affiliate-disclosure): Affiliate relationship disclosures
