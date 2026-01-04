@@ -559,7 +559,7 @@ export default async function ReviewPage({
 
             {/* Title and Meta */}
             <div className="mb-6">
-              <h1 className="text-4xl md:text-5xl font-bold text-primary mb-4 font-mono">
+              <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-4 font-mono">
                 {review.title}
               </h1>
 
