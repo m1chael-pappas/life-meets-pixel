@@ -111,6 +111,36 @@ export const reviewType = defineType({
         },
         {
           type: 'object',
+          name: 'spacer',
+          title: 'Spacer',
+          fields: [
+            {
+              name: 'size',
+              type: 'string',
+              title: 'Size',
+              options: {
+                list: [
+                  {title: 'Small', value: 'small'},
+                  {title: 'Medium', value: 'medium'},
+                  {title: 'Large', value: 'large'},
+                ],
+              },
+              initialValue: 'medium',
+            },
+          ],
+          preview: {
+            select: {
+              size: 'size',
+            },
+            prepare({size}: {size?: string}) {
+              return {
+                title: `↕ Spacer (${size || 'medium'})`,
+              }
+            },
+          },
+        },
+        {
+          type: 'object',
           name: 'videoEmbed',
           title: 'Video Embed',
           fields: [
