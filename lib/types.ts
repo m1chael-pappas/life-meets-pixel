@@ -107,6 +107,10 @@ export interface ReviewableItem {
   // Common fields
   genres?: Genre[];
   officialWebsite?: string;
+
+  // Affiliate fields
+  affiliateLink?: string;
+  affiliatePartner?: 'gmg' | 'gearup' | 'other';
 }
 
 export interface Review {

@@ -10,12 +10,10 @@ import {
   fetchCatalogs,
   fetchCatalogItems,
   fetchCampaigns,
-  fetchAds,
   isImpactConfigured,
   type ImpactDeal,
   type ImpactCatalogItem,
   type ImpactCampaign,
-  type ImpactAd,
 } from "@/lib/impact";
 
 const siteUrl =
@@ -98,15 +96,33 @@ function DealCard({ deal }: { deal: ImpactDeal }) {
   );
 }
 
+// Extended type to handle different API field names
+type ExtendedCatalogItem = ImpactCatalogItem & {
+  CurrentPrice?: number;
+  SalePrice?: number;
+  ListPrice?: number;
+  ImageURL?: string;
+  image_url?: string;
+  ProductURL?: string;
+  product_url?: string;
+  Link?: string;
+  ProductName?: string;
+  Title?: string;
+  CurrencyCode?: string;
+  ProductCategory?: string;
+  CategoryName?: string;
+};
+
 function GameCard({ item }: { item: ImpactCatalogItem }) {
+  const extItem = item as ExtendedCatalogItem;
   // Handle different field names from API
-  const price = item.Price ?? (item as any).CurrentPrice ?? (item as any).SalePrice ?? 0;
-  const originalPrice = item.OriginalPrice ?? (item as any).OriginalPrice ?? (item as any).ListPrice;
-  const imageUrl = item.ImageUrl ?? (item as any).ImageURL ?? (item as any).image_url;
-  const productUrl = item.Url ?? (item as any).ProductURL ?? (item as any).product_url ?? (item as any).Link;
-  const name = item.Name ?? (item as any).ProductName ?? (item as any).Title ?? "Unknown Product";
-  const currency = item.Currency ?? (item as any).CurrencyCode ?? "$";
-  const category = item.Category ?? (item as any).ProductCategory ?? (item as any).CategoryName;
+  const price = extItem.Price ?? extItem.CurrentPrice ?? extItem.SalePrice ?? 0;
+  const originalPrice = extItem.OriginalPrice ?? extItem.ListPrice;
+  const imageUrl = extItem.ImageUrl ?? extItem.ImageURL ?? extItem.image_url;
+  const productUrl = extItem.Url ?? extItem.ProductURL ?? extItem.product_url ?? extItem.Link;
+  const name = extItem.Name ?? extItem.ProductName ?? extItem.Title ?? "Unknown Product";
+  const currency = extItem.Currency ?? extItem.CurrencyCode ?? "$";
+  const category = extItem.Category ?? extItem.ProductCategory ?? extItem.CategoryName;
 
   const hasDiscount = originalPrice && originalPrice > price;
   const discountPercent = hasDiscount
@@ -192,32 +208,22 @@ export default async function DealsPage({
   let deals: ImpactDeal[] = [];
   let games: ImpactCatalogItem[] = [];
   let campaigns: ImpactCampaign[] = [];
-  let ads: ImpactAd[] = [];
   let totalItems = 0;
   let catalogName = "";
 
   if (configured) {
     // Fetch all data in parallel
-    const [dealsResult, catalogs, campaignsResult, adsResult] = await Promise.all([
+    const [dealsResult, catalogs, campaignsResult] = await Promise.all([
       fetchDeals(),
       fetchCatalogs(),
       fetchCampaigns(),
-      fetchAds(),
     ]);
 
     deals = dealsResult.filter((deal) => deal.State === "ACTIVE");
     campaigns = campaignsResult.filter((c) => c.Status === "ACTIVE" || c.Status === "Active");
-    ads = adsResult;
 
     // Find Australian catalog first, fall back to first available
     if (catalogs.length > 0) {
-      // Log all catalogs for debugging
-      console.log("Available catalogs:", JSON.stringify(catalogs.map(c => ({
-        Id: c.Id,
-        Name: c.Name,
-        Currency: c.Currency,
-        ServiceAreas: c.ServiceAreas,
-      })), null, 2));
 
       // Look for AU/Australia catalog
       const auCatalog = catalogs.find((c) => {
@@ -243,9 +249,9 @@ export default async function DealsPage({
       });
 
       const catalogToUse = auCatalog || catalogs[0];
-      catalogName = (catalogToUse as any).Name || catalogToUse.Id;
-      totalItems = (catalogToUse as any).ItemCount || 0;
-      console.log(`Using catalog: ${catalogName} (Currency: ${(catalogToUse as any).Currency || 'unknown'}, Items: ${totalItems})`);
+      catalogName = catalogToUse.Name || catalogToUse.Id;
+      totalItems = catalogToUse.ItemCount || 0;
+      void catalogName; // Used for debugging
 
       games = await fetchCatalogItems(catalogToUse.Id, {
         pageSize: ITEMS_PER_PAGE,

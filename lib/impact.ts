@@ -75,7 +75,7 @@ export interface ImpactCatalog {
   CampaignId: string;
   CampaignName: string;
   ItemCount: number;
-  ServiceAreas?: string[];
+  ServiceAreas?: string[] | string;
   Currency?: string;
   Description?: string;
 }
@@ -96,16 +96,12 @@ export async function fetchCampaigns(): Promise<ImpactCampaign[]> {
     );
 
     if (!response.ok) {
-      const errorText = await response.text();
-      console.error("Impact API Campaigns error:", response.status, errorText);
       return [];
     }
 
     const data = await response.json();
-    console.log("Impact Campaigns found:", data.Campaigns?.length || 0);
     return data.Campaigns || [];
-  } catch (error) {
-    console.error("Failed to fetch Impact campaigns:", error);
+  } catch {
     return [];
   }
 }
@@ -116,7 +112,7 @@ export async function fetchDeals(): Promise<ImpactDeal[]> {
     const config = getConfig();
 
     // First try account-level deals
-    let response = await fetch(
+    const response = await fetch(
       `${IMPACT_API_BASE}/${config.accountSid}/Deals?PageSize=100`,
       {
         headers: {
@@ -160,14 +156,13 @@ export async function fetchDeals(): Promise<ImpactDeal[]> {
             })));
           }
         }
-      } catch (e) {
-        console.log(`No deals for campaign ${campaign.CampaignName}`);
+      } catch {
+        // No deals for this campaign
       }
     }
 
     return allDeals;
-  } catch (error) {
-    console.error("Failed to fetch Impact deals:", error);
+  } catch {
     return [];
   }
 }
@@ -178,7 +173,7 @@ export async function fetchCatalogs(): Promise<ImpactCatalog[]> {
     const config = getConfig();
 
     // First try account-level catalogs
-    let response = await fetch(
+    const response = await fetch(
       `${IMPACT_API_BASE}/${config.accountSid}/Catalogs`,
       {
         headers: {
@@ -192,7 +187,6 @@ export async function fetchCatalogs(): Promise<ImpactCatalog[]> {
     if (response.ok) {
       const data = await response.json();
       if (data.Catalogs?.length > 0) {
-        console.log("Impact Catalogs found (account-level):", data.Catalogs.length);
         return data.Catalogs;
       }
     }
@@ -217,11 +211,6 @@ export async function fetchCatalogs(): Promise<ImpactCatalog[]> {
         if (campaignResponse.ok) {
           const campaignData = await campaignResponse.json();
           if (campaignData.Catalogs) {
-            console.log(`Found ${campaignData.Catalogs.length} catalogs for ${campaign.CampaignName}`);
-            // Log each catalog's details including service areas
-            campaignData.Catalogs.forEach((cat: any) => {
-              console.log(`  - Catalog: ${cat.Name || cat.Id}, ServiceAreas: ${JSON.stringify(cat.ServiceAreas)}, Currency: ${cat.Currency}`);
-            });
             allCatalogs.push(...campaignData.Catalogs.map((catalog: ImpactCatalog) => ({
               ...catalog,
               CampaignName: campaign.CampaignName,
@@ -229,14 +218,13 @@ export async function fetchCatalogs(): Promise<ImpactCatalog[]> {
             })));
           }
         }
-      } catch (e) {
-        console.log(`No catalogs for campaign ${campaign.CampaignName}`);
+      } catch {
+        // No catalogs for this campaign
       }
     }
 
     return allCatalogs;
-  } catch (error) {
-    console.error("Failed to fetch Impact catalogs:", error);
+  } catch {
     return [];
   }
 }
@@ -273,21 +261,12 @@ export async function fetchCatalogItems(
     );
 
     if (!response.ok) {
-      console.error("Impact API error:", response.status, await response.text());
       return [];
     }
 
     const data = await response.json();
-    const items = data.Items || data.CatalogItems || [];
-
-    // Log first item structure for debugging
-    if (items.length > 0) {
-      console.log("Sample catalog item structure:", JSON.stringify(items[0], null, 2));
-    }
-
-    return items;
-  } catch (error) {
-    console.error("Failed to fetch catalog items:", error);
+    return data.Items || data.CatalogItems || [];
+  } catch {
     return [];
   }
 }
@@ -315,14 +294,12 @@ export async function searchCatalogItems(
     );
 
     if (!response.ok) {
-      console.error("Impact API error:", response.status, await response.text());
       return [];
     }
 
     const data = await response.json();
     return data.Items || [];
-  } catch (error) {
-    console.error("Failed to search catalog items:", error);
+  } catch {
     return [];
   }
 }
@@ -362,7 +339,6 @@ export async function fetchAds(): Promise<ImpactAd[]> {
         if (response.ok) {
           const data = await response.json();
           if (data.Ads) {
-            console.log(`Found ${data.Ads.length} ads for ${campaign.CampaignName}`);
             allAds.push(...data.Ads.map((ad: ImpactAd) => ({
               ...ad,
               CampaignName: campaign.CampaignName,
@@ -370,14 +346,13 @@ export async function fetchAds(): Promise<ImpactAd[]> {
             })));
           }
         }
-      } catch (e) {
-        console.log(`No ads for campaign ${campaign.CampaignName}`);
+      } catch {
+        // No ads for this campaign
       }
     }
 
     return allAds;
-  } catch (error) {
-    console.error("Failed to fetch Impact ads:", error);
+  } catch {
     return [];
   }
 }
