@@ -18,7 +18,7 @@ export function SiteFooter() {
             </h3>
             <p className="text-sm text-muted-foreground leading-relaxed mb-3">
               Your source for honest reviews of games, movies, books, anime, and
-              more. Plus the latest gaming and geek culture news.
+              more. Plus gaming news, previews, and thoughts on what we&apos;re playing.
             </p>
             <p className="text-xs text-muted-foreground">
               © {currentYear} Life Meets Pixel. All rights reserved.
@@ -44,7 +44,15 @@ export function SiteFooter() {
                   href="/news"
                   className="text-muted-foreground hover:text-primary transition-colors"
                 >
-                  News
+                  News & Previews
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/deals"
+                  className="text-muted-foreground hover:text-primary transition-colors"
+                >
+                  Deals
                 </Link>
               </li>
               <li>

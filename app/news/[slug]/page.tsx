@@ -126,6 +126,14 @@ const portableTextComponents: PortableTextComponents = {
       );
     },
     divider: () => <hr className="my-8 border-t-2 border-primary/30" />,
+    spacer: ({ value }) => {
+      const sizeClasses = {
+        small: "h-4",
+        medium: "h-8",
+        large: "h-16",
+      };
+      return <div className={sizeClasses[value?.size as keyof typeof sizeClasses] || sizeClasses.medium} />;
+    },
   },
   block: {
     h1: ({ children }) => (
@@ -134,7 +142,7 @@ const portableTextComponents: PortableTextComponents = {
       </h1>
     ),
     h2: ({ children }) => (
-      <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-5 font-mono">
+      <h2 className="text-3xl md:text-[2.75rem] font-bold text-foreground mb-5 font-mono">
         {children}
       </h2>
     ),
@@ -395,7 +403,7 @@ export default async function NewsPostPage({ params }: NewsPostPageProps) {
       </header>
 
       {/* Main Content */}
-      <main className="container mx-auto max-w-3xl p-6 py-12">
+      <main className="container mx-auto max-w-5xl p-6 py-12">
         <div className="bg-card border border-border rounded-xl p-6 md:p-8 card-shadow-static">
           {/* Back Link */}
           <Link

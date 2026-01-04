@@ -175,6 +175,25 @@ export const reviewableItemType = defineType({
       title: 'Official Website',
       type: 'url',
     }),
+    defineField({
+      name: 'affiliateLink',
+      title: 'Affiliate Link',
+      type: 'url',
+      description: 'Buy link from affiliate partner (e.g., Green Man Gaming, Gear Up)',
+    }),
+    defineField({
+      name: 'affiliatePartner',
+      title: 'Affiliate Partner',
+      type: 'string',
+      options: {
+        list: [
+          {title: 'Green Man Gaming', value: 'gmg'},
+          {title: 'Gear Up', value: 'gearup'},
+          {title: 'Other', value: 'other'},
+        ],
+      },
+      hidden: ({document}) => !document?.affiliateLink,
+    }),
   ],
   preview: {
     select: {

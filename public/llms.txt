@@ -2,7 +2,7 @@
 
 > A geek culture review website covering video games, movies, TV series, anime, books, comics, board games, and gadgets. Reviews include scores from 1-10 with detailed analysis, pros/cons, and structured metadata.
 
-Life Meets Pixel provides in-depth reviews and news for gaming and entertainment enthusiasts. Each review includes a numerical score (1-10), editorial analysis, and type-specific metadata (platforms, runtime, page count, etc.).
+Life Meets Pixel provides in-depth reviews, news, and previews for gaming and entertainment enthusiasts. Each review includes a numerical score (1-10), editorial analysis, and type-specific metadata (platforms, runtime, page count, etc.). The news section also features game previews and casual thoughts on games being played.
 
 ## Content Types
 
@@ -17,9 +17,9 @@ Life Meets Pixel provides in-depth reviews and news for gaming and entertainment
 
 ## Main Sections
 
-- [Home](https://lifemeetspixel.com/): Featured reviews, latest news, and site highlights
+- [Home](https://lifemeetspixel.com/): Featured reviews, latest news & previews, and site highlights
 - [All Reviews](https://lifemeetspixel.com/reviews): Browse all reviews with filtering by content type
-- [News](https://lifemeetspixel.com/news): Latest gaming and entertainment news articles
+- [News & Previews](https://lifemeetspixel.com/news): Gaming news, game previews, and thoughts on games being played
 - [Contact](https://lifemeetspixel.com/contact): Get in touch with the team
 
 ## Reviews by Category

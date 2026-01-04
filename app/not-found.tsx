@@ -45,7 +45,7 @@ export default function NotFound() {
                 href="/news"
                 className="text-foreground hover:text-primary font-mono text-sm transition-colors"
               >
-                📰 NEWS
+                📰 NEWS & PREVIEWS
               </Link>
               <div className="ml-2">
                 <ModeToggle />
@@ -141,7 +141,7 @@ export default function NotFound() {
             href="/news"
             className="bg-accent text-accent-foreground px-6 py-3 rounded-lg font-mono hover:bg-accent/90 transition-colors text-lg"
           >
-            📰 READ NEWS
+            📰 READ NEWS & PREVIEWS
           </Link>
         </div>
 

@@ -9,7 +9,7 @@ import Link from "next/link";
 import { ModeToggle } from "@/components/ui/mode-toggle";
 
 interface SiteHeaderProps {
-  currentPage?: "home" | "reviews" | "news" | "author" | "contact";
+  currentPage?: "home" | "reviews" | "news" | "deals" | "author" | "contact";
 }
 
 export function SiteHeader({ currentPage }: SiteHeaderProps) {
@@ -18,7 +18,8 @@ export function SiteHeader({ currentPage }: SiteHeaderProps) {
   const navItems = [
     { href: "/", label: "🏠 HOME", key: "home" },
     { href: "/reviews", label: "📝 REVIEWS", key: "reviews" },
-    { href: "/news", label: "📰 NEWS", key: "news" },
+    { href: "/news", label: "📰 NEWS & PREVIEWS", key: "news" },
+    { href: "/deals", label: "🏷️ DEALS", key: "deals" },
     { href: "/contact", label: "✉️ CONTACT", key: "contact" },
   ];
 

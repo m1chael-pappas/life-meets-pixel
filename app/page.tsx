@@ -117,8 +117,8 @@ export default function HomePage() {
           <SocialSection />
         </Suspense>
 
-        {/* Gaming News */}
-        <Suspense fallback={<SectionSkeleton title="LATEST NEWS" />}>
+        {/* News & Previews */}
+        <Suspense fallback={<SectionSkeleton title="NEWS & PREVIEWS" />}>
           <NewsSection />
         </Suspense>
 

@@ -892,6 +892,31 @@ export default async function ReviewPage({
                         </a>
                       </div>
                     )}
+
+                    {/* Affiliate Buy Button */}
+                    {review.reviewableItem.affiliateLink && (
+                      <div className="pt-3 border-t border-border">
+                        <a
+                          href={review.reviewableItem.affiliateLink}
+                          target="_blank"
+                          rel="noopener noreferrer sponsored"
+                          className="block w-full bg-green-600 hover:bg-green-700 text-white text-center py-3 px-4 rounded-lg font-mono font-bold transition-colors"
+                        >
+                          {itemType === "videogame" || itemType === "boardgame"
+                            ? "🛒 BUY THIS GAME"
+                            : itemType === "gadget"
+                            ? "🛒 BUY THIS GEAR"
+                            : "🛒 BUY NOW"}
+                        </a>
+                        <p className="text-xs text-muted-foreground text-center mt-2">
+                          {review.reviewableItem.affiliatePartner === "gmg"
+                            ? "via Green Man Gaming"
+                            : review.reviewableItem.affiliatePartner === "gearup"
+                            ? "via Gear Up"
+                            : "Affiliate link"}
+                        </p>
+                      </div>
+                    )}
                   </CardContent>
                 </Card>
               )}

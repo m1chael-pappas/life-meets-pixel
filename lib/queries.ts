@@ -306,7 +306,9 @@ export const REVIEW_QUERY = `*[
     episodes,
     pageCount,
     isbn,
-    officialWebsite
+    officialWebsite,
+    affiliateLink,
+    affiliatePartner
   },
   author->{
     name,

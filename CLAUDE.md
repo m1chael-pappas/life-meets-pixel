@@ -104,6 +104,12 @@ Required environment variables in `.env.local`:
 - `NEXT_PUBLIC_SANITY_API_VERSION` - API version (e.g., "2024-01-01")
 - `SANITY_API_TOKEN` - API token with Editor/Admin permissions (for seeding scripts only)
 
+### Affiliate Integration (Optional)
+- `IMPACT_ACCOUNT_SID` - Impact.com Account SID for affiliate API
+- `IMPACT_AUTH_TOKEN` - Impact.com Auth Token for affiliate API
+
+The affiliate integration powers the `/deals` page and "Buy Now" buttons on reviews. Required API scopes: Promotions, Catalogs, Ads, Deals.
+
 ## Data Seeding
 
 The `scripts/seed-sanity.ts` script programmatically populates Sanity with sample data. This is useful for:
