@@ -1,74 +1,35 @@
-import { type SanityDocument } from 'next-sanity';
-import Link from 'next/link';
+import Link from "next/link";
 
-import AnimatedCardWrapper from '@/components/animated-card-wrapper';
-import { Button } from '@/components/ui/button';
-import UniversalReviewCard from '@/components/universal-review-card';
-import {
-  fetchOptions,
-  REVIEWS_QUERY,
-} from '@/lib/queries';
-import { client } from '@/sanity/client';
+import { ReviewCard } from "@/components/retro/review-card";
+import { REVIEWS_QUERY, fetchOptions } from "@/lib/queries";
+import type { Review } from "@/lib/types";
+import { client } from "@/sanity/client";
 
 export default async function ReviewsSection() {
-  const reviews = await client.fetch<SanityDocument[]>(
-    REVIEWS_QUERY,
-    {},
-    fetchOptions
-  );
+  const reviews = await client.fetch<Review[]>(REVIEWS_QUERY, {}, fetchOptions);
+  // Skip the first few featured shown in the hero / featured section — then cap at 6
+  const items = reviews.slice(0, 6);
+
+  if (items.length === 0) {
+    return null;
+  }
 
   return (
-    <section className="mb-12">
-      <div className="flex items-center gap-3 mb-6">
-        <h3 className="text-2xl font-bold text-white drop-shadow-md font-mono">
-          LATEST REVIEWS
-        </h3>
-        <div className="h-px bg-white/30 flex-1"></div>
-      </div>
-
-      {reviews.length > 0 ? (
-        <>
-          {/* Mobile: Stacking cards */}
-          <div className="stacking-cards-container md:hidden">
-            {reviews.map((review, index) => (
-              <div
-                key={review._id}
-                className="stacking-card"
-                style={{ zIndex: index + 1 }}
-              >
-                <UniversalReviewCard review={review} priority={index < 3} />
-              </div>
-            ))}
-          </div>
-
-          {/* Desktop: Regular grid */}
-          <div className="hidden md:grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {reviews.map((review, index) => (
-              <AnimatedCardWrapper key={review._id} index={index}>
-                <UniversalReviewCard review={review} priority={index < 3} />
-              </AnimatedCardWrapper>
-            ))}
-          </div>
-
-          <div className="text-center mt-6">
-            <Link href="/reviews">
-              <Button variant="outline" className="font-mono">
-                SEE ALL REVIEWS →
-              </Button>
-            </Link>
-          </div>
-        </>
-      ) : (
-        <div className="text-center py-12">
-          <div className="text-6xl mb-4">📝</div>
-          <h3 className="text-2xl font-bold text-muted-foreground mb-2 font-mono">
-            No reviews yet
-          </h3>
-          <p className="text-muted-foreground">
-            Check back soon for the latest reviews!
-          </p>
+    <section className="lmp-section">
+      <div className="section-head">
+        <div className="section-head__title">
+          <span className="num">03</span>
+          <h2>LATEST REVIEWS</h2>
         </div>
-      )}
+        <Link href="/reviews" className="section-head__action">
+          VIEW ALL
+        </Link>
+      </div>
+      <div className="reviews-grid">
+        {items.map((r) => (
+          <ReviewCard key={r._id} review={r} />
+        ))}
+      </div>
     </section>
   );
 }

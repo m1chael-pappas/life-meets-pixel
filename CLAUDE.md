@@ -1,120 +1,79 @@
-# CLAUDE.md
+# Life Meets Pixel — Claude Context
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+Public-facing geek-culture review site (games, movies, books, anime, board games, tech). Next.js 15 (App Router) + React 19 + Sanity CMS + Impact.com affiliate integration. Retro-gaming aesthetic — Press Start 2P / JetBrains Mono / VT323 fonts, 4 switchable palettes, scanline overlay, CRT hero frame, HP-bar score breakdown. Deployed on Vercel.
 
-## Project Overview
+## Read this first
 
-Life Meets Pixel is a Next.js 15 (App Router) review website for geek culture content (games, movies, books, anime, board games, gadgets). Content is managed via Sanity CMS, with reviews, news posts, and reviewable items stored as structured content.
+Durable project knowledge lives in the Obsidian vault at `~/Documents/ObsidianVault`. Start here, then follow links:
 
-## Development Commands
+- [`Projects/life-meets-pixel/overview.md`](/home/michael_pappas/Documents/ObsidianVault/Projects/life-meets-pixel/overview.md) — entry point, links to everything else
+- `architecture.md`, `sanity-schema.md`, `affiliate-integration.md`, `decisions.md`, `backlog.md`, `redesign-plan.md` — topic-specific notes
 
-```bash
-# Frontend (Next.js)
-npm run dev        # Start development server
-npm run build      # Build for production
-npm run start      # Start production server
-npm run lint       # Run linter
+Cross-project conventions:
+- [`Conventions/nextjs-patterns.md`](/home/michael_pappas/Documents/ObsidianVault/Conventions/nextjs-patterns.md) — App Router patterns (note: this repo uses webhook-driven `revalidatePath`, not tag-based `revalidateTag`)
+- [`Stack/life-meets-pixel-stack.md`](/home/michael_pappas/Documents/ObsidianVault/Stack/life-meets-pixel-stack.md) — versions + env vars
 
-# Sanity Studio (CMS)
-npm run studio          # Start Sanity Studio dev server (http://localhost:3333)
-npm run studio:build    # Build Sanity Studio
-npm run studio:deploy   # Deploy Studio to Sanity hosting
+## Write back to the vault
 
-# Data Seeding (requires SANITY_API_TOKEN in .env.local)
-npm run seed:dry-run    # Preview seed data without writing
-npm run seed            # Populate Sanity with sample data
+Any decision, convention, performance finding, or gotcha discovered during a session should be documented in the vault before the session ends — not just when asked. Update existing notes before creating new ones.
+
+## Non-negotiable rules
+
+- **All GROQ lives in `lib/queries.ts`.** Don't inline GROQ in components/pages (sitemap + one-off scripts excepted).
+- **`components/retro/review-card.tsx` renders all 8 item types.** Don't fork per-type cards — extend `lib/mappings.ts` + `components/retro/sprites.tsx`.
+- **`/api/revalidate` is gated on `REVALIDATE_SECRET`.** If you add a new Sanity `_type`, update the `switch` in `app/api/revalidate/route.ts` or edits won't reflect until the 30s cache window lapses.
+- **Every affiliate surface links to `/legal/affiliate-disclosure`.** FTC + ACL requirement.
+- **Studio (`studio/`) is React 18 + Sanity 3.99.** Frontend is React 19. Don't try to unify.
+- **No tag-based `revalidateTag` here.** This site is CMS-driven — Sanity webhook → `revalidatePath`. Don't retrofit tag-based invalidation without a concrete reason.
+
+## Sanity MCP
+
+This repo ships with a `.mcp.json` that registers the Sanity MCP server (`@sanity/mcp-server`). It picks up `SANITY_API_TOKEN` from `.env.local` at session start. Use it for schema introspection, data queries, and content patches without writing one-off scripts.
+
+## Env vars (`.env.local`)
+
+```
+# Sanity
+NEXT_PUBLIC_SANITY_PROJECT_ID=1ir3sv5r
+NEXT_PUBLIC_SANITY_DATASET=production
+NEXT_PUBLIC_SANITY_API_VERSION=2024-01-01
+SANITY_API_TOKEN=sk_...              # Editor/Admin — seed scripts, delete-alex, MCP
+
+# Site
+NEXT_PUBLIC_SITE_URL=https://lifemeetspixel.com
+REVALIDATE_SECRET=...                # gates /api/revalidate webhook
+
+# Resend (contact form)
+RESEND_API_KEY=re_...
+RESEND_FROM_EMAIL="Life Meets Pixel <noreply@onthedot.dev>"
+CONTACT_TO_EMAIL=michael@lifemeetspixel.com   # optional
+
+# Impact.com (optional — /deals)
+IMPACT_ACCOUNT_SID=...
+IMPACT_AUTH_TOKEN=...
+
+# Analytics (optional)
+NEXT_PUBLIC_GA_MEASUREMENT_ID=G-...
+NEXT_PUBLIC_GOOGLE_ADS_ID=AW-...
 ```
 
-## Architecture
+## Commands
 
-### Homepage Structure
-The homepage (`app/page.tsx`) is a single-page component that composes reusable section components:
+```bash
+# Frontend (pnpm — this is a pnpm workspace, not npm)
+pnpm dev                # Next dev server
+pnpm build
+pnpm start
+pnpm lint               # Vercel is the only CI gate — run this locally before push
 
-- **Section Components** (`components/sections/`):
-  - `hero-section.tsx` - Hero banner with site tagline
-  - `featured-section.tsx` - Featured reviews from Sanity CMS
-  - `news-section.tsx` - Latest news articles
-  - `support-section.tsx` - Support/donation CTA
-  - `gear-section.tsx` - Gaming gear recommendations (static content)
-  - `reviews-section.tsx` - Latest reviews grid
-  - `stats-section.tsx` - Site statistics
+# Sanity Studio
+pnpm studio             # http://localhost:3333
+pnpm studio:build
+pnpm studio:deploy
 
-Each section is wrapped in React Suspense boundaries with custom loading skeletons for better perceived performance. The header with navigation is embedded directly in the page component.
-
-### Content Types & Type System
-All content types are defined in `lib/types.ts`:
-
-- **Review** - Main review entity linking to a ReviewableItem, Author, Categories, and Tags
-- **ReviewableItem** - The item being reviewed (game, movie, book, etc.) with type-specific fields
-  - `itemType` field determines which fields are relevant (platforms for games, runtime for movies, etc.)
-- **NewsPost** - News articles with breaking news flag
-- **Author** - Content author with bio and social links
-- **SiteStats** - Aggregate statistics about site content
-
-### Sanity Integration
-The Sanity Studio CMS is located in the `studio/` directory within the workspace for easier maintenance.
-
-**Frontend Connection:**
-- Sanity client is configured in `sanity/client.ts` using environment variables:
-  - `NEXT_PUBLIC_SANITY_PROJECT_ID=1ir3sv5r`
-  - `NEXT_PUBLIC_SANITY_DATASET=production`
-  - `NEXT_PUBLIC_SANITY_API_VERSION=2024-01-01`
-- All GROQ queries are centralized in `lib/queries.ts` with a 30-second revalidation period (`fetchOptions`)
-
-**Studio Schema (`studio/schemaTypes/`):**
-- `reviewableItem.ts` - Items that can be reviewed (games, movies, books, etc.)
-- `review.ts` - Review documents linked to reviewable items
-- `newPost.ts` - News articles
-- `author.ts` - Content authors
-- `category.ts`, `tag.ts`, `genre.ts`, `platform.ts` - Taxonomy types
-- `seo.ts` - SEO metadata object
-
-### Review System
-Reviews support multiple content types through the `ReviewableItem.itemType` discriminated union:
-- videogame, boardgame, movie, tvseries, anime, book, comic, gadget
-
-Each type has specific fields (e.g., platforms for videogames, pageCount for books). The `UniversalReviewCard` component (`components/universal-review-card.tsx`) handles display logic for all types.
-
-### UI Components
-Built with shadcn/ui components in `components/ui/`:
-- Radix UI primitives
-- Tailwind CSS v4 styling
-- Custom theme provider with dark mode support (`next-themes`)
-- Custom `PixelHeartRating` component for review scores
-
-### Styling
-- Tailwind CSS v4 with CSS-first configuration
-- `@tailwindcss/typography` for rich text content
-- `tw-animate-css` for animations
-- Monospace font (`font-mono`) used for headings and branding
-- Theme colors use CSS custom properties for light/dark modes
-
-## Key Patterns
-
-1. **Data Fetching**: Server components fetch data directly using Sanity client and GROQ queries
-2. **Image Handling**: Sanity image URLs accessed via `asset.url` (using `@sanity/image-url` package)
-3. **Navigation**: Type-based filtering via URL params (`/reviews?type=videogame`)
-4. **Portable Text**: Review content uses `@portabletext/types` for structured rich text
-
-## Environment Setup
-
-Required environment variables in `.env.local`:
-- `NEXT_PUBLIC_SANITY_PROJECT_ID` - Sanity project ID
-- `NEXT_PUBLIC_SANITY_DATASET` - Dataset name (usually "production")
-- `NEXT_PUBLIC_SANITY_API_VERSION` - API version (e.g., "2024-01-01")
-- `SANITY_API_TOKEN` - API token with Editor/Admin permissions (for seeding scripts only)
-
-### Affiliate Integration (Optional)
-- `IMPACT_ACCOUNT_SID` - Impact.com Account SID for affiliate API
-- `IMPACT_AUTH_TOKEN` - Impact.com Auth Token for affiliate API
-
-The affiliate integration powers the `/deals` page and "Buy Now" buttons on reviews. Required API scopes: Promotions, Catalogs, Ads, Deals.
-
-## Data Seeding
-
-The `scripts/seed-sanity.ts` script programmatically populates Sanity with sample data. This is useful for:
-- Initial setup and development
-- Testing with realistic data
-- Resetting to a known state
-
-See `scripts/README.md` for detailed usage instructions.
+# Data scripts (needs SANITY_API_TOKEN in .env.local)
+pnpm seed:dry-run
+pnpm seed
+pnpm delete:alex:dry-run
+pnpm delete:alex        # add --force to also delete referencing docs
+```

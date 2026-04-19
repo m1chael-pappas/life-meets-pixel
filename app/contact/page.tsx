@@ -1,239 +1,154 @@
-import {
-  Facebook,
-  Instagram,
-} from 'lucide-react';
-import { Metadata } from 'next';
-import Link from 'next/link';
-import { SiDiscord } from 'react-icons/si';
+import { Metadata } from "next";
+import Link from "next/link";
 
-import { SiteHeader } from '@/components/site-header';
-import { Button } from '@/components/ui/button';
-import { SITE_CONFIG } from '@/lib/constants';
+import { ContactForm } from "@/components/retro/contact-form";
+import { SiteHeader } from "@/components/site-header";
+import { SITE_CONFIG } from "@/lib/constants";
+import { authorInitial, authorLevel } from "@/lib/mappings";
+import { ALL_AUTHORS_QUERY, fetchOptions } from "@/lib/queries";
+import type { Author } from "@/lib/types";
+import { client } from "@/sanity/client";
 
-const siteUrl =
-  process.env.NEXT_PUBLIC_SITE_URL || "https://lifemeetspixel.com";
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://lifemeetspixel.com";
 
 export const metadata: Metadata = {
-  title: "Contact Us",
+  title: "Contact",
   description:
-    "Want us to review your game, board game, book, or gadget? Get in touch with the Life Meets Pixel team.",
-  alternates: {
-    canonical: `${siteUrl}/contact`,
-  },
+    "Drop us a line — review requests, news tips, collabs, or just to say g'day.",
+  alternates: { canonical: `${siteUrl}/contact` },
   openGraph: {
-    title: "Contact Us | Life Meets Pixel",
-    description:
-      "Want us to review your game, board game, book, or gadget? Get in touch with the Life Meets Pixel team.",
+    title: "Contact | Life Meets Pixel",
+    description: "Drop us a line — review requests, news tips, collabs.",
     url: `${siteUrl}/contact`,
     type: "website",
   },
 };
 
-export default function ContactPage() {
+const SOCIAL_TILES = [
+  { name: "DISCORD", mark: "DC", handle: "life_meets_pixel", href: SITE_CONFIG.social.discord, color: "#a3adf6" },
+  { name: "INSTAGRAM", mark: "IG", handle: "@life_meets_pixel", href: SITE_CONFIG.social.instagram, color: "var(--neon-1)" },
+  { name: "FACEBOOK", mark: "FB", handle: "Life Meets Pixel", href: SITE_CONFIG.social.facebook, color: "var(--neon-2)" },
+  { name: "RSS", mark: "RSS", handle: "/feed.xml", href: "/feed.xml", color: "var(--neon-4)" },
+];
+
+export default async function ContactPage() {
+  const authors = await client.fetch<Author[]>(ALL_AUTHORS_QUERY, {}, fetchOptions);
+
   return (
-    <div className="min-h-screen">
+    <>
       <SiteHeader currentPage="contact" />
-
-      {/* Main Content */}
-      <main className="container mx-auto max-w-4xl p-6">
-        {/* Page Header */}
-        <div className="mb-12 text-center">
-          <h2 className="text-4xl md:text-5xl font-bold text-white drop-shadow-md mb-4 font-mono">
-            GET IN TOUCH
-          </h2>
-          <p className="text-lg text-white/80 max-w-2xl mx-auto">
-            Want us to review your latest creation? We&apos;d love to hear from
-            you!
-          </p>
-        </div>
-
-        {/* Contact Info Cards */}
-        <div className="grid gap-8 md:grid-cols-2 mb-12">
-          {/* Review Submissions */}
-          <div className="bg-card border border-border rounded-lg p-6 card-shadow">
-            <div className="text-4xl mb-4">🎮</div>
-            <h3 className="text-xl font-bold text-foreground mb-3 font-mono">
-              GAME REVIEWS
-            </h3>
-            <p className="text-muted-foreground mb-4 leading-relaxed">
-              Got a video game or board game you&apos;d like us to review? We
-              cover everything from AAA titles to indie gems, and tabletop
-              classics to modern board game innovations.
-            </p>
-            <ul className="text-sm text-muted-foreground space-y-2 mb-4">
-              <li className="flex items-start gap-2">
-                <span className="text-primary">▸</span>
-                <span>Video games (all platforms)</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <span className="text-primary">▸</span>
-                <span>Board games & tabletop RPGs</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <span className="text-primary">▸</span>
-                <span>Card games & party games</span>
-              </li>
-            </ul>
-          </div>
-
-          {/* Other Reviews */}
-          <div className="bg-card border border-border rounded-lg p-6 card-shadow">
-            <div className="text-4xl mb-4">📚</div>
-            <h3 className="text-xl font-bold text-foreground mb-3 font-mono">
-              OTHER CONTENT
-            </h3>
-            <p className="text-muted-foreground mb-4 leading-relaxed">
-              Our coverage extends beyond games. We review movies, TV series,
-              anime, books, comics, and gaming gadgets too!
-            </p>
-            <ul className="text-sm text-muted-foreground space-y-2 mb-4">
-              <li className="flex items-start gap-2">
-                <span className="text-primary">▸</span>
-                <span>Movies, TV series & anime</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <span className="text-primary">▸</span>
-                <span>Books & comic books</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <span className="text-primary">▸</span>
-                <span>Gaming gadgets & accessories</span>
-              </li>
-            </ul>
-          </div>
-        </div>
-
-        {/* Before You Reach Out */}
-        <div className="bg-accent/20 border border-accent rounded-lg p-8 mb-12 card-shadow">
-          <h3 className="text-2xl font-bold text-foreground mb-4 font-mono flex items-center gap-2">
-            <span>✨</span>
-            BEFORE YOU REACH OUT
-          </h3>
-          <p className="text-white/80 mb-4 leading-relaxed">
-            We want to make sure we&apos;re a good fit for your content. Please
-            take a moment to explore our website first to get a feel for our
-            review style, tone, and the types of content we cover.
-          </p>
-          <Link href="/reviews">
-            <Button variant="default" className="font-mono">
-              EXPLORE OUR REVIEWS →
-            </Button>
-          </Link>
-        </div>
-
-        {/* Contact Methods */}
-        <div className="bg-card border border-border rounded-lg p-8 card-shadow">
-          <h3 className="text-2xl font-bold text-foreground mb-6 font-mono">
-            HOW TO REACH US
-          </h3>
-
-          <div className="space-y-6">
+      <main className="lmp-container" style={{ paddingTop: 48, paddingBottom: 32 }}>
+        <section className="contact-hero">
+          <div className="contact-hero__grid">
             <div>
-              <h4 className="font-bold text-foreground mb-2 flex items-center gap-2">
-                <span className="text-primary">📧</span>
-                Email
-              </h4>
-              <p className="text-muted-foreground mb-2">
-                For review submissions and general inquiries:
+              <h1 className="contact-hero__title">DROP US A LINE</h1>
+              <p className="contact-hero__sub">
+                Review requests, news tips, collab pitches, or just a friendly g&apos;day — we read{" "}
+                <strong>every</strong> message. No PR fluff, please.
               </p>
-              <a
-                href={`mailto:${SITE_CONFIG.contact.email}`}
-                className="text-primary hover:text-primary/80 font-mono transition-colors"
-              >
-                {SITE_CONFIG.contact.email}
-              </a>
             </div>
+            <div className="contact-hero__badge" aria-hidden="true">
+              ✉
+            </div>
+          </div>
+        </section>
 
-            <div className="border-t border-border pt-6">
-              <h4 className="font-bold text-foreground mb-2 flex items-center gap-2">
-                <span className="text-primary">🌐</span>
-                Follow Us
-              </h4>
-              <p className="text-muted-foreground mb-3">
-                Stay updated with our latest reviews and news, and join our
-                community:
-              </p>
-              <div className="flex flex-wrap gap-3">
-                <a
-                  href={SITE_CONFIG.social.facebook}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-4 py-2 bg-card border border-border rounded-lg text-muted-foreground hover:text-primary hover:border-primary transition-colors"
-                  aria-label="Follow us on Facebook"
+        <div className="contact-grid">
+          <ContactForm />
+
+          <aside className="contact-side">
+            {authors.slice(0, 4).map((a) => (
+              <div
+                key={a._id}
+                className="staff-card"
+                style={{ color: a.accentColor || "var(--neon-2)" }}
+              >
+                <div
+                  className="staff-card__avatar"
+                  style={{ color: a.accentColor || "var(--neon-2)" }}
                 >
-                  <Facebook className="h-5 w-5" />
-                  <span className="text-sm font-medium">Facebook</span>
-                </a>
-                <a
-                  href={SITE_CONFIG.social.instagram}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-4 py-2 bg-card border border-border rounded-lg text-muted-foreground hover:text-primary hover:border-primary transition-colors"
-                  aria-label="Follow us on Instagram"
-                >
-                  <Instagram className="h-5 w-5" />
-                  <span className="text-sm font-medium">Instagram</span>
-                </a>
-                <a
-                  href={SITE_CONFIG.social.discord}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-4 py-2 bg-card border border-border rounded-lg text-muted-foreground hover:text-primary hover:border-primary transition-colors"
-                  aria-label="Join our Discord server"
-                >
-                  <SiDiscord className="h-5 w-5" />
-                  <span className="text-sm font-medium">Discord</span>
-                </a>
+                  {authorInitial(a.name)}
+                </div>
+                <div>
+                  <div className="staff-card__name" style={{ color: "var(--ink)" }}>
+                    {a.name}
+                    <span className="staff-card__lvl">
+                      LV {authorLevel(a.reviewCount, a.newsCount)} · CRITIC
+                    </span>
+                  </div>
+                  <div className="staff-card__role">Reviewer</div>
+                  {a.bio && <p className="staff-card__bio">{a.bio}</p>}
+                  {a.email && (
+                    <p className="staff-card__bio" style={{ marginTop: 6 }}>
+                      <a href={`mailto:${a.email}`} style={{ color: "var(--neon-2)" }}>
+                        {a.email}
+                      </a>
+                    </p>
+                  )}
+                </div>
+              </div>
+            ))}
+
+            <div className="inbox-card">
+              <h3>◆ INBOX STATUS</h3>
+              <div className="inbox-row">
+                <span className="lbl">RESPONSE TIME</span>
+                <span className="val good">&lt; 48H</span>
+              </div>
+              <div className="inbox-row">
+                <span className="lbl">REVIEW QUEUE</span>
+                <span className="val">OPEN</span>
+              </div>
+              <div className="inbox-row">
+                <span className="lbl">COLLAB SLOTS</span>
+                <span className="val good">AVAILABLE</span>
+              </div>
+              <div className="inbox-row">
+                <span className="lbl">GENERAL EMAIL</span>
+                <span className="val">
+                  <a
+                    href={`mailto:${SITE_CONFIG.contact.email}`}
+                    style={{ color: "var(--neon-2)", fontFamily: "var(--font-press-start-2p)" }}
+                  >
+                    {SITE_CONFIG.contact.email}
+                  </a>
+                </span>
               </div>
             </div>
+          </aside>
+        </div>
 
-            <div className="border-t border-border pt-6">
-              <h4 className="font-bold text-foreground mb-2 flex items-center gap-2">
-                <span className="text-primary">💬</span>
-                What to Include
-              </h4>
-              <ul className="text-sm text-muted-foreground space-y-2">
-                <li className="flex items-start gap-2">
-                  <span className="text-primary">•</span>
-                  <span>Brief description of your game/product</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-primary">•</span>
-                  <span>Target platform(s) and release date</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-primary">•</span>
-                  <span>Link to trailer, website, or press kit</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-primary">•</span>
-                  <span>Your preferred review timeline</span>
-                </li>
-              </ul>
-            </div>
-
-            <div className="border-t border-border pt-6">
-              <h4 className="font-bold text-foreground mb-2 flex items-center gap-2">
-                <span className="text-primary">⏱️</span>
-                Response Time
-              </h4>
-              <p className="text-sm text-muted-foreground">
-                We aim to respond to all review requests within 2-5 business
-                days. Due to high volume, we may not be able to review every
-                submission, but we read every email!
-              </p>
+        <section className="lmp-section--tight">
+          <div className="section-head">
+            <div className="section-head__title">
+              <span className="num">◆</span>
+              <h2>OR CATCH US ON THE GRID</h2>
             </div>
           </div>
-        </div>
-
-        {/* Footer Note */}
-        <div className="mt-12 text-center text-sm text-white/80">
-          <p>
-            We appreciate your interest in Life Meets Pixel and look forward to
-            hearing from you!
+          <div className="socials-grid">
+            {SOCIAL_TILES.map((t) => (
+              <a
+                key={t.name}
+                href={t.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="social-tile"
+                style={{ color: t.color }}
+              >
+                <div className="social-tile__mark">{t.mark}</div>
+                <div className="social-tile__name">{t.name}</div>
+                <div className="social-tile__handle">{t.handle}</div>
+              </a>
+            ))}
+          </div>
+          <p style={{ fontSize: 11, color: "var(--ink-mute)", marginTop: 16, textAlign: "center" }}>
+            Want to buy us a coffee instead?{" "}
+            <Link href="/" style={{ color: "var(--neon-2)" }}>
+              See support options on the homepage →
+            </Link>
           </p>
-        </div>
+        </section>
       </main>
-    </div>
+    </>
   );
 }

@@ -11,7 +11,9 @@
     "studio:build": "cd studio && npm run build",
     "studio:deploy": "cd studio && npm run deploy",
     "seed": "tsx scripts/seed-sanity.ts",
-    "seed:dry-run": "tsx scripts/seed-sanity.ts --dry-run"
+    "seed:dry-run": "tsx scripts/seed-sanity.ts --dry-run",
+    "delete:alex": "tsx scripts/delete-alex.ts",
+    "delete:alex:dry-run": "tsx scripts/delete-alex.ts --dry-run"
   },
   "dependencies": {
     "@next/third-parties": "^16.0.0",
@@ -31,6 +33,7 @@
     "react": "19.1.4",
     "react-dom": "19.1.4",
     "react-icons": "^5.5.0",
+    "resend": "^6.12.0",
     "tailwind-merge": "^3.3.0"
   },
   "devDependencies": {

@@ -1,29 +1,29 @@
 export default function SupportSection() {
   return (
-    <section className="mb-12">
-      <div className="bg-card rounded-lg p-6 text-center border border-border card-shadow">
-        <h3 className="text-2xl font-bold text-foreground mb-2 font-mono">
-          SUPPORT LIFE MEETS PIXEL
-        </h3>
-        <p className="text-sm text-foreground font-medium mb-4">
-          Enjoying our reviews? Help us keep the pixels flowing with coffee ☕
-        </p>
-        <div className="flex flex-wrap justify-center gap-4">
+    <section className="lmp-section--tight">
+      <div className="cta-strip">
+        <div>
+          <h3 className="cta-strip__title">◆ SUPPORT THE MISSION</h3>
+          <p className="cta-strip__sub">
+            No sponsors, no ads in reviews — just honest takes. Help keep the lights on.
+          </p>
+        </div>
+        <div className="cta-strip__buttons">
           <a
-            href="https://ko-fi.com/lifemeetspixel"
+            href="https://www.buymeacoffee.com/lifemeetspixel"
             target="_blank"
             rel="noopener noreferrer"
-            className="bg-primary text-white px-4 py-2 rounded-md text-sm font-bold font-mono hover:bg-primary/90 transition-all card-shadow"
+            className="retro-btn retro-btn--lime"
           >
-            ☕ Buy us a Coffee
+            ☕ BUY US A COFFEE
           </a>
           <a
             href="https://patreon.com/lifemeetspixel"
             target="_blank"
             rel="noopener noreferrer"
-            className="bg-secondary text-secondary-foreground px-4 py-2 rounded-md text-sm font-bold font-mono hover:bg-secondary/90 transition-all card-shadow"
+            className="retro-btn retro-btn--magenta"
           >
-            💖 Become a Patron
+            💖 BECOME A PATRON
           </a>
         </div>
       </div>

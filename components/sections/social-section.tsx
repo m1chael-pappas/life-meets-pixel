@@ -1,50 +1,75 @@
-import {
-  Facebook,
-  Instagram,
-} from 'lucide-react';
-import { SiDiscord } from 'react-icons/si';
+import { SITE_CONFIG } from "@/lib/constants";
 
-import { SITE_CONFIG } from '@/lib/constants';
+type Tile = {
+  name: string;
+  mark: string;
+  handle: string;
+  href: string;
+  variant: string;
+};
+
+const TILES: Tile[] = [
+  {
+    name: "DISCORD",
+    mark: "DC",
+    handle: "life_meets_pixel",
+    href: SITE_CONFIG.social.discord,
+    variant: "discord",
+  },
+  {
+    name: "INSTAGRAM",
+    mark: "IG",
+    handle: "@life_meets_pixel",
+    href: SITE_CONFIG.social.instagram,
+    variant: "insta",
+  },
+  {
+    name: "FACEBOOK",
+    mark: "FB",
+    handle: "Life Meets Pixel",
+    href: SITE_CONFIG.social.facebook,
+    variant: "fb",
+  },
+  {
+    name: "RSS FEED",
+    mark: "RSS",
+    handle: "/feed.xml",
+    href: "/feed.xml",
+    variant: "rss",
+  },
+];
+
+const VARIANT_COLOR: Record<string, string> = {
+  discord: "#a3adf6",
+  insta: "var(--neon-1)",
+  fb: "var(--neon-2)",
+  rss: "var(--neon-4)",
+};
 
 export default function SocialSection() {
   return (
-    <section className="mb-12">
-      <div className="bg-card rounded-lg p-6 text-center border border-border card-shadow">
-        <h3 className="text-2xl font-bold text-foreground mb-2 font-mono">
-          FOLLOW US ON SOCIAL MEDIA
-        </h3>
-        <p className="text-sm text-foreground font-medium mb-4">
-          Join our community and stay updated with the latest reviews and news
-        </p>
-        <div className="flex flex-wrap justify-center gap-4">
-          <a
-            href={SITE_CONFIG.social.facebook}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="bg-primary text-white px-4 py-2 rounded-md text-sm font-bold font-mono hover:bg-primary/90 transition-all inline-flex items-center gap-2 card-shadow"
-          >
-            <Facebook className="w-4 h-4 stroke-[2.5]" />
-            Facebook
-          </a>
-          <a
-            href={SITE_CONFIG.social.instagram}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="bg-secondary text-secondary-foreground px-4 py-2 rounded-md text-sm font-bold font-mono hover:bg-secondary/90 transition-all inline-flex items-center gap-2 card-shadow"
-          >
-            <Instagram className="w-4 h-4 stroke-[2.5]" />
-            Instagram
-          </a>
-          <a
-            href={SITE_CONFIG.social.discord}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="bg-accent text-accent-foreground px-4 py-2 rounded-md text-sm font-bold font-mono hover:bg-accent/90 transition-all inline-flex items-center gap-2 card-shadow"
-          >
-            <SiDiscord className="w-4 h-4" />
-            Discord
-          </a>
+    <section className="lmp-section--tight">
+      <div className="section-head">
+        <div className="section-head__title">
+          <span className="num">04</span>
+          <h2>CONNECT WITH US</h2>
         </div>
+      </div>
+      <div className="socials-grid">
+        {TILES.map((t) => (
+          <a
+            key={t.name}
+            href={t.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="social-tile"
+            style={{ color: VARIANT_COLOR[t.variant] }}
+          >
+            <div className="social-tile__mark">{t.mark}</div>
+            <div className="social-tile__name">{t.name}</div>
+            <div className="social-tile__handle">{t.handle}</div>
+          </a>
+        ))}
       </div>
     </section>
   );

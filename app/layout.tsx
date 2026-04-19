@@ -1,24 +1,35 @@
 import "./globals.css";
 
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { JetBrains_Mono, Press_Start_2P, VT323 } from "next/font/google";
 import Script from "next/script";
 
-import PageTransition from "@/components/page-transition";
-import ScenicBackground from "@/components/scenic-background";
+import { KonamiEasterEgg } from "@/components/retro/konami";
+import { SoundEffects } from "@/components/retro/sound-effects";
+import { TweaksPanel } from "@/components/retro/tweaks-panel";
 import { SiteFooter } from "@/components/site-footer";
-import { ThemeProvider } from "@/components/ui/theme-provider";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import { Analytics } from "@vercel/analytics/next";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const pressStart2P = Press_Start_2P({
+  variable: "--font-press-start-2p",
+  weight: "400",
   subsets: ["latin"],
+  display: "swap",
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const jetbrainsMono = JetBrains_Mono({
+  variable: "--font-jetbrains-mono",
+  weight: ["400", "500", "700"],
   subsets: ["latin"],
+  display: "swap",
+});
+
+const vt323 = VT323({
+  variable: "--font-vt323",
+  weight: "400",
+  subsets: ["latin"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -105,28 +116,22 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" data-palette="midnight" suppressHydrationWarning>
       <head>
         <link rel="icon" href="/logo.svg" type="image/svg+xml" />
         <link rel="apple-touch-icon" href="/logo.svg" />
         <link rel="manifest" href="/site.webmanifest" />
       </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${pressStart2P.variable} ${jetbrainsMono.variable} ${vt323.variable} antialiased`}
+        data-scanlines="off"
       >
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="light"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <ScenicBackground simplified />
-          <PageTransition>
-            {children}
-            <SiteFooter />
-          </PageTransition>
-          <Analytics />
-        </ThemeProvider>
+        {children}
+        <SiteFooter />
+        <TweaksPanel />
+        <KonamiEasterEgg />
+        <SoundEffects />
+        <Analytics />
       </body>
 
       {/* Google Analytics 4 */}

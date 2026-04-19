@@ -1,118 +1,105 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-import { Menu, X } from "lucide-react";
-import Image from "next/image";
 import Link from "next/link";
 
-import { ModeToggle } from "@/components/ui/mode-toggle";
+type PageKey = "home" | "reviews" | "news" | "deals" | "contact" | "author";
 
 interface SiteHeaderProps {
-  currentPage?: "home" | "reviews" | "news" | "deals" | "author" | "contact";
+  currentPage?: PageKey;
 }
 
-export function SiteHeader({ currentPage }: SiteHeaderProps) {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+const LINKS: Array<{ id: PageKey; label: string; icon: string; href: string }> = [
+  { id: "home", label: "HOME", icon: "◉", href: "/" },
+  { id: "reviews", label: "REVIEWS", icon: "★", href: "/reviews" },
+  { id: "news", label: "NEWS", icon: "▤", href: "/news" },
+  { id: "deals", label: "DEALS", icon: "$", href: "/deals" },
+  { id: "contact", label: "CONTACT", icon: "✉", href: "/contact" },
+];
 
-  const navItems = [
-    { href: "/", label: "🏠 HOME", key: "home" },
-    { href: "/reviews", label: "📝 REVIEWS", key: "reviews" },
-    { href: "/news", label: "📰 NEWS & PREVIEWS", key: "news" },
-    { href: "/deals", label: "🏷️ DEALS", key: "deals" },
-    { href: "/contact", label: "✉️ CONTACT", key: "contact" },
-  ];
+function formatClock(d: Date) {
+  const pad = (n: number) => String(n).padStart(2, "0");
+  return `${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
+}
+
+export function SiteHeader({ currentPage = "home" }: SiteHeaderProps) {
+  const [time, setTime] = useState<string>("");
+  const [navOpen, setNavOpen] = useState(false);
+
+  useEffect(() => {
+    setTime(formatClock(new Date()));
+    const t = setInterval(() => setTime(formatClock(new Date())), 1000);
+    return () => clearInterval(t);
+  }, []);
 
   return (
-    <header className="bg-background/95 backdrop-blur-sm border-b border-primary/20 sticky top-0 z-50">
-      <div className="container mx-auto max-w-6xl px-4 py-4">
-        <div className="flex justify-between items-center">
-          {/* Logo */}
-          <Link
-            href="/"
-            className="hover:opacity-80 transition-opacity flex items-center gap-3"
-          >
-            <Image
-              src="/logo.svg"
-              alt="Life Meets Pixel"
-              width={40}
-              height={40}
-              className="w-10 h-10"
-            />
-            <h1 className="text-2xl md:text-3xl font-bold text-primary font-mono">
-              LIFE MEETS PIXEL
-            </h1>
-          </Link>
-
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center gap-6">
-            {navItems.map((item) => (
-              <Link
-                key={item.key}
-                href={item.href}
-                className={`font-mono text-lg transition-colors ${
-                  currentPage === item.key
-                    ? "text-primary hover:text-primary/80"
-                    : "text-foreground hover:text-primary"
-                }`}
-              >
-                {item.label}
-              </Link>
-            ))}
-            <div className="ml-2">
-              <ModeToggle />
-            </div>
-          </nav>
-
-          {/* Mobile Menu Button */}
-          <div className="flex items-center gap-4 md:hidden">
-            <button
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="text-foreground hover:text-primary transition-colors"
-              aria-label="Toggle menu"
-            >
-              {mobileMenuOpen ? (
-                <X className="w-6 h-6" />
-              ) : (
-                <Menu className="w-6 h-6" />
-              )}
-            </button>
-            <ModeToggle />
+    <header className="lmp-header">
+      <div className="lmp-header__topbar">
+        <div className="lmp-container">
+          <div className="lmp-header__status">
+            <span>
+              <span className="dot" aria-hidden="true"></span>SYSTEM ONLINE
+            </span>
+            <span>P1 READY</span>
+            <span>HI-SCORE 999900</span>
+          </div>
+          <div className="lmp-header__status">
+            <span suppressHydrationWarning>{time || "--:--:--"}</span>
+            <span>v2.6.18</span>
+            <span style={{ color: "var(--neon-3)" }}>EST. 2026</span>
           </div>
         </div>
-
-        {/* Mobile Menu */}
-        <nav
-          className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out ${
-            mobileMenuOpen
-              ? "max-h-64 opacity-100 mt-4 pt-4 border-t border-border"
-              : "max-h-0 opacity-0"
-          }`}
-        >
-          <div className="flex flex-col gap-4">
-            {navItems.map((item, index) => (
-              <Link
-                key={item.key}
-                href={item.href}
-                onClick={() => setMobileMenuOpen(false)}
-                className={`font-mono text-md transition-all py-2 ${
-                  currentPage === item.key
-                    ? "text-primary hover:text-primary/80"
-                    : "text-foreground hover:text-primary"
-                }`}
-                style={{
-                  transitionDelay: mobileMenuOpen ? `${index * 50}ms` : "0ms",
-                  transform: mobileMenuOpen
-                    ? "translateX(0)"
-                    : "translateX(-10px)",
-                  opacity: mobileMenuOpen ? 1 : 0,
-                }}
+      </div>
+      <div className="lmp-header__main">
+        <div className="lmp-container">
+          <Link href="/" className="lmp-logo" aria-label="Life Meets Pixel home">
+            <div className="lmp-logo__mark">
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 8 8"
+                shapeRendering="crispEdges"
+                aria-hidden="true"
               >
-                {item.label}
+                <rect x="1" y="2" width="2" height="2" fill="var(--neon-1)" />
+                <rect x="5" y="2" width="2" height="2" fill="var(--neon-1)" />
+                <rect x="2" y="3" width="4" height="2" fill="var(--neon-1)" />
+                <rect x="3" y="5" width="2" height="1" fill="var(--neon-1)" />
+              </svg>
+            </div>
+            <span className="lmp-logo__name">
+              <span className="top">LIFE MEETS</span>
+              <span className="bot">► PIXEL</span>
+            </span>
+          </Link>
+
+          <button
+            type="button"
+            className="lmp-nav-toggle"
+            aria-label="Toggle navigation"
+            aria-expanded={navOpen}
+            onClick={() => setNavOpen((v) => !v)}
+          >
+            {navOpen ? "[X]" : "☰ MENU"}
+          </button>
+
+          <nav className={`lmp-nav ${navOpen ? "is-open" : ""}`}>
+            {LINKS.map((l) => (
+              <Link
+                key={l.id}
+                href={l.href}
+                className={currentPage === l.id ? "is-active" : ""}
+                onClick={() => setNavOpen(false)}
+              >
+                <span style={{ color: "var(--neon-1)" }} aria-hidden="true">
+                  {l.icon}
+                </span>
+                {l.label}
               </Link>
             ))}
-          </div>
-        </nav>
+          </nav>
+        </div>
       </div>
     </header>
   );

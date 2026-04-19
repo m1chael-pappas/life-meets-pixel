@@ -2,25 +2,21 @@ import { Suspense } from "react";
 
 import { Metadata } from "next";
 
-import ScenicBackground from "@/components/scenic-background";
-import FeaturedSection from "@/components/sections/featured-section";
-import GearSection from "@/components/sections/gear-section";
+import { Ticker } from "@/components/retro/ticker";
+import AboutStrip from "@/components/sections/about-strip";
 import HeroSection from "@/components/sections/hero-section";
 import NewsSection from "@/components/sections/news-section";
 import ReviewsSection from "@/components/sections/reviews-section";
 import SocialSection from "@/components/sections/social-section";
-import StatsSection from "@/components/sections/stats-section";
 import SupportSection from "@/components/sections/support-section";
 import { SiteHeader } from "@/components/site-header";
 
-// Homepage metadata
-const siteUrl =
-  process.env.NEXT_PUBLIC_SITE_URL || "https://lifemeetspixel.com";
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://lifemeetspixel.com";
 
 export const metadata: Metadata = {
   title: "Life Meets Pixel - Reviews & News",
   description:
-    "Your source for honest reviews of games, movies, books, anime, board games, and more. Plus the latest gaming and geek culture news.",
+    "Honest reviews of games, movies, books, anime, board games, and tech. No sponsors. No PR fluff. Just real reviews from a fellow nerd.",
   keywords: [
     "gaming",
     "game reviews",
@@ -35,7 +31,7 @@ export const metadata: Metadata = {
     type: "website",
     title: "Life Meets Pixel - Reviews & News",
     description:
-      "Your source for honest reviews of games, movies, books, anime, board games, and more.",
+      "Honest reviews of games, movies, books, anime, board games, and more.",
     url: siteUrl,
     siteName: "Life Meets Pixel",
     images: [
@@ -51,7 +47,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Life Meets Pixel - Reviews & News",
     description:
-      "Your source for honest reviews of games, movies, books, anime, and more.",
+      "Honest reviews of games, movies, books, anime, and more.",
     images: [`${siteUrl}/logo.svg`],
   },
   alternates: {
@@ -59,97 +55,55 @@ export const metadata: Metadata = {
   },
 };
 
-// Loading components for each section
 function HeroSkeleton() {
   return (
-    <section className="text-center mb-12 py-8">
-      <div className="h-16 bg-muted/20 rounded-lg mb-4 animate-pulse"></div>
-      <div className="h-6 bg-muted/20 rounded-lg max-w-2xl mx-auto animate-pulse"></div>
+    <section className="hero">
+      <div className="crt-frame" style={{ minHeight: 420 }}>
+        <div className="hero-grid">
+          <div style={{ minHeight: 420, background: "var(--bg-2)" }} />
+          <div style={{ minHeight: 420, background: "var(--bg-2)" }} />
+        </div>
+      </div>
     </section>
   );
 }
 
-function SectionSkeleton({ title }: { title: string }) {
+function GridSkeleton() {
   return (
-    <section className="mb-12">
-      <div className="flex items-center gap-3 mb-6">
-        <h3 className="text-2xl font-bold text-foreground font-mono">
-          {title}
-        </h3>
-        <div className="h-px bg-primary/30 flex-1"></div>
-      </div>
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {[1, 2, 3].map((i) => (
-          <div
-            key={i}
-            className="h-64 bg-muted/20 rounded-lg animate-pulse"
-          ></div>
-        ))}
-      </div>
-    </section>
+    <div className="reviews-grid">
+      {[0, 1, 2].map((i) => (
+        <div key={i} style={{ height: 420, background: "var(--bg-1)", border: "3px solid var(--bg-3)" }} />
+      ))}
+    </div>
   );
 }
 
 export default function HomePage() {
   return (
-    <div className="min-h-screen relative">
-      <ScenicBackground />
+    <>
       <SiteHeader currentPage="home" />
-
-      {/* Main Content */}
-      <main className="container mx-auto max-w-7xl p-6">
-        {/* Hero Section */}
+      <Suspense fallback={<div className="lmp-ticker" style={{ height: 32 }} />}>
+        <Ticker />
+      </Suspense>
+      <main className="lmp-container">
         <Suspense fallback={<HeroSkeleton />}>
           <HeroSection />
         </Suspense>
 
-        {/* Featured Reviews */}
-        <Suspense fallback={<SectionSkeleton title="FEATURED REVIEWS" />}>
-          <FeaturedSection />
-        </Suspense>
+        <AboutStrip />
 
-        {/* Social Media Section */}
-        <Suspense
-          fallback={
-            <div className="h-32 bg-muted/20 rounded-lg mb-12 animate-pulse"></div>
-          }
-        >
-          <SocialSection />
-        </Suspense>
-
-        {/* News & Previews */}
-        <Suspense fallback={<SectionSkeleton title="NEWS & PREVIEWS" />}>
+        <Suspense fallback={<GridSkeleton />}>
           <NewsSection />
         </Suspense>
 
-        {/* Support Section */}
-        <Suspense
-          fallback={
-            <div className="h-32 bg-muted/20 rounded-lg mb-12 animate-pulse"></div>
-          }
-        >
-          <SupportSection />
-        </Suspense>
+        <SupportSection />
 
-        {/* All Reviews */}
-        <Suspense fallback={<SectionSkeleton title="LATEST REVIEWS" />}>
+        <Suspense fallback={<GridSkeleton />}>
           <ReviewsSection />
         </Suspense>
 
-        {/* Gaming Gear */}
-        <Suspense fallback={<SectionSkeleton title="GEAR WE LOVE" />}>
-          <GearSection />
-        </Suspense>
-
-        {/* Stats */}
-        <Suspense
-          fallback={
-            <div className="h-24 bg-muted/20 rounded-lg mt-16 animate-pulse"></div>
-          }
-        >
-          <StatsSection />
-        </Suspense>
+        <SocialSection />
       </main>
-    </div>
+    </>
   );
 }

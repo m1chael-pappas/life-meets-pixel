@@ -1,97 +1,105 @@
-"use client";
+import Image from "next/image";
+import Link from "next/link";
 
-import { motion } from 'motion/react';
+import { HeartRow } from "@/components/retro/heart-row";
+import { itemTypeToCat, scoreTone } from "@/lib/mappings";
+import { FEATURED_REVIEWS_QUERY, TOP_PICKS_QUERY, fetchOptions } from "@/lib/queries";
+import type { Review } from "@/lib/types";
+import { client } from "@/sanity/client";
 
-import PixelCursorFollower from '@/components/pixel-cursor-follower';
-import PixelHeartRating from '@/components/ui/pixel-heart-rating';
+type TopPick = { _id: string; title: string; slug: { current: string }; reviewScore: number };
 
-export default function HeroSection() {
+export default async function HeroSection() {
+  const [featured, topPicks] = await Promise.all([
+    client.fetch<Review[]>(FEATURED_REVIEWS_QUERY, {}, fetchOptions),
+    client.fetch<TopPick[]>(TOP_PICKS_QUERY, {}, fetchOptions),
+  ]);
+
+  const hero = featured[0];
+
+  if (!hero) {
+    return null;
+  }
+
+  const item = hero.reviewableItem;
+  const cat = itemTypeToCat(item.itemType);
+  const studio = item.publisher || item.creator || "";
+  const tone = scoreTone(hero.reviewScore);
+  const toneColor =
+    tone === "low"
+      ? "var(--heart)"
+      : tone === "mid"
+        ? "var(--neon-4)"
+        : "var(--neon-3)";
+
   return (
-    <section className="text-center mb-12 py-8 relative overflow-hidden">
-      {/* Pixelated cursor follower - only visible in hero area */}
-      <div className="absolute inset-0 pointer-events-none">
-        <PixelCursorFollower />
+    <section className="hero">
+      <div className="crt-frame">
+        <div className="hero-grid">
+          <Link href={`/reviews/${hero.slug.current}`} className="hero-feature">
+            <div className="hero-feature__media">
+              {item.coverImage?.asset?.url && (
+                <Image
+                  src={item.coverImage.asset.url}
+                  alt={item.coverImage.alt || item.title}
+                  fill
+                  priority
+                  sizes="(max-width: 980px) 100vw, 60vw"
+                />
+              )}
+            </div>
+            <div className="hero-feature__body">
+              <div className="hero-feature__overline">★ EDITOR&apos;S CHOICE · {cat.toUpperCase()}</div>
+              <h2 className="hero-feature__title">{hero.title}</h2>
+              <p className="hero-feature__sub">
+                {item.title}
+                {studio && ` — ${studio}`}
+              </p>
+              <div className="hero-feature__meta">
+                <span
+                  className="hero-feature__score"
+                  style={{ color: toneColor, borderColor: toneColor }}
+                >
+                  {hero.reviewScore.toFixed(1)}
+                </span>
+                <span className="hero-feature__hearts">
+                  <HeartRow score={hero.reviewScore} size={18} />
+                </span>
+                <span style={{ color: "var(--ink-dim)", fontSize: 12 }}>
+                  by {hero.author.name}
+                </span>
+              </div>
+            </div>
+          </Link>
+
+          <aside className="hero-side">
+            <div className="hero-side__head">
+              <span>◆ TOP PICKS THIS WEEK</span>
+              <span className="blink">●</span>
+            </div>
+            <div className="hero-side__list">
+              {topPicks
+                .filter((p) => p._id !== hero._id)
+                .slice(0, 4)
+                .map((pick, i) => (
+                  <Link
+                    key={pick._id}
+                    href={`/reviews/${pick.slug.current}`}
+                    className="hero-side-item"
+                  >
+                    <span className="hero-side-item__num">
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
+                    <span className="hero-side-item__title">{pick.title}</span>
+                    <span className="hero-side-item__score">
+                      {pick.reviewScore.toFixed(1)}
+                    </span>
+                  </Link>
+                ))}
+            </div>
+          </aside>
+        </div>
       </div>
-      <motion.h2
-        className="text-5xl font-bold text-white mb-4 font-mono drop-shadow-lg"
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, ease: "easeOut" }}
-      >
-        <span className="text-primary">Reviews</span>{" "}
-        <span className="text-white/90">&</span> Stuff;
-      </motion.h2>
-      <motion.div
-        className="flex items-center justify-center gap-4 mb-4"
-        initial={{ opacity: 0, scale: 0.9 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.5, delay: 0.2 }}
-      >
-        <span className="text-2xl">🎮</span>
-        <PixelHeartRating
-          reviewScore={7}
-          showScore={false}
-          size="md"
-          animate={true}
-          animationDelay={0}
-        />
-        <span className="text-2xl hidden md:inline">🎬</span>
-        <PixelHeartRating
-          reviewScore={7}
-          showScore={false}
-          size="md"
-          className="hidden md:flex"
-          animate={true}
-          animationDelay={1.5}
-        />
-        <span className="text-2xl">📚</span>
-      </motion.div>
-      <motion.p
-        className="text-white/80 text-lg max-w-3xl mx-auto drop-shadow-md"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.6, delay: 0.4 }}
-      >
-        Hello there, General Kenobi{" "}
-        <motion.span
-          className="inline-block"
-          animate={{
-            rotate: [0, 14, -8, 14, -4, 10, 0],
-          }}
-          transition={{
-            duration: 1.5,
-            ease: "easeInOut",
-            repeat: Infinity,
-            repeatDelay: 3,
-          }}
-        >
-          👋
-        </motion.span>
-        (oops wrong universe) <br /> Welcome to our little corner of the
-        internet. It&apos;s just me here and my partner Jenna, sharing honest
-        thoughts on the games, movies, books, and tech we love (or sometimes
-        don&apos;t). <br /> No sponsors. No PR fluff. <br /> Just real reviews
-        from a fellow nerd and his sidekick.
-      </motion.p>
-      <motion.div
-        className="flex justify-center gap-4 mt-6 flex-wrap"
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, delay: 0.6 }}
-      >
-        <div className="flex items-center gap-2 text-sm text-white/70">
-          <span className="text-lg">🎯</span>
-          <span>Honest Reviews</span>
-        </div>
-        <div className="flex items-center gap-2 text-sm text-white/70">
-          <span className="text-lg">🧠</span>
-          <span>Personal Insights</span>
-        </div>
-        <div className="flex items-center gap-2 text-sm text-white/70">
-          <span className="text-lg">🔥</span>
-          <span>Geek-Centric Picks</span>
-        </div>
-      </motion.div>
     </section>
   );
 }

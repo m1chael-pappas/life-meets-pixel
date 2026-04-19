@@ -1,136 +1,93 @@
-import Link from 'next/link';
-import { Facebook, Instagram } from 'lucide-react';
-import { SiDiscord } from 'react-icons/si';
+import Link from "next/link";
 
-import { SITE_CONFIG } from '@/lib/constants';
+import { SITE_CONFIG } from "@/lib/constants";
 
 export function SiteFooter() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="bg-background border-t border-border mt-16">
-      <div className="container mx-auto max-w-7xl px-6 py-8">
-        <div className="grid gap-8 md:grid-cols-4">
-          {/* About */}
-          <div>
-            <h3 className="font-bold text-foreground mb-3 font-mono">
-              LIFE MEETS PIXEL
-            </h3>
-            <p className="text-sm text-muted-foreground leading-relaxed mb-3">
-              Your source for honest reviews of games, movies, books, anime, and
-              more. Plus gaming news, previews, and thoughts on what we&apos;re playing.
-            </p>
-            <p className="text-xs text-muted-foreground">
-              © {currentYear} Life Meets Pixel. All rights reserved.
+    <footer className="lmp-footer">
+      <div className="lmp-container">
+        <div className="footer-grid">
+          <div className="footer-col">
+            <h4>► LIFE MEETS PIXEL</h4>
+            <p className="footer-about">
+              Honest reviews of games, movies, books, anime, and tech. Plus gaming news, previews,
+              and thoughts on what we&apos;re playing. No sponsors. No PR fluff.
             </p>
           </div>
-
-          {/* Quick Links */}
-          <div>
-            <h3 className="font-bold text-foreground mb-3 font-mono">
-              QUICK LINKS
-            </h3>
-            <ul className="space-y-2 text-sm">
+          <div className="footer-col">
+            <h4>QUICK LINKS</h4>
+            <ul>
               <li>
-                <Link
-                  href="/reviews"
-                  className="text-muted-foreground hover:text-primary transition-colors"
-                >
-                  Reviews
-                </Link>
+                <Link href="/reviews">Reviews</Link>
               </li>
               <li>
-                <Link
-                  href="/news"
-                  className="text-muted-foreground hover:text-primary transition-colors"
-                >
-                  News & Previews
-                </Link>
+                <Link href="/news">News &amp; Previews</Link>
               </li>
               <li>
-                <Link
-                  href="/deals"
-                  className="text-muted-foreground hover:text-primary transition-colors"
-                >
-                  Deals
-                </Link>
+                <Link href="/deals">Deals</Link>
               </li>
               <li>
-                <Link
-                  href="/contact"
-                  className="text-muted-foreground hover:text-primary transition-colors"
-                >
-                  Contact Us
-                </Link>
+                <Link href="/contact">Contact Us</Link>
               </li>
             </ul>
           </div>
-
-          {/* Legal */}
-          <div>
-            <h3 className="font-bold text-foreground mb-3 font-mono">LEGAL</h3>
-            <ul className="space-y-2 text-sm">
+          <div className="footer-col">
+            <h4>LEGAL</h4>
+            <ul>
               <li>
-                <Link
-                  href="/legal/privacy"
-                  className="text-muted-foreground hover:text-primary transition-colors"
-                >
-                  Privacy Policy
-                </Link>
+                <Link href="/legal/privacy">Privacy Policy</Link>
               </li>
               <li>
-                <Link
-                  href="/legal/terms"
-                  className="text-muted-foreground hover:text-primary transition-colors"
-                >
-                  Terms of Use
-                </Link>
+                <Link href="/legal/terms">Terms of Use</Link>
               </li>
               <li>
-                <Link
-                  href="/legal/affiliate-disclosure"
-                  className="text-muted-foreground hover:text-primary transition-colors"
-                >
-                  Affiliate Disclosure
-                </Link>
+                <Link href="/legal/affiliate-disclosure">Affiliate Disclosure</Link>
               </li>
             </ul>
           </div>
-
-          {/* Social */}
-          <div>
-            <h3 className="font-bold text-foreground mb-3 font-mono">
-              CONNECT
-            </h3>
-            <div className="flex gap-3">
-              <a
-                href={SITE_CONFIG.social.facebook}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-muted-foreground hover:text-primary transition-colors"
-                aria-label="Follow us on Facebook"
-              >
-                <Facebook className="h-5 w-5" />
-              </a>
-              <a
-                href={SITE_CONFIG.social.instagram}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-muted-foreground hover:text-primary transition-colors"
-                aria-label="Follow us on Instagram"
-              >
-                <Instagram className="h-5 w-5" />
-              </a>
-              <a
-                href={SITE_CONFIG.social.discord}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-muted-foreground hover:text-primary transition-colors"
-                aria-label="Join our Discord server"
-              >
-                <SiDiscord className="h-5 w-5" />
-              </a>
-            </div>
+          <div className="footer-col">
+            <h4>CONNECT</h4>
+            <ul>
+              <li>
+                <a href={SITE_CONFIG.social.discord} target="_blank" rel="noopener noreferrer">
+                  Discord
+                </a>
+              </li>
+              <li>
+                <a href={SITE_CONFIG.social.instagram} target="_blank" rel="noopener noreferrer">
+                  Instagram
+                </a>
+              </li>
+              <li>
+                <a href={SITE_CONFIG.social.facebook} target="_blank" rel="noopener noreferrer">
+                  Facebook
+                </a>
+              </li>
+              <li>
+                <Link href="/feed.xml">RSS Feed</Link>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div className="footer-bot">
+          <span>© {currentYear} LIFE MEETS PIXEL · INSERT COIN TO CONTINUE</span>
+          <div className="socials">
+            <a href={SITE_CONFIG.social.discord} aria-label="Discord" target="_blank" rel="noopener noreferrer">
+              DC
+            </a>
+            <a
+              href={SITE_CONFIG.social.instagram}
+              aria-label="Instagram"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              IG
+            </a>
+            <a href={SITE_CONFIG.social.facebook} aria-label="Facebook" target="_blank" rel="noopener noreferrer">
+              FB
+            </a>
           </div>
         </div>
       </div>

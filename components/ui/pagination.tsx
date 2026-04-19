@@ -1,12 +1,7 @@
 "use client";
 
-import Link from 'next/link';
-import {
-  usePathname,
-  useSearchParams,
-} from 'next/navigation';
-
-import { Button } from '@/components/ui/button';
+import Link from "next/link";
+import { usePathname, useSearchParams } from "next/navigation";
 
 interface PaginationProps {
   currentPage: number;
@@ -36,105 +31,51 @@ export default function Pagination({
     const maxVisible = 5;
 
     if (totalPages <= maxVisible) {
-      // Show all pages if total is small
-      for (let i = 1; i <= totalPages; i++) {
-        pages.push(i);
-      }
+      for (let i = 1; i <= totalPages; i++) pages.push(i);
     } else {
-      // Always show first page
       pages.push(1);
-
-      if (currentPage > 3) {
-        pages.push("...");
-      }
-
-      // Show pages around current page
+      if (currentPage > 3) pages.push("...");
       const start = Math.max(2, currentPage - 1);
       const end = Math.min(totalPages - 1, currentPage + 1);
-
-      for (let i = start; i <= end; i++) {
-        pages.push(i);
-      }
-
-      if (currentPage < totalPages - 2) {
-        pages.push("...");
-      }
-
-      // Always show last page
+      for (let i = start; i <= end; i++) pages.push(i);
+      if (currentPage < totalPages - 2) pages.push("...");
       pages.push(totalPages);
     }
-
     return pages;
   };
 
   return (
-    <div className="flex items-center justify-center gap-2 mt-8">
-      {/* Previous Button */}
+    <nav className="retro-pagination" aria-label="Pagination">
       {currentPage > 1 ? (
-        <Link href={createPageUrl(currentPage - 1)}>
-          <Button variant="outline" size="sm" className="font-mono">
-            ← PREV
-          </Button>
-        </Link>
+        <Link href={createPageUrl(currentPage - 1)}>← PREV</Link>
       ) : (
-        <Button variant="outline" size="sm" disabled className="font-mono">
-          ← PREV
-        </Button>
+        <span className="disabled">← PREV</span>
       )}
-
-      {/* Page Numbers */}
-      <div className="flex gap-1">
-        {getPageNumbers().map((page, index) => {
-          if (page === "...") {
-            return (
-              <span
-                key={`ellipsis-${index}`}
-                className="px-3 py-2 text-muted-foreground"
-              >
-                ...
-              </span>
-            );
-          }
-
-          const pageNumber = page as number;
-          const isActive = pageNumber === currentPage;
-
-          return isActive ? (
-            <Button
-              key={pageNumber}
-              variant="default"
-              size="sm"
-              className="font-mono min-w-[40px]"
-              disabled
-            >
-              {pageNumber}
-            </Button>
-          ) : (
-            <Link key={pageNumber} href={createPageUrl(pageNumber)}>
-              <Button
-                variant="outline"
-                size="sm"
-                className="font-mono min-w-[40px]"
-              >
-                {pageNumber}
-              </Button>
-            </Link>
+      {getPageNumbers().map((page, index) => {
+        if (page === "...") {
+          return (
+            <span key={`ellipsis-${index}`} className="disabled">
+              …
+            </span>
           );
-        })}
-      </div>
-
-      {/* Next Button */}
+        }
+        const pageNumber = page as number;
+        const isActive = pageNumber === currentPage;
+        return isActive ? (
+          <span key={pageNumber} className="is-active" aria-current="page">
+            {pageNumber}
+          </span>
+        ) : (
+          <Link key={pageNumber} href={createPageUrl(pageNumber)}>
+            {pageNumber}
+          </Link>
+        );
+      })}
       {currentPage < totalPages ? (
-        <Link href={createPageUrl(currentPage + 1)}>
-          <Button variant="outline" size="sm" className="font-mono">
-            NEXT →
-          </Button>
-        </Link>
+        <Link href={createPageUrl(currentPage + 1)}>NEXT →</Link>
       ) : (
-        <Button variant="outline" size="sm" disabled className="font-mono">
-          NEXT →
-        </Button>
+        <span className="disabled">NEXT →</span>
       )}
-    </div>
+    </nav>
   );
 }

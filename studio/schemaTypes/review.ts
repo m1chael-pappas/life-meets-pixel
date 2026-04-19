@@ -192,6 +192,44 @@ export const reviewType = defineType({
       rows: 2,
     }),
     defineField({
+      name: 'scoreBreakdown',
+      title: 'Score Breakdown (optional)',
+      type: 'array',
+      description:
+        'Per-criterion scores that render as HP bars on the article sidebar. Label each row however fits the content — "Gameplay/Story/Visuals" for a game, "Writing/Pacing/Characters" for a book, "Acting/Direction/Score" for a film. Leave empty to hide the breakdown. Recommended 3-6 rows.',
+      of: [
+        {
+          type: 'object',
+          name: 'scoreCriterion',
+          title: 'Criterion',
+          fields: [
+            {
+              name: 'label',
+              title: 'Label',
+              type: 'string',
+              validation: (rule) => rule.required().max(30),
+            },
+            {
+              name: 'score',
+              title: 'Score (0–10)',
+              type: 'number',
+              validation: (rule) => rule.required().min(0).max(10),
+            },
+          ],
+          preview: {
+            select: {label: 'label', score: 'score'},
+            prepare({label, score}: {label?: string; score?: number}) {
+              return {
+                title: label || 'Unlabeled',
+                subtitle: typeof score === 'number' ? `${score.toFixed(1)}/10` : '—',
+              }
+            },
+          },
+        },
+      ],
+      validation: (rule) => rule.max(8),
+    }),
+    defineField({
       name: 'author',
       title: 'Author',
       type: 'reference',

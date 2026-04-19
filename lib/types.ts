@@ -8,6 +8,9 @@ export interface Author {
   };
   bio?: string;
   email?: string;
+  accentColor?: string;
+  reviewCount?: number;
+  newsCount?: number;
   avatar?: {
     asset: {
       url: string;
@@ -125,6 +128,11 @@ export interface Review {
   pros?: string[];
   cons?: string[];
   verdict?: string;
+  scoreBreakdown?: Array<{
+    _key?: string;
+    label: string;
+    score: number;
+  }>;
   publishedAt: string;
   featured: boolean;
   reviewableItem: ReviewableItem;
@@ -145,6 +153,7 @@ export interface NewsPost {
     current: string;
   };
   excerpt: string;
+  content?: PortableTextBlock[];
   publishedAt: string;
   breaking: boolean;
   featuredImage: {

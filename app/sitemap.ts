@@ -1,4 +1,5 @@
 import { MetadataRoute } from 'next';
+import { HIDDEN_AUTHOR_IDS } from '@/lib/queries';
 import { client } from '@/sanity/client';
 
 // Fetch all reviews, news, and authors for sitemap
@@ -17,10 +18,11 @@ async function getContent() {
       }`
     ),
     client.fetch<Array<{ slug: { current: string }; _updatedAt: string }>>(
-      `*[_type == "author" && defined(slug.current)]{
+      `*[_type == "author" && defined(slug.current) && !(_id in $hidden)]{
         "slug": slug,
         _updatedAt
-      }`
+      }`,
+      { hidden: HIDDEN_AUTHOR_IDS }
     ),
   ]);
 

@@ -47,6 +47,13 @@ export const authorType = defineType({
       validation: (rule) => rule.email(),
     }),
     defineField({
+      name: 'accentColor',
+      title: 'Accent Color',
+      type: 'color',
+      description: 'Drives author chip + staff card border color on the retro site. Optional.',
+      options: {disableAlpha: true},
+    }),
+    defineField({
       name: 'socialLinks',
       title: 'Social Links',
       type: 'object',
