@@ -1,0 +1,24 @@
+{
+  "_note": "Edit freely. The /news-radar slash command reads this file each run. Add new sources as RSS URLs. Remove sources you don't care about to cut noise.",
+  "press": [
+    { "name": "PC Gamer",         "url": "https://www.pcgamer.com/rss/",                "focus": "PC gaming, news + reviews + previews" },
+    { "name": "Eurogamer",        "url": "https://www.eurogamer.net/feed",              "focus": "UK gaming, long-form + news" },
+    { "name": "Polygon",          "url": "https://www.polygon.com/rss/index.xml",       "focus": "Gaming + broader geek culture" },
+    { "name": "Rock Paper Shotgun","url": "https://www.rockpapershotgun.com/feed",      "focus": "PC gaming with a voice" },
+    { "name": "Kotaku",           "url": "https://kotaku.com/rss",                      "focus": "Gaming news + culture" },
+    { "name": "GameSpot",         "url": "https://www.gamespot.com/feeds/mashup/",      "focus": "Broad gaming coverage" },
+    { "name": "Destructoid",      "url": "https://www.destructoid.com/feed/",           "focus": "Indie-leaning gaming news" },
+    { "name": "IGN",              "url": "https://feeds.ign.com/ign/all",               "focus": "Mass-market gaming coverage" },
+    { "name": "The Verge Gaming", "url": "https://www.theverge.com/rss/gaming/index.xml","focus": "Tech + gaming intersection" },
+    { "name": "Nintendo Life",    "url": "https://www.nintendolife.com/feeds/news",     "focus": "Nintendo platforms" }
+  ],
+  "publishers": [
+    { "name": "PlayStation Blog", "url": "https://blog.playstation.com/feed/",     "focus": "Sony first-party + PS platform news" },
+    { "name": "Xbox Wire",        "url": "https://news.xbox.com/en-us/feed/",      "focus": "Xbox platform + Game Pass + Bethesda" },
+    { "name": "Bungie News",      "url": "https://www.bungie.net/News/rss",        "focus": "Destiny + Marathon dev blogs" },
+    { "name": "Blizzard News",    "url": "https://news.blizzard.com/en-us/rss",    "focus": "Blizzard franchises" }
+  ],
+  "youtube": [
+    { "_note": "YouTube channels expose RSS via https://www.youtube.com/feeds/videos.xml?channel_id=CHANNEL_ID. Add channels you follow. Leave empty to skip YouTube." }
+  ]
+}
