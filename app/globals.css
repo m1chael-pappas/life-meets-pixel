@@ -1181,19 +1181,19 @@ a:hover { color: var(--neon-1); }
 }
 .article-content h2 {
   font-family: var(--font-press-start-2p), system-ui, monospace;
-  font-size: 17px;
+  font-size: 22px;
   line-height: 1.4;
   color: var(--neon-1);
-  margin: 36px 0 18px;
-  padding-bottom: 10px;
+  margin: 40px 0 20px;
+  padding-bottom: 12px;
   border-bottom: 2px dashed var(--bg-3);
 }
 .article-content h3 {
   font-family: var(--font-press-start-2p), system-ui, monospace;
-  font-size: 14px;
+  font-size: 16px;
   line-height: 1.4;
   color: var(--neon-2);
-  margin: 28px 0 14px;
+  margin: 32px 0 16px;
 }
 .article-content h2:first-child { margin-top: 0; }
 .article-content p { margin-bottom: 16px; color: var(--ink-dim); }
