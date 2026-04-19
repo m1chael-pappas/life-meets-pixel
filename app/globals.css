@@ -697,9 +697,10 @@ a:hover { color: var(--neon-1); }
 }
 .hero-feature__sub {
   font-family: var(--font-jetbrains-mono), ui-monospace, monospace;
-  font-size: 14px;
+  font-size: 16px;
+  line-height: 1.55;
   color: var(--ink-dim);
-  max-width: 70%;
+  max-width: 80%;
 }
 .hero-feature__meta {
   display: flex;
@@ -1127,10 +1128,18 @@ a:hover { color: var(--neon-1); }
 }
 .article-meta__sub {
   font-family: var(--font-jetbrains-mono), ui-monospace, monospace;
-  font-size: 16px;
+  font-size: 18px;
   color: var(--neon-2);
 }
 .article-meta__sub .by { color: var(--ink-mute); }
+.article-meta__lead {
+  font-family: var(--font-jetbrains-mono), ui-monospace, monospace;
+  font-size: 18px;
+  line-height: 1.65;
+  color: var(--ink-dim);
+  max-width: 72ch;
+  margin: 0;
+}
 .article-meta__hpwrap {
   background: rgba(0, 0, 0, 0.6);
   border: 2px solid var(--bg-3);
@@ -1160,26 +1169,31 @@ a:hover { color: var(--neon-1); }
 .article-content {
   background: var(--bg-1);
   border: 3px solid var(--bg-3);
-  padding: 32px;
+  padding: 36px 40px;
   box-shadow: 4px 4px 0 #000;
   font-family: var(--font-jetbrains-mono), ui-monospace, monospace;
-  font-size: 15px;
-  line-height: 1.75;
+  font-size: 17px;
+  line-height: 1.8;
   color: var(--ink-dim);
+}
+.article-content p {
+  max-width: 72ch;
 }
 .article-content h2 {
   font-family: var(--font-press-start-2p), system-ui, monospace;
-  font-size: 14px;
+  font-size: 17px;
+  line-height: 1.4;
   color: var(--neon-1);
-  margin: 32px 0 16px;
-  padding-bottom: 8px;
+  margin: 36px 0 18px;
+  padding-bottom: 10px;
   border-bottom: 2px dashed var(--bg-3);
 }
 .article-content h3 {
   font-family: var(--font-press-start-2p), system-ui, monospace;
-  font-size: 12px;
+  font-size: 14px;
+  line-height: 1.4;
   color: var(--neon-2);
-  margin: 24px 0 12px;
+  margin: 28px 0 14px;
 }
 .article-content h2:first-child { margin-top: 0; }
 .article-content p { margin-bottom: 16px; color: var(--ink-dim); }
@@ -1189,10 +1203,10 @@ a:hover { color: var(--neon-1); }
 .article-content blockquote {
   border-left: 4px solid var(--neon-2);
   background: var(--bg-2);
-  padding: 16px 20px;
-  margin: 20px 0;
+  padding: 20px 24px;
+  margin: 24px 0;
   font-family: var(--font-vt323), monospace;
-  font-size: 22px;
+  font-size: 26px;
   line-height: 1.4;
   color: var(--ink);
 }

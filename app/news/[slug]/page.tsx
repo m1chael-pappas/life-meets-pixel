@@ -6,8 +6,14 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { AuthorChip } from "@/components/retro/author-chip";
+import { NewsCard } from "@/components/retro/news-card";
 import { SiteHeader } from "@/components/site-header";
-import { fetchOptions, NEWS_POST_QUERY } from "@/lib/queries";
+import { authorInitial, authorLevel } from "@/lib/mappings";
+import {
+  fetchOptions,
+  NEWS_POST_QUERY,
+  RELATED_NEWS_QUERY,
+} from "@/lib/queries";
 import type { Category, NewsPost } from "@/lib/types";
 import { client } from "@/sanity/client";
 import imageUrlBuilder from "@sanity/image-url";
@@ -131,14 +137,37 @@ const portableTextComponents: PortableTextComponents = {
   },
 };
 
+function countWords(blocks: NewsPost["content"]): number {
+  if (!Array.isArray(blocks)) return 0;
+  let total = 0;
+  for (const block of blocks) {
+    if (block && typeof block === "object" && "_type" in block && block._type === "block") {
+      const children = (block as { children?: Array<{ text?: string }> }).children ?? [];
+      for (const child of children) {
+        if (child?.text) total += child.text.trim().split(/\s+/).filter(Boolean).length;
+      }
+    }
+  }
+  return total;
+}
+
 export default async function NewsPostPage({ params }: NewsPostPageProps) {
-  const post = await client.fetch<NewsPost>(NEWS_POST_QUERY, await params, fetchOptions);
+  const resolvedParams = await params;
+  const post = await client.fetch<NewsPost>(NEWS_POST_QUERY, resolvedParams, fetchOptions);
 
   if (!post) notFound();
+
+  const related = await client.fetch<NewsPost[]>(
+    RELATED_NEWS_QUERY,
+    { slug: resolvedParams.slug },
+    fetchOptions,
+  );
 
   const publishDate = new Date(post.publishedAt);
   const relativeDate = formatDistanceToNow(publishDate, { addSuffix: true });
   const imageUrl = post.featuredImage?.asset?.url ?? null;
+  const wordCount = countWords(post.content);
+  const readMin = Math.max(1, Math.round(wordCount / 220));
 
   return (
     <>
@@ -167,7 +196,7 @@ export default async function NewsPostPage({ params }: NewsPostPageProps) {
                 </div>
               )}
               <h1 className="article-meta__title">{post.title}</h1>
-              <p className="hero-feature__sub">{post.excerpt}</p>
+              <p className="article-meta__lead">{post.excerpt}</p>
               <div style={{ display: "flex", alignItems: "center", gap: 16, flexWrap: "wrap" }}>
                 <AuthorChip name={post.author.name} accentColor={post.author.accentColor} />
                 <time
@@ -181,11 +210,96 @@ export default async function NewsPostPage({ params }: NewsPostPageProps) {
           </div>
         </div>
 
-        <article className="article-content" style={{ maxWidth: 820, margin: "0 auto" }}>
-          {Array.isArray(post.content) && (
-            <PortableText value={post.content} components={portableTextComponents} />
-          )}
-        </article>
+        <div className="article-body">
+          <article className="article-content">
+            {Array.isArray(post.content) && (
+              <PortableText value={post.content} components={portableTextComponents} />
+            )}
+          </article>
+
+          <aside>
+            <div className="stat-block">
+              <h3>◆ AT A GLANCE</h3>
+              <div className="stat-row">
+                <span className="lbl">Type</span>
+                <span className="val">{post.breaking ? "BREAKING" : "NEWS"}</span>
+              </div>
+              <div className="stat-row">
+                <span className="lbl">Published</span>
+                <span className="val">
+                  {publishDate
+                    .toISOString()
+                    .slice(0, 10)
+                    .replace(/-/g, "·")}
+                </span>
+              </div>
+              <div className="stat-row">
+                <span className="lbl">Read Time</span>
+                <span className="val">
+                  {readMin} MIN · {wordCount} WORDS
+                </span>
+              </div>
+              {post.categories?.length ? (
+                <div className="stat-row">
+                  <span className="lbl">Categories</span>
+                  <span className="val">
+                    {post.categories
+                      .map((c: Category) => c.title.toUpperCase())
+                      .join(" · ")}
+                  </span>
+                </div>
+              ) : null}
+            </div>
+
+            <div className="stat-block">
+              <h3>◆ REPORTED BY</h3>
+              <Link
+                href={`/author/${post.author.slug.current}`}
+                className="reviewed-by"
+              >
+                <div
+                  className="reviewed-by__avatar"
+                  style={{
+                    borderColor: post.author.accentColor || "var(--neon-2)",
+                    color: post.author.accentColor || "var(--neon-2)",
+                  }}
+                >
+                  {authorInitial(post.author.name)}
+                </div>
+                <div>
+                  <div className="reviewed-by__name">
+                    {post.author.name.toUpperCase()}
+                  </div>
+                  <div className="reviewed-by__lvl">
+                    LV {authorLevel(post.author.reviewCount, post.author.newsCount)} · REPORTER
+                  </div>
+                </div>
+              </Link>
+              {post.author.bio && (
+                <p className="reviewed-by__bio">{post.author.bio}</p>
+              )}
+            </div>
+          </aside>
+        </div>
+
+        {related.length > 0 && (
+          <section className="lmp-section--tight">
+            <div className="section-head">
+              <div className="section-head__title">
+                <span className="num">◆</span>
+                <h2>MORE FROM THE NEWS DESK</h2>
+              </div>
+              <Link href="/news" className="section-head__action">
+                ALL NEWS
+              </Link>
+            </div>
+            <div className="news-grid">
+              {related.map((p, i) => (
+                <NewsCard key={p._id} post={p} lead={i === 0} />
+              ))}
+            </div>
+          </section>
+        )}
       </main>
     </>
   );

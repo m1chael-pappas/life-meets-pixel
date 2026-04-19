@@ -491,6 +491,8 @@ export const NEWS_POST_QUERY = `*[
     slug,
     bio,
     "accentColor": accentColor.hex,
+    "reviewCount": count(*[_type == "review" && author._ref == ^._id && defined(slug.current)]),
+    "newsCount": count(*[_type == "newsPost" && author._ref == ^._id && defined(slug.current)]),
     avatar{
       asset->{
         url
@@ -505,6 +507,42 @@ export const NEWS_POST_QUERY = `*[
     "color": color.hex
   },
   seo
+}`;
+
+// Related news (latest 3 other news posts, excluding current slug)
+export const RELATED_NEWS_QUERY = `*[
+  _type == "newsPost"
+  && defined(slug.current)
+  && slug.current != $slug
+]|order(publishedAt desc)[0...3]{
+  _id,
+  title,
+  slug,
+  excerpt,
+  publishedAt,
+  breaking,
+  featuredImage{
+    asset->{
+      url
+    },
+    alt
+  },
+  author->{
+    name,
+    slug,
+    "accentColor": accentColor.hex,
+    avatar{
+      asset->{
+        url
+      },
+      alt
+    }
+  },
+  categories[]->{
+    title,
+    slug,
+    "color": color.hex
+  }
 }`;
 
 // Stats Query
