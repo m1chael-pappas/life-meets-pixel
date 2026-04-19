@@ -49,6 +49,18 @@ Unless the subject is clearly in Jenna's lane (K-drama, UX/design reads, cozy st
 - **No AI tells.** Avoid "In conclusion", "It's worth noting", "Delve", "Tapestry", "Vibrant", "In this article we will explore". Read the existing reviews in Sanity before drafting if you need a style reference (use `query_documents` to pull a sample).
 - **FTC-safe:** no unverifiable superlatives ("the best game ever made"). No uncited quotes from developers unless actually found via research.
 
+### Punctuation — HARD RULES
+
+- **NEVER use em dashes (`—`) anywhere.** Not in titles, headings, body prose, pros, cons, verdict, summary, meta description, captions, or anywhere else in any field of any document. This is non-negotiable.
+- Replace what you'd normally use an em dash for with:
+  - `:` (colon) for introducing a list or phrase
+  - `,` (comma) for short parenthetical asides
+  - `.` (period + new sentence) for anything that would be a stronger break
+  - `(parentheses)` for genuine asides
+  - `;` (semicolon) for joining related clauses
+- En dashes (`–`) and hyphens (`-`) are fine. Only em dashes (`—`, U+2014) are banned.
+- Scrub em dashes from any material you quote or paraphrase from research sources.
+
 ## Data shape to produce
 
 ### `reviewableItem` draft
@@ -64,7 +76,7 @@ Unless the subject is clearly in Jenna's lane (K-drama, UX/design reads, cozy st
   "creator": "director/developer/author",
   "publisher": "publisher/studio/network",
   "officialWebsite": "https://..." | undefined,
-  "coverImage": undefined  // leave undefined — user uploads the cover in Studio
+  "coverImage": undefined  // leave undefined initially. You will generate one via generate_image (see Media step below).
   // Type-specific fields (only include the ones relevant to itemType):
   // videogame: esrbRating
   // boardgame: playerCount, playTime
@@ -174,11 +186,17 @@ Pick **4-5 criteria**. Scores should vary around `reviewScore` — some above, s
 
 4. **Create the `reviewableItem` draft** (if new) via `create_documents_from_json`. Use `drafts.<uuid>` as the `_id` or let Sanity auto-assign (then prefix with `drafts.` when referencing).
 
-5. **Create the `review` draft**, referencing the reviewableItem by `_ref`. Remember: reviewItem in a draft can reference the published ID safely; Sanity resolves it.
+5. **Publish the `reviewableItem` immediately.** Sanity's strong-reference validation blocks a draft review from pointing at a non-existent published `reviewableItem`. So: create the reviewableItem as a draft, then call `publish_documents` on it right away. The reviewableItem represents "this thing exists in the catalogue" and is benign to publish. The review itself stays a draft.
 
-6. **Do not publish.** Stop at the draft. Tell the user the draft is ready + give the Studio URL: `https://lmp.sanity.studio/desk/review;<reviewDocId>`.
+6. **Generate the cover image** for the reviewableItem using `mcp__Sanity__generate_image`. Target `documentId: <reviewableItem published id>`, `imagePath: "coverImage"`. Prompt the generator for a **retro 16-bit pixel-art style key-art illustration** matching the Life Meets Pixel aesthetic (chunky pixel clusters, sharp edges, saturated neon-on-midnight palette of deep navy background + magenta and cyan accents + yellow highlights, CRT scanline texture overlay, landscape 16:9). Describe the specific scene/composition relevant to the subject. **Explicitly say "NOT photorealistic"** and "NOT a photograph" so the generator doesn't make a realistic image of copyrighted characters. Generation is async; the image lands shortly after the call returns.
 
-7. **Output the social pack** (see next section).
+7. **Create the `review` draft**, referencing the reviewableItem by published `_ref`.
+
+8. **Do not publish the review.** Stop at the draft. Tell the user the draft is ready + give the Studio URL: `https://lmp.sanity.studio/desk/review;<reviewDocId>`. Note that the generated cover may take 20-60 seconds to render.
+
+9. **Inline body images:** do NOT attempt to add image blocks to the Portable Text content array. User adds those manually in Studio after reading the draft. Video embeds (`videoEmbed` blocks) are encouraged when an official trailer exists; place one near the end under a "Watch the Trailer" h2.
+
+10. **Output the social pack** (see next section).
 
 ## Social pack output (for Figma / Instagram / Facebook)
 
@@ -217,9 +235,11 @@ Keep hashtags tasteful: 4-6 max, mix of brand + category + subject. No hashtag s
 
 ## Guardrails
 
-- **Never publish.** Always drafts.
+- **Review stays as draft.** Only the reviewableItem gets published (so the draft review can reference it without triggering Sanity's strong-ref validation).
+- **NO em dashes anywhere.** See the Punctuation hard rules above. This catches you even in headings, captions, and meta fields.
 - **Never invent developer quotes or review scores from other outlets.** Only cite what you actually found in research.
 - **No affiliate links in the first draft.** User adds them manually via Studio after deciding which partner to use.
 - **If research surfaces something reputational** (studio scandal, cancelled release, etc.), flag it in the chat before drafting so the user can decide whether to proceed.
 - **Double-check slug collisions** with an existing GROQ query before creating.
 - **If you can't find enough research to write honestly,** stop and say so. Don't pad with filler.
+- **Generated cover image:** always generate one in retro pixel-art style. User can replace it in Studio if they don't like it. Never force the generator into photorealism.
