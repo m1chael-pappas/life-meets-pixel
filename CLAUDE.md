@@ -28,7 +28,13 @@ Any decision, convention, performance finding, or gotcha discovered during a ses
 
 ## Sanity MCP
 
-This repo ships with a `.mcp.json` that registers the Sanity MCP server (`@sanity/mcp-server`). It picks up `SANITY_API_TOKEN` from `.env.local` at session start. Use it for schema introspection, data queries, and content patches without writing one-off scripts.
+Register the hosted Sanity MCP server once per machine (OAuth — no token needed):
+
+```
+claude mcp add Sanity -t http https://mcp.sanity.io --scope user
+```
+
+After first use it'll prompt an OAuth browser flow. Use the MCP for schema introspection, data queries, and content patches — faster than maintaining one-off scripts in `scripts/`. The `SANITY_API_TOKEN` in `.env.local` is still needed for the local seed/delete scripts, but **not** for the MCP.
 
 ## Env vars (`.env.local`)
 
