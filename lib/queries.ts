@@ -1,9 +1,8 @@
 // lib/queries.ts
 
-// TEMP: hide Alex Chen until Sanity reference-delete is resolved.
-// See Projects/life-meets-pixel/backlog in the vault. Remove this once
-// `pnpm delete:alex --force` is run or the author is reassigned in Studio.
-export const HIDDEN_AUTHOR_IDS = ["9d0f03de-9495-4e3b-886a-f3b4a7af5b38"];
+// Empty — kept as a mechanism for future soft-hiding of authors without a CMS delete.
+// Add an _id to the array to hide that author from listings + 404 their profile page.
+export const HIDDEN_AUTHOR_IDS: string[] = [];
 
 const HIDDEN_AUTHORS_GROQ = `!(_id in ${JSON.stringify(HIDDEN_AUTHOR_IDS)})`;
 
