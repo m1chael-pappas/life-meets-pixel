@@ -1,24 +1,33 @@
 {
-  "_note": "Edit freely. The /news-radar slash command reads this file each run. Add new sources as RSS URLs. Remove sources you don't care about to cut noise.",
+  "_note": "Edit freely. The /news-radar slash command reads this file each run. Add new sources as RSS URLs. Remove sources you don't care about to cut noise. Some sources are blocked by Claude Code's WebFetch sandbox (Eurogamer, RPS, Polygon, IGN, The Verge, Reddit); they're noted in `_blocked` below for awareness rather than included in the active lists.",
   "press": [
     { "name": "PC Gamer",         "url": "https://www.pcgamer.com/rss/",                "focus": "PC gaming, news + reviews + previews" },
-    { "name": "Eurogamer",        "url": "https://www.eurogamer.net/feed",              "focus": "UK gaming, long-form + news" },
-    { "name": "Polygon",          "url": "https://www.polygon.com/rss/index.xml",       "focus": "Gaming + broader geek culture" },
-    { "name": "Rock Paper Shotgun","url": "https://www.rockpapershotgun.com/feed",      "focus": "PC gaming with a voice" },
     { "name": "Kotaku",           "url": "https://kotaku.com/rss",                      "focus": "Gaming news + culture" },
-    { "name": "GameSpot",         "url": "https://www.gamespot.com/feeds/mashup/",      "focus": "Broad gaming coverage" },
     { "name": "Destructoid",      "url": "https://www.destructoid.com/feed/",           "focus": "Indie-leaning gaming news" },
-    { "name": "IGN",              "url": "https://feeds.ign.com/ign/all",               "focus": "Mass-market gaming coverage" },
-    { "name": "The Verge Gaming", "url": "https://www.theverge.com/rss/gaming/index.xml","focus": "Tech + gaming intersection" },
-    { "name": "Nintendo Life",    "url": "https://www.nintendolife.com/feeds/news",     "focus": "Nintendo platforms" }
+    { "name": "Nintendo Life",    "url": "https://www.nintendolife.com/feeds/news",     "focus": "Nintendo platforms" },
+    { "name": "GamesRadar",       "url": "https://www.gamesradar.com/rss/",             "focus": "Broad gaming coverage, lots of features" }
   ],
   "publishers": [
     { "name": "PlayStation Blog", "url": "https://blog.playstation.com/feed/",     "focus": "Sony first-party + PS platform news" },
-    { "name": "Xbox Wire",        "url": "https://news.xbox.com/en-us/feed/",      "focus": "Xbox platform + Game Pass + Bethesda" },
-    { "name": "Bungie News",      "url": "https://www.bungie.net/News/rss",        "focus": "Destiny + Marathon dev blogs" },
-    { "name": "Blizzard News",    "url": "https://news.blizzard.com/en-us/rss",    "focus": "Blizzard franchises" }
+    { "name": "Xbox Wire",        "url": "https://news.xbox.com/en-us/feed/",      "focus": "Xbox platform + Game Pass + Bethesda" }
   ],
   "youtube": [
     { "_note": "YouTube channels expose RSS via https://www.youtube.com/feeds/videos.xml?channel_id=CHANNEL_ID. Add channels you follow. Leave empty to skip YouTube." }
-  ]
+  ],
+  "_blocked": {
+    "_note": "Sources that Claude Code's WebFetch sandbox refuses. Keep the URLs here as a reminder; try periodically since sandbox policies change. Reddit would need the JSON API (auth'd) or an alternative fetcher.",
+    "sandboxed": [
+      { "name": "Eurogamer",        "url": "https://www.eurogamer.net/feed" },
+      { "name": "Rock Paper Shotgun","url": "https://www.rockpapershotgun.com/feed" },
+      { "name": "Polygon",          "url": "https://www.polygon.com/rss/index.xml" },
+      { "name": "IGN",              "url": "https://feeds.ign.com/ign/all" },
+      { "name": "The Verge Gaming", "url": "https://www.theverge.com/rss/gaming/index.xml" },
+      { "name": "Reddit r/Games",   "url": "https://www.reddit.com/r/Games/.rss" }
+    ],
+    "http_errors": [
+      { "name": "GameSpot",      "url": "https://www.gamespot.com/feeds/mashup/", "status": 403 },
+      { "name": "Bungie News",   "url": "https://www.bungie.net/News/rss",        "status": 404, "_tip": "URL may have changed; check bungie.net for current feed endpoint" },
+      { "name": "Blizzard News", "url": "https://news.blizzard.com/en-us/rss",    "status": 404, "_tip": "URL may have changed; check news.blizzard.com footer for RSS" }
+    ]
+  }
 }
