@@ -10,7 +10,7 @@ export default function SupportSection() {
         </div>
         <div className="cta-strip__buttons">
           <a
-            href="https://www.buymeacoffee.com/lifemeetspixel"
+            href="https://ko-fi.com/lifemeetspixel"
             target="_blank"
             rel="noopener noreferrer"
             className="retro-btn retro-btn--lime"
