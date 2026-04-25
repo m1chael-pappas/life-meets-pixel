@@ -4,18 +4,21 @@ Public-facing geek-culture review site (games, movies, books, anime, board games
 
 ## Read this first
 
-Durable project knowledge lives in the Obsidian vault at `~/Documents/ObsidianVault`. Start here, then follow links:
+Durable project knowledge lives in the Obsidian vault at `~/Documents/ObsidianVault`, organised under the wiki schema. Start at the entry-point pages and follow `[[wikilinks]]`:
 
-- [`Projects/life-meets-pixel/overview.md`](/home/michael_pappas/Documents/ObsidianVault/Projects/life-meets-pixel/overview.md) — entry point, links to everything else
-- `architecture.md`, `sanity-schema.md`, `affiliate-integration.md`, `decisions.md`, `backlog.md`, `redesign-plan.md` — topic-specific notes
+- [`wiki/entities/life-meets-pixel.md`](/home/michael_pappas/Documents/ObsidianVault/wiki/entities/life-meets-pixel.md): project entry point, links to everything else.
+- [`wiki/concepts/life-meets-pixel-architecture.md`](/home/michael_pappas/Documents/ObsidianVault/wiki/concepts/life-meets-pixel-architecture.md), `life-meets-pixel-sanity-schema.md`, `life-meets-pixel-affiliate-integration.md`: topic-specific concepts.
+- [`wiki/synthesis/life-meets-pixel-decisions.md`](/home/michael_pappas/Documents/ObsidianVault/wiki/synthesis/life-meets-pixel-decisions.md), `life-meets-pixel-backlog.md`, `life-meets-pixel-redesign-plan.md`: decision log, open work, redesign history.
+- [`wiki/entities/life-meets-pixel-stack.md`](/home/michael_pappas/Documents/ObsidianVault/wiki/entities/life-meets-pixel-stack.md): versions + env vars.
 
 Cross-project conventions:
-- [`Conventions/nextjs-patterns.md`](/home/michael_pappas/Documents/ObsidianVault/Conventions/nextjs-patterns.md) — App Router patterns (note: this repo uses webhook-driven `revalidatePath`, not tag-based `revalidateTag`)
-- [`Stack/life-meets-pixel-stack.md`](/home/michael_pappas/Documents/ObsidianVault/Stack/life-meets-pixel-stack.md) — versions + env vars
+- [`wiki/concepts/nextjs-patterns.md`](/home/michael_pappas/Documents/ObsidianVault/wiki/concepts/nextjs-patterns.md): App Router patterns (note: this repo uses webhook-driven `revalidatePath`, not tag-based `revalidateTag`).
+
+The vault's operating manual is at [`WIKI-SCHEMA.md`](/home/michael_pappas/Documents/ObsidianVault/WIKI-SCHEMA.md). Master catalogue at [`wiki/index.md`](/home/michael_pappas/Documents/ObsidianVault/wiki/index.md).
 
 ## Write back to the vault
 
-Any decision, convention, performance finding, or gotcha discovered during a session should be documented in the vault before the session ends — not just when asked. Update existing notes before creating new ones.
+Any decision, convention, performance finding, or gotcha discovered during a session should be documented in the vault before the session ends, not just when asked. Update existing pages before creating new ones. Always update `wiki/index.md` and append to `wiki/log.md` when you create a page. Tags must come from the canonical taxonomy in `WIKI-SCHEMA.md`.
 
 ## Non-negotiable rules
 
