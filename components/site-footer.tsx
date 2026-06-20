@@ -72,7 +72,16 @@ export function SiteFooter() {
           </div>
         </div>
         <div className="footer-bot">
-          <span>© {currentYear} LIFE MEETS PIXEL · INSERT COIN TO CONTINUE</span>
+          <span>
+            © {currentYear} LIFE MEETS PIXEL · INSERT COIN TO CONTINUE ·{" "}
+            <a
+              href="https://onthedot.au/?utm_source=life-meets-pixel&utm_medium=built-by&utm_campaign=footer"
+              target="_blank"
+              rel="noopener"
+            >
+              Built by OnTheDot.
+            </a>
+          </span>
           <div className="socials">
             <a href={SITE_CONFIG.social.discord} aria-label="Discord" target="_blank" rel="noopener noreferrer">
               DC
