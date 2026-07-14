@@ -297,11 +297,13 @@ Report facts only. Do not write the article.`,
 
     // The abort signal (not a per-call timeout) caps the total including any
     // SDK retries, so a slow call can never outlive the phase budget.
+    // Sonnet, not Opus: research is fact-gathering, and Opus + adaptive
+    // thinking + web tools regularly blew the phase budget. Writing stays
+    // on Opus where the voice matters.
     const response = await client.messages.create(
       {
-        model: 'claude-opus-4-8',
-        max_tokens: 16000,
-        thinking: { type: 'adaptive' },
+        model: 'claude-sonnet-5',
+        max_tokens: 8000,
         tools: [
           { type: 'web_search_20260209', name: 'web_search', max_uses: wrapUp ? 1 : 4 },
           { type: 'web_fetch_20260209', name: 'web_fetch', max_uses: wrapUp ? 1 : 5 },
