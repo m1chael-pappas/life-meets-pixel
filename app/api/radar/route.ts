@@ -70,17 +70,22 @@ export async function GET(request: NextRequest) {
     );
 
     let proposed = 0;
+    const proposeErrors: string[] = [];
     for (const story of stories) {
       try {
         await proposeCandidate(story);
         proposed++;
       } catch (err) {
         console.error(`Failed to propose "${story.headline}":`, err);
+        proposeErrors.push(`"${story.headline}": ${String(err).slice(0, 150)}`);
       }
     }
 
     await sendMessage(
-      `📡 <b>Radar done.</b> ${sources.length} sources · ${items.length} items · ${proposed} candidates above.` +
+      `📡 <b>Radar done.</b> ${sources.length} sources · ${items.length} items · ${proposed}/${stories.length} candidates above.` +
+        (proposeErrors.length
+          ? `\n\n⚠️ ${proposeErrors.length} failed to propose:\n${proposeErrors[0]}`
+          : '') +
         formatFeedHealth(failed)
     );
 
