@@ -1,8 +1,17 @@
 import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
-  // Headless Chromium (social template renderer) must not be bundled.
+  // Headless Chromium (social template renderer) must not be bundled, and
+  // its brotli-packed binaries are loaded via fs at runtime so the file
+  // tracer misses them without an explicit include (pnpm layout needs the
+  // .pnpm glob; the plain one covers the symlink).
   serverExternalPackages: ["@sparticuz/chromium", "puppeteer-core"],
+  outputFileTracingIncludes: {
+    "/api/social": [
+      "./node_modules/@sparticuz/chromium/bin/**",
+      "./node_modules/.pnpm/@sparticuz+chromium*/node_modules/@sparticuz/chromium/bin/**",
+    ],
+  },
 
   images: {
     // Custom loader: Sanity images resize on Sanity's CDN, third-party
