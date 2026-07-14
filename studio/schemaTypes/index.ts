@@ -6,6 +6,7 @@ import {platformType} from './platform'
 import {reviewType} from './review'
 import {reviewableItemType} from './reviewableItem'
 import {seoType} from './seo'
+import {storyCandidateType} from './storyCandidate'
 import {tagType} from './tag'
 
 export const schemaTypes = [
@@ -16,6 +17,9 @@ export const schemaTypes = [
 
   // Main content types
   newsPostType,
+
+  // Automation pipeline
+  storyCandidateType,
 
   // Reference types (keep these)
   authorType,

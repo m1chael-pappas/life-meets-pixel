@@ -13,7 +13,8 @@
     "seed": "tsx scripts/seed-sanity.ts",
     "seed:dry-run": "tsx scripts/seed-sanity.ts --dry-run",
     "delete:alex": "tsx scripts/delete-alex.ts",
-    "delete:alex:dry-run": "tsx scripts/delete-alex.ts --dry-run"
+    "delete:alex:dry-run": "tsx scripts/delete-alex.ts --dry-run",
+    "telegram:setup": "tsx scripts/telegram-setup.ts"
   },
   "dependencies": {
     "@next/third-parties": "^16.0.0",
