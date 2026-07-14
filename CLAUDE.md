@@ -67,8 +67,14 @@ TELEGRAM_CHAT_ID=...                 # pnpm telegram:setup -- --updates
 TELEGRAM_WEBHOOK_SECRET=...          # openssl rand -hex 24; gates /api/telegram
 
 # Radar cron (content pipeline)
-CRON_SECRET=...                      # openssl rand -hex 24; gates /api/radar (Vercel cron sends it as Bearer)
-ANTHROPIC_API_KEY=sk-ant-...         # radar ranking + drafting agent
+CRON_SECRET=...                      # openssl rand -hex 24; gates /api/radar, /api/draft, /api/social
+ANTHROPIC_API_KEY=sk-ant-...         # radar ranking + drafting agent + social copy
+
+# Meta / Instagram + Facebook posting (optional — without these, /api/social
+# delivers the rendered template + captions to Telegram for manual posting)
+META_PAGE_ID=...                     # Facebook Page ID
+META_IG_USER_ID=...                  # Instagram business account ID linked to the Page
+META_PAGE_ACCESS_TOKEN=...           # long-lived Page token: pages_manage_posts + instagram_content_publish
 
 # Analytics (optional)
 NEXT_PUBLIC_GA_MEASUREMENT_ID=G-...

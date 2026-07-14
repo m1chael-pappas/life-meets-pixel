@@ -1,6 +1,9 @@
 import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
+  // Headless Chromium (social template renderer) must not be bundled.
+  serverExternalPackages: ["@sparticuz/chromium", "puppeteer-core"],
+
   images: {
     // Custom loader: Sanity images resize on Sanity's CDN, third-party
     // affiliate images pass through untouched. Avoids Vercel image

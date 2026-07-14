@@ -116,6 +116,17 @@ export async function sendMessage(
   });
 }
 
+export async function sendPhoto(photoUrl: string, caption: string) {
+  if (!CHAT_ID) throw new Error("TELEGRAM_CHAT_ID is not set");
+  // Telegram caps photo captions at 1024 chars.
+  return tg<{ message_id: number }>("sendPhoto", {
+    chat_id: CHAT_ID,
+    photo: photoUrl,
+    caption: caption.slice(0, 1024),
+    parse_mode: "HTML",
+  });
+}
+
 export async function editMessageText(
   messageId: number,
   text: string,

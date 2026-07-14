@@ -156,9 +156,15 @@ async function handleCallback(
       if (callback.message) {
         await editMessageText(
           callback.message.message_id,
-          `🌐 <b>Published: ${escapeHtml(candidate.headline)}</b>\n\nhttps://lifemeetspixel.com/news/${slug}\n\n#cand:${candidate._id}`
+          `🌐 <b>Published: ${escapeHtml(candidate.headline)}</b>\n\nhttps://lifemeetspixel.com/news/${slug}\n\nSocial post rendering now…\n\n#cand:${candidate._id}`
         );
       }
+      // Social render + Meta posting runs as its own invocation.
+      waitUntil(
+        fetch(
+          `${SITE_URL}/api/social?candidateId=${encodeURIComponent(candidate._id)}&secret=${process.env.CRON_SECRET}`
+        ).catch((err) => console.error("Social trigger failed:", err))
+      );
       break;
     }
 
