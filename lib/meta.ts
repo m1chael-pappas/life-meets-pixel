@@ -29,12 +29,15 @@ async function graph<T = Record<string, unknown>>(
   return data as T;
 }
 
-// Two-step publish: create a media container, then publish it.
+// Two-step publish: create a media container, wait for it to finish
+// processing the image (it's asynchronous; publishing too early fails with
+// "Media ID is not available"), then publish it.
 export async function postToInstagram(imageUrl: string, caption: string): Promise<string> {
   const container = await graph<{ id: string }>(`${IG_USER_ID}/media`, {
     image_url: imageUrl,
     caption,
   });
+  await waitForContainer(container.id);
   const published = await graph<{ id: string }>(`${IG_USER_ID}/media_publish`, {
     creation_id: container.id,
   });
@@ -48,6 +51,22 @@ export async function postToInstagram(imageUrl: string, caption: string): Promis
     // permalink is cosmetic; fall through
   }
   return 'https://www.instagram.com/';
+}
+
+async function waitForContainer(creationId: string) {
+  for (let i = 0; i < 30; i++) {
+    const res = await fetch(
+      `${GRAPH}/${creationId}?fields=status_code&access_token=${ACCESS_TOKEN}`
+    );
+    const data = await res.json();
+    const status = data.status_code;
+    if (status === 'FINISHED') return;
+    if (status === 'ERROR' || status === 'EXPIRED') {
+      throw new Error(`IG media container ${status}`);
+    }
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+  }
+  throw new Error('IG media container not ready after 60s');
 }
 
 export async function postToFacebook(imageUrl: string, message: string): Promise<string> {
