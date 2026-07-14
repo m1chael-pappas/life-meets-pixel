@@ -20,6 +20,13 @@ const AUTHOR_IDS: Record<string, string> = {
 const STUDIO_URL = 'https://lmp.sanity.studio';
 const SITE_URL = 'https://lifemeetspixel.com';
 
+// Vercel (Hobby) hard-kills the function at 300s WITHOUT running catch blocks,
+// which strands the candidate in "approved" with no Telegram report. Budget the
+// whole run to finish, or fail cleanly, inside that window.
+const DRAFT_BUDGET_MS = 270_000;
+// Held back from the research phase for writing + image sourcing + Sanity writes.
+const WRITE_RESERVE_MS = 90_000;
+
 interface Candidate {
   _id: string;
   headline: string;
@@ -127,6 +134,9 @@ export async function draftFromCandidate(candidateId: string): Promise<void> {
   );
   if (!candidate) throw new Error(`Candidate ${candidateId} not found`);
 
+  const startedAt = Date.now();
+  const remaining = () => DRAFT_BUDGET_MS - (Date.now() - startedAt);
+
   try {
     const client = new Anthropic();
 
@@ -140,10 +150,10 @@ export async function draftFromCandidate(candidateId: string): Promise<void> {
     );
 
     // 1. Research: web search + fetch, primary source first.
-    const research = await runResearch(client, candidate);
+    const research = await runResearch(client, candidate, remaining);
 
     // 2. Write: structured output in the house voice.
-    const article = await writeArticle(client, candidate, research, samples);
+    const article = await writeArticle(client, candidate, research, samples, remaining);
 
     // 3. Unique slug.
     const slug = await ensureUniqueSlug(article.slug);
@@ -223,13 +233,19 @@ export async function draftFromCandidate(candidateId: string): Promise<void> {
   } catch (err) {
     await writeClient.patch(candidate._id).set({ status: 'failed' }).commit();
     await sendMessage(
-      `⚠️ <b>Drafting failed</b> for "${escapeHtml(candidate.headline)}":\n${escapeHtml(String(err).slice(0, 300))}`
+      `⚠️ <b>Drafting failed</b> for "${escapeHtml(candidate.headline)}":\n` +
+        `${escapeHtml(String(err).slice(0, 300))}\n\n` +
+        `Retry: /api/draft?candidateId=${candidate._id}`
     );
     throw err;
   }
 }
 
-async function runResearch(client: Anthropic, candidate: Candidate): Promise<string> {
+async function runResearch(
+  client: Anthropic,
+  candidate: Candidate,
+  remaining: () => number
+): Promise<string> {
   let messages: Anthropic.MessageParam[] = [
     {
       role: 'user',
@@ -252,20 +268,37 @@ Report facts only. Do not write the article.`,
     },
   ];
 
+  let wrapUp = false;
   for (let i = 0; i < 5; i++) {
-    const response = await client.messages.create({
-      model: 'claude-opus-4-8',
-      max_tokens: 16000,
-      thinking: { type: 'adaptive' },
-      tools: [
-        { type: 'web_search_20260209', name: 'web_search', max_uses: 6 },
-        { type: 'web_fetch_20260209', name: 'web_fetch', max_uses: 8 },
-      ],
-      messages,
-    });
+    const budget = remaining() - WRITE_RESERVE_MS;
+    if (budget < 20_000) throw new Error('Ran out of time during research');
+
+    const response = await client.messages.create(
+      {
+        model: 'claude-opus-4-8',
+        max_tokens: 16000,
+        thinking: { type: 'adaptive' },
+        tools: [
+          { type: 'web_search_20260209', name: 'web_search', max_uses: wrapUp ? 1 : 4 },
+          { type: 'web_fetch_20260209', name: 'web_fetch', max_uses: wrapUp ? 1 : 5 },
+        ],
+        messages,
+      },
+      { timeout: budget, maxRetries: 1 }
+    );
 
     if (response.stop_reason === 'pause_turn') {
       messages = [messages[0], { role: 'assistant', content: response.content }];
+      // Running short: tell the model to report what it has instead of
+      // researching further, so we degrade to a thinner draft, not a timeout.
+      if (wrapUp || remaining() - WRITE_RESERVE_MS < 60_000) {
+        wrapUp = true;
+        messages.push({
+          role: 'user',
+          content:
+            'Stop researching now. Write your findings report immediately from what you have already verified, in the requested format. Do not make any more tool calls.',
+        });
+      }
       continue;
     }
     const text = response.content
@@ -282,27 +315,35 @@ async function writeArticle(
   client: Anthropic,
   candidate: Candidate,
   research: string,
-  samples: { title: string; excerpt: string; body: string }[]
+  samples: { title: string; excerpt: string; body: string }[],
+  remaining: () => number
 ): Promise<Article> {
-  const response = await client.messages.create({
-    model: 'claude-opus-4-8',
-    max_tokens: 16000,
-    thinking: { type: 'adaptive' },
-    system: VOICE_RULES,
-    output_config: { format: { type: 'json_schema', schema: ARTICLE_SCHEMA } },
-    messages: [
-      {
-        role: 'user',
-        content:
-          `Recent published articles, for voice matching only (do NOT reuse their content):\n` +
-          `${JSON.stringify(samples)}\n\n` +
-          `Story type: ${candidate.storyType || 'news'}\n` +
-          `Suggested author: ${candidate.suggestedAuthor || 'michael'}\n\n` +
-          `Research notes (verified facts + sources):\n${research}\n\n` +
-          `Write the article now. Original prose only, in the house voice.`,
-      },
-    ],
-  });
+  // Leave ~30s after writing for image sourcing + Sanity writes + Telegram.
+  const budget = remaining() - 30_000;
+  if (budget < 30_000) throw new Error('Ran out of time before writing');
+
+  const response = await client.messages.create(
+    {
+      model: 'claude-opus-4-8',
+      max_tokens: 16000,
+      thinking: { type: 'adaptive' },
+      system: VOICE_RULES,
+      output_config: { format: { type: 'json_schema', schema: ARTICLE_SCHEMA } },
+      messages: [
+        {
+          role: 'user',
+          content:
+            `Recent published articles, for voice matching only (do NOT reuse their content):\n` +
+            `${JSON.stringify(samples)}\n\n` +
+            `Story type: ${candidate.storyType || 'news'}\n` +
+            `Suggested author: ${candidate.suggestedAuthor || 'michael'}\n\n` +
+            `Research notes (verified facts + sources):\n${research}\n\n` +
+            `Write the article now. Original prose only, in the house voice.`,
+        },
+      ],
+    },
+    { timeout: budget, maxRetries: 1 }
+  );
 
   if (response.stop_reason === 'max_tokens') {
     throw new Error('Article writing truncated: raise max_tokens');
