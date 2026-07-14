@@ -5,8 +5,14 @@
 // captions to Telegram when Meta credentials are not configured.
 
 import Anthropic from '@anthropic-ai/sdk';
-import chromium from '@sparticuz/chromium';
+import chromium from '@sparticuz/chromium-min';
 import puppeteer from 'puppeteer-core';
+
+// chromium-min downloads this pack to /tmp at cold start (the full package
+// can't be bundled: pnpm's symlinked node_modules breaks Vercel's function
+// packaging). Keep the version in lockstep with the installed package.
+const CHROMIUM_PACK =
+  'https://github.com/Sparticuz/chromium/releases/download/v149.0.0/chromium-v149.0.0-pack.x64.tar';
 
 import {
   metaConfigured,
@@ -178,7 +184,7 @@ async function renderTemplate(params: {
 
   const browser = await puppeteer.launch({
     args: chromium.args,
-    executablePath: await chromium.executablePath(),
+    executablePath: await chromium.executablePath(CHROMIUM_PACK),
     headless: true,
     defaultViewport: { width: dims[0], height: dims[1], deviceScaleFactor: 1 },
   });
