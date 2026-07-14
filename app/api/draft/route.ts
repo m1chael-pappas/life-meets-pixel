@@ -7,8 +7,9 @@ import {
 import { draftFromCandidate } from '@/lib/drafting';
 import { writeClient } from '@/sanity/write-client';
 
-// Research + writing can take several minutes end to end.
-export const maxDuration = 800;
+// Research + writing can take several minutes end to end. 300s is the
+// Hobby-plan ceiling; bump this if the project moves to Pro.
+export const maxDuration = 300;
 
 const CRON_SECRET = process.env.CRON_SECRET;
 
