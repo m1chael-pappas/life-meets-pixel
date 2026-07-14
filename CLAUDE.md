@@ -66,6 +66,10 @@ TELEGRAM_BOT_TOKEN=...               # from @BotFather
 TELEGRAM_CHAT_ID=...                 # pnpm telegram:setup -- --updates
 TELEGRAM_WEBHOOK_SECRET=...          # openssl rand -hex 24; gates /api/telegram
 
+# Radar cron (content pipeline)
+CRON_SECRET=...                      # openssl rand -hex 24; gates /api/radar (Vercel cron sends it as Bearer)
+ANTHROPIC_API_KEY=sk-ant-...         # radar ranking + drafting agent
+
 # Analytics (optional)
 NEXT_PUBLIC_GA_MEASUREMENT_ID=G-...
 NEXT_PUBLIC_GOOGLE_ADS_ID=AW-...

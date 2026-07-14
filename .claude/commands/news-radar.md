@@ -10,7 +10,7 @@ You are a **news radar** for **Life Meets Pixel**. Your job is to scan a curated
 ## Rules of engagement
 
 - **Read-only.** Do NOT touch Sanity. Do NOT draft articles. Do NOT publish anything. You just scan + report.
-- **RSS first.** The full source list is in `.claude/news-radar-sources.json` at the repo root. Read it as your first step.
+- **RSS first.** The full source list is in `lib/news-radar-sources.json` at the repo root. Read it as your first step. Skip sources flagged `"webfetchBlocked": true`: they refuse Claude Code's WebFetch sandbox (the `/api/radar` cron fetches them server-side instead).
 - **Time window:** stories from the last **48 hours**. If a feed shows nothing that recent, include the most recent couple of items (flagged as `>48h`) so the feed doesn't disappear from the report silently.
 - **Dedupe.** When multiple outlets cover the same story (same subject + same news beat), collapse into one entry with "also covered by: X, Y" in smaller text. Pick the outlet with the richest article body as the canonical link.
 - **No WebSearch noise.** Only use `WebFetch` on the RSS URLs in the config. Use `WebSearch` only as a fallback when a specific RSS fetch fails (404, redirect loop, feed structure changed), and log that the source needs attention.
@@ -18,7 +18,7 @@ You are a **news radar** for **Life Meets Pixel**. Your job is to scan a curated
 
 ## Execution steps
 
-1. **Read the source config** with the `Read` tool: `.claude/news-radar-sources.json`.
+1. **Read the source config** with the `Read` tool: `lib/news-radar-sources.json`.
 2. **Fetch in parallel.** Issue multiple `WebFetch` tool calls in the same turn (one per source). Prompt each fetch with: *"Return the 5 most recent items from this RSS feed as JSON: [{title, url, pubDate, summary}]. Include full article summary if the feed provides it."*
 3. **Wait for all fetches**, then combine results into a single deduplicated list.
 4. **Filter by topic** if the user passed one. Case-insensitive keyword match against title + summary. If the topic is broad ("indie strategy", "nintendo"), match loosely. If narrow ("silksong"), match tightly.
@@ -93,7 +93,7 @@ If all 15 stories suggest Michael, don't note author. If any would suggest Jenna
 
 ## Source config reference
 
-Read the current source list from: `.claude/news-radar-sources.json`
+Read the current source list from: `lib/news-radar-sources.json`
 
 Format:
 ```json

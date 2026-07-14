@@ -1,0 +1,27 @@
+{
+  "_note": "Edit freely. Read by BOTH the /news-radar slash command and the /api/radar cron. Sources flagged webfetchBlocked:true are unreachable from Claude Code's WebFetch sandbox but work fine from the Vercel cron, so the slash command skips them and the cron includes them.",
+  "press": [
+    { "name": "PC Gamer",           "url": "https://www.pcgamer.com/rss/",                  "focus": "PC gaming, news + reviews + previews" },
+    { "name": "Kotaku",             "url": "https://kotaku.com/rss",                        "focus": "Gaming news + culture" },
+    { "name": "Destructoid",        "url": "https://www.destructoid.com/feed/",             "focus": "Indie-leaning gaming news" },
+    { "name": "Nintendo Life",      "url": "https://www.nintendolife.com/feeds/news",       "focus": "Nintendo platforms" },
+    { "name": "GamesRadar",         "url": "https://www.gamesradar.com/rss/",               "focus": "Broad gaming coverage, lots of features" },
+    { "name": "Eurogamer",          "url": "https://www.eurogamer.net/feed",                "focus": "European gaming press", "webfetchBlocked": true },
+    { "name": "Rock Paper Shotgun", "url": "https://www.rockpapershotgun.com/feed",         "focus": "PC gaming, indie-friendly", "webfetchBlocked": true },
+    { "name": "Polygon",            "url": "https://www.polygon.com/rss/index.xml",         "focus": "Gaming + geek culture", "webfetchBlocked": true },
+    { "name": "IGN",                "url": "https://feeds.ign.com/ign/all",                 "focus": "Mainstream gaming + entertainment", "webfetchBlocked": true },
+    { "name": "The Verge Gaming",   "url": "https://www.theverge.com/rss/gaming/index.xml", "focus": "Gaming x tech industry", "webfetchBlocked": true }
+  ],
+  "publishers": [
+    { "name": "PlayStation Blog", "url": "https://blog.playstation.com/feed/", "focus": "Sony first-party + PS platform news" },
+    { "name": "Xbox Wire",        "url": "https://news.xbox.com/en-us/feed/",  "focus": "Xbox platform + Game Pass + Bethesda" }
+  ],
+  "youtube": [
+    { "_note": "YouTube channels expose RSS via https://www.youtube.com/feeds/videos.xml?channel_id=CHANNEL_ID. Add channels you follow. Leave empty to skip YouTube." }
+  ],
+  "_http_errors": [
+    { "name": "GameSpot",      "url": "https://www.gamespot.com/feeds/mashup/", "status": 403 },
+    { "name": "Bungie News",   "url": "https://www.bungie.net/News/rss",        "status": 404, "_tip": "URL may have changed; check bungie.net for current feed endpoint" },
+    { "name": "Blizzard News", "url": "https://news.blizzard.com/en-us/rss",    "status": 404, "_tip": "URL may have changed; check news.blizzard.com footer for RSS" }
+  ]
+}
