@@ -5,7 +5,6 @@ import {
   NextResponse,
 } from 'next/server';
 
-import { draftFromCandidate } from '@/lib/drafting';
 import {
   answerCallbackQuery,
   editMessageText,
@@ -18,12 +17,9 @@ import {
 } from '@/lib/telegram';
 import { writeClient } from '@/sanity/write-client';
 
-// Approvals kick off the drafting agent via waitUntil after the response is
-// sent; give the function room for the full research + write run.
-export const maxDuration = 300;
-
 // Telegram sends this header when the webhook was registered with a secret_token.
 const WEBHOOK_SECRET = process.env.TELEGRAM_WEBHOOK_SECRET;
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://lifemeetspixel.com';
 
 interface TelegramUpdate {
   callback_query?: {
@@ -112,9 +108,14 @@ async function handleCallback(
           `${formatCandidateCard(candidate)}\n\n✅ <b>Approved.</b> Drafting now, preview lands here in a few minutes.`
         );
       }
-      // Runs after the webhook response is sent; failures report to Telegram
-      // from inside draftFromCandidate.
-      waitUntil(draftFromCandidate(candidate._id).catch(() => {}));
+      // Fire the drafting run as its own invocation so it survives this
+      // webhook function's lifetime; failures report to Telegram from inside
+      // draftFromCandidate.
+      waitUntil(
+        fetch(
+          `${SITE_URL}/api/draft?candidateId=${encodeURIComponent(candidate._id)}&secret=${process.env.CRON_SECRET}`
+        ).catch((err) => console.error('Draft trigger failed:', err))
+      );
       break;
     }
 
