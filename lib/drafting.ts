@@ -20,12 +20,12 @@ const AUTHOR_IDS: Record<string, string> = {
 const STUDIO_URL = 'https://lmp.sanity.studio';
 const SITE_URL = 'https://lifemeetspixel.com';
 
-// Vercel (Hobby) hard-kills the function at 300s WITHOUT running catch blocks,
-// which strands the candidate in "approved" with no Telegram report. Budget the
-// whole run to finish, or fail cleanly, inside that window.
-const DRAFT_BUDGET_MS = 270_000;
-// Held back from the research phase for writing + image sourcing + Sanity writes.
-const WRITE_RESERVE_MS = 90_000;
+// Vercel (Hobby) hard-kills a function at 300s WITHOUT running catch blocks,
+// which strands the candidate in "approved" with no Telegram report. Research
+// and writing therefore run as two chained invocations (each with its own 300s
+// window), and each phase aborts its API calls at this budget so a slow run
+// fails cleanly (status + Telegram) instead of being killed silently.
+const PHASE_BUDGET_MS = 240_000;
 
 interface Candidate {
   _id: string;
@@ -36,6 +36,7 @@ interface Candidate {
   alsoCoveredBy?: string[];
   storyType?: string;
   suggestedAuthor?: string;
+  researchNotes?: string;
 }
 
 interface ArticleLink {
@@ -127,19 +128,35 @@ Voice and writing rules:
 - If there is an official trailer/announcement video, end with a videoEmbed section under an h2 like "Watch the Trailer".
 - If the story is reputational (layoffs, allegations), stick to verified facts, attribute clearly, and skip the editorial sting if the situation is still developing.`;
 
-export async function draftFromCandidate(candidateId: string): Promise<void> {
+// Runs one phase per call. Phase 1 (no researchNotes on the candidate yet):
+// research the story, store the notes, return 'researched' — the /api/draft
+// route then re-invokes itself so writing gets a fresh 300s window. Phase 2
+// (notes present): write the article, create the draft, ping Telegram.
+export async function draftFromCandidate(candidateId: string): Promise<'researched' | 'drafted'> {
   const candidate = await writeClient.fetch<Candidate | null>(
     `*[_type == "storyCandidate" && _id == $id][0]`,
     { id: candidateId }
   );
   if (!candidate) throw new Error(`Candidate ${candidateId} not found`);
 
-  const startedAt = Date.now();
-  const remaining = () => DRAFT_BUDGET_MS - (Date.now() - startedAt);
+  const deadline = Date.now() + PHASE_BUDGET_MS;
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), PHASE_BUDGET_MS);
 
   try {
     const client = new Anthropic();
 
+    // Phase 1: research, store notes, hand off.
+    if (!candidate.researchNotes) {
+      const research = await runResearch(client, candidate, controller.signal, deadline);
+      await writeClient.patch(candidate._id).set({ researchNotes: research }).commit();
+      await sendMessage(
+        `🔎 Research done for "${escapeHtml(candidate.headline)}". Writing the draft now…`
+      );
+      return 'researched';
+    }
+
+    // Phase 2: write + image + draft doc + Telegram preview.
     // Style samples so the writing call can match recent published voice.
     const samples = await writeClient.fetch<
       { title: string; excerpt: string; body: string }[]
@@ -149,11 +166,13 @@ export async function draftFromCandidate(candidateId: string): Promise<void> {
       }`
     );
 
-    // 1. Research: web search + fetch, primary source first.
-    const research = await runResearch(client, candidate, remaining);
-
-    // 2. Write: structured output in the house voice.
-    const article = await writeArticle(client, candidate, research, samples, remaining);
+    const article = await writeArticle(
+      client,
+      candidate,
+      candidate.researchNotes,
+      samples,
+      controller.signal
+    );
 
     // 3. Unique slug.
     const slug = await ensureUniqueSlug(article.slug);
@@ -230,6 +249,7 @@ export async function draftFromCandidate(candidateId: string): Promise<void> {
         },
       }
     );
+    return 'drafted';
   } catch (err) {
     await writeClient.patch(candidate._id).set({ status: 'failed' }).commit();
     await sendMessage(
@@ -238,13 +258,16 @@ export async function draftFromCandidate(candidateId: string): Promise<void> {
         `Retry: /api/draft?candidateId=${candidate._id}`
     );
     throw err;
+  } finally {
+    clearTimeout(timer);
   }
 }
 
 async function runResearch(
   client: Anthropic,
   candidate: Candidate,
-  remaining: () => number
+  signal: AbortSignal,
+  deadline: number
 ): Promise<string> {
   let messages: Anthropic.MessageParam[] = [
     {
@@ -270,9 +293,10 @@ Report facts only. Do not write the article.`,
 
   let wrapUp = false;
   for (let i = 0; i < 5; i++) {
-    const budget = remaining() - WRITE_RESERVE_MS;
-    if (budget < 20_000) throw new Error('Ran out of time during research');
+    if (deadline - Date.now() < 20_000) throw new Error('Ran out of time during research');
 
+    // The abort signal (not a per-call timeout) caps the total including any
+    // SDK retries, so a slow call can never outlive the phase budget.
     const response = await client.messages.create(
       {
         model: 'claude-opus-4-8',
@@ -284,14 +308,14 @@ Report facts only. Do not write the article.`,
         ],
         messages,
       },
-      { timeout: budget, maxRetries: 1 }
+      { signal }
     );
 
     if (response.stop_reason === 'pause_turn') {
       messages = [messages[0], { role: 'assistant', content: response.content }];
       // Running short: tell the model to report what it has instead of
       // researching further, so we degrade to a thinner draft, not a timeout.
-      if (wrapUp || remaining() - WRITE_RESERVE_MS < 60_000) {
+      if (wrapUp || deadline - Date.now() < 90_000) {
         wrapUp = true;
         messages.push({
           role: 'user',
@@ -316,12 +340,8 @@ async function writeArticle(
   candidate: Candidate,
   research: string,
   samples: { title: string; excerpt: string; body: string }[],
-  remaining: () => number
+  signal: AbortSignal
 ): Promise<Article> {
-  // Leave ~30s after writing for image sourcing + Sanity writes + Telegram.
-  const budget = remaining() - 30_000;
-  if (budget < 30_000) throw new Error('Ran out of time before writing');
-
   const response = await client.messages.create(
     {
       model: 'claude-opus-4-8',
@@ -342,7 +362,7 @@ async function writeArticle(
         },
       ],
     },
-    { timeout: budget, maxRetries: 1 }
+    { signal }
   );
 
   if (response.stop_reason === 'max_tokens') {

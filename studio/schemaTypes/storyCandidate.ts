@@ -132,6 +132,15 @@ export const storyCandidateType = defineType({
       type: 'datetime',
       initialValue: () => new Date().toISOString(),
     }),
+    defineField({
+      name: 'researchNotes',
+      title: 'Research Notes',
+      type: 'text',
+      rows: 12,
+      description:
+        'Verified facts gathered by the research phase; the write phase drafts from these',
+      readOnly: true,
+    }),
   ],
   preview: {
     select: {
