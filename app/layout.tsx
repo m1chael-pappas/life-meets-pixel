@@ -4,6 +4,8 @@ import type { Metadata } from "next";
 import { JetBrains_Mono, Press_Start_2P, VT323 } from "next/font/google";
 import Script from "next/script";
 
+import dynamic from "next/dynamic";
+
 import { ClerkProvider } from "@clerk/nextjs";
 
 import { KonamiEasterEgg } from "@/components/retro/konami";
@@ -27,6 +29,9 @@ const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
   display: "swap",
 });
+
+// Loaded only when AdSense is configured; skips the script for ad_free members.
+const AdSenseLoader = dynamic(() => import("@/components/ads/adsense-loader"));
 
 const vt323 = VT323({
   variable: "--font-vt323",
@@ -139,6 +144,7 @@ export default function RootLayout({
         <KonamiEasterEgg />
         <SoundEffects />
         <Analytics />
+        {process.env.NEXT_PUBLIC_ADSENSE_CLIENT && <AdSenseLoader />}
       </body>
 
       {/* Google Analytics 4 */}

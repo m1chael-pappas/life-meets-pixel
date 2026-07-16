@@ -2,6 +2,7 @@ import { Suspense } from "react";
 
 import { Metadata } from "next";
 
+import AdBreak from "@/components/ads/ad-break";
 import { Ticker } from "@/components/retro/ticker";
 import AboutStrip from "@/components/sections/about-strip";
 import HeroSection from "@/components/sections/hero-section";
@@ -96,6 +97,8 @@ export default function HomePage() {
         <Suspense fallback={<GridSkeleton />}>
           <NewsSection />
         </Suspense>
+
+        <AdBreak />
 
         <SupportSection />
 
