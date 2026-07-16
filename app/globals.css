@@ -1835,6 +1835,86 @@ textarea.field-input { min-height: 140px; resize: vertical; line-height: 1.6; }
 }
 
 
+/* ===== CLERK UI OVERRIDES =====
+   Clerk injects its stylesheet at runtime, so element-level retro styling
+   lives here on the stable .cl-* classes (appearance.variables only takes
+   flat hex colors). !important beats the injected sheet. */
+
+/* Cards (sign-in/up, account) */
+.cl-cardBox {
+  border: 3px solid var(--bg-3) !important;
+  border-radius: 0 !important;
+  box-shadow: 6px 6px 0 rgba(0, 0, 0, 0.35) !important;
+}
+
+/* Account (UserProfile) must fill the page and shrink on small screens */
+.cl-userProfile-root,
+.cl-userProfile-root .cl-cardBox {
+  width: 100% !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
+}
+
+/* Badges: "This device", "Last used", "Windows", "Active" */
+.cl-badge {
+  background: var(--bg-3) !important;
+  color: var(--neon-2) !important;
+  border: 1px solid var(--neon-2) !important;
+  border-radius: 0 !important;
+  font-family: var(--font-jetbrains-mono), monospace !important;
+}
+
+/* Social sign-in buttons: visible retro border instead of borderless */
+.cl-socialButtonsBlockButton {
+  border: 2px solid var(--bg-3) !important;
+  border-radius: 0 !important;
+  background: var(--bg-2) !important;
+}
+
+.cl-socialButtonsBlockButton:hover {
+  border-color: var(--neon-2) !important;
+}
+
+/* Pricing table: retro-clean cards (404-style structure) */
+.cl-pricingTableCard {
+  border: 3px solid var(--bg-3) !important;
+  border-radius: 0 !important;
+  background: var(--bg-1) !important;
+  box-shadow: 6px 6px 0 rgba(0, 0, 0, 0.35) !important;
+}
+
+.cl-pricingTableCardTitle {
+  font-family: var(--font-press-start-2p), system-ui, monospace !important;
+  font-size: 13px !important;
+  color: var(--ink) !important;
+}
+
+.cl-pricingTableCardFee {
+  font-family: var(--font-vt323), monospace !important;
+  font-size: 44px !important;
+  color: var(--neon-2) !important;
+}
+
+.cl-pricingTableCardFeePeriod,
+.cl-pricingTableCardFeePeriodNotice {
+  color: var(--ink-dim) !important;
+}
+
+.cl-pricingTableCardFeaturesListItemTitle {
+  color: var(--ink-dim) !important;
+  font-size: 14px !important;
+}
+
+.cl-pricingTableCardFeaturesListItem svg {
+  color: var(--neon-3) !important;
+}
+
+.cl-pricingTableCardFooterButton {
+  font-family: var(--font-press-start-2p), system-ui, monospace !important;
+  font-size: 11px !important;
+  text-transform: uppercase !important;
+}
+
 /* ===== MEMBERSHIP + AUTH ===== */
 .lmp-nav__auth {
   display: inline-flex;
