@@ -342,7 +342,27 @@ Report facts only. Do not write the article.`,
     }
 
     if (response.stop_reason === 'pause_turn') {
-      messages = [messages[0], { role: 'assistant', content: response.content }];
+      // Cache the accumulated turn: continuations re-send the whole history
+      // (including every fetched page) as input, so without a breakpoint each
+      // loop iteration pays full price for the entire prefix again. With one,
+      // the re-sent prefix bills at ~0.1x. Thinking blocks can't carry
+      // cache_control (and must be passed back unmodified), so only mark the
+      // last block when it's a cacheable type.
+      const CACHEABLE = new Set([
+        'text',
+        'tool_use',
+        'tool_result',
+        'server_tool_use',
+        'web_search_tool_result',
+        'web_fetch_tool_result',
+      ]);
+      const last = response.content.length - 1;
+      const content = response.content.map((block, i) =>
+        i === last && CACHEABLE.has(block.type)
+          ? ({ ...block, cache_control: { type: 'ephemeral' } } as Anthropic.ContentBlockParam)
+          : block
+      );
+      messages = [messages[0], { role: 'assistant', content }];
       // Running short: tell the model to report what it has instead of
       // researching further, so we degrade to a thinner draft, not a timeout.
       if (wrapUp || deadline - Date.now() < 90_000) {

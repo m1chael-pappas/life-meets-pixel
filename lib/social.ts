@@ -145,7 +145,8 @@ async function generateCopy(
 ): Promise<SocialCopy> {
   const client = new Anthropic();
   const response = await client.messages.create({
-    model: 'claude-opus-4-8',
+    // Sonnet: short caption copy doesn't need Opus (2026-07-16 cost review).
+    model: 'claude-sonnet-5',
     max_tokens: 4000,
     thinking: { type: 'adaptive' },
     system: `You write social media copy for Life Meets Pixel, a retro-gaming geek-culture site run by Michael (Sydney, programmer, lifelong gamer). Voice: punchy, honest, lightly skeptical, no hype, Australian English. NEVER use em dashes (U+2014). Hashtags tasteful, 4-6 max.`,

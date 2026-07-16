@@ -137,7 +137,10 @@ export async function rankStories(
 ): Promise<RankedStory[]> {
   const client = new Anthropic();
   const response = await client.messages.create({
-    model: 'claude-opus-4-8',
+    // Sonnet, not Opus: ranking/dedupe is classification work, and this runs
+    // daily whether or not anything gets drafted — Opus here was the single
+    // biggest fixed cost in the pipeline (2026-07-16 cost review).
+    model: 'claude-sonnet-5',
     max_tokens: 16000,
     thinking: { type: 'adaptive' },
     system: RANKING_SYSTEM,
