@@ -199,12 +199,12 @@ export default async function NewsPage({ searchParams }: NewsPageProps) {
       <SiteHeader currentPage="news" />
 
       {/* Main Content */}
-      <main className="container mx-auto max-w-7xl p-6">
+      <main id="main-content" className="container mx-auto max-w-7xl p-6">
         {/* Page Header */}
         <div className="mb-8">
-          <h2 className="text-4xl font-bold text-white drop-shadow-md mb-2 font-mono">
+          <h1 className="text-4xl font-bold text-white drop-shadow-md mb-2 font-mono">
             News & Previews
-          </h2>
+          </h1>
           <p className="text-white/80">
             Stay up to date with the latest gaming news, previews, and thoughts
             on games we&apos;re playing

@@ -172,7 +172,7 @@ export default async function NewsPostPage({ params }: NewsPostPageProps) {
   return (
     <>
       <SiteHeader currentPage="news" />
-      <main className="lmp-container" style={{ paddingTop: 32, paddingBottom: 48 }}>
+      <main id="main-content" className="lmp-container" style={{ paddingTop: 32, paddingBottom: 48 }}>
         <nav className="article-breadcrumb" aria-label="Breadcrumb">
           <Link href="/">HOME</Link>
           <span className="sep">/</span>

@@ -14,7 +14,7 @@ export default function SignUpPage() {
   return (
     <>
       <SiteHeader />
-      <main className="lmp-container">
+      <main id="main-content" className="lmp-container">
         <div className="auth-page">
           {membershipEnabled() ? (
             <SignUp />

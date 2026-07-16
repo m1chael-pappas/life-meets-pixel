@@ -25,11 +25,20 @@ interface SiteHeaderProps {
   currentPage?: PageKey;
 }
 
-const LINKS: Array<{ id: PageKey; label: string; icon: string; href: string }> = [
+// iconScale compensates for how much of the em-box each glyph fills, so all
+// five icons read as the same visual size (︎ forces the heart's
+// monochrome text glyph instead of the larger color-emoji variant).
+const LINKS: Array<{
+  id: PageKey;
+  label: string;
+  icon: string;
+  iconScale?: number;
+  href: string;
+}> = [
   { id: "home", label: "HOME", icon: "◉", href: "/" },
   { id: "reviews", label: "REVIEWS", icon: "★", href: "/reviews" },
   { id: "news", label: "NEWS", icon: "▤", href: "/news" },
-  { id: "membership", label: "JOIN", icon: "♥", href: "/membership" },
+  { id: "membership", label: "JOIN", icon: "♥︎", iconScale: 0.8, href: "/membership" },
   { id: "contact", label: "CONTACT", icon: "✉", href: "/contact" },
 ];
 
@@ -50,6 +59,9 @@ export function SiteHeader({ currentPage = "home" }: SiteHeaderProps) {
 
   return (
     <header className="lmp-header">
+      <a href="#main-content" className="skip-link">
+        SKIP TO CONTENT
+      </a>
       <div className="lmp-header__topbar">
         <div className="lmp-container">
           <div className="lmp-header__status">
@@ -92,7 +104,7 @@ export function SiteHeader({ currentPage = "home" }: SiteHeaderProps) {
           <button
             type="button"
             className="lmp-nav-toggle"
-            aria-label="Toggle navigation"
+            aria-label={navOpen ? "Close menu" : "Menu"}
             aria-expanded={navOpen}
             onClick={() => setNavOpen((v) => !v)}
           >
@@ -107,7 +119,11 @@ export function SiteHeader({ currentPage = "home" }: SiteHeaderProps) {
                 className={currentPage === l.id ? "is-active" : ""}
                 onClick={() => setNavOpen(false)}
               >
-                <span style={{ color: "var(--neon-1)" }} aria-hidden="true">
+                <span
+                  className="lmp-nav__icon"
+                  style={l.iconScale ? { fontSize: `${Math.round(14 * l.iconScale)}px` } : undefined}
+                  aria-hidden="true"
+                >
                   {l.icon}
                 </span>
                 {l.label}

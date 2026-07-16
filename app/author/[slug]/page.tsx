@@ -255,7 +255,7 @@ export default async function AuthorPage({ params }: Props) {
   return (
     <>
       <SiteHeader currentPage="author" />
-      <main className="lmp-container" style={{ paddingTop: 32, paddingBottom: 48 }}>
+      <main id="main-content" className="lmp-container" style={{ paddingTop: 32, paddingBottom: 48 }}>
         <Suspense fallback={<AuthorSkeleton />}>
           <AuthorContent slug={slug} />
         </Suspense>

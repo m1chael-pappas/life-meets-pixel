@@ -13,9 +13,9 @@ export default clerkEnabled ? clerkMiddleware() : () => NextResponse.next();
 
 export const config = {
   matcher: [
-    // Skip Next.js internals and static files
-    "/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)",
+    // Skip Next.js internals and any path with a file extension
+    "/((?!_next|.*\\..*).*)",
     // Always run for API routes
-    "/(api|trpc)(.*)",
+    "/api/(.*)",
   ],
 };

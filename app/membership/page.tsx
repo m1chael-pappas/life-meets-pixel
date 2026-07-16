@@ -41,7 +41,7 @@ export default function MembershipPage() {
   return (
     <>
       <SiteHeader currentPage="membership" />
-      <main className="lmp-container">
+      <main id="main-content" className="lmp-container">
         <section className="membership-hero">
           <h1>PRESS START: PLAYER 2</h1>
           <p>

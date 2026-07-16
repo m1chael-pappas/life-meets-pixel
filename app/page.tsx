@@ -85,7 +85,8 @@ export default function HomePage() {
       <Suspense fallback={<div className="lmp-ticker" style={{ height: 32 }} />}>
         <Ticker />
       </Suspense>
-      <main className="lmp-container">
+      <main id="main-content" className="lmp-container">
+        <h1 className="sr-only">Life Meets Pixel: Reviews &amp; News</h1>
         <Suspense fallback={<HeroSkeleton />}>
           <HeroSection />
         </Suspense>

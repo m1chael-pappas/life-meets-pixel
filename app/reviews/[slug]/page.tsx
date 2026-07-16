@@ -50,8 +50,12 @@ export async function generateMetadata({
     ? urlFor(review.reviewableItem.coverImage)?.width(1200).height(630).url()
     : null;
 
-  const seoTitle =
-    review.seo?.metaTitle || `${review.title} | ${review.reviewableItem?.title} Review`;
+  // Strip a trailing site name from CMS meta titles — the layout's title
+  // template appends it, so leaving it in doubles the suffix.
+  const seoTitle = (
+    review.seo?.metaTitle ||
+    `${review.title} | ${review.reviewableItem?.title} Review`
+  ).replace(/\s*\|\s*Life Meets Pixel\s*$/i, "");
   const seoDescription =
     review.seo?.metaDescription ||
     review.summary ||
@@ -191,7 +195,7 @@ function ProsConsBlock({ pros, cons }: { pros?: string[]; cons?: string[] }) {
     <div className="pros-cons">
       {pros?.length ? (
         <div className="pros">
-          <h4>+ PROS</h4>
+          <h3>+ PROS</h3>
           <ul>
             {pros.map((p, i) => (
               <li key={`pro-${i}`}>{p}</li>
@@ -201,7 +205,7 @@ function ProsConsBlock({ pros, cons }: { pros?: string[]; cons?: string[] }) {
       ) : null}
       {cons?.length ? (
         <div className="cons">
-          <h4>− CONS</h4>
+          <h3>− CONS</h3>
           <ul>
             {cons.map((c, i) => (
               <li key={`con-${i}`}>{c}</li>
@@ -305,7 +309,7 @@ export default async function ReviewPage({ params }: { params: Promise<{ slug: s
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
       />
 
-      <main className="lmp-container" style={{ paddingTop: 32, paddingBottom: 48 }}>
+      <main id="main-content" className="lmp-container" style={{ paddingTop: 32, paddingBottom: 48 }}>
         <nav className="article-breadcrumb" aria-label="Breadcrumb">
           <Link href="/">HOME</Link>
           <span className="sep">/</span>

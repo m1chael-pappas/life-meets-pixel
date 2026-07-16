@@ -37,7 +37,7 @@ export default async function ContactPage() {
   return (
     <>
       <SiteHeader currentPage="contact" />
-      <main className="lmp-container" style={{ paddingTop: 48, paddingBottom: 32 }}>
+      <main id="main-content" className="lmp-container" style={{ paddingTop: 48, paddingBottom: 32 }}>
         <section className="contact-hero">
           <div className="contact-hero__grid">
             <div>

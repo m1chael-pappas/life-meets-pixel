@@ -140,7 +140,7 @@ export default async function ReviewsPage({ searchParams }: ReviewsPageProps) {
   return (
     <>
       <SiteHeader currentPage="reviews" />
-      <main className="lmp-container" style={{ paddingTop: 32, paddingBottom: 32 }}>
+      <main id="main-content" className="lmp-container" style={{ paddingTop: 32, paddingBottom: 32 }}>
         <div className="section-head">
           <div className="section-head__title">
             <span className="num">DB</span>
@@ -153,6 +153,7 @@ export default async function ReviewsPage({ searchParams }: ReviewsPageProps) {
 
         <ReviewTypeTabs currentType={type} counts={counts} />
 
+        <h2 className="sr-only">Results</h2>
         <Suspense fallback={<ReviewsListSkeleton />}>
           <ReviewsList type={type} page={currentPage} />
         </Suspense>

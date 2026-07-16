@@ -26,7 +26,7 @@ export default function AffiliateDisclosurePage() {
     <div className="min-h-screen">
       <SiteHeader />
 
-      <main className="container mx-auto max-w-4xl p-6">
+      <main id="main-content" className="container mx-auto max-w-4xl p-6">
         <div className="mb-8">
           <Link
             href="/legal"

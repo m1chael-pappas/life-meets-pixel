@@ -21,7 +21,7 @@ export default function LegalPage() {
     <div className="min-h-screen">
       <SiteHeader />
 
-      <main className="container mx-auto max-w-4xl p-6">
+      <main id="main-content" className="container mx-auto max-w-4xl p-6">
         <div className="mb-12">
           <h1 className="text-4xl font-bold text-foreground mb-4 font-mono">
             LEGAL INFORMATION

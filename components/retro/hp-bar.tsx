@@ -23,7 +23,14 @@ export function HPBar({
           {score.toFixed(1)}/{max}
         </span>
       </div>
-      <div className="hp-row__bar" role="progressbar" aria-valuenow={score} aria-valuemin={0} aria-valuemax={max}>
+      <div
+        className="hp-row__bar"
+        role="progressbar"
+        aria-label={`${label}: ${score.toFixed(1)} out of ${max}`}
+        aria-valuenow={score}
+        aria-valuemin={0}
+        aria-valuemax={max}
+      >
         {Array.from({ length: CELLS }).map((_, i) => (
           <span
             key={i}

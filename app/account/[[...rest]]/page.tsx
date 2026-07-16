@@ -20,7 +20,7 @@ export default async function AccountPage() {
   return (
     <>
       <SiteHeader />
-      <main className="lmp-container">
+      <main id="main-content" className="lmp-container">
         <div className="auth-page">
           <UserProfile path="/account" />
         </div>

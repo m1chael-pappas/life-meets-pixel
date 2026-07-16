@@ -10,14 +10,14 @@ export function SiteFooter() {
       <div className="lmp-container">
         <div className="footer-grid">
           <div className="footer-col">
-            <h4>► LIFE MEETS PIXEL</h4>
+            <h3>► LIFE MEETS PIXEL</h3>
             <p className="footer-about">
               Honest reviews of games, movies, books, anime, and tech. Plus gaming news, previews,
               and thoughts on what we&apos;re playing. No sponsors. No PR fluff.
             </p>
           </div>
           <div className="footer-col">
-            <h4>QUICK LINKS</h4>
+            <h3>QUICK LINKS</h3>
             <ul>
               <li>
                 <Link href="/reviews">Reviews</Link>
@@ -34,7 +34,7 @@ export function SiteFooter() {
             </ul>
           </div>
           <div className="footer-col">
-            <h4>LEGAL</h4>
+            <h3>LEGAL</h3>
             <ul>
               <li>
                 <Link href="/legal/privacy">Privacy Policy</Link>
@@ -48,7 +48,7 @@ export function SiteFooter() {
             </ul>
           </div>
           <div className="footer-col">
-            <h4>CONNECT</h4>
+            <h3>CONNECT</h3>
             <ul>
               <li>
                 <a href={SITE_CONFIG.social.discord} target="_blank" rel="noopener noreferrer">
@@ -83,18 +83,18 @@ export function SiteFooter() {
             </a>
           </span>
           <div className="socials">
-            <a href={SITE_CONFIG.social.discord} aria-label="Discord" target="_blank" rel="noopener noreferrer">
+            <a href={SITE_CONFIG.social.discord} aria-label="DC: Discord" target="_blank" rel="noopener noreferrer">
               DC
             </a>
             <a
               href={SITE_CONFIG.social.instagram}
-              aria-label="Instagram"
+              aria-label="IG: Instagram"
               target="_blank"
               rel="noopener noreferrer"
             >
               IG
             </a>
-            <a href={SITE_CONFIG.social.facebook} aria-label="Facebook" target="_blank" rel="noopener noreferrer">
+            <a href={SITE_CONFIG.social.facebook} aria-label="FB: Facebook" target="_blank" rel="noopener noreferrer">
               FB
             </a>
           </div>
