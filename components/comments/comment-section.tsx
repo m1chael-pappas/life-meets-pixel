@@ -134,6 +134,9 @@ function CommentItem({
       setLikes(data.likes);
       setDislikes(data.dislikes);
       setMyVote(data.myVote);
+    } else {
+      // Don't fail silently — a silent 400 hid the bigint-id bug once.
+      console.error("vote failed:", res.status, await res.text());
     }
   };
 

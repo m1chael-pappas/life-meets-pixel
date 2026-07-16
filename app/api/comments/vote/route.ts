@@ -14,7 +14,9 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Sign in to vote" }, { status: 401 });
   }
 
-  const { commentId, value } = await request.json().catch(() => ({}));
+  const { commentId: rawId, value } = await request.json().catch(() => ({}));
+  // Accept string ids too — BIGINT columns serialize as strings.
+  const commentId = Number(rawId);
   if (!Number.isInteger(commentId) || ![1, -1, 0].includes(value)) {
     return NextResponse.json(
       { error: "commentId and value (1, -1 or 0) required" },

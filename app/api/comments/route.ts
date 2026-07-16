@@ -23,8 +23,10 @@ export async function GET(request: NextRequest) {
   // Signed-out readers get null userId — my_vote just comes back null.
   const { userId } = await getMembership();
   await ensureSchema();
+  // id is BIGINT — the Neon driver returns it as a string; cast so the
+  // client gets a number (votes broke on this once already).
   const rows = (await db()`
-    SELECT c.id, c.post_id, c.user_id, c.author_name, c.author_image, c.body, c.created_at,
+    SELECT c.id::int AS id, c.post_id, c.user_id, c.author_name, c.author_image, c.body, c.created_at,
       COALESCE(SUM(CASE WHEN v.value = 1 THEN 1 ELSE 0 END), 0)::int AS likes,
       COALESCE(SUM(CASE WHEN v.value = -1 THEN 1 ELSE 0 END), 0)::int AS dislikes,
       MAX(CASE WHEN v.user_id = ${userId} THEN v.value END)::int AS my_vote
@@ -76,7 +78,7 @@ export async function POST(request: NextRequest) {
   const [created] = (await db()`
     INSERT INTO comments (post_id, user_id, author_name, author_image, body)
     VALUES (${postId}, ${membership.userId}, ${authorName}, ${authorImage}, ${text})
-    RETURNING id, post_id, user_id, author_name, author_image, body, created_at
+    RETURNING id::int AS id, post_id, user_id, author_name, author_image, body, created_at
   `) as CommentRow[];
   return NextResponse.json({ comment: created }, { status: 201 });
 }
