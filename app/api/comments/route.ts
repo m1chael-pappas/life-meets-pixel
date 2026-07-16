@@ -20,11 +20,19 @@ export async function GET(request: NextRequest) {
   if (!postId) {
     return NextResponse.json({ error: "postId required" }, { status: 400 });
   }
+  // Signed-out readers get null userId — my_vote just comes back null.
+  const { userId } = await getMembership();
   await ensureSchema();
   const rows = (await db()`
-    SELECT id, post_id, user_id, author_name, author_image, body, created_at
-    FROM comments WHERE post_id = ${postId}
-    ORDER BY created_at ASC LIMIT 500
+    SELECT c.id, c.post_id, c.user_id, c.author_name, c.author_image, c.body, c.created_at,
+      COALESCE(SUM(CASE WHEN v.value = 1 THEN 1 ELSE 0 END), 0)::int AS likes,
+      COALESCE(SUM(CASE WHEN v.value = -1 THEN 1 ELSE 0 END), 0)::int AS dislikes,
+      MAX(CASE WHEN v.user_id = ${userId} THEN v.value END)::int AS my_vote
+    FROM comments c
+    LEFT JOIN comment_votes v ON v.comment_id = c.id
+    WHERE c.post_id = ${postId}
+    GROUP BY c.id
+    ORDER BY c.created_at ASC LIMIT 500
   `) as CommentRow[];
   return NextResponse.json(
     { comments: rows },

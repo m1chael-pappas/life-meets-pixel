@@ -15,6 +15,9 @@ interface Comment {
   author_image: string | null;
   body: string;
   created_at: string;
+  likes: number;
+  dislikes: number;
+  my_vote: number | null;
 }
 
 export default function CommentSection({ postId }: { postId: string }) {
@@ -93,6 +96,7 @@ function CommentList({
           comment={c}
           onDeleted={onDeleted}
           mine={currentUserId === c.user_id}
+          signedIn={Boolean(currentUserId)}
         />
       ))}
     </ul>
@@ -103,11 +107,35 @@ function CommentItem({
   comment,
   onDeleted,
   mine,
+  signedIn,
 }: {
   comment: Comment;
   onDeleted: () => void;
   mine: boolean;
+  signedIn: boolean;
 }) {
+  const [likes, setLikes] = useState(comment.likes ?? 0);
+  const [dislikes, setDislikes] = useState(comment.dislikes ?? 0);
+  const [myVote, setMyVote] = useState<number | null>(comment.my_vote ?? null);
+
+  const vote = async (v: 1 | -1) => {
+    if (!signedIn) {
+      window.location.href = "/sign-in";
+      return;
+    }
+    const next = myVote === v ? 0 : v; // clicking your own vote retracts it
+    const res = await fetch("/api/comments/vote", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ commentId: comment.id, value: next }),
+    });
+    if (res.ok) {
+      const data = await res.json();
+      setLikes(data.likes);
+      setDislikes(data.dislikes);
+      setMyVote(data.myVote);
+    }
+  };
 
   const remove = async () => {
     await fetch(`/api/comments?id=${comment.id}`, { method: "DELETE" });
@@ -142,6 +170,26 @@ function CommentItem({
         )}
       </div>
       <p className="comment__body">{comment.body}</p>
+      <div className="comment__votes">
+        <button
+          type="button"
+          className={myVote === 1 ? "is-on" : ""}
+          onClick={() => vote(1)}
+          aria-label={`Like (${likes})`}
+          aria-pressed={myVote === 1}
+        >
+          ▲ {likes}
+        </button>
+        <button
+          type="button"
+          className={myVote === -1 ? "is-on is-down" : "is-down-idle"}
+          onClick={() => vote(-1)}
+          aria-label={`Dislike (${dislikes})`}
+          aria-pressed={myVote === -1}
+        >
+          ▼ {dislikes}
+        </button>
+      </div>
     </li>
   );
 }

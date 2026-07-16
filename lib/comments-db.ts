@@ -14,6 +14,9 @@ export interface CommentRow {
   author_image: string | null;
   body: string;
   created_at: string;
+  likes?: number;
+  dislikes?: number;
+  my_vote?: number | null;
 }
 
 export function commentsEnabled(): boolean {
@@ -44,6 +47,15 @@ export function ensureSchema() {
     `.then(
       () =>
         sql`CREATE INDEX IF NOT EXISTS comments_post_idx ON comments (post_id, created_at)`
+    ).then(
+      () =>
+        sql`CREATE TABLE IF NOT EXISTS comment_votes (
+          comment_id BIGINT NOT NULL REFERENCES comments(id) ON DELETE CASCADE,
+          user_id TEXT NOT NULL,
+          value SMALLINT NOT NULL CHECK (value IN (-1, 1)),
+          created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+          PRIMARY KEY (comment_id, user_id)
+        )`
     );
     schemaReady.catch(() => {
       schemaReady = null; // allow retry on transient failures
