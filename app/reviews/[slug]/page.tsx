@@ -5,6 +5,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
+import AdBreak from "@/components/ads/ad-break";
+import Comments from "@/components/comments/comments";
 import { AuthorChip } from "@/components/retro/author-chip";
 import { CatBadge } from "@/components/retro/cat-badge";
 import { HeartRow } from "@/components/retro/heart-row";
@@ -635,6 +637,9 @@ export default async function ReviewPage({ params }: { params: Promise<{ slug: s
             </div>
           </aside>
         </div>
+
+        <AdBreak />
+        <Comments postId={review._id} />
 
         {related.length > 0 && (
           <section className="lmp-section--tight">

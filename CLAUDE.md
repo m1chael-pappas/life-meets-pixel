@@ -57,6 +57,15 @@ REVALIDATE_SECRET=...                # gates /api/revalidate webhook
 NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_...
 CLERK_SECRET_KEY=sk_...
 
+# Google AdSense (optional — without these no ad slots render; ad_free members
+# never load the AdSense script at all)
+NEXT_PUBLIC_ADSENSE_CLIENT=ca-pub-...
+NEXT_PUBLIC_ADSENSE_SLOT=...         # a responsive display unit's slot id
+
+# Comments (optional — Neon Postgres; without it the comment section is hidden)
+DATABASE_URL=postgres://...          # Neon connection string
+COMMENTS_ADMIN_USER_ID=user_...      # Clerk user id allowed to delete any comment
+
 # Resend (contact form)
 RESEND_API_KEY=re_...
 RESEND_FROM_EMAIL="Life Meets Pixel <noreply@onthedot.dev>"

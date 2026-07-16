@@ -5,6 +5,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
+import AdBreak from "@/components/ads/ad-break";
+import Comments from "@/components/comments/comments";
 import { AuthorChip } from "@/components/retro/author-chip";
 import { NewsCard } from "@/components/retro/news-card";
 import { SiteHeader } from "@/components/site-header";
@@ -281,6 +283,9 @@ export default async function NewsPostPage({ params }: NewsPostPageProps) {
             </div>
           </aside>
         </div>
+
+        <AdBreak />
+        <Comments postId={post._id} />
 
         {related.length > 0 && (
           <section className="lmp-section--tight">
