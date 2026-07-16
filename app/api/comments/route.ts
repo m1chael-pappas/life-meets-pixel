@@ -94,13 +94,9 @@ export async function DELETE(request: NextRequest) {
     return NextResponse.json({ error: "id required" }, { status: 400 });
   }
 
-  // Authors can delete their own comments; the site admin can delete any.
-  const isAdmin =
-    Boolean(process.env.COMMENTS_ADMIN_USER_ID) &&
-    membership.userId === process.env.COMMENTS_ADMIN_USER_ID;
-
+  // Authors can delete their own comments; admins can delete any.
   await ensureSchema();
-  const deleted = isAdmin
+  const deleted = membership.isAdmin
     ? await db()`DELETE FROM comments WHERE id = ${Number(id)} RETURNING id`
     : await db()`DELETE FROM comments WHERE id = ${Number(id)} AND user_id = ${membership.userId} RETURNING id`;
   if ((deleted as unknown[]).length === 0) {

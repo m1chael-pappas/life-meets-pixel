@@ -202,6 +202,7 @@ function CommentComposer({
   onPosted: () => void;
 }) {
   const { isLoaded, isSignedIn, has } = useAuth();
+  const { user } = useUser();
   const [body, setBody] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -216,7 +217,8 @@ function CommentComposer({
     );
   }
 
-  if (!has?.({ feature: "comments" })) {
+  const isAdmin = user?.publicMetadata?.role === "admin";
+  if (!isAdmin && !has?.({ feature: "comments" })) {
     return (
       <p className="comments__gate">
         COMMENTS ARE A MEMBER PERK.{" "}

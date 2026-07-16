@@ -57,6 +57,9 @@ export async function userIdForRssToken(token: string): Promise<string | null> {
 export async function userHasPaidSubscription(userId: string): Promise<boolean> {
   try {
     const clerk = await clerkClient();
+    // Admins are comped (publicMetadata.role === "admin").
+    const user = await clerk.users.getUser(userId);
+    if (user.publicMetadata?.role === "admin") return true;
     const sub = await clerk.billing.getUserBillingSubscription(userId);
     if (!sub || sub.status !== "active") return false;
     const items =

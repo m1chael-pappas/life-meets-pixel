@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 
-import { useAuth } from "@clerk/nextjs";
+import { useAuth, useUser } from "@clerk/nextjs";
 
 declare global {
   interface Window {
@@ -32,8 +32,10 @@ export default function AdSlot({ slot }: { slot?: string }) {
 
 function MemberGate({ adSlot }: { adSlot?: string }) {
   const { isLoaded, has } = useAuth();
+  const { user } = useUser();
   // While Clerk loads, render nothing rather than flashing an ad at members.
   if (!isLoaded) return null;
+  if (user?.publicMetadata?.role === "admin") return null;
   if (has?.({ feature: "ad_free" })) return null;
   return <AdUnit adSlot={adSlot} />;
 }

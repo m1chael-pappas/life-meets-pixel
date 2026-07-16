@@ -1,4 +1,4 @@
-import { auth } from "@clerk/nextjs/server";
+import { auth, currentUser } from "@clerk/nextjs/server";
 
 /**
  * Membership gating helpers (404-style model: free site, paid perks).
@@ -33,13 +33,25 @@ export interface Membership {
   /** Active subscription that includes the given feature (or any feature). */
   hasFeature: (feature: MemberFeature) => boolean;
   isMember: boolean;
+  /** publicMetadata.role === "admin" — comped all features + moderation. */
+  isAdmin: boolean;
 }
 
 const signedOut: Membership = {
   userId: null,
   hasFeature: () => false,
   isMember: false,
+  isAdmin: false,
 };
+
+/**
+ * Admins (Clerk publicMetadata.role === "admin", set in the Clerk dashboard)
+ * get every member feature without paying — the site owner shouldn't have to
+ * subscribe to themselves — plus moderation rights (delete any comment).
+ */
+function isAdminUser(user: Awaited<ReturnType<typeof currentUser>>): boolean {
+  return user?.publicMetadata?.role === "admin";
+}
 
 /**
  * Resolve the current visitor's membership. Calling this opts the route into
@@ -50,10 +62,12 @@ export async function getMembership(): Promise<Membership> {
   if (!membershipEnabled()) return signedOut;
   const { userId, has } = await auth();
   if (!userId) return signedOut;
-  const hasFeature = (feature: MemberFeature) => has({ feature });
+  const isAdmin = isAdminUser(await currentUser());
+  const hasFeature = (feature: MemberFeature) => isAdmin || has({ feature });
   return {
     userId,
     hasFeature,
+    isAdmin,
     isMember: hasFeature(MEMBER_FEATURES.adFree) ||
       hasFeature(MEMBER_FEATURES.comments) ||
       hasFeature(MEMBER_FEATURES.fullRss) ||

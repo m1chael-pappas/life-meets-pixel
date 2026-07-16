@@ -62,9 +62,10 @@ CLERK_SECRET_KEY=sk_...
 NEXT_PUBLIC_ADSENSE_CLIENT=ca-pub-...
 NEXT_PUBLIC_ADSENSE_SLOT=...         # a responsive display unit's slot id
 
-# Comments (optional — Neon Postgres; without it the comment section is hidden)
+# Comments + member RSS (optional — Neon Postgres; without it those features hide)
 DATABASE_URL=postgres://...          # Neon connection string
-COMMENTS_ADMIN_USER_ID=user_...      # Clerk user id allowed to delete any comment
+# Admin access (all member features comped + delete any comment): set the Clerk
+# user's PUBLIC metadata to {"role": "admin"} in the Clerk dashboard (per instance)
 
 # Resend (contact form)
 RESEND_API_KEY=re_...
