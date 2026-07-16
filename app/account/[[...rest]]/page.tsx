@@ -3,8 +3,10 @@ import { redirect } from "next/navigation";
 
 import { UserProfile } from "@clerk/nextjs";
 
+import RssFeedCard from "@/components/rss-feed-card";
 import { SiteHeader } from "@/components/site-header";
 import { getMembership, membershipEnabled } from "@/lib/membership";
+import { rssFeedsEnabled } from "@/lib/rss";
 
 export const metadata: Metadata = {
   title: "Account",
@@ -24,6 +26,7 @@ export default async function AccountPage() {
         <div className="auth-page">
           <UserProfile path="/account" />
         </div>
+        {rssFeedsEnabled() && <RssFeedCard />}
       </main>
     </>
   );

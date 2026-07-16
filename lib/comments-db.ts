@@ -56,6 +56,14 @@ export function ensureSchema() {
           created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
           PRIMARY KEY (comment_id, user_id)
         )`
+    ).then(
+      // Personal full-text RSS feed tokens (the full_rss member perk).
+      () =>
+        sql`CREATE TABLE IF NOT EXISTS rss_tokens (
+          token TEXT PRIMARY KEY,
+          user_id TEXT NOT NULL UNIQUE,
+          created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+        )`
     );
     schemaReady.catch(() => {
       schemaReady = null; // allow retry on transient failures

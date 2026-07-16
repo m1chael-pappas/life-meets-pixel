@@ -135,7 +135,7 @@ export async function GET() {
     <title>Life Meets Pixel — Reviews &amp; News</title>
     <link>${siteUrl}</link>
     <atom:link href="${siteUrl}/feed.xml" rel="self" type="application/rss+xml" />
-    <description>Honest reviews of games, movies, books, anime, board games, and tech. No sponsors. No PR fluff.</description>
+    <description>Honest reviews of games, movies, books, anime, board games, and tech. No sponsors. No PR fluff. This public feed carries excerpts; members get a personal full-text feed at ${siteUrl}/membership</description>
     <language>en-AU</language>
     <lastBuildDate>${lastBuildDate}</lastBuildDate>
     <generator>Life Meets Pixel (Next.js)</generator>${itemsXml}

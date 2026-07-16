@@ -1997,6 +1997,48 @@ textarea.field-input { min-height: 140px; resize: vertical; line-height: 1.6; }
   margin: 0 auto;
 }
 
+/* ===== RSS FEED CARD (account page) ===== */
+.rss-card {
+  max-width: 880px;
+  margin: 0 auto 88px;
+  border: 3px solid var(--bg-3);
+  background: var(--bg-1);
+  padding: 24px;
+}
+
+.rss-card h2 {
+  font-family: var(--font-press-start-2p), system-ui, monospace;
+  font-size: 12px;
+  color: var(--ink);
+  margin-bottom: 12px;
+}
+
+.rss-card p {
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--ink-dim);
+  margin-bottom: 14px;
+}
+
+.rss-card__url {
+  display: block;
+  background: var(--bg-2);
+  border: 2px solid var(--bg-3);
+  color: var(--neon-2);
+  font-family: var(--font-jetbrains-mono), monospace;
+  font-size: 12px;
+  padding: 10px 12px;
+  overflow-x: auto;
+  white-space: nowrap;
+  margin-bottom: 14px;
+}
+
+.rss-card__actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
 /* ===== AD SLOTS ===== */
 .ad-slot {
   margin: 24px 0;
