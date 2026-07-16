@@ -136,6 +136,7 @@ function CommentItem({
       setMyVote(data.myVote);
     } else {
       // Don't fail silently — a silent 400 hid the bigint-id bug once.
+      // eslint-disable-next-line no-console
       console.error("vote failed:", res.status, await res.text());
     }
   };
