@@ -19,8 +19,7 @@ export default function imageLoader({
     return url.toString();
   }
 
-  // Third-party affiliate images (Impact.com, GreenManGaming) pass through
-  // untransformed — rotating catalog thumbnails would otherwise generate a
-  // new set of Vercel transformations on every catalog refresh.
+  // Non-Sanity images pass through untransformed to avoid Vercel image
+  // transformation costs.
   return src;
 }

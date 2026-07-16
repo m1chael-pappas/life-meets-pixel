@@ -1,6 +1,6 @@
 # Life Meets Pixel — Claude Context
 
-Public-facing geek-culture review site (games, movies, books, anime, board games, tech). Next.js 15 (App Router) + React 19 + Sanity CMS + Impact.com affiliate integration. Retro-gaming aesthetic — Press Start 2P / JetBrains Mono / VT323 fonts, 4 switchable palettes, scanline overlay, CRT hero frame, HP-bar score breakdown. Deployed on Vercel.
+Public-facing geek-culture review site (games, movies, books, anime, board games, tech). Next.js 15 (App Router) + React 19 + Sanity CMS. Retro-gaming aesthetic — Press Start 2P / JetBrains Mono / VT323 fonts, 4 switchable palettes, scanline overlay, CRT hero frame, HP-bar score breakdown. Deployed on Vercel.
 
 ## Read this first
 
@@ -56,10 +56,6 @@ REVALIDATE_SECRET=...                # gates /api/revalidate webhook
 RESEND_API_KEY=re_...
 RESEND_FROM_EMAIL="Life Meets Pixel <noreply@onthedot.dev>"
 CONTACT_TO_EMAIL=michael@lifemeetspixel.com   # optional
-
-# Impact.com (optional — /deals)
-IMPACT_ACCOUNT_SID=...
-IMPACT_AUTH_TOKEN=...
 
 # Telegram approval bot (content pipeline)
 TELEGRAM_BOT_TOKEN=...               # from @BotFather
