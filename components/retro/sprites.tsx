@@ -233,3 +233,112 @@ export function CatSprite({ cat, size = 14 }: { cat: RetroCat; size?: number }) 
   const Sprite = CAT_SPRITE[cat] ?? GameSprite;
   return <Sprite size={size} />;
 }
+
+/* 9x9 single-color glyphs for the site nav — one grid size so every icon
+   renders at identical visual weight (unicode glyphs never line up). */
+const NAV_GLYPHS = {
+  home: `
+....F....
+...FFF...
+..FFFFF..
+.FFFFFFF.
+FFFFFFFFF
+.FFFFFFF.
+.FF...FF.
+.FF...FF.
+.FFFFFFF.`,
+  star: `
+....F....
+....F....
+...FFF...
+F.FFFFF.F
+FFFFFFFFF
+..FFFFF..
+..FF.FF..
+.FF...FF.
+.F.....F.`,
+  news: `
+FFFFFFFFF
+F.......F
+F.FFFFF.F
+F.......F
+F.FFFFF.F
+F.......F
+F.FFF...F
+F.......F
+FFFFFFFFF`,
+  heart: `
+.........
+.FF...FF.
+FFFF.FFFF
+FFFFFFFFF
+FFFFFFFFF
+.FFFFFFF.
+..FFFFF..
+...FFF...
+....F....`,
+  mail: `
+.........
+FFFFFFFFF
+FF.....FF
+F.F...F.F
+F..F.F..F
+F...F...F
+F.......F
+FFFFFFFFF
+.........`,
+  play: `
+.F.......
+.FFF.....
+.FFFF....
+.FFFFF...
+.FFFFFF..
+.FFFFF...
+.FFFF....
+.FFF.....
+.F.......`,
+  shield: `
+FFFFFFFFF
+FFFFFFFFF
+FFFFFFFFF
+FFFFFFFFF
+.FFFFFFF.
+.FFFFFFF.
+..FFFFF..
+...FFF...
+....F....`,
+  bubble: `
+.FFFFFFF.
+FFFFFFFFF
+FFFFFFFFF
+FFFFFFFFF
+FFFFFFFFF
+.FFFFFFF.
+..FFF....
+..FF.....
+..F......`,
+  rss: `
+......FF.
+......FF.
+......FF.
+...FF.FF.
+...FF.FF.
+FF.FF.FF.
+FF.FF.FF.
+FF.FF.FF.
+.........`,
+} as const;
+
+export type NavGlyphName = keyof typeof NAV_GLYPHS;
+
+export function NavGlyph({
+  name,
+  size = 13,
+  color = "var(--neon-1)",
+}: {
+  name: NavGlyphName;
+  size?: number;
+  color?: string;
+}) {
+  return gridSvg(NAV_GLYPHS[name], { F: color, ".": "none" }, size);
+}

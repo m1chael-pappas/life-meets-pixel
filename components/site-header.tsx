@@ -5,6 +5,8 @@ import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 
+import { NavGlyph, type NavGlyphName } from "@/components/retro/sprites";
+
 // NEXT_PUBLIC_* is inlined at build time; without Clerk keys the auth
 // controls simply don't render and no Clerk context is required.
 const CLERK_ENABLED = Boolean(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY);
@@ -25,21 +27,17 @@ interface SiteHeaderProps {
   currentPage?: PageKey;
 }
 
-// iconScale compensates for how much of the em-box each glyph fills, so all
-// five icons read as the same visual size (︎ forces the heart's
-// monochrome text glyph instead of the larger color-emoji variant).
 const LINKS: Array<{
   id: PageKey;
   label: string;
-  icon: string;
-  iconScale?: number;
+  icon: NavGlyphName;
   href: string;
 }> = [
-  { id: "home", label: "HOME", icon: "◉", href: "/" },
-  { id: "reviews", label: "REVIEWS", icon: "★", href: "/reviews" },
-  { id: "news", label: "NEWS", icon: "▤", href: "/news" },
-  { id: "membership", label: "JOIN", icon: "♥︎", iconScale: 0.8, href: "/membership" },
-  { id: "contact", label: "CONTACT", icon: "✉", href: "/contact" },
+  { id: "home", label: "HOME", icon: "home", href: "/" },
+  { id: "reviews", label: "REVIEWS", icon: "star", href: "/reviews" },
+  { id: "news", label: "NEWS", icon: "news", href: "/news" },
+  { id: "membership", label: "JOIN", icon: "heart", href: "/membership" },
+  { id: "contact", label: "CONTACT", icon: "mail", href: "/contact" },
 ];
 
 function formatClock(d: Date) {
@@ -119,12 +117,8 @@ export function SiteHeader({ currentPage = "home" }: SiteHeaderProps) {
                 className={currentPage === l.id ? "is-active" : ""}
                 onClick={() => setNavOpen(false)}
               >
-                <span
-                  className="lmp-nav__icon"
-                  style={l.iconScale ? { fontSize: `${Math.round(14 * l.iconScale)}px` } : undefined}
-                  aria-hidden="true"
-                >
-                  {l.icon}
+                <span className="lmp-nav__icon" aria-hidden="true">
+                  <NavGlyph name={l.icon} />
                 </span>
                 {l.label}
               </Link>

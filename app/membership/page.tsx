@@ -2,6 +2,7 @@ import { Metadata } from "next";
 
 import { PricingTable } from "@clerk/nextjs";
 
+import { NavGlyph, type NavGlyphName } from "@/components/retro/sprites";
 import { SiteHeader } from "@/components/site-header";
 import { membershipEnabled } from "@/lib/membership";
 
@@ -14,24 +15,24 @@ export const metadata: Metadata = {
   alternates: { canonical: `${siteUrl}/membership` },
 };
 
-const PERKS = [
+const PERKS: Array<{ icon: NavGlyphName; title: string; text: string }> = [
   {
-    icon: "◼",
+    icon: "shield",
     title: "AD-FREE",
     text: "No ads, anywhere on the site. Just the content.",
   },
   {
-    icon: "▤",
+    icon: "bubble",
     title: "COMMENTS",
     text: "Join the discussion under every review and news post.",
   },
   {
-    icon: "◉",
+    icon: "rss",
     title: "FULL-TEXT RSS",
     text: "A personal feed URL with complete articles in your reader.",
   },
   {
-    icon: "★",
+    icon: "star",
     title: "MEMBER POSTS",
     text: "Occasional members-only reviews, previews, and extras.",
   },
@@ -55,7 +56,7 @@ export default function MembershipPage() {
           {PERKS.map((perk) => (
             <div key={perk.title} className="membership-perk">
               <span className="membership-perk__icon" aria-hidden="true">
-                {perk.icon}
+                <NavGlyph name={perk.icon} size={22} />
               </span>
               <h2>{perk.title}</h2>
               <p>{perk.text}</p>

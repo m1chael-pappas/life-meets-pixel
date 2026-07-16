@@ -80,13 +80,14 @@ async function NewsList({ page }: { page: number }) {
             <article key={article._id} className="group">
               <Link href={`/news/${article.slug.current}`} className="block">
                 <div
-                  className={`bg-card border overflow-hidden hover:shadow-lg transition-all duration-300 hover:scale-[1.02] rounded-lg ${
+                  className={`relative bg-card border overflow-hidden hover:shadow-lg transition-all duration-300 hover:scale-[1.02] rounded-lg ${
                     article.breaking ? "ring-2 ring-red-500" : "border-border"
                   }`}
                 >
-                  {/* Breaking News Badge */}
+                  {/* Breaking News Badge — overlays the image so the card
+                      stays the same height as its grid siblings */}
                   {article.breaking && (
-                    <div className="bg-red-500 text-white text-xs font-mono px-3 py-1 text-center">
+                    <div className="absolute top-0 inset-x-0 z-10 bg-red-500 text-white text-xs font-mono px-3 py-1 text-center">
                       🚨 BREAKING NEWS
                     </div>
                   )}

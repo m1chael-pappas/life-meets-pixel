@@ -278,8 +278,8 @@ a:hover { color: var(--neon-1); }
   animation: borderpulse 2s ease-in-out infinite;
 }
 .lmp-logo__name { display: flex; flex-direction: column; gap: 4px; }
-.lmp-logo__name .top { font-size: 14px; color: var(--neon-2); }
-.lmp-logo__name .bot { font-size: 14px; color: var(--neon-1); }
+.lmp-logo__name .top { font-size: 14px; color: var(--neon-2); white-space: nowrap; }
+.lmp-logo__name .bot { font-size: 14px; color: var(--neon-1); white-space: nowrap; }
 
 .lmp-nav { display: flex; gap: 4px; }
 .lmp-nav a {
@@ -1822,14 +1822,16 @@ textarea.field-input { min-height: 140px; resize: vertical; line-height: 1.6; }
   top: 8px;
 }
 
-/* Normalize nav icon glyphs: ◉ ★ ▤ ✉ render smaller than ♥ at equal size */
+/* Nav icons are uniform 9x9 pixel-art SVGs (NavGlyph in retro/sprites.tsx) */
 .lmp-nav__icon {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   width: 18px;
-  text-align: center;
-  color: var(--neon-1);
-  font-size: 14px;
-  line-height: 1;
+}
+
+.lmp-nav__icon svg {
+  display: block;
 }
 
 
@@ -1950,6 +1952,11 @@ textarea.field-input { min-height: 140px; resize: vertical; line-height: 1.6; }
 
 /* Tablet (portrait tablets, small laptops) ----------------------------- */
 @media (max-width: 1024px) {
+  /* Header: 5 nav links + logo don't fit at 12px between 720-1024 */
+  .lmp-nav { gap: 2px; }
+  .lmp-nav a { font-size: 11px; padding: 10px 8px; gap: 6px; }
+  .lmp-header__main .lmp-container { gap: 16px; }
+
   .hero-grid { grid-template-columns: 1fr; }
   .hero-feature { min-height: 320px; }
   .hero-side { max-height: none; }

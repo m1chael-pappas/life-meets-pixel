@@ -4,6 +4,8 @@ import Link from "next/link";
 
 import { Show, UserButton } from "@clerk/nextjs";
 
+import { NavGlyph } from "@/components/retro/sprites";
+
 // Loaded lazily from the header (next/dynamic) so Clerk's client bundle
 // stays out of First Load JS on every page.
 export default function AuthControls({
@@ -15,8 +17,8 @@ export default function AuthControls({
     <span className="lmp-nav__auth">
       <Show when="signed-out">
         <Link href="/sign-in" onClick={onNavigate}>
-          <span style={{ color: "var(--neon-2)" }} aria-hidden="true">
-            ▶
+          <span className="lmp-nav__icon" aria-hidden="true">
+            <NavGlyph name="play" color="var(--neon-2)" />
           </span>
           SIGN IN
         </Link>
