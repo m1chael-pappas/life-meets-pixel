@@ -2,29 +2,18 @@
 
 import Script from "next/script";
 
-import { useAuth } from "@clerk/nextjs";
-
 const ADSENSE_CLIENT = process.env.NEXT_PUBLIC_ADSENSE_CLIENT;
-const CLERK_ENABLED = Boolean(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY);
 
 /**
- * Loads the AdSense script for non-members only — skipping the script
- * entirely is what makes the ad_free perk real (no auction, no tracking).
+ * Loads the AdSense script whenever AdSense is configured. Deliberately NOT
+ * gated on Clerk membership: chaining Google's site verification to Clerk
+ * availability broke verification when Clerk couldn't load (2026-07-16).
+ * The ad_free perk is enforced where it's visible — AdSlot never renders ad
+ * UNITS for members. Keep Auto ads OFF in the AdSense dashboard, or Google
+ * will inject ads outside our slots for everyone, members included.
  */
 export default function AdSenseLoader() {
   if (!ADSENSE_CLIENT) return null;
-  if (CLERK_ENABLED) return <MemberGatedScript />;
-  return <AdScript />;
-}
-
-function MemberGatedScript() {
-  const { isLoaded, has } = useAuth();
-  if (!isLoaded) return null;
-  if (has?.({ feature: "ad_free" })) return null;
-  return <AdScript />;
-}
-
-function AdScript() {
   return (
     <Script
       id="adsense"

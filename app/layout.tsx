@@ -93,6 +93,11 @@ export const metadata: Metadata = {
   },
   other: {
     "facebook:profile_id": "61582819127746",
+    // AdSense site verification: a static meta tag Google's crawler can see
+    // in the raw HTML, independent of any client-side script loading.
+    ...(process.env.NEXT_PUBLIC_ADSENSE_CLIENT
+      ? { "google-adsense-account": process.env.NEXT_PUBLIC_ADSENSE_CLIENT }
+      : {}),
   },
   twitter: {
     card: "summary_large_image",
