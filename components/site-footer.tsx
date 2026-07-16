@@ -26,6 +26,9 @@ export function SiteFooter() {
                 <Link href="/news">News &amp; Previews</Link>
               </li>
               <li>
+                <Link href="/membership">Membership</Link>
+              </li>
+              <li>
                 <Link href="/contact">Contact Us</Link>
               </li>
             </ul>

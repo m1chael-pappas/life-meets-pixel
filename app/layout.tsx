@@ -4,7 +4,10 @@ import type { Metadata } from "next";
 import { JetBrains_Mono, Press_Start_2P, VT323 } from "next/font/google";
 import Script from "next/script";
 
+import { ClerkProvider } from "@clerk/nextjs";
+
 import { KonamiEasterEgg } from "@/components/retro/konami";
+import { clerkAppearance } from "@/lib/clerk-appearance";
 import { SoundEffects } from "@/components/retro/sound-effects";
 import { TweaksPanel } from "@/components/retro/tweaks-panel";
 import { SiteFooter } from "@/components/site-footer";
@@ -115,7 +118,11 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return (
+  // Membership (Clerk) is optional until its env keys exist — same pattern
+  // as GA/Meta. Without keys the tree renders exactly as before.
+  const clerkEnabled = Boolean(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY);
+
+  const tree = (
     <html lang="en" data-palette="midnight" suppressHydrationWarning>
       <head>
         <link rel="icon" href="/logo.svg" type="image/svg+xml" />
@@ -157,5 +164,17 @@ export default function RootLayout({
         </>
       )}
     </html>
+  );
+
+  if (!clerkEnabled) return tree;
+
+  return (
+    <ClerkProvider
+      appearance={clerkAppearance}
+      signInUrl="/sign-in"
+      signUpUrl="/sign-up"
+    >
+      {tree}
+    </ClerkProvider>
   );
 }

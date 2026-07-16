@@ -52,6 +52,11 @@ SANITY_API_TOKEN=sk_...              # Editor/Admin — seed scripts, delete-ale
 NEXT_PUBLIC_SITE_URL=https://lifemeetspixel.com
 REVALIDATE_SECRET=...                # gates /api/revalidate webhook
 
+# Clerk (membership: auth + billing — optional; without keys the site runs
+# with membership disabled and no auth UI renders)
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_...
+CLERK_SECRET_KEY=sk_...
+
 # Resend (contact form)
 RESEND_API_KEY=re_...
 RESEND_FROM_EMAIL="Life Meets Pixel <noreply@onthedot.dev>"

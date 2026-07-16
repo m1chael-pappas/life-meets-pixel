@@ -18,6 +18,7 @@
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.111.0",
+    "@clerk/nextjs": "^7.5.19",
     "@next/third-parties": "^16.0.0",
     "@portabletext/types": "2.0.13",
     "@radix-ui/react-avatar": "^1.1.10",

@@ -1803,6 +1803,88 @@ textarea.field-input { min-height: 140px; resize: vertical; line-height: 1.6; }
 }
 .retro-pagination .disabled { opacity: 0.4; cursor: not-allowed; }
 
+/* ===== MEMBERSHIP + AUTH ===== */
+.lmp-nav__auth {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.auth-page {
+  display: flex;
+  justify-content: center;
+  padding: 56px 0 88px;
+}
+
+.auth-page__offline {
+  font-family: var(--font-press-start-2p), system-ui, monospace;
+  font-size: 12px;
+  line-height: 2;
+  color: var(--ink-dim);
+  border: 3px solid var(--bg-3);
+  background: var(--bg-1);
+  padding: 32px;
+  text-align: center;
+}
+
+.membership-hero {
+  padding: 56px 0 32px;
+  max-width: 720px;
+}
+
+.membership-hero h1 {
+  font-family: var(--font-press-start-2p), system-ui, monospace;
+  font-size: 22px;
+  line-height: 1.7;
+  color: var(--ink);
+  margin-bottom: 20px;
+}
+
+.membership-hero p {
+  font-size: 17px;
+  line-height: 1.8;
+  color: var(--ink-dim);
+}
+
+.membership-perks {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 48px;
+}
+
+.membership-perk {
+  border: 3px solid var(--bg-3);
+  background: var(--bg-1);
+  padding: 20px;
+}
+
+.membership-perk__icon {
+  display: block;
+  color: var(--neon-1);
+  font-size: 20px;
+  margin-bottom: 12px;
+}
+
+.membership-perk h2 {
+  font-family: var(--font-press-start-2p), system-ui, monospace;
+  font-size: 11px;
+  color: var(--ink);
+  margin-bottom: 10px;
+}
+
+.membership-perk p {
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--ink-dim);
+}
+
+.membership-pricing {
+  padding-bottom: 88px;
+  max-width: 880px;
+  margin: 0 auto;
+}
+
 /* ===== RESPONSIVE ===== */
 /* Laptop (small desktops, large tablets landscape) ---------------------- */
 @media (max-width: 1280px) {
@@ -1862,6 +1944,8 @@ textarea.field-input { min-height: 140px; resize: vertical; line-height: 1.6; }
 
   .socials-grid { grid-template-columns: 1fr 1fr; }
   .topic-grid { grid-template-columns: 1fr 1fr; }
+
+  .membership-perks { grid-template-columns: 1fr 1fr; }
 
   .pros-cons { gap: 10px; }
 }
@@ -1946,6 +2030,9 @@ textarea.field-input { min-height: 140px; resize: vertical; line-height: 1.6; }
 
   /* News + Reviews grids */
   .news-grid, .reviews-grid { grid-template-columns: 1fr; gap: 14px; }
+  .membership-perks { grid-template-columns: 1fr; }
+  .membership-hero h1 { font-size: 16px; }
+  .membership-hero p { font-size: 15px; }
   .news-card.lead .news-card__title { font-size: 12px; }
   .review-card__body { padding: 14px; gap: 8px; }
   .review-card__title { font-size: 11px; }

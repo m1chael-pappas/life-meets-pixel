@@ -2,9 +2,24 @@
 
 import { useEffect, useState } from "react";
 
+import dynamic from "next/dynamic";
 import Link from "next/link";
 
-type PageKey = "home" | "reviews" | "news" | "contact" | "author";
+// NEXT_PUBLIC_* is inlined at build time; without Clerk keys the auth
+// controls simply don't render and no Clerk context is required.
+const CLERK_ENABLED = Boolean(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY);
+
+const AuthControls = CLERK_ENABLED
+  ? dynamic(() => import("@/components/auth-controls"))
+  : null;
+
+type PageKey =
+  | "home"
+  | "reviews"
+  | "news"
+  | "membership"
+  | "contact"
+  | "author";
 
 interface SiteHeaderProps {
   currentPage?: PageKey;
@@ -14,6 +29,7 @@ const LINKS: Array<{ id: PageKey; label: string; icon: string; href: string }> =
   { id: "home", label: "HOME", icon: "◉", href: "/" },
   { id: "reviews", label: "REVIEWS", icon: "★", href: "/reviews" },
   { id: "news", label: "NEWS", icon: "▤", href: "/news" },
+  { id: "membership", label: "JOIN", icon: "♥", href: "/membership" },
   { id: "contact", label: "CONTACT", icon: "✉", href: "/contact" },
 ];
 
@@ -97,6 +113,9 @@ export function SiteHeader({ currentPage = "home" }: SiteHeaderProps) {
                 {l.label}
               </Link>
             ))}
+            {AuthControls && (
+              <AuthControls onNavigate={() => setNavOpen(false)} />
+            )}
           </nav>
         </div>
       </div>
