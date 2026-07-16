@@ -293,25 +293,53 @@ Report facts only. Do not write the article.`,
 
   let wrapUp = false;
   for (let i = 0; i < 5; i++) {
-    if (deadline - Date.now() < 20_000) throw new Error('Ran out of time during research');
+    const remaining = deadline - Date.now();
+    if (remaining < 20_000) throw new Error('Ran out of time during research');
 
-    // The abort signal (not a per-call timeout) caps the total including any
-    // SDK retries, so a slow call can never outlive the phase budget.
+    // Server-side web tools can stretch a single request for minutes, and the
+    // deadline checks / wrap-up nudge only run BETWEEN calls — so an over-long
+    // call would eat the whole phase with nothing salvaged. Cap each call and,
+    // if it's the one that runs long, abort just that call and drop to wrap-up
+    // mode (tiny tool budget, report-what-you-have) instead of failing the phase.
+    const callCap = Math.max(Math.min(remaining - 40_000, 110_000), 30_000);
+    const callController = new AbortController();
+    const callTimer = setTimeout(() => callController.abort(), callCap);
+
     // Sonnet, not Opus: research is fact-gathering, and Opus + adaptive
     // thinking + web tools regularly blew the phase budget. Writing stays
     // on Opus where the voice matters.
-    const response = await client.messages.create(
-      {
-        model: 'claude-sonnet-5',
-        max_tokens: 8000,
-        tools: [
-          { type: 'web_search_20260209', name: 'web_search', max_uses: wrapUp ? 1 : 4 },
-          { type: 'web_fetch_20260209', name: 'web_fetch', max_uses: wrapUp ? 1 : 5 },
-        ],
-        messages,
-      },
-      { signal }
-    );
+    let response: Anthropic.Message;
+    try {
+      response = await client.messages.create(
+        {
+          model: 'claude-sonnet-5',
+          max_tokens: 8000,
+          tools: [
+            { type: 'web_search_20260209', name: 'web_search', max_uses: wrapUp ? 1 : 2 },
+            { type: 'web_fetch_20260209', name: 'web_fetch', max_uses: wrapUp ? 1 : 3 },
+          ],
+          messages,
+        },
+        { signal: AbortSignal.any([signal, callController.signal]) }
+      );
+    } catch (err) {
+      if (signal.aborted || !callController.signal.aborted) throw err;
+      // This call ran long and was cut; nothing from it survives. Retry in
+      // wrap-up mode — the model restarts its turn from the last kept message.
+      if (!wrapUp) {
+        wrapUp = true;
+        messages.push({
+          role: 'user',
+          content:
+            messages.length === 1
+              ? 'Time is short. Fetch the primary source only, then immediately write your findings report from it in the requested format. No other tool calls.'
+              : 'Stop researching now. Write your findings report immediately from what you have already verified, in the requested format. Do not make any more tool calls.',
+        });
+      }
+      continue;
+    } finally {
+      clearTimeout(callTimer);
+    }
 
     if (response.stop_reason === 'pause_turn') {
       messages = [messages[0], { role: 'assistant', content: response.content }];
