@@ -76,7 +76,7 @@ Unless the subject is clearly in Jenna's lane (K-drama, UX/design reads, cozy st
   "creator": "director/developer/author",
   "publisher": "publisher/studio/network",
   "officialWebsite": "https://..." | undefined,
-  "coverImage": undefined  // leave undefined initially. You will generate one via generate_image (see Media step below).
+  "coverImage": undefined  // leave undefined; user attaches an existing promo/press image in Studio (see Media step below).
   // Type-specific fields (only include the ones relevant to itemType):
   // videogame: esrbRating
   // boardgame: playerCount, playTime
@@ -188,11 +188,11 @@ Pick **4-5 criteria**. Scores should vary around `reviewScore` — some above, s
 
 5. **Publish the `reviewableItem` immediately.** Sanity's strong-reference validation blocks a draft review from pointing at a non-existent published `reviewableItem`. So: create the reviewableItem as a draft, then call `publish_documents` on it right away. The reviewableItem represents "this thing exists in the catalogue" and is benign to publish. The review itself stays a draft.
 
-6. **Generate the cover image** for the reviewableItem using `mcp__Sanity__generate_image`. Target `documentId: <reviewableItem published id>`, `imagePath: "coverImage"`. Prompt the generator for a **retro 16-bit pixel-art style key-art illustration** matching the Life Meets Pixel aesthetic (chunky pixel clusters, sharp edges, saturated neon-on-midnight palette of deep navy background + magenta and cyan accents + yellow highlights, CRT scanline texture overlay, landscape 16:9). Describe the specific scene/composition relevant to the subject. **Explicitly say "NOT photorealistic"** and "NOT a photograph" so the generator doesn't make a realistic image of copyrighted characters. Generation is async; the image lands shortly after the call returns.
+6. **Attach a real, existing image as the `coverImage`.** Do NOT call `mcp__Sanity__generate_image`; the site only uses real images (official key art, press-kit stills, publisher promo shots, Steam art: `https://cdn.cloudflare.steamstatic.com/steam/apps/<appid>/library_hero.jpg`). Download the image, VIEW it with the Read tool to confirm it is the right official art, then upload + attach via a Node script using the repo's `@sanity/client` and `SANITY_API_TOKEN` from `.env.local` (run with `NODE_PATH=<repo>/node_modules`): `client.assets.upload('image', stream, {filename})` then patch the `coverImage` field with the asset reference and a descriptive `alt`.
 
 7. **Create the `review` draft**, referencing the reviewableItem by published `_ref`.
 
-8. **Do not publish the review.** Stop at the draft. Tell the user the draft is ready + give the Studio URL: `https://lmp.sanity.studio/desk/review;<reviewDocId>`. Note that the generated cover may take 20-60 seconds to render.
+8. **Do not publish the review.** Stop at the draft. Tell the user the draft is ready + give the Studio URL: `https://lmp.sanity.studio/desk/review;<reviewDocId>`, along with the suggested cover image URLs.
 
 9. **Inline body images:** do NOT attempt to add image blocks to the Portable Text content array. User adds those manually in Studio after reading the draft. Video embeds (`videoEmbed` blocks) are encouraged when an official trailer exists; place one near the end under a "Watch the Trailer" h2.
 
@@ -242,4 +242,4 @@ Keep hashtags tasteful: 4-6 max, mix of brand + category + subject. No hashtag s
 - **If research surfaces something reputational** (studio scandal, cancelled release, etc.), flag it in the chat before drafting so the user can decide whether to proceed.
 - **Double-check slug collisions** with an existing GROQ query before creating.
 - **If you can't find enough research to write honestly,** stop and say so. Don't pad with filler.
-- **Generated cover image:** always generate one in retro pixel-art style. User can replace it in Studio if they don't like it. Never force the generator into photorealism.
+- **No AI-generated images, ever.** `coverImage` is always a real, existing image (official key art, press kit, promo shots). Suggest URLs; Michael attaches in Studio.

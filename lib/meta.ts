@@ -38,8 +38,37 @@ export async function postToInstagram(imageUrl: string, caption: string): Promis
     caption,
   });
   await waitForContainer(container.id);
+  return publishContainer(container.id);
+}
+
+// Carousel publish: one container per slide (is_carousel_item), then a parent
+// CAROUSEL container referencing the children. IG allows 2-10 slides.
+export async function postCarouselToInstagram(
+  imageUrls: string[],
+  caption: string
+): Promise<string> {
+  if (imageUrls.length < 2) return postToInstagram(imageUrls[0], caption);
+  const children: string[] = [];
+  for (const url of imageUrls.slice(0, 10)) {
+    const child = await graph<{ id: string }>(`${IG_USER_ID}/media`, {
+      image_url: url,
+      is_carousel_item: 'true',
+    });
+    await waitForContainer(child.id);
+    children.push(child.id);
+  }
+  const parent = await graph<{ id: string }>(`${IG_USER_ID}/media`, {
+    media_type: 'CAROUSEL',
+    children: children.join(','),
+    caption,
+  });
+  await waitForContainer(parent.id);
+  return publishContainer(parent.id);
+}
+
+async function publishContainer(creationId: string): Promise<string> {
   const published = await graph<{ id: string }>(`${IG_USER_ID}/media_publish`, {
-    creation_id: container.id,
+    creation_id: creationId,
   });
   try {
     const res = await fetch(
@@ -75,4 +104,26 @@ export async function postToFacebook(imageUrl: string, message: string): Promise
     message,
   });
   return `https://www.facebook.com/${post.post_id || post.id}`;
+}
+
+// Multi-photo Page post: upload each photo unpublished, then create a feed
+// post that attaches them all.
+export async function postPhotosToFacebook(
+  imageUrls: string[],
+  message: string
+): Promise<string> {
+  if (imageUrls.length < 2) return postToFacebook(imageUrls[0], message);
+  const mediaIds: string[] = [];
+  for (const url of imageUrls.slice(0, 10)) {
+    const photo = await graph<{ id: string }>(`${PAGE_ID}/photos`, {
+      url,
+      published: 'false',
+    });
+    mediaIds.push(photo.id);
+  }
+  const post = await graph<{ id: string }>(`${PAGE_ID}/feed`, {
+    message,
+    attached_media: JSON.stringify(mediaIds.map((id) => ({ media_fbid: id }))),
+  });
+  return `https://www.facebook.com/${post.id}`;
 }

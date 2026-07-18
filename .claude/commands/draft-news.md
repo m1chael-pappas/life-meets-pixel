@@ -12,7 +12,7 @@ You are ghost-writing a draft **news item or preview** for **Life Meets Pixel**,
 1. **Research** the story thoroughly. Always start from the **primary source** (publisher announcement, dev blog, official trailer, press release). Then corroborate with 2-3 outlets.
 2. **Classify** as either **news** (something that happened) or **preview** (early impressions of unreleased content the user has played/seen or can describe from hands-on coverage). Sometimes it's both; pick the dominant frame.
 3. **Write** the article in the house voice + `newsPost` shape.
-4. **Generate** a retro pixel-art `featuredImage` via `mcp__Sanity__generate_image`.
+4. **Suggest existing images** for the `featuredImage`: official promo art, press-kit stills, or the game's Steam capsule. NEVER generate AI images.
 5. **Create** the `newsPost` as a **draft** in Sanity. **Never publish.** User reviews and publishes in Studio.
 6. **Output a social pack** for manual use in Figma / Instagram / Facebook.
 
@@ -56,7 +56,7 @@ Default to **Michael** unless the story is clearly in Jenna's lane.
   "slug": { "_type": "slug", "current": "kebab-case-version" },
   "excerpt": "2-3 sentence summary, appears on the card + in RSS. 150-250 chars.",
   "content": [/* Portable Text blocks, see shape below */],
-  "featuredImage": undefined,  // generated separately via generate_image
+  "featuredImage": undefined,  // left empty; user attaches an existing promo/press image in Studio
   "publishedAt": "<now in ISO>",
   "breaking": false,  // true only for genuinely urgent stories (release day, major leak, surprise reveal, cancellation)
   "author": { "_type": "reference", "_ref": "author-michael" },
@@ -142,14 +142,13 @@ Default to **Michael** unless the story is clearly in Jenna's lane.
 
 4. **Create the `newsPost` draft** via `create_documents_from_json`. Skip `featuredImage` for now (generated next).
 
-5. **Generate the `featuredImage`** via `mcp__Sanity__generate_image`:
-   - `documentId`: the draft's `_id` (e.g., `drafts.xxx`)
-   - `imagePath`: `"featuredImage"`
-   - `instruction`: retro 16-bit pixel-art key art describing the news scene. Specify "NOT photorealistic, NOT a photograph". Use the Life Meets Pixel palette (deep navy background, neon magenta and cyan accents, yellow highlights, CRT scanline texture, 16:9 landscape).
+5. **Attach a real, existing image as the `featuredImage`.** Do NOT call `mcp__Sanity__generate_image`; the site only uses real images (official key art, press-kit stills, publisher blog images, Steam art: `https://cdn.cloudflare.steamstatic.com/steam/apps/<appid>/library_hero.jpg`). Download the image, VIEW it with the Read tool to confirm it is the right official art (og:images from outlets are sometimes memes or collages), then upload + attach via a Node script using the repo's `@sanity/client` and `SANITY_API_TOKEN` from `.env.local` (run with `NODE_PATH=<repo>/node_modules`): `client.assets.upload('image', stream, {filename})` then patch `featuredImage: {_type: 'image', asset: {_type: 'reference', _ref: asset._id}, alt: '<descriptive alt, credit the source>'}`. The `alt` field is required by the schema.
 
-6. **Do NOT publish.** Leave as draft. Give the user the Studio URL: `https://lmp.sanity.studio/structure/newsPost;<draftDocId>`.
+6. **Find verified Instagram tag handles.** Look up the official Instagram handle of the studio/publisher/game in the story (check the official site footer, linktree, or press kit; the IG account must link back to the official site). Set them on the story's `storyCandidate` as `tagHandles` (array of strings, no `@`). Tagged studios often reshare coverage, which is the account's main free-reach lever. **Never guess a handle**; if you can't verify one, leave the array empty.
 
-7. **Output the social pack** (next section).
+7. **Do NOT publish.** Leave as draft. Give the user the Studio URL: `https://lmp.sanity.studio/structure/newsPost;<draftDocId>`.
+
+8. **Output the social pack** (next section).
 
 ## Social pack output (for Figma / Instagram / Facebook)
 
@@ -163,24 +162,30 @@ Link           : lifemeetspixel.com/news/<slug>
 Type           : NEWS | PREVIEW | BREAKING
 
 , Instagram post caption (≤2200 chars) ,
-<catchy opener>
+<catchy opener, front-loaded with search keywords>
 
-<2-sentence hook with a key fact>
+<2-sentence hook with a key fact, weaving in @mentions from tagHandles if any>
 
-Full story: lifemeetspixel.com/news/<slug>
+Full story: link in bio
+
+<closing comment-bait question, ≤80 chars>
 
 #LifeMeetsPixel #GamingNews #<SubjectHashtag> #<PublisherHashtag>
+
+, Fact slides (2-3 lines, one concrete fact each, ≤140 chars, for the carousel middles) ,
+<fact 1>
+<fact 2>
 
 , Instagram story tagline (one line, ≤60 chars) ,
 <punchy one-liner>
 
 , Facebook post (≤300 chars) ,
-<slightly longer version with the hook + link>
+<slightly longer version with the hook + the full article URL (links are clickable on FB)>
 
 ═════════════════════════════════════════════════
 ```
 
-Keep hashtags tasteful: 4-6 max. No hashtag spam.
+Keep hashtags tasteful: 4-6 max. No hashtag spam. NEVER put a raw URL in the IG caption (not clickable, and IG demotes it): the CTA is always "link in bio". Instagram posts go out as CAROUSELS (hook card → key art → fact slides → CTA card) via the queued pipeline; approving a story books the next free 08:00/18:00 Sydney slot rather than posting immediately.
 
 ## News vs Preview, when to set what
 
@@ -194,6 +199,6 @@ Keep hashtags tasteful: 4-6 max. No hashtag spam.
 - **Primary source first.** If you can't find a primary source (publisher statement, dev blog, verified trade press), stop and ask the user for a URL.
 - **No fake quotes.** Only use quotes present in the primary source.
 - **Scrub em dashes from any quoted or paraphrased material.** Replace with colons or periods.
-- **Generated image caveat:** always retro pixel-art style, never photorealistic. User can swap in Studio.
+- **No AI-generated images, ever.** `featuredImage` is always a real, existing image (promo art, press kit, official screenshots). Suggest URLs; Michael attaches in Studio.
 - **No affiliate links in news.** News pieces stay neutral. Any shopping CTA lives on the review of the same subject, not the news post.
 - **If the story is reputational** (scandal, layoffs, allegations), write carefully, stick to verified facts, attribute clearly, and skip the editorial sting if the situation is still developing.

@@ -156,7 +156,7 @@ async function handleCallback(
       if (callback.message) {
         await editMessageText(
           callback.message.message_id,
-          `🌐 <b>Published: ${escapeHtml(candidate.headline)}</b>\n\nhttps://lifemeetspixel.com/news/${slug}\n\nSocial post rendering now…\n\n#cand:${candidate._id}`
+          `🌐 <b>Published: ${escapeHtml(candidate.headline)}</b>\n\nhttps://lifemeetspixel.com/news/${slug}\n\nBooking a social slot…\n\n#cand:${candidate._id}`
         );
       }
       // Social render + Meta posting runs as its own invocation.

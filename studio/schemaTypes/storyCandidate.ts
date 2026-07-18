@@ -9,6 +9,7 @@ const STATUS_EMOJI: Record<string, string> = {
   skipped: '⏭',
   drafted: '📝',
   published: '🌐',
+  queued: '🗓',
   posted: '📣',
   failed: '⚠️',
 }
@@ -79,6 +80,7 @@ export const storyCandidateType = defineType({
           {title: 'Skipped', value: 'skipped'},
           {title: 'Drafted (awaiting publish approval)', value: 'drafted'},
           {title: 'Published', value: 'published'},
+          {title: 'Queued for socials', value: 'queued'},
           {title: 'Posted to socials', value: 'posted'},
           {title: 'Failed', value: 'failed'},
         ],
@@ -111,6 +113,20 @@ export const storyCandidateType = defineType({
       type: 'image',
       description: 'Sourced automatically from press assets, or dropped in via Telegram reply',
       options: {hotspot: true},
+    }),
+    defineField({
+      name: 'scheduledAt',
+      title: 'Scheduled Social Slot',
+      type: 'datetime',
+      description: 'When the queued social post goes out (08:00 / 18:00 Sydney slots)',
+    }),
+    defineField({
+      name: 'tagHandles',
+      title: 'Instagram Tag Handles',
+      type: 'array',
+      of: [{type: 'string'}],
+      description:
+        'VERIFIED official Instagram handles to @mention (studio/publisher), without the @. Only add handles confirmed via the official site or a verified account; never guess',
     }),
     defineField({
       name: 'newsPostId',
