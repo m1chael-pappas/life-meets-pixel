@@ -34,9 +34,12 @@ import { writeClient } from '@/sanity/write-client';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://lifemeetspixel.com';
 
-// Posting slots in Sydney local time. Two per day: evening AEST catches
-// US morning, morning AEST catches US evening.
-const SLOT_HOURS_SYDNEY = [8, 18];
+// Posting slots in Sydney local time. ONE per day, because Vercel Hobby only
+// permits a daily cron and `processSocialQueue` drains a single candidate per
+// run: booking more slots per day than the cron can drain grows the backlog
+// forever. Keep this array length in sync with the /api/social cron in
+// vercel.json. 08:00 Sydney is ~18:00 US Eastern, the better of the two windows.
+const SLOT_HOURS_SYDNEY = [8];
 
 interface SocialCandidate {
   _id: string;
