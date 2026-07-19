@@ -76,7 +76,7 @@ Unless the subject is clearly in Jenna's lane (K-drama, UX/design reads, cozy st
   "creator": "director/developer/author",
   "publisher": "publisher/studio/network",
   "officialWebsite": "https://..." | undefined,
-  "coverImage": undefined  // leave undefined; user attaches an existing promo/press image in Studio (see Media step below).
+  "coverImage": undefined  // omit here; you upload + attach real press art in the Media step below.
   // Type-specific fields (only include the ones relevant to itemType):
   // videogame: esrbRating
   // boardgame: playerCount, playTime
@@ -188,15 +188,39 @@ Pick **4-5 criteria**. Scores should vary around `reviewScore` — some above, s
 
 5. **Publish the `reviewableItem` immediately.** Sanity's strong-reference validation blocks a draft review from pointing at a non-existent published `reviewableItem`. So: create the reviewableItem as a draft, then call `publish_documents` on it right away. The reviewableItem represents "this thing exists in the catalogue" and is benign to publish. The review itself stays a draft.
 
-6. **Attach a real, existing image as the `coverImage`.** Do NOT call `mcp__Sanity__generate_image`; the site only uses real images (official key art, press-kit stills, publisher promo shots, Steam art: `https://cdn.cloudflare.steamstatic.com/steam/apps/<appid>/library_hero.jpg`). Download the image, VIEW it with the Read tool to confirm it is the right official art, then upload + attach via a Node script using the repo's `@sanity/client` and `SANITY_API_TOKEN` from `.env.local` (run with `NODE_PATH=<repo>/node_modules`): `client.assets.upload('image', stream, {filename})` then patch the `coverImage` field with the asset reference and a descriptive `alt`.
+6. **Source the media set up front. A text-only draft is not a finished draft.** Every review ships with a cover image, 3-5 inline body images, and a trailer embed where one exists. Do NOT call `mcp__Sanity__generate_image` and never generate images with any other tool: the site only uses real, existing press material.
 
-7. **Create the `review` draft**, referencing the reviewableItem by published `_ref`.
+   **Where to get it:**
+   - **Games (best source by far):** `https://store.steampowered.com/api/appdetails?appids=<appid>&cc=au&l=en` returns `data.screenshots[].path_full` (full-res 1920x1080 stills) and `data.movies[]` (trailer name + thumbnail). This is the canonical grab. Cover art: `https://cdn.cloudflare.steamstatic.com/steam/apps/<appid>/library_hero.jpg` (note: `header.jpg` and `capsule_616x353.jpg` 404 on newer app IDs).
+   - **Movies/TV/anime:** TMDB stills, official press kits, studio media pages.
+   - **Books/comics:** publisher cover art and preview pages.
+   - **Gadgets:** manufacturer press images.
 
-8. **Do not publish the review.** Stop at the draft. Tell the user the draft is ready + give the Studio URL: `https://lmp.sanity.studio/desk/review;<reviewDocId>`, along with the suggested cover image URLs.
+   **Always VIEW each candidate with the Read tool before uploading.** Pick images that match the specific section they will sit under (a boss fight for the difficulty section, a build screen for the progression section) rather than dropping in the first four. Write a caption for each that says something the prose does not; the caption is also used as the alt text by the frontend renderer.
 
-9. **Inline body images:** do NOT attempt to add image blocks to the Portable Text content array. User adds those manually in Studio after reading the draft. Video embeds (`videoEmbed` blocks) are encouraged when an official trailer exists; place one near the end under a "Watch the Trailer" h2.
+7. **Upload and attach the media** via a Node script using the repo's `@sanity/client` and `SANITY_API_TOKEN` parsed from `.env.local`. Two hard-won gotchas:
+   - **`NODE_PATH=<repo>/node_modules node script.mjs` does NOT work.** ESM resolution ignores `NODE_PATH`. Copy the script to the repo root, run it there, then delete it.
+   - **A Sanity patch object holds only ONE `insert`.** Chaining `.insert()` calls on a single patch silently keeps only the last one. Commit one patch per inserted block, or use a transaction.
 
-10. **Output the social pack** (see next section).
+   Cover: `client.assets.upload('image', stream, {filename})`, then patch `coverImage` with the asset reference and a descriptive `alt`.
+
+8. **Create the `review` draft**, referencing the reviewableItem by published `_ref`.
+
+9. **Insert inline body images and the trailer into the Portable Text `content` array.** Anchor each insert to an existing block `_key` with `insert('after', 'content[_key=="<key>"]', [...])` so placement survives reordering. Block shapes:
+   - Image: `{_type: 'image', _key, asset: {_type: 'reference', _ref}, caption}`. The schema defines **`caption` only, no `alt` field**; the review page renders `alt={value.caption}`. Do not add an `alt` key, it shows as an unknown field in Studio.
+   - Video: `{_type: 'videoEmbed', _key, url, caption}` under a "Watch the Trailer" h2 near the end, before the Verdict section. YouTube watch URLs work; verify the trailer URL actually resolves to the right video before embedding it (fetch the page and check the title). Steam's own trailers are DASH/HLS only and will not embed, so prefer the publisher's YouTube upload.
+
+10. **Do not publish the review.** Stop at the draft. Tell the user the draft is ready + give the Studio URL: `https://lmp.sanity.studio/desk/review;<reviewDocId>`, and list what media you attached.
+
+11. **Output the social pack** (see next section).
+
+## Reel (vertical video) — build it when a trailer exists
+
+Michael posts Reels, not just static carousels. When the subject has an official trailer, cut a vertical reel, send it to Telegram for approval, and post it once he approves.
+
+**Use the `social-reel` skill** (`.claude/skills/social-reel/SKILL.md`). It has the full pipeline plus working scripts: where to find the trailer, the no-sudo tooling setup, how to pick the take, the text and audio rules, the verification that actually catches faults, and the Instagram/Facebook posting steps. Do not rebuild that process from scratch here, and do not duplicate its rules into this file.
+
+The two things worth knowing before you even open it: use **one continuous take** rather than stitched trailer segments, and **verify timestamps rather than audio levels**. Both of those cost a lot of rework on the Pathogenic reel.
 
 ## Social pack output (for Figma / Instagram / Facebook)
 
@@ -242,4 +266,5 @@ Keep hashtags tasteful: 4-6 max, mix of brand + category + subject. No hashtag s
 - **If research surfaces something reputational** (studio scandal, cancelled release, etc.), flag it in the chat before drafting so the user can decide whether to proceed.
 - **Double-check slug collisions** with an existing GROQ query before creating.
 - **If you can't find enough research to write honestly,** stop and say so. Don't pad with filler.
-- **No AI-generated images, ever.** `coverImage` is always a real, existing image (official key art, press kit, promo shots). Suggest URLs; Michael attaches in Studio.
+- **No AI-generated images, ever.** Cover and body images are always real, existing press material (official key art, press kit, promo shots, storefront screenshots). Attach them yourself; never generate them.
+- **Never ship a text-only draft.** If you genuinely cannot find usable press images for a subject, say so explicitly in the chat rather than quietly handing over a wall of prose.
