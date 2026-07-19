@@ -6,7 +6,7 @@
     },
     {
       "path": "/api/social",
-      "schedule": "5 8,22 * * *"
+      "schedule": "5 22 * * *"
     }
   ]
 }
