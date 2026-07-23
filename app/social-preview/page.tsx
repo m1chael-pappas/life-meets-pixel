@@ -27,7 +27,59 @@ const EDAY_SQUAD =
 const EDAY_UE5 =
   "https://xboxwire.thesourcemediaassets.com/sites/2/2026/06/08_GoW_EDAY_RebuiltUE5_Final-f85777f17d384c17e3a3-1900x1080.jpg";
 
+// 2027 anime lineup: official posters (LiveChart large / MAL CDN / AniList),
+// all verified as live portrait images. Dates are the most specific verified
+// (exact > month > year); "2027" alone means the year is confirmed but no
+// month is announced yet. Titles that turned out to be 2026 (Blue Lock S3,
+// Bleach TYBW Pt 4, Cyberpunk Edgerunners 2, Baki-Dou) are deliberately left out.
+const A = {
+  onepiece: "https://u.livechart.me/anime/12460/poster_image/2dde0c6aab1e32fa0c88608e77b9282a.webp/large.jpg",
+  demonslayer: "https://u.livechart.me/anime/12734/poster_image/25074e391880f633feb6d4f1c8523193.webp/large.jpg",
+  sololeveling: "https://u.livechart.me/anime/13718/poster_image/75b0fd04ae7a53c5f70c4030715fc3f4.webp/large.jpg",
+  jjk: "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx113415-LHBAeoZDIsnF.jpg",
+  chainsaw: "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx204429-9scYA2ab3Zz3.jpg",
+  opm: "https://cdn.myanimelist.net/images/anime/1168/148347l.jpg",
+  kagurabachi: "https://cdn.myanimelist.net/images/anime/1653/157089.jpg",
+  godvalley: "https://u.livechart.me/anime/321/poster_image/b121b16f4061e35e27b6d758b2e9503a.jpg/large.jpg",
+  haikyu: "https://u.livechart.me/anime/11370/poster_image/e25006a13244f280cbcc2bc8c0c0e5de.webp/large.jpg",
+  sakamoto: "https://cdn.myanimelist.net/images/anime/1812/158683.jpg",
+  mashle: "https://cdn.myanimelist.net/images/anime/1085/154496.jpg",
+  shangri: "https://cdn.myanimelist.net/images/anime/1450/156167.jpg",
+  frieren: "https://cdn.myanimelist.net/images/anime/1619/156313.jpg",
+  apothecary: "https://cdn.myanimelist.net/images/anime/1862/152811.jpg",
+  dungeon: "https://cdn.myanimelist.net/images/anime/1830/158890.jpg",
+};
+
 const DECKS: Deck[] = [
+  {
+    id: "anime-2027",
+    title: "2027 ANIME LINEUP — carousel (cover + 15 single cards + closer)",
+    note: "One anime per card, full-bleed portrait key art, date + title over a scrim. Set aside as 2026: Blue Lock S3, Bleach TYBW Pt4, Cyberpunk Edgerunners 2, Baki. Also held (undated/possibly 2028): Sentenced to Be a Hero S2.",
+    slides: [
+      { t: "hype.hook", img: A.demonslayer, fit: "contain", kicker: "Anime · 2027", kickerPill: true, title: "2027 is absolutely stacked for anime", cue: "swipe the lineup" },
+      // The Big Three
+      { t: "anime.single", img: A.onepiece, kicker: "The Big Three", title: "The One Piece", date: "FEB 2027", note: "WIT Studio remake, Netflix" },
+      { t: "anime.single", img: A.demonslayer, kicker: "The Big Three", title: "Demon Slayer: Infinity Castle II", date: "2027" },
+      { t: "anime.single", img: A.sololeveling, kicker: "The Big Three", title: "Solo Leveling: Beyond the System", date: "2027", note: "the movie" },
+      // Dark Shonen
+      { t: "anime.single", img: A.jjk, kicker: "Dark Shonen", title: "Jujutsu Kaisen: Culling Game II", date: "2027", note: "date expected, not locked" },
+      { t: "anime.single", img: A.chainsaw, kicker: "Dark Shonen", title: "Chainsaw Man: Assassins Arc", date: "2027", note: "date expected, not locked" },
+      { t: "anime.single", img: A.kagurabachi, kicker: "Dark Shonen", title: "Kagurabachi", date: "APR 2027" },
+      // Action & Comedy
+      { t: "anime.single", img: A.opm, kicker: "Action & Comedy", title: "One-Punch Man S3 Part 2", date: "2027" },
+      { t: "anime.single", img: A.sakamoto, kicker: "Action & Comedy", title: "Sakamoto Days S2", date: "JAN 2027" },
+      { t: "anime.single", img: A.mashle, kicker: "Action & Comedy", title: "Mashle S3", date: "JAN 2027" },
+      // Fantasy Favourites
+      { t: "anime.single", img: A.frieren, kicker: "Fantasy Favourites", title: "Frieren S3", date: "OCT 2027" },
+      { t: "anime.single", img: A.apothecary, kicker: "Fantasy Favourites", title: "The Apothecary Diaries S3", date: "APR 2027" },
+      { t: "anime.single", img: A.dungeon, kicker: "Fantasy Favourites", title: "Delicious in Dungeon S2", date: "OCT 2027" },
+      // And There's More
+      { t: "anime.single", img: A.shangri, kicker: "And There's More", title: "Shangri-La Frontier S3", date: "JAN 2027" },
+      { t: "anime.single", img: A.haikyu, kicker: "And There's More", title: "Haikyu!! VS The Little Giant", date: "2027" },
+      { t: "anime.single", img: A.godvalley, kicker: "And There's More", title: "One Piece: God Valley Arc", date: "2027" },
+      { t: "anime.closer", img: A.kagurabachi, kicker: "Our take", title: "I can't wait for 2027", sub: "It looks amazing for anime. Which one are you most hyped for?", handle: HANDLE },
+    ],
+  },
   {
     id: "xbox-gamepass-news",
     title: "PENDING DRAFT — Xbox exclusives vs Game Pass (News, Hype Mode)",

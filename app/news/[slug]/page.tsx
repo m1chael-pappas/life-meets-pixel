@@ -82,15 +82,19 @@ const portableTextComponents: PortableTextComponents = {
   types: {
     image: ({ value }) => {
       if (!value?.asset) return null;
-      const imageUrl = urlFor(value)?.width(800).url();
+      // Request at 2x display width in a modern format so body images stay
+      // crisp on retina. The source asset must be at least this wide or Sanity
+      // upscales it (the usual cause of soft body images).
+      const imageUrl = urlFor(value)?.width(1600).quality(82).auto("format").url();
       if (!imageUrl) return null;
       return (
         <figure style={{ margin: "24px 0" }}>
           <Image
             src={imageUrl}
             alt={value.alt || value.caption || "News image"}
-            width={800}
-            height={450}
+            width={1600}
+            height={900}
+            sizes="(max-width: 768px) 100vw, 720px"
             style={{ width: "100%", height: "auto" }}
           />
           {value.caption && (
