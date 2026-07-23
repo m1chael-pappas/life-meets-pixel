@@ -12,6 +12,13 @@
     { "name": "IGN",                "url": "https://feeds.ign.com/ign/all",                 "focus": "Mainstream gaming + entertainment", "webfetchBlocked": true },
     { "name": "The Verge Gaming",   "url": "https://www.theverge.com/rss/gaming/index.xml", "focus": "Gaming x tech industry", "webfetchBlocked": true }
   ],
+  "anime": [
+    { "name": "Anime News Network", "url": "https://www.animenewsnetwork.com/news/rss.xml", "focus": "Anime + manga industry news of record: adaptations, licensing, staff, air dates" },
+    { "name": "LiveChart",          "url": "https://www.livechart.me/feeds/headlines",      "focus": "Air dates, key visuals, trailers, seasonal chart changes" },
+    { "name": "MyAnimeList News",   "url": "https://myanimelist.net/rss/news.xml",          "focus": "Adaptation announcements + manga launches, community-facing" },
+    { "name": "Anime Corner",       "url": "https://animecorner.me/feed/",                  "focus": "Interviews, seasonal rankings, studio features" },
+    { "name": "Kodansha US",        "url": "https://kodansha.us/feed",                      "focus": "Manga licensing + English release schedule" }
+  ],
   "publishers": [
     { "name": "PlayStation Blog", "url": "https://blog.playstation.com/feed/", "focus": "Sony first-party + PS platform news" },
     { "name": "Xbox Wire",        "url": "https://news.xbox.com/en-us/feed/",  "focus": "Xbox platform + Game Pass + Bethesda" }
@@ -19,9 +26,24 @@
   "youtube": [
     { "_note": "YouTube channels expose RSS via https://www.youtube.com/feeds/videos.xml?channel_id=CHANNEL_ID. Add channels you follow. Leave empty to skip YouTube." }
   ],
+  "_upcoming": {
+    "_note": "Read by /preview-radar only, NOT by /news-radar or the /api/radar cron. These are release-calendar and wishlist surfaces, not news feeds: they answer 'what is coming' rather than 'what happened'. Steam pages are HTML, not RSS, so WebFetch them with an extraction prompt.",
+    "calendars": [
+      { "name": "Steam Upcoming",        "url": "https://store.steampowered.com/explore/upcoming/",             "type": "html", "focus": "Near-term releases, next ~2 weeks, ordered by date" },
+      { "name": "Steam Top Wishlisted",  "url": "https://store.steampowered.com/search/?filter=popularwishlist", "type": "html", "focus": "Anticipation ranking: the single best signal for what players actually want" },
+      { "name": "Steam Popular Upcoming","url": "https://store.steampowered.com/search/?filter=popularcomingsoon","type": "html", "focus": "Dated upcoming releases sorted by wishlist volume" },
+      { "name": "Steam Next Fest",       "url": "https://store.steampowered.com/sale/nextfest",                  "type": "html", "focus": "Demo festival: the richest source of playable indie previews. Only live during fest windows." }
+    ],
+    "anime_calendars": [
+      { "name": "LiveChart Upcoming",  "url": "https://www.livechart.me/schedule",                    "type": "html", "focus": "Season-by-season anime premiere chart with air dates" },
+      { "name": "ANN Upcoming Anime",  "url": "https://www.animenewsnetwork.com/encyclopedia/anime-season.php", "type": "html", "focus": "Seasonal encyclopedia listing, studio + staff attached" }
+    ]
+  },
   "_http_errors": [
-    { "name": "GameSpot",      "url": "https://www.gamespot.com/feeds/mashup/", "status": 403 },
-    { "name": "Bungie News",   "url": "https://www.bungie.net/News/rss",        "status": 404, "_tip": "URL may have changed; check bungie.net for current feed endpoint" },
-    { "name": "Blizzard News", "url": "https://news.blizzard.com/en-us/rss",    "status": 404, "_tip": "URL may have changed; check news.blizzard.com footer for RSS" }
+    { "name": "GameSpot",         "url": "https://www.gamespot.com/feeds/mashup/", "status": 403 },
+    { "name": "Bungie News",      "url": "https://www.bungie.net/News/rss",        "status": 404, "_tip": "URL may have changed; check bungie.net for current feed endpoint" },
+    { "name": "Blizzard News",    "url": "https://news.blizzard.com/en-us/rss",    "status": 404, "_tip": "URL may have changed; check news.blizzard.com footer for RSS" },
+    { "name": "Crunchyroll News", "url": "https://www.crunchyroll.com/newsrss",    "status": 404, "_tip": "Checked 2026-07-20: /newsrss 404s and /news/rss returns the SPA shell, not XML. Crunchyroll appears to have dropped RSS entirely. LiveChart covers the same beat." },
+    { "name": "Otaku USA",        "url": "https://otakuusamagazine.com/feed/",     "status": 200, "_tip": "Feed is valid but stale: newest item as of 2026-07-20 was Sept 2025. Site appears dormant. Re-check before adding." }
   ]
 }
