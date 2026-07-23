@@ -18,7 +18,33 @@ interface Deck {
   slides: SlidePayload[];
 }
 
+// Real official art from Xbox Wire, not placeholders: this deck is the actual
+// pending draft, kept here so the carousel can be approved before it is queued.
+const EDAY_HERO =
+  "https://xboxwire.thesourcemediaassets.com/sites/2/2026/06/01_GoW_EDAY_StoryofEmergence_Final-c7235a47ba80efb87247-1900x1080.jpg";
+const EDAY_SQUAD =
+  "https://xboxwire.thesourcemediaassets.com/sites/2/2026/06/02_GoW_EDAY_BravoSquad_Final-a32885de01b5813c980f-1900x1080.jpg";
+const EDAY_UE5 =
+  "https://xboxwire.thesourcemediaassets.com/sites/2/2026/06/08_GoW_EDAY_RebuiltUE5_Final-f85777f17d384c17e3a3-1900x1080.jpg";
+
 const DECKS: Deck[] = [
+  {
+    id: "xbox-gamepass-news",
+    title: "PENDING DRAFT — Xbox exclusives vs Game Pass (News, Hype Mode)",
+    note: "The live candidate for the unpublished draft. Real Xbox Wire art, real copy. Approve or send back before this gets queued.",
+    slides: [
+      { t: "hype.hook", img: EDAY_HERO, kicker: "Gaming News", kickerPill: true, title: "Xbox wants exclusives back. Its own studios want off Game Pass.", cue: "both things are true" },
+      { t: "hype.bullets", img: EDAY_SQUAD, heading: "What Xbox said", items: [
+        "Gears of War: E-Day and Clockwork Revolution are permanent exclusives",
+        "Not timed, and not the last, says strategy chief Matthew Ball",
+        "Large live service games still go multiplatform",
+        "Halo and Fable still ship to PS5 anyway",
+      ] },
+      { t: "hype.fact", img: EDAY_UE5, heading: "The other half", body: "Bloomberg's Jason Schreier says plenty of Xbox studio leadership \"absolutely detest\" Game Pass and think it destroyed the value of their games." },
+      { t: "hype.date", label: "E-DAY LAUNCHES", big: "OCT 6", chips: ["Xbox", "PC", "Day one on Game Pass"], img: EDAY_HERO },
+      { t: "hype.cta", title: "When did you last PAY for an Xbox game?", sub: "Be honest. Your answer is the entire argument happening inside Xbox right now.", button: "💬 Say the year", handle: HANDLE },
+    ],
+  },
   {
     id: "review-grid",
     title: "Review — Grid Match (1a)",

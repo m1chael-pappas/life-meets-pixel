@@ -18,7 +18,7 @@ export type SlidePayload =
   | { t: 'hype.hook'; img: string; kicker: string; title: string; cue: string; kickerPill?: boolean; fit?: 'contain' }
   | { t: 'hype.fact'; img: string; heading: string; body: string; fit?: 'contain' }
   | { t: 'hype.bullets'; img: string; heading: string; items: string[]; fit?: 'contain' }
-  | { t: 'hype.date'; label: string; big: string; chips: string[] }
+  | { t: 'hype.date'; label: string; big: string; chips: string[]; img?: string }
   | { t: 'hype.score'; kicker: string; big: string; button: string }
   | { t: 'hype.cta'; title: string; sub: string; button: string; handle?: string }
   // zine family
@@ -151,11 +151,16 @@ function body(slide: SlidePayload): string {
   </div>
 </div>`;
     case 'hype.date':
-      return `<div style="width:${W}px;height:${H}px;background:#7c5cff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:40px">
-  <div style="color:rgba(255,255,255,.75);font-weight:700;font-size:30px;letter-spacing:.14em">${esc(slide.label)}</div>
-  <div style="color:#fff;font-family:${PSTART};font-size:110px;line-height:1.3;text-align:center">${esc(slide.big)}</div>
-  <div style="display:flex;gap:20px">
-    ${slide.chips.map((chip) => `<div style="border:3px solid #fff;color:#fff;font-weight:700;font-size:30px;padding:14px 34px;border-radius:12px">${esc(chip)}</div>`).join('\n')}
+      // Optional img: blurred, darkened key art behind the purple, so the date
+      // card carries the game's colour instead of reading as a flat slab.
+      return `<div style="width:${W}px;height:${H}px;position:relative;overflow:hidden;background:#7c5cff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:40px">
+  ${slide.img ? `<div style="position:absolute;inset:-40px;background-image:url(&quot;${escAttr(slide.img)}&quot;);background-size:cover;background-position:center;filter:blur(15px) contrast(1.1);mix-blend-mode:luminosity;opacity:.9"></div>
+  <div style="position:absolute;inset:0;background:linear-gradient(165deg,rgba(140,110,255,.42) 0%,rgba(108,72,240,.30) 50%,rgba(38,20,92,.55) 100%)"></div>
+  <div style="position:absolute;inset:0;background:radial-gradient(ellipse at 50% 47%,rgba(18,10,44,0) 30%,rgba(16,9,40,.62) 82%)"></div>` : ''}
+  <div style="position:relative;color:rgba(255,255,255,.8);font-weight:700;font-size:30px;letter-spacing:.14em">${esc(slide.label)}</div>
+  <div style="position:relative;color:#fff;font-family:${PSTART};font-size:110px;line-height:1.3;text-align:center;text-shadow:0 6px 34px rgba(10,6,26,.75)">${esc(slide.big)}</div>
+  <div style="position:relative;display:flex;gap:20px">
+    ${slide.chips.map((chip) => `<div style="border:3px solid #fff;color:#fff;font-weight:700;font-size:30px;padding:14px 34px;border-radius:12px;background:rgba(16,10,34,.30)">${esc(chip)}</div>`).join('\n')}
   </div>
 </div>`;
     case 'hype.score':
