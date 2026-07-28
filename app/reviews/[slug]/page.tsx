@@ -24,6 +24,7 @@ import {
   fetchOptions,
   RELATED_REVIEWS_QUERY,
   REVIEW_QUERY,
+  REVIEW_SLUGS_QUERY,
 } from "@/lib/queries";
 import type { Category, Genre, Platform, Review, Tag } from "@/lib/types";
 import type { PortableTextBlock } from "@portabletext/types";
@@ -36,6 +37,13 @@ const urlFor = (source: SanityImageSource) =>
   projectId && dataset
     ? imageUrlBuilder({ projectId, dataset }).image(source)
     : null;
+
+// Prerender every review so the route is served from the full route cache
+// instead of `Cache-Control: no-store`, which blocks the back/forward cache.
+export async function generateStaticParams() {
+  const reviews = await client.fetch<Array<{ slug: string }>>(REVIEW_SLUGS_QUERY);
+  return reviews.map(({ slug }) => ({ slug }));
+}
 
 export async function generateMetadata({
   params,

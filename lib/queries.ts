@@ -676,4 +676,18 @@ export const COMMENT_TARGET_QUERY = `*[_id == $id][0]{
   "slug": slug.current
 }`;
 
+// Slug lists for generateStaticParams. Without these, every article renders on
+// demand and Next serves `Cache-Control: no-store`, which disqualifies the page
+// from the browser's back/forward cache: hitting Back re-fetches and re-renders
+// instead of restoring instantly. Prerendering the articles fixes that and lets
+// the full route cache do its job. New slugs published after a build are still
+// served (dynamicParams defaults to true) and picked up by the Sanity webhook.
+export const REVIEW_SLUGS_QUERY = `*[_type == "review" && defined(slug.current)]{
+  "slug": slug.current
+}`;
+
+export const NEWS_SLUGS_QUERY = `*[_type == "newsPost" && defined(slug.current)]{
+  "slug": slug.current
+}`;
+
 export const fetchOptions = { next: { revalidate: 30 } };

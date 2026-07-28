@@ -14,6 +14,7 @@ import { authorInitial, authorLevel } from "@/lib/mappings";
 import {
   fetchOptions,
   NEWS_POST_QUERY,
+  NEWS_SLUGS_QUERY,
   RELATED_NEWS_QUERY,
 } from "@/lib/queries";
 import type { Category, NewsPost } from "@/lib/types";
@@ -29,6 +30,13 @@ const urlFor = (source: SanityImageSource) =>
 
 interface NewsPostPageProps {
   params: Promise<{ slug: string }>;
+}
+
+// Prerender every article so the route is served from the full route cache
+// instead of `Cache-Control: no-store`, which blocks the back/forward cache.
+export async function generateStaticParams() {
+  const posts = await client.fetch<Array<{ slug: string }>>(NEWS_SLUGS_QUERY);
+  return posts.map(({ slug }) => ({ slug }));
 }
 
 export async function generateMetadata({ params }: NewsPostPageProps): Promise<Metadata> {
