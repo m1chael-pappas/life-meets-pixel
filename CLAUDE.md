@@ -29,6 +29,26 @@ Any decision, convention, performance finding, or gotcha discovered during a ses
 - **Studio (`studio/`) is React 18 + Sanity 3.99.** Frontend is React 19. Don't try to unify.
 - **No tag-based `revalidateTag` here.** This site is CMS-driven — Sanity webhook → `revalidatePath`. Don't retrofit tag-based invalidation without a concrete reason.
 
+## Article media, non-negotiable
+
+**A text-only draft is not a deliverable.** Never hand over a `newsPost` or `review` draft without all three:
+
+1. **Featured image** — real promo art, press-kit still, key art or Steam capsule. Download it and actually *look* at it (`Read` the file) before attaching. Outlet `og:image` tags are sometimes memes or collages.
+2. **At least 2 inline body images**, spread through the sections, each with a required `alt` *and* a `caption` crediting the source ("Screenshot via Steam / BioWare", "Still via Sony Pictures").
+3. **A `videoEmbed` of the official trailer** under a closing `h2` ("Watch the trailer"), whenever one exists.
+
+**Verify the video's channel before embedding.** `curl -sL "https://www.youtube.com/watch?v=<id>" | grep -oE '"author":"[^"]*"'` and confirm it is the studio/publisher's own account. Fan reuploads and outlet reuploads (IGN, Entertainment Tonight) don't go on the site.
+
+**No AI-generated images, ever.** Real existing art only.
+
+Useful sources: the primary source article's `og:image`; publisher newsrooms (`cdn.marvel.com`, `blog.playstation.com`); Steam official screenshots via `https://store.steampowered.com/api/appdetails?appids=<id>`; Steam art at `https://cdn.cloudflare.steamstatic.com/steam/apps/<id>/library_hero.jpg`.
+
+Upload with `@sanity/client` `assets.upload('image', stream, {filename})`, then patch `featuredImage` / splice the image block into `content`.
+
+## Social assets
+
+Any carousel or reel is **rendered and sent to Telegram for review** before it counts as done. Don't describe it, don't leave PNGs in a scratchpad. Render the real slides through `/social-template` (the same route the pipeline screenshots) so what Michael approves is what ships, then `sendMediaGroup` to the bot. Posting to Instagram/Facebook still needs his explicit go for that specific item.
+
 ## Sanity MCP
 
 Register the hosted Sanity MCP server once per machine (OAuth — no token needed):

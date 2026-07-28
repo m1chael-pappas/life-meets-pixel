@@ -46,3 +46,5 @@ next-env.d.ts
 /studio/node_modules
 /studio/dist
 /studio/.sanity
+# scratch media for reel/carousel builds (not source)
+New folder/
