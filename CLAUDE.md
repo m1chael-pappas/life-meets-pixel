@@ -41,9 +41,22 @@ Any decision, convention, performance finding, or gotcha discovered during a ses
 
 **No AI-generated images, ever.** Real existing art only.
 
+**Never reuse an image across articles**, and **the photo must depict what its section is actually about**. A Spider-Man still under a heading called "The X-Men question" is not acceptable, however well the body text connects them: find Cyclops, a Sentinel, the mutant teaser. Same per carousel slide, four content slides need four distinct on-topic images, not two alternating. Reject anything with another outlet's watermark burned in (io9/Gizmodo badges, IGN bugs). Check `file <img>` for embedded EXIF, press stills often carry a "Photo courtesy of Marvel" description that confirms provenance.
+
 Useful sources: the primary source article's `og:image`; publisher newsrooms (`cdn.marvel.com`, `blog.playstation.com`); Steam official screenshots via `https://store.steampowered.com/api/appdetails?appids=<id>`; Steam art at `https://cdn.cloudflare.steamstatic.com/steam/apps/<id>/library_hero.jpg`.
 
 Upload with `@sanity/client` `assets.upload('image', stream, {filename})`, then patch `featuredImage` / splice the image block into `content`.
+
+## Social copy: keywords, never hashtags
+
+**Never put a hashtag in a caption. Not one, on any platform.** Instagram ranks captions on search keywords now, so a hashtag block does nothing but read as spam. Instead work the searchable terms into natural sentences and front-load the strongest keyword phrase in the first line:
+
+- Bad: `Marvel dropped the slate. #LifeMeetsPixel #Marvel #MCU #ComicCon`
+- Good: `The Avengers: Doomsday slate after San Diego Comic-Con 2026 is four Marvel movies in three years.`
+
+Searchable terms worth weaving in: title, studio/publisher, platform, genre, year, event name. This applies to the `igCaption` and `fbMessage` in `lib/social.ts`, and to the social pack in `.claude/commands/draft-news.md` and `draft-review.md`. Keep all four in sync.
+
+The CTA in an Instagram caption is always "link in bio". Never a raw URL (not clickable, and IG demotes it). Facebook links are clickable, so the full URL goes there.
 
 ## Social assets
 

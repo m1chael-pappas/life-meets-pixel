@@ -120,11 +120,11 @@ const COPY_SCHEMA = {
     },
     igCaption: {
       type: 'string',
-      description: 'Instagram caption. Front-load search keywords in the first line. NEVER include a raw URL: say "Full story: link in bio". If tagHandles are provided, weave the @mentions in naturally (e.g. "from @studio"). End with the comment-bait question, then 4-6 tasteful hashtags (always include #LifeMeetsPixel). Max 2000 chars.',
+      description: 'Instagram caption. NO HASHTAGS, ever, not even one: Instagram ranks captions on search keywords now and a hashtag block reads as spam. Instead write naturally and work the searchable terms (title, studio, platform, genre, year) into real sentences, front-loading the strongest keyword phrase in the first line. NEVER include a raw URL: say "Full story: link in bio". If tagHandles are provided, weave the @mentions in naturally (e.g. "from @studio"). End with the comment-bait question. Max 2000 chars.',
     },
     fbMessage: {
       type: 'string',
-      description: 'Facebook post text: hook + full article link (links ARE clickable on Facebook), max 300 chars, no hashtag spam.',
+      description: 'Facebook post text: hook + full article link (links ARE clickable on Facebook), max 300 chars. No hashtags at all.',
     },
   },
   required: [
@@ -275,7 +275,7 @@ async function generateCopy(
     model: 'claude-sonnet-5',
     max_tokens: 4000,
     thinking: { type: 'adaptive' },
-    system: `You write social media copy for Life Meets Pixel, a retro-gaming geek-culture site run by Michael (Sydney, programmer, lifelong gamer). Voice: punchy, honest, lightly skeptical, no hype, Australian English. NEVER use em dashes (U+2014). Hashtags tasteful, 4-6 max. Only @mention the handles provided in tagHandles; never invent a handle.`,
+    system: `You write social media copy for Life Meets Pixel, a retro-gaming geek-culture site run by Michael (Sydney, programmer, lifelong gamer). Voice: punchy, honest, lightly skeptical, no hype, Australian English. NEVER use em dashes (U+2014). NEVER use hashtags on any platform: write searchable keywords into natural sentences instead. Only @mention the handles provided in tagHandles; never invent a handle.`,
     output_config: { format: { type: 'json_schema', schema: COPY_SCHEMA } },
     messages: [
       {

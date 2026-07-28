@@ -162,7 +162,7 @@ Link           : lifemeetspixel.com/news/<slug>
 Type           : NEWS | PREVIEW | BREAKING
 
 , Instagram post caption (≤2200 chars) ,
-<catchy opener, front-loaded with search keywords>
+<opener, front-loaded with the strongest search keyword phrase, written as a real sentence>
 
 <2-sentence hook with a key fact, weaving in @mentions from tagHandles if any>
 
@@ -170,7 +170,6 @@ Full story: link in bio
 
 <closing comment-bait question, ≤80 chars>
 
-#LifeMeetsPixel #GamingNews #<SubjectHashtag> #<PublisherHashtag>
 
 , Fact slides (2-3 lines, one concrete fact each, ≤140 chars, for the carousel middles) ,
 <fact 1>
@@ -185,7 +184,7 @@ Full story: link in bio
 ═════════════════════════════════════════════════
 ```
 
-Keep hashtags tasteful: 4-6 max. No hashtag spam. NEVER put a raw URL in the IG caption (not clickable, and IG demotes it): the CTA is always "link in bio". Instagram posts go out as CAROUSELS (hook card → key art → fact slides → CTA card) via the queued pipeline; approving a story books the next free 08:00/18:00 Sydney slot rather than posting immediately.
+**NEVER use hashtags. Not one, on any platform.** Instagram ranks captions on search keywords now, and a hashtag block reads as spam. Work the searchable terms (title, studio, platform, genre, year) into natural sentences instead, strongest phrase first. NEVER put a raw URL in the IG caption (not clickable, and IG demotes it): the CTA is always "link in bio". Instagram posts go out as CAROUSELS (hook card → key art → fact slides → CTA card) via the queued pipeline; approving a story books the next free 08:00/18:00 Sydney slot rather than posting immediately.
 
 ## News vs Preview, when to set what
 
