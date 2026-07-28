@@ -86,9 +86,11 @@ Blurred fill behind, gameplay centred, text above and below:
 [0:v]split=2[bg][fg];
 [bg]scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920,
     gblur=sigma=40,eq=brightness=-0.30:saturation=1.15[bgb];
-[fg]scale=1080:-2[fgs];
+[fg]scale=1500:-2,crop=1080:844[fgs];
 [bgb][fgs]overlay=x=0:y=(H-h)/2,format=yuv420p,setsar=1[vv]
 ```
+
+**The gameplay block is 844px tall. Do not ship 607.** 16:9 at 1080 wide is only 607 tall, so the height only grows by zooming: scale to 1500 wide, then centre-crop back to 1080. `scale=1080:-2` gives the old, too-small block and gets rejected on review every time.
 
 ### Text rules
 
@@ -100,17 +102,24 @@ Press Start 2P advances roughly **one character per point of size**, so width �
 |---|---|---|
 | Hook lines (beat 1) | 70 | ~10 |
 | Headline lines | 50 | ~16 |
-| Lower line | 36 | ~25 |
-| End CTA | 50 | ~18 |
+| Lower line (`Sub`) | 50 | ~21 |
+| End CTA | 54 | ~20 |
 | Score number | 96 | short |
+
+These sizes are settled. `Sub` was raised 36 -> 50 and `Cta` 50 -> 54 because the lower line was unreadable on a phone. Do not lower them to make longer copy fit.
+
+**The lower line is top-anchored with `\an8` at a single shared `LOW_Y` (1450).** The styles are `Alignment=5` (middle-centre), which centres a text block on its `\pos()`, so a 2- or 3-line lower line pushes its first line *upward* and visibly stops matching the single-line beats. The platform beat and the end CTA are the two that always have extra lines, so they are the two that always drifted. Top-anchoring pins every beat's first line to the same y regardless of line count. **Do not override `low_y` per beat**, or they stop aligning again.
 
 ### Beat structure
 
-1. **Hook** — a claim, not a title card. `CHECK THIS` / `NEW GEM!` / `<TITLE>`. Gets `\fad(0,200)` so it is **fully drawn on frame 0** and works as a thumbnail. Never apply `fade=t=in` to the video.
-2-5. **Body beats**, ~3.8s each: premise, mechanic, variety, then the honest caveat.
-6. **Close** — `OUR SCORE:` above the big number, then the CTA.
+1. **Hook** — a claim, not a title card. `CHECK THIS` / `NEW GEM!`. Gets `\fad(0,200)` so it is **fully drawn on frame 0** and works as a thumbnail. Never apply `fade=t=in` to the video.
+2-5. **Body beats**: premise, mechanic, variety, then a payoff beat.
+6. **Title beat** — the game's name, near the end.
+7. **Close** — `OUR SCORE:` above the big number, then the CTA.
 
-Frame the caveat as a tease that resolves ("rough for a few hours / but it gets better / as you evolve"), never a flat negative. It must still match the review's real criticism.
+**The game's name goes at the END, never in the opening beat.** The hook sells the claim; the title lands once the viewer is already watching. Put release/platform status ("1.0 out now on steam / and nintendo switch") with the title beat.
+
+**The beat-5 slot is a payoff, not an obligatory negative.** Do not manufacture a caveat for every review. "Your time will evaporate" is a perfectly good beat 5. Only include a criticism when the review genuinely leads with one, and even then frame it as a tease that resolves, never a flat negative.
 
 The end CTA gets its own large treatment, three stacked lines at ~50px:
 

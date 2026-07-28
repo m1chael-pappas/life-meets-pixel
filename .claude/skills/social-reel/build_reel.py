@@ -37,6 +37,11 @@ START, TOTAL = 57.0, 23.0
 SITE = "lifemeetspixel.com"
 TITLE = "PATHOGENIC"
 SCORE = "8.2 / 10"
+
+# Top edge of the lower text block, shared by EVERY beat. The gameplay block is
+# 844px centred, so it ends at y=1382; the brand mark sits at 1792. Keep one
+# value here and do not override low_y per beat, or the beats stop aligning.
+LOW_Y = 1450
 BEATS = [
     # hook: \fad(0,...) via no_fade_in so it is fully drawn on frame 0
     dict(t0=0.0,  t1=3.8,  l1="CHECK THIS", l2="NEW GEM!",
@@ -50,11 +55,11 @@ BEATS = [
          low="no two runs the same"),
     # frame the flaw as a tease that resolves, never a flat negative
     dict(t0=15.2, t1=19.0, l1="THE CATCH?",  l2="THAT STAMINA BAR",
-         low="rough for a few hours\\Nbut it gets better\\Nas you evolve", low_y=1430),
+         low="rough for a few hours\\Nbut it gets better\\Nas you evolve"),
     # big pixel CTA: the URL is the conversion moment, so it gets its own size
     dict(t0=19.0, t1=TOTAL, l1="OUR SCORE:", l2=SCORE, l2_fs=96, l2_y=418,
          low=f"READ OUR FULL\\NREVIEW ON:\\N{{\\c&H6BFF6B&}}{SITE}",
-         low_style="Cta", low_y=1440),
+         low_style="Cta"),
 ]
 # ------------------------------------------------------------ end configure --
 
@@ -112,8 +117,8 @@ Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour,
 Style: Head,Press Start 2P,50,&H00FFFFFF,&H000000FF,&H00000000,&H00000000,0,0,0,0,100,100,0,0,1,6,3,5,0,0,0,1
 Style: Accent,Press Start 2P,50,&H006BFF6B,&H000000FF,&H00000000,&H00000000,0,0,0,0,100,100,0,0,1,6,3,5,0,0,0,1
 Style: Title,Press Start 2P,62,&H00FFFFFF,&H000000FF,&H00000000,&H00000000,0,0,0,0,100,100,0,0,1,7,4,5,0,0,0,1
-Style: Sub,Press Start 2P,36,&H00FFFFFF,&H000000FF,&H00000000,&H00000000,0,0,0,0,100,100,0,0,1,6,3,5,0,0,0,1
-Style: Cta,Press Start 2P,50,&H00FFFFFF,&H000000FF,&H00000000,&H00000000,0,0,0,0,100,100,0,0,1,7,4,5,0,0,0,1
+Style: Sub,Press Start 2P,50,&H00FFFFFF,&H000000FF,&H00000000,&H00000000,0,0,0,0,100,100,0,0,1,6,3,5,0,0,0,1
+Style: Cta,Press Start 2P,54,&H00FFFFFF,&H000000FF,&H00000000,&H00000000,0,0,0,0,100,100,0,0,1,7,4,5,0,0,0,1
 Style: Brand,Press Start 2P,20,&H50FFFFFF,&H000000FF,&H90000000,&H00000000,0,0,0,0,100,100,0,0,1,4,0,5,0,0,0,1
 
 [Events]
@@ -128,8 +133,12 @@ for b in BEATS:
     y1, y2 = b.get("l1_y", 322), b.get("l2_y", 402)
     lines.append(f"Dialogue: 0,{ts(b['t0'])},{ts(b['t1'])},Head,,0,0,0,,{fade}{{\\pos(540,{y1})}}{o1}{b['l1']}")
     lines.append(f"Dialogue: 0,{ts(b['t0'])},{ts(b['t1'])},Accent,,0,0,0,,{fade}{{\\pos(540,{y2})}}{o2}{b['l2']}")
+    # \an8 = TOP-centre anchor. The styles are Alignment=5 (middle-centre), which
+    # centres a block on low_y, so a 2- or 3-line lower line drifts its first line
+    # upward and stops matching the single-line beats. Top-anchoring pins every
+    # beat's first line to the same y regardless of how many lines it has.
     lines.append(f"Dialogue: 0,{ts(b['t0'])},{ts(b['t1'])},{b.get('low_style','Sub')},,0,0,0,,"
-                 f"{fade}{{\\pos(540,{b.get('low_y', 1412)})}}{b['low']}")
+                 f"{fade}{{\\an8}}{{\\pos(540,{b.get('low_y', LOW_Y)})}}{b['low']}")
 lines.append(f"Dialogue: 0,{ts(0)},{ts(TOTAL)},Brand,,0,0,0,,{{\\pos(540,1792)}}LIFE MEETS PIXEL")
 open(ASS, "w", encoding="utf-8").write(header + "\n".join(lines) + "\n")
 
@@ -149,7 +158,9 @@ vf = (
     "[0:v]split=2[bg][fg];"
     "[bg]scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920,"
     "gblur=sigma=40,eq=brightness=-0.30:saturation=1.15[bgb];"
-    "[fg]scale=1080:-2[fgs];"
+    # Gameplay block is 844px tall, NOT 607. 16:9 at 1080 wide is only 607 tall,
+    # so height only grows by zooming: scale to 1500 wide, then centre-crop to 1080.
+    "[fg]scale=1500:-2,crop=1080:844[fgs];"
     "[bgb][fgs]overlay=x=0:y=(H-h)/2,format=yuv420p,setsar=1[vv];"
     f"[vv]ass='{ASS}':fontsdir='{D}',fade=t=out:st={TOTAL-0.6}:d=0.6[vout];"
     # single take: music runs unbroken, only a tail fade
