@@ -29,6 +29,39 @@ Any decision, convention, performance finding, or gotcha discovered during a ses
 - **Studio (`studio/`) is React 18 + Sanity 3.99.** Frontend is React 19. Don't try to unify.
 - **No tag-based `revalidateTag` here.** This site is CMS-driven — Sanity webhook → `revalidatePath`. Don't retrofit tag-based invalidation without a concrete reason.
 
+## Article media, non-negotiable
+
+**A text-only draft is not a deliverable.** Never hand over a `newsPost` or `review` draft without all three:
+
+1. **Featured image** — real promo art, press-kit still, key art or Steam capsule. Download it and actually *look* at it (`Read` the file) before attaching. Outlet `og:image` tags are sometimes memes or collages.
+2. **At least 2 inline body images**, spread through the sections, each with a required `alt` *and* a `caption` crediting the source ("Screenshot via Steam / BioWare", "Still via Sony Pictures").
+3. **A `videoEmbed` of the official trailer** under a closing `h2` ("Watch the trailer"), whenever one exists.
+
+**Verify the video's channel before embedding.** `curl -sL "https://www.youtube.com/watch?v=<id>" | grep -oE '"author":"[^"]*"'` and confirm it is the studio/publisher's own account. Fan reuploads and outlet reuploads (IGN, Entertainment Tonight) don't go on the site.
+
+**No AI-generated images, ever.** Real existing art only.
+
+**Never reuse an image across articles**, and **the photo must depict what its section is actually about**. A Spider-Man still under a heading called "The X-Men question" is not acceptable, however well the body text connects them: find Cyclops, a Sentinel, the mutant teaser. Same per carousel slide, four content slides need four distinct on-topic images, not two alternating. Reject anything with another outlet's watermark burned in (io9/Gizmodo badges, IGN bugs). Check `file <img>` for embedded EXIF, press stills often carry a "Photo courtesy of Marvel" description that confirms provenance.
+
+Useful sources: the primary source article's `og:image`; publisher newsrooms (`cdn.marvel.com`, `blog.playstation.com`); Steam official screenshots via `https://store.steampowered.com/api/appdetails?appids=<id>`; Steam art at `https://cdn.cloudflare.steamstatic.com/steam/apps/<id>/library_hero.jpg`.
+
+Upload with `@sanity/client` `assets.upload('image', stream, {filename})`, then patch `featuredImage` / splice the image block into `content`.
+
+## Social copy: keywords, never hashtags
+
+**Never put a hashtag in a caption. Not one, on any platform.** Instagram ranks captions on search keywords now, so a hashtag block does nothing but read as spam. Instead work the searchable terms into natural sentences and front-load the strongest keyword phrase in the first line:
+
+- Bad: `Marvel dropped the slate. #LifeMeetsPixel #Marvel #MCU #ComicCon`
+- Good: `The Avengers: Doomsday slate after San Diego Comic-Con 2026 is four Marvel movies in three years.`
+
+Searchable terms worth weaving in: title, studio/publisher, platform, genre, year, event name. This applies to the `igCaption` and `fbMessage` in `lib/social.ts`, and to the social pack in `.claude/commands/draft-news.md` and `draft-review.md`. Keep all four in sync.
+
+The CTA in an Instagram caption is always "link in bio". Never a raw URL (not clickable, and IG demotes it). Facebook links are clickable, so the full URL goes there.
+
+## Social assets
+
+Any carousel or reel is **rendered and sent to Telegram for review** before it counts as done. Don't describe it, don't leave PNGs in a scratchpad. Render the real slides through `/social-template` (the same route the pipeline screenshots) so what Michael approves is what ships, then `sendMediaGroup` to the bot. Posting to Instagram/Facebook still needs his explicit go for that specific item.
+
 ## Sanity MCP
 
 Register the hosted Sanity MCP server once per machine (OAuth — no token needed):
@@ -56,6 +89,12 @@ REVALIDATE_SECRET=...                # gates /api/revalidate webhook
 # with membership disabled and no auth UI renders)
 NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_...
 CLERK_SECRET_KEY=sk_...
+CLERK_WEBHOOK_SIGNING_SECRET=whsec_...  # gates /api/clerk; without it that route 404s
+                                        # Clerk dashboard > Webhooks > Add Endpoint
+                                        # https://lifemeetspixel.com/api/clerk
+                                        # events: user.created, user.deleted,
+                                        # subscriptionItem.active/.canceled/.pastDue/
+                                        # .freeTrialEnding  → pings Telegram
 
 # Google AdSense (optional — without these no ad slots render; ad_free members
 # never load the AdSense script at all)

@@ -244,7 +244,6 @@ Score: X.X/10
 
 Full review: lifemeetspixel.com/reviews/<slug>
 
-#LifeMeetsPixel #<ItemTypeHashtag> #<SubjectHashtag> #Review
 
 — Instagram story tagline (one line, ≤60 chars) —
 <punchy one-liner>
@@ -255,7 +254,7 @@ Full review: lifemeetspixel.com/reviews/<slug>
 ═════════════════════════════════════════════════
 ```
 
-Keep hashtags tasteful: 4-6 max, mix of brand + category + subject. No hashtag spam.
+**NEVER use hashtags. Not one, on any platform.** Instagram ranks captions on search keywords now, and a hashtag block reads as spam. Work the searchable terms (title, itemType, studio/publisher, platform, genre, year) into natural sentences instead, strongest phrase first.
 
 ## Guardrails
 
