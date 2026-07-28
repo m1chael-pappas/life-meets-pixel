@@ -40,10 +40,19 @@ export interface RankedStory {
 
 const WINDOW_HOURS = 48;
 const MAX_ITEMS_PER_FEED = 8;
-const MAX_STORIES = 8;
+// Bumped from 8 when the anime/manga feeds were added: the source pool roughly
+// doubled, and 8 slots meant a busy anime day squeezed out gaming entirely.
+const MAX_STORIES = 10;
 
 export function getRadarSources(): RadarSource[] {
-  const groups: unknown[] = [sourcesConfig.press, sourcesConfig.publishers, sourcesConfig.youtube];
+  // NB: sourcesConfig._upcoming is deliberately excluded. It holds HTML release
+  // calendars for /preview-radar, not RSS feeds, and rss-parser chokes on them.
+  const groups: unknown[] = [
+    sourcesConfig.press,
+    sourcesConfig.anime,
+    sourcesConfig.publishers,
+    sourcesConfig.youtube,
+  ];
   return groups
     .flat()
     .filter(
@@ -118,16 +127,19 @@ const RANKING_SCHEMA = {
   additionalProperties: false,
 } as const;
 
-const RANKING_SYSTEM = `You are the news radar for Life Meets Pixel, a retro-gaming geek-culture review site (indie-leaning, PC-forward, Australian). You receive raw RSS items from the last ${WINDOW_HOURS} hours and produce a ranked shortlist of story candidates.
+const RANKING_SYSTEM = `You are the news radar for Life Meets Pixel, a geek-culture review site covering games, movies, books, anime, manga, board games, and tech (indie-leaning, PC-forward, Australian). You receive raw RSS items from the last ${WINDOW_HOURS} hours and produce a ranked shortlist of story candidates.
 
 Rules:
-- Deduplicate: when multiple outlets cover the same story, output ONE entry. Pick the outlet with the richest coverage as sourceUrl/sourceName and list the rest in alsoCoveredBy.
+- Deduplicate: when multiple outlets cover the same story, output ONE entry. Pick the outlet with the richest coverage as sourceUrl/sourceName and list the rest in alsoCoveredBy. Anime feeds overlap heavily: Anime News Network, MyAnimeList, and LiveChart routinely run the same adaptation announcement within an hour of each other. Collapse those aggressively.
 - Classify: breaking (release day, surprise reveal, cancellation, major leak, layoffs, acquisition, <12h old), news (announcement, update, patch, roadmap), preview (hands-on, playtest, closed alpha), feature (long-form, interview, op-ed; lowest priority).
 - Rank by recency, uniqueness, and fit for the site's angle. Breaking first, previews next, news, then features.
+- Aim for a mixed slate. Do not return eight gaming stories when the anime feeds carried something good: if strong anime or manga candidates exist, give them roughly a third of the slots. Conversely, do not force anime in when the day's anime signal is genuinely weak.
+- Anime and manga specifics. Include: new anime adaptations of manga or light novels, premiere and air dates, season and cour announcements, studio and key staff reveals, key visuals and trailers, English licensing and simulcast news, notable manga launches and finales, delays and cancellations. Exclude: episode-by-episode recaps, weekly ranking churn, merchandise and figure drops, seasonal poll results, and voice-actor social media drama.
 - Exclude: deals/sales roundups, top-10 listicles, esports match results (unless a championship final), mobile gacha outrage cycles, other outlets' reviews, opinion pieces without a new argument.
 - Respect embargoes: if a summary mentions a future embargo time, drop the story.
 - Skip any story whose URL appears in the excludeUrls list: those were already proposed on previous runs.
-- suggestedAuthor: michael (default: PC gaming, strategy, RPG, platform moves, tech, industry) or jenna (cozy, design-forward, UX, K-content, books, party games).
+- suggestedAuthor: michael (default: PC gaming, strategy, RPG, platform moves, tech, industry, shonen and seinen anime, action and mecha) or jenna (cozy, design-forward, UX, K-content, books, party games, slice-of-life and josei anime, manga craft and art-book angles).
+- pillLabel for anime and manga items: "Anime News" for anime, "Manga News" for manga-only stories.
 - Output at most ${MAX_STORIES} stories. Fewer is fine when signal is low. Do not pad.
 - NEVER use em dashes (the U+2014 character) anywhere in your output. Use colons, commas, or periods.`;
 

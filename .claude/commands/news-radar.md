@@ -1,9 +1,9 @@
 ---
-description: Scan curated RSS sources for recent gaming news and return a shortlist of story candidates for drafting
-argument-hint: "Optional topic filter (e.g. 'indie strategy', 'nintendo direct', 'bungie'). Omit to scan everything."
+description: Scan curated RSS sources for recent gaming, anime, and manga news and return a shortlist of story candidates for drafting
+argument-hint: "Optional topic filter (e.g. 'indie strategy', 'nintendo direct', 'anime', 'manga licensing'). Omit to scan everything."
 ---
 
-You are a **news radar** for **Life Meets Pixel**. Your job is to scan a curated list of RSS feeds, surface recent gaming stories, deduplicate coverage of the same story across outlets, and return a shortlist Michael can triage for drafting.
+You are a **news radar** for **Life Meets Pixel**. Your job is to scan a curated list of RSS feeds, surface recent gaming, anime, and manga stories, deduplicate coverage of the same story across outlets, and return a shortlist Michael can triage for drafting.
 
 **Topic filter (optional):** $ARGUMENTS
 
@@ -68,7 +68,9 @@ FEED HEALTH
   - Updates / patches / DLC announcements for games we cover.
   - Dev blogs from publishers in the config.
   - Indie showcase highlights.
-  - Industry moves that affect gamers (layoffs, acquisitions, studio closures) — but flag reputational stories with `[SENSITIVE]` prefix on the type tag (e.g. `[BREAKING][SENSITIVE]`).
+  - Industry moves that affect gamers (layoffs, acquisitions, studio closures): flag reputational stories with `[SENSITIVE]` prefix on the type tag (e.g. `[BREAKING][SENSITIVE]`).
+  - **Anime:** new adaptations of manga or light novels, premiere and air dates, season/cour announcements, studio and key staff reveals, key visuals and trailers, English licensing and simulcast pickups, delays and cancellations.
+  - **Manga:** notable series launches and finales, hiatus news, English licensing announcements, print-run and sales milestones that say something about the market.
 
 - **Exclude:**
   - Deals / sales / Humble Bundle / Prime Gaming roundups.
@@ -77,12 +79,13 @@ FEED HEALTH
   - Mobile gacha / microtransaction outrage cycles (too outlet-specific).
   - Reviews by other outlets (we write our own).
   - Opinion pieces unless the argument is genuinely new.
+  - Anime episode recaps, weekly ranking churn, figure and merch drops, seasonal poll results, voice-actor social media drama.
 
 ## Author suggestion
 
 For each story, silently note the likely author if we draft it:
-- **Michael** (default): PC gaming, strategy, RPG, platform moves, tech, industry.
-- **Jenna**: cozy / design-forward / UX / K-content / books / party-game.
+- **Michael** (default): PC gaming, strategy, RPG, platform moves, tech, industry, shonen/seinen anime, action and mecha.
+- **Jenna**: cozy / design-forward / UX / K-content / books / party-game, slice-of-life and josei anime, manga craft and art-book angles.
 
 If all 15 stories suggest Michael, don't note author. If any would suggest Jenna, append `(author: Jenna)` to those lines.
 
@@ -99,12 +102,22 @@ Format:
 ```json
 {
   "press":      [{ "name": "...", "url": "...", "focus": "..." }, ...],
+  "anime":      [{ "name": "...", "url": "...", "focus": "..." }, ...],
   "publishers": [{ "name": "...", "url": "...", "focus": "..." }, ...],
   "youtube":    [{ "name": "...", "url": "...", "channelId": "..." }, ...]
 }
 ```
 
+Scan `press`, `anime`, `publishers`, and `youtube`. **Ignore the `_upcoming` key entirely:** those are HTML release calendars belonging to `/preview-radar`, not news feeds. Also ignore `_http_errors`, which is a record of feeds known to be dead or stale.
+
 If a source has `"channelId"` (YouTube), the URL will be `https://www.youtube.com/feeds/videos.xml?channel_id=<channelId>`.
+
+## Slate balance
+
+The anime feeds are prolific and will happily flood the report if you let them (Anime News Network alone publishes dozens of items a day). Two rules:
+
+- **Dedupe hard across anime outlets.** Anime News Network, MyAnimeList, and LiveChart run the same adaptation announcement within the hour, often with near-identical wording. Collapse them into one entry. ANN usually has the richest body, so it is the default canonical link.
+- **Aim for a mixed slate**, roughly two thirds gaming and one third anime/manga on a normal day. Do not force anime in when the day's anime signal is genuinely weak, and do not let a busy anime news day crowd out gaming.
 
 ## Guardrails
 

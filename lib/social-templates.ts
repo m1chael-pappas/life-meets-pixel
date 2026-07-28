@@ -18,7 +18,7 @@ export type SlidePayload =
   | { t: 'hype.hook'; img: string; kicker: string; title: string; cue: string; kickerPill?: boolean; fit?: 'contain' }
   | { t: 'hype.fact'; img: string; heading: string; body: string; fit?: 'contain' }
   | { t: 'hype.bullets'; img: string; heading: string; items: string[]; fit?: 'contain' }
-  | { t: 'hype.date'; label: string; big: string; chips: string[] }
+  | { t: 'hype.date'; label: string; big: string; chips: string[]; img?: string }
   | { t: 'hype.score'; kicker: string; big: string; button: string }
   | { t: 'hype.cta'; title: string; sub: string; button: string; handle?: string }
   // zine family
@@ -26,7 +26,13 @@ export type SlidePayload =
   | { t: 'zine.summary'; label: string; body: string; quote: string; handle: string }
   | { t: 'zine.stats'; img: string; label: string; cells: { big: string; small: string }[] }
   | { t: 'zine.verdict'; label: string; score: string; blurb: string }
-  | { t: 'zine.save'; label: string; title: string; button: string; foot: string };
+  | { t: 'zine.save'; label: string; title: string; button: string; foot: string }
+  // anime family — the 2027 lineup carousel: 3 titles per card, poster + date,
+  // rows alternate image-left / image-right down the card.
+  | { t: 'anime.trio'; label: string; items: { img: string; title: string; date: string; note?: string }[] }
+  | { t: 'anime.closer'; img: string; kicker: string; title: string; sub: string; handle: string }
+  // one anime per card: full-bleed portrait key art, date + title over a scrim
+  | { t: 'anime.single'; img: string; kicker: string; title: string; date: string; note?: string };
 
 const W = 1080;
 const H = 1350;
@@ -151,11 +157,16 @@ function body(slide: SlidePayload): string {
   </div>
 </div>`;
     case 'hype.date':
-      return `<div style="width:${W}px;height:${H}px;background:#7c5cff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:40px">
-  <div style="color:rgba(255,255,255,.75);font-weight:700;font-size:30px;letter-spacing:.14em">${esc(slide.label)}</div>
-  <div style="color:#fff;font-family:${PSTART};font-size:110px;line-height:1.3;text-align:center">${esc(slide.big)}</div>
-  <div style="display:flex;gap:20px">
-    ${slide.chips.map((chip) => `<div style="border:3px solid #fff;color:#fff;font-weight:700;font-size:30px;padding:14px 34px;border-radius:12px">${esc(chip)}</div>`).join('\n')}
+      // Optional img: blurred, darkened key art behind the purple, so the date
+      // card carries the game's colour instead of reading as a flat slab.
+      return `<div style="width:${W}px;height:${H}px;position:relative;overflow:hidden;background:#7c5cff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:40px">
+  ${slide.img ? `<div style="position:absolute;inset:-40px;background-image:url(&quot;${escAttr(slide.img)}&quot;);background-size:cover;background-position:center;filter:blur(15px) contrast(1.1);mix-blend-mode:luminosity;opacity:.9"></div>
+  <div style="position:absolute;inset:0;background:linear-gradient(165deg,rgba(140,110,255,.42) 0%,rgba(108,72,240,.30) 50%,rgba(38,20,92,.55) 100%)"></div>
+  <div style="position:absolute;inset:0;background:radial-gradient(ellipse at 50% 47%,rgba(18,10,44,0) 30%,rgba(16,9,40,.62) 82%)"></div>` : ''}
+  <div style="position:relative;color:rgba(255,255,255,.8);font-weight:700;font-size:30px;letter-spacing:.14em">${esc(slide.label)}</div>
+  <div style="position:relative;color:#fff;font-family:${PSTART};font-size:110px;line-height:1.3;text-align:center;text-shadow:0 6px 34px rgba(10,6,26,.75)">${esc(slide.big)}</div>
+  <div style="position:relative;display:flex;gap:20px">
+    ${slide.chips.map((chip) => `<div style="border:3px solid #fff;color:#fff;font-weight:700;font-size:30px;padding:14px 34px;border-radius:12px;background:rgba(16,10,34,.30)">${esc(chip)}</div>`).join('\n')}
   </div>
 </div>`;
     case 'hype.score':
@@ -215,6 +226,55 @@ function body(slide: SlidePayload): string {
   <div style="color:#17141c;font-family:${PSTART};font-size:40px;line-height:1.65;text-wrap:pretty">${esc(slide.title)}</div>
   <div style="border:4px solid #17141c;color:#17141c;font-weight:800;font-size:34px;padding:22px 52px;border-radius:14px">${esc(slide.button)}</div>
   <div style="color:#9c94a8;font-size:28px">${esc(slide.foot)}</div>
+</div>`;
+    // ── anime ─────────────────────────────────────────────────────────
+    case 'anime.trio':
+      return `<div style="width:${W}px;height:${H}px;background:#0f0e11;position:relative;display:flex;flex-direction:column;padding:52px 56px 44px;box-sizing:border-box;gap:26px;overflow:hidden">
+  <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid #2a2533;padding-bottom:22px">
+    <div style="color:#a88bff;font-family:${PSTART};font-size:24px;letter-spacing:.04em">${esc(slide.label)}</div>
+    <div style="color:#7c5cff;font-family:${PSTART};font-size:24px">2027</div>
+  </div>
+  ${slide.items
+    .map((it, i) => {
+      const reverse = i % 2 === 1;
+      // Poster is the large element (fills row height, ~78% width), text is the
+      // compact column beside it. Rows alternate poster-left / poster-right.
+      // The art is CONTAINED over a blurred fill of itself, so a portrait poster
+      // shows the whole character (not cover-cropped to a torso/hands band) while
+      // still filling the wide box. Works for landscape key art too.
+      const art = `<div style="position:absolute;inset:0;background-image:url(&quot;${escAttr(it.img)}&quot;);background-size:cover;background-position:center;filter:blur(26px) brightness(.5);transform:scale(1.12)"></div>
+      <div style="position:absolute;inset:0;background-image:url(&quot;${escAttr(it.img)}&quot;);background-size:contain;background-repeat:no-repeat;background-position:center"></div>`;
+      const poster = `<div style="flex:3.6;align-self:stretch;position:relative;border-radius:14px;overflow:hidden;box-shadow:0 10px 34px rgba(0,0,0,.55);border:2px solid rgba(168,139,255,.25)">${art}</div>`;
+      const text = `<div style="flex:1;display:flex;flex-direction:column;justify-content:center;gap:12px;${reverse ? 'align-items:flex-end;text-align:right' : ''}">
+      <div style="color:#faf3e4;font-weight:800;font-size:25px;line-height:1.2;text-wrap:pretty">${esc(it.title)}</div>
+      <div style="background:#7c5cff;color:#fff;font-weight:800;font-size:22px;padding:8px 16px;border-radius:8px">${esc(it.date)}</div>
+      ${it.note ? `<div style="color:#b7aec6;font-size:19px;line-height:1.35">${esc(it.note)}</div>` : ''}
+    </div>`;
+      return `<div style="flex:1;display:flex;gap:26px;align-items:stretch;${reverse ? 'flex-direction:row-reverse' : ''}">${poster}${text}</div>`;
+    })
+    .join('\n')}
+</div>`;
+    case 'anime.single':
+      return `<div style="width:${W}px;height:${H}px;position:relative;background:#0f0e11;overflow:hidden">
+  ${img(slide.img)}
+  <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(7,5,11,.97) 0%,rgba(7,5,11,.86) 20%,rgba(7,5,11,.15) 48%,rgba(7,5,11,.35) 100%)"></div>
+  <div style="position:absolute;top:40px;left:40px;display:flex"><div style="background:#7c5cff;color:#fff;font-family:${MONO};font-weight:700;font-size:26px;padding:10px 24px;border-radius:10px">${esc(slide.kicker)}</div></div>
+  <div style="position:absolute;left:56px;right:56px;bottom:66px;display:flex;flex-direction:column;gap:26px">
+    <div style="display:flex"><div style="background:#faf3e4;color:#17141c;font-family:${MONO};font-weight:800;font-size:32px;padding:12px 28px;border-radius:10px">${esc(slide.date)}</div></div>
+    <div style="color:#fff;font-family:${PSTART};font-size:38px;line-height:1.42;text-transform:uppercase;text-wrap:pretty;text-shadow:0 4px 24px rgba(0,0,0,.7)">${esc(slide.title)}</div>
+    ${slide.note ? `<div style="color:#cbbfe6;font-size:30px;line-height:1.4;font-family:${MONO}">${esc(slide.note)}</div>` : ''}
+  </div>
+</div>`;
+    case 'anime.closer':
+      return `<div style="width:${W}px;height:${H}px;position:relative;background:#0f0e11;overflow:hidden">
+  ${img(slide.img)}
+  <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(10,8,14,.97) 24%,rgba(10,8,14,.6) 68%,rgba(10,8,14,.4))"></div>
+  <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:34px;padding:80px;box-sizing:border-box;text-align:center">
+    <div style="color:#a88bff;font-family:${MONO};font-weight:800;font-size:30px;letter-spacing:.14em">${esc(slide.kicker)}</div>
+    <div style="color:#fff;font-family:${PSTART};font-size:54px;line-height:1.5;text-transform:uppercase;text-wrap:pretty">${esc(slide.title)}</div>
+    <div style="color:#e9e2f4;font-size:36px;line-height:1.55;font-family:${MONO};max-width:840px">${esc(slide.sub)}</div>
+    <div style="color:#a88bff;font-weight:700;font-size:30px;font-family:${MONO}">${esc(slide.handle)}</div>
+  </div>
 </div>`;
   }
 }

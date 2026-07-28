@@ -185,7 +185,19 @@ export async function processSocialQueue(): Promise<string[]> {
   return posted;
 }
 
-export async function postToSocials(candidateId: string): Promise<void> {
+// An approved deck skips copy generation entirely. Michael reviews a carousel
+// in /social-preview and picks the exact wording; regenerating it at post time
+// would ship copy nobody signed off on.
+export interface ApprovedSocialPost {
+  deck: SlidePayload[];
+  igCaption: string;
+  fbMessage: string;
+}
+
+export async function postToSocials(
+  candidateId: string,
+  approved?: ApprovedSocialPost
+): Promise<void> {
   const candidate = await writeClient.fetch<SocialCandidate | null>(
     `*[_type == "storyCandidate" && _id == $id][0]{_id, headline, pillLabel, newsPostId, status, tagHandles}`,
     { id: candidateId }
@@ -202,24 +214,34 @@ export async function postToSocials(candidateId: string): Promise<void> {
   if (!post.imageUrl) throw new Error(`Post ${publishedId} has no featured image to render`);
 
   try {
-    const copy = await generateCopy(candidate, post);
-    const pill = candidate.pillLabel || 'Gaming News';
-    const size = (url: string) => `${url}?w=1600&q=85&auto=format`;
-    const hero = size(post.imageUrl);
-    // Bullets slide gets the first inline article image so the deck isn't
-    // one photo repeated; falls back to the hero.
-    const second = post.inlineImages?.[0] ? size(post.inlineImages[0]) : hero;
+    let deck: SlidePayload[];
+    let igCaption: string;
+    let fbMessage: string;
 
-    // "News — hype mode" deck from the approved design doc:
-    // hook → bullets → date card (when the story has one) → share CTA.
-    const deck: SlidePayload[] = [
-      { t: 'hype.hook', img: hero, kicker: pill, kickerPill: true, title: copy.hook, cue: 'everything we know' },
-      { t: 'hype.bullets', img: second, heading: copy.bulletsHeading, items: copy.bullets.slice(0, 4) },
-      ...(copy.dateBig
-        ? [{ t: 'hype.date', label: copy.dateLabel || 'RELEASE DATE', big: copy.dateBig, chips: copy.chips.slice(0, 3) } as SlidePayload]
-        : []),
-      { t: 'hype.cta', title: copy.shareTitle, sub: copy.shareSub, button: 'Share ➤', handle: '@life_meets_pixel' },
-    ];
+    if (approved) {
+      ({ deck, igCaption, fbMessage } = approved);
+    } else {
+      const copy = await generateCopy(candidate, post);
+      const pill = candidate.pillLabel || 'Gaming News';
+      const size = (url: string) => `${url}?w=1600&q=85&auto=format`;
+      const hero = size(post.imageUrl);
+      // Bullets slide gets the first inline article image so the deck isn't
+      // one photo repeated; falls back to the hero.
+      const second = post.inlineImages?.[0] ? size(post.inlineImages[0]) : hero;
+
+      // "News — hype mode" deck from the approved design doc:
+      // hook → bullets → date card (when the story has one) → share CTA.
+      deck = [
+        { t: 'hype.hook', img: hero, kicker: pill, kickerPill: true, title: copy.hook, cue: 'everything we know' },
+        { t: 'hype.bullets', img: second, heading: copy.bulletsHeading, items: copy.bullets.slice(0, 4) },
+        ...(copy.dateBig
+          ? [{ t: 'hype.date', label: copy.dateLabel || 'RELEASE DATE', big: copy.dateBig, chips: copy.chips.slice(0, 3), img: hero } as SlidePayload]
+          : []),
+        { t: 'hype.cta', title: copy.shareTitle, sub: copy.shareSub, button: 'Share ➤', handle: '@life_meets_pixel' },
+      ];
+      igCaption = copy.igCaption;
+      fbMessage = copy.fbMessage;
+    }
     const slides = await renderSlides(deck);
 
     const slideUrls: string[] = [];
@@ -238,16 +260,16 @@ export async function postToSocials(candidateId: string): Promise<void> {
         `🖼 <b>Social carousel ready</b> (Meta not configured yet, post manually)`
       );
       await sendMessage(
-        `<b>IG caption:</b>\n${escapeHtml(copy.igCaption)}\n\n` +
-          `<b>FB post:</b>\n${escapeHtml(copy.fbMessage)}\n\n` +
+        `<b>IG caption:</b>\n${escapeHtml(igCaption)}\n\n` +
+          `<b>FB post:</b>\n${escapeHtml(fbMessage)}\n\n` +
           `Slides:\n${slideUrls.join('\n')}\n\n#cand:${candidate._id}`,
         { disablePreview: true }
       );
       return;
     }
 
-    const igLink = await postCarouselToInstagram(slideUrls, copy.igCaption);
-    const fbLink = await postPhotosToFacebook(slideUrls, copy.fbMessage);
+    const igLink = await postCarouselToInstagram(slideUrls, igCaption);
+    const fbLink = await postPhotosToFacebook(slideUrls, fbMessage);
 
     await writeClient.patch(candidate._id).set({ status: 'posted' }).commit();
     await sendMessage(
