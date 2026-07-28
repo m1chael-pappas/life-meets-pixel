@@ -89,6 +89,12 @@ REVALIDATE_SECRET=...                # gates /api/revalidate webhook
 # with membership disabled and no auth UI renders)
 NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_...
 CLERK_SECRET_KEY=sk_...
+CLERK_WEBHOOK_SIGNING_SECRET=whsec_...  # gates /api/clerk; without it that route 404s
+                                        # Clerk dashboard > Webhooks > Add Endpoint
+                                        # https://lifemeetspixel.com/api/clerk
+                                        # events: user.created, user.deleted,
+                                        # subscriptionItem.active/.canceled/.pastDue/
+                                        # .freeTrialEnding  → pings Telegram
 
 # Google AdSense (optional — without these no ad slots render; ad_free members
 # never load the AdSense script at all)
