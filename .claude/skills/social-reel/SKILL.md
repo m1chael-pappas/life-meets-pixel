@@ -9,6 +9,8 @@ End-to-end recipe for turning an official trailer into a Life Meets Pixel reel. 
 
 **Golden rule: ONE CONTINUOUS TAKE.** Never stitch separate parts of a trailer together. See "Choose the take".
 
+**Golden rule: HOOK FIRST, NAME LAST.** Beat 1 is a hook that opens a curiosity gap, and it must NOT name the game. Reveal the game's name (with the score or release date, and the CTA) on the FINAL beat, over the last frame. The unanswered "what is this?" is what carries a viewer to the end, so nobody should be able to name the game before the reveal. The thumbnail (frame 0) sells the hook, not the title. See "Beat structure".
+
 **Never post without explicit approval for that specific item.** Send to Telegram, wait for Michael's go, then post.
 
 ---
@@ -104,7 +106,8 @@ Press Start 2P advances roughly **one character per point of size**, so width �
 | Headline lines | 50 | ~16 |
 | Lower line (`Sub`) | 50 | ~21 |
 | End CTA | 54 | ~20 |
-| Score number | 96 | short |
+| Name reveal (last beat) | 84-90 | short |
+| Score line (last beat) | 40 | ~26 |
 
 These sizes are settled. `Sub` was raised 36 -> 50 and `Cta` 50 -> 54 because the lower line was unreadable on a phone. Do not lower them to make longer copy fit.
 
@@ -112,20 +115,20 @@ These sizes are settled. `Sub` was raised 36 -> 50 and `Cta` 50 -> 54 because th
 
 ### Beat structure
 
-1. **Hook** — a claim, not a title card. `CHECK THIS` / `NEW GEM!`. Gets `\fad(0,200)` so it is **fully drawn on frame 0** and works as a thumbnail. Never apply `fade=t=in` to the video.
-2-5. **Body beats**: premise, mechanic, variety, then a payoff beat.
-6. **Title beat** — the game's name, near the end.
-7. **Close** — `OUR SCORE:` above the big number, then the CTA.
+1. **Hook** — a claim that opens a curiosity gap, not a title card, and it must NOT name the game. `CHECK THIS` / `NEW GEM!` / `IT STARTED AS A MEME`, with a lower line that teases rather than labels ("you have not played this"). Gets `\fad(0,200)` so it is **fully drawn on frame 0** and works as a thumbnail. Never apply `fade=t=in` to the video.
+2-5. **Body beats**, ~3.8s each: premise, mechanic, variety, then a payoff beat.
+6. **Close / reveal** — the game's NAME lands here for the first time, big and centred **over** the gameplay strip, so the whole reel is a "what is this?" that only resolves on the last frame. Pair the name with `OUR SCORE  8.2 / 10` for a review, or with the release date for a preview/launch. The CTA sits underneath on the lower line.
 
-**The game's name goes at the END, never in the opening beat.** The hook sells the claim; the title lands once the viewer is already watching. Put release/platform status ("1.0 out now on steam / and nintendo switch") with the title beat.
+**Never put the name in beat 1**, including as the lower line. `low=TITLE` on the hook beat is the exact mistake the reference script used to ship: it answers the question the reel is supposed to be asking.
 
-**The beat-5 slot is a payoff, not an obligatory negative.** Do not manufacture a caveat for every review. "Your time will evaporate" is a perfectly good beat 5. Only include a criticism when the review genuinely leads with one, and even then frame it as a tease that resolves, never a flat negative.
+**The beat-5 slot is a payoff, not an obligatory negative.** Do not manufacture a caveat for every review. "Your time will evaporate" is a perfectly good beat 5. Only include a criticism when the review genuinely leads with one, and even then frame it as a tease that resolves, never a flat negative. For a not-yet-scored preview, swap it for social proof (wishlists, demo rating).
 
-The end CTA gets its own large treatment, three stacked lines at ~50px:
+The reveal beat stacks the name over the score, with the CTA as the lower line:
 
 ```
-READ OUR FULL
-REVIEW ON:
+PATHOGENIC                          <- 86px, y690, over the footage
+OUR SCORE  8.2 / 10                 <- 40px, y812
+READ OUR FULL REVIEW                <- Cta style on the shared LOW_Y
 {\c&H6BFF6B&}lifemeetspixel.com
 ```
 

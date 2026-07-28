@@ -43,10 +43,12 @@ SCORE = "8.2 / 10"
 # value here and do not override low_y per beat, or the beats stop aligning.
 LOW_Y = 1450
 BEATS = [
-    # hook: \fad(0,...) via no_fade_in so it is fully drawn on frame 0
+    # HOOK: open a curiosity gap and do NOT name the game, not even on the lower
+    # line (the name is the payoff on the last beat). \fad(0,...) via no_fade_in
+    # so it is fully drawn on frame 0 and works as the thumbnail.
     dict(t0=0.0,  t1=3.8,  l1="CHECK THIS", l2="NEW GEM!",
          l1_fs=70, l2_fs=70, l1_y=312, l2_y=406, no_fade_in=True,
-         low=TITLE, low_style="Title"),
+         low="you have not played this"),
     dict(t0=3.8,  t1=7.6,  l1="YOU ARE",     l2="THE DISEASE",
          low="you play the infection"),
     dict(t0=7.6,  t1=11.4, l1="KILL A CELL", l2="STEAL ITS ORGANS",
@@ -56,9 +58,12 @@ BEATS = [
     # frame the flaw as a tease that resolves, never a flat negative
     dict(t0=15.2, t1=19.0, l1="THE CATCH?",  l2="THAT STAMINA BAR",
          low="rough for a few hours\\Nbut it gets better\\Nas you evolve"),
-    # big pixel CTA: the URL is the conversion moment, so it gets its own size
-    dict(t0=19.0, t1=TOTAL, l1="OUR SCORE:", l2=SCORE, l2_fs=96, l2_y=418,
-         low=f"READ OUR FULL\\NREVIEW ON:\\N{{\\c&H6BFF6B&}}{SITE}",
+    # REVEAL: the game NAME lands here for the first time, big and centred over
+    # the gameplay strip, so the reel is a "what is this?" that only resolves on
+    # the last frame. Name over score, CTA underneath on the shared LOW_Y.
+    dict(t0=19.0, t1=TOTAL, l1=TITLE, l1_fs=86, l1_y=690,
+         l2=f"OUR SCORE  {SCORE}", l2_fs=40, l2_y=812,
+         low=f"READ OUR FULL REVIEW\\N{{\\c&H6BFF6B&}}{SITE}",
          low_style="Cta"),
 ]
 # ------------------------------------------------------------ end configure --
