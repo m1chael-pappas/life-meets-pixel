@@ -87,10 +87,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-async function AuthorContent({ slug }: { slug: string }) {
-  const author = await client.fetch<Author>(AUTHOR_BY_SLUG_QUERY, { slug }, fetchOptions);
-  if (!author || HIDDEN_AUTHOR_IDS.includes(author._id)) notFound();
-
+// Receives an already-resolved author: the existence check has to happen above
+// the Suspense boundary in AuthorPage, not here. See the note there.
+async function AuthorContent({ author }: { author: Author }) {
   const [reviews, newsPosts, reviewCount, newsCount] = await Promise.all([
     client.fetch<Review[]>(AUTHOR_REVIEWS_QUERY, { authorId: author._id }, fetchOptions),
     client.fetch<NewsPost[]>(AUTHOR_NEWS_QUERY, { authorId: author._id }, fetchOptions),
@@ -252,12 +251,20 @@ function AuthorSkeleton() {
 
 export default async function AuthorPage({ params }: Props) {
   const { slug } = await params;
+
+  // Resolve existence BEFORE anything streams. Once the shell below is flushed,
+  // the 200 status is committed and a later notFound() can no longer change it,
+  // which turned every bogus /author/* URL into a soft 404. The Suspense
+  // boundary stays for the slow secondary fetches, which cannot 404.
+  const author = await client.fetch<Author>(AUTHOR_BY_SLUG_QUERY, { slug }, fetchOptions);
+  if (!author || HIDDEN_AUTHOR_IDS.includes(author._id)) notFound();
+
   return (
     <>
       <SiteHeader currentPage="author" />
       <main id="main-content" className="lmp-container" style={{ paddingTop: 32, paddingBottom: 48 }}>
         <Suspense fallback={<AuthorSkeleton />}>
-          <AuthorContent slug={slug} />
+          <AuthorContent author={author} />
         </Suspense>
       </main>
     </>

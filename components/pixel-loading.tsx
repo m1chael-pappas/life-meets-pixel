@@ -1,4 +1,16 @@
-export default function Loading() {
+// Shared retro loading skeleton.
+//
+// This used to be app/loading.tsx. At the root it wrapped every page in an
+// implicit Suspense boundary, so Next flushed a 200 status before any page
+// body ran. Any notFound() after that could no longer change the status, and
+// every bogus /news/* and /reviews/* URL answered 200 with the not-found UI:
+// a soft 404 that search engines index as a real page.
+//
+// It now lives only in (listing) route groups, which exclude the [slug]
+// segments that call notFound(). Do NOT add a loading.tsx to a segment that
+// has a notFound()-calling child, or the soft 404s come straight back.
+
+export function PixelLoading() {
   return (
     <div className="min-h-screen flex items-center justify-center">
       <div className="text-center space-y-8">
