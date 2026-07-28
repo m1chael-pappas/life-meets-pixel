@@ -48,3 +48,7 @@ next-env.d.ts
 /studio/.sanity
 # scratch media for reel/carousel builds (not source)
 New folder/
+
+# python bytecode
+__pycache__/
+*.pyc
