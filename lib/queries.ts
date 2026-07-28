@@ -667,4 +667,13 @@ export const TOP_PICKS_QUERY = `*[
   reviewScore
 }`;
 
+// Resolve a commented-on document to a title + link, so the Telegram
+// moderation ping can point straight at the thread. $id is the Sanity _id
+// that components/comments passes through as postId.
+export const COMMENT_TARGET_QUERY = `*[_id == $id][0]{
+  _type,
+  title,
+  "slug": slug.current
+}`;
+
 export const fetchOptions = { next: { revalidate: 30 } };

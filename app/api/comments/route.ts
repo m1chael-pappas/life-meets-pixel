@@ -1,4 +1,5 @@
-import { NextRequest, NextResponse } from "next/server";
+/* eslint-disable no-console */
+import { after, NextRequest, NextResponse } from "next/server";
 
 import { currentUser } from "@clerk/nextjs/server";
 
@@ -8,9 +9,47 @@ import {
   ensureSchema,
   type CommentRow,
 } from "@/lib/comments-db";
+import { SITE_CONFIG } from "@/lib/constants";
 import { getMembership, MEMBER_FEATURES } from "@/lib/membership";
+import { COMMENT_TARGET_QUERY } from "@/lib/queries";
+import { escapeHtml, sendMessage } from "@/lib/telegram";
+import { client } from "@/sanity/client";
 
 const MAX_BODY = 2000;
+
+// Moderation ping. Runs in after() so a slow or broken bot never delays the
+// commenter's response, and every failure is swallowed: a Telegram outage
+// must not turn a successfully saved comment into a 500 for the member.
+async function notifyNewComment(opts: {
+  postId: string;
+  authorName: string;
+  body: string;
+  commentId: number;
+}) {
+  if (!process.env.TELEGRAM_BOT_TOKEN || !process.env.TELEGRAM_CHAT_ID) return;
+  try {
+    const target = await client.fetch<{
+      _type?: string;
+      title?: string;
+      slug?: string;
+    } | null>(COMMENT_TARGET_QUERY, { id: opts.postId });
+
+    const section = target?._type === "review" ? "reviews" : "news";
+    const where = target?.slug
+      ? `<a href="${SITE_CONFIG.url}/${section}/${target.slug}#comments">${escapeHtml(target.title || target.slug)}</a>`
+      : escapeHtml(opts.postId);
+
+    await sendMessage(
+      `💬 <b>New comment</b> on ${where}\n\n` +
+        `From: ${escapeHtml(opts.authorName)}\n\n` +
+        `${escapeHtml(opts.body.slice(0, 500))}${opts.body.length > 500 ? "…" : ""}\n\n` +
+        `<code>#comment:${opts.commentId}</code>`,
+      { disablePreview: true }
+    );
+  } catch (err) {
+    console.error("Comment notification failed:", err);
+  }
+}
 
 export async function GET(request: NextRequest) {
   if (!commentsEnabled()) {
@@ -80,6 +119,16 @@ export async function POST(request: NextRequest) {
     VALUES (${postId}, ${membership.userId}, ${authorName}, ${authorImage}, ${text})
     RETURNING id::int AS id, post_id, user_id, author_name, author_image, body, created_at
   `) as CommentRow[];
+
+  after(() =>
+    notifyNewComment({
+      postId,
+      authorName,
+      body: text,
+      commentId: created.id,
+    })
+  );
+
   return NextResponse.json({ comment: created }, { status: 201 });
 }
 
