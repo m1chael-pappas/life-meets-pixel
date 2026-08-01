@@ -2521,3 +2521,88 @@ textarea.field-input { min-height: 140px; resize: vertical; line-height: 1.6; }
   .section-head { flex-direction: column; align-items: flex-start; }
   .section-head__action { align-self: flex-end; }
 }
+
+/* ---------- About / editorial standards page ---------- */
+/* AdSense flagged the site "Low value content"; a standalone page naming the
+   author and spelling out how scores, review copies and affiliate links work is
+   one of the things a policy reviewer looks for. */
+.about-page {
+  padding: clamp(20px, 4vw, 40px);
+  max-width: 820px;
+  margin: 0 auto;
+}
+.about-page p,
+.about-page li {
+  color: var(--ink-dim);
+  line-height: 1.75;
+  margin-bottom: 16px;
+}
+.about-page__lede {
+  color: var(--ink) !important;
+  font-size: clamp(15px, 1.6vw, 18px);
+}
+.about-page__stat {
+  font-size: 13px;
+  border-left: 3px solid var(--neon-3);
+  padding-left: 12px;
+}
+.about-page h2 {
+  font-family: var(--font-press-start), monospace;
+  font-size: clamp(13px, 1.8vw, 16px);
+  color: var(--neon-3);
+  margin: 32px 0 14px;
+  line-height: 1.6;
+}
+.about-page ul {
+  padding-left: 20px;
+  list-style: square;
+}
+.about-page a {
+  color: var(--neon-4);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.about-page a:hover {
+  color: var(--neon-3);
+}
+
+.score-scale {
+  display: grid;
+  gap: 2px;
+  margin: 20px 0 24px;
+  border: 3px solid var(--bg-3);
+  background: var(--bg-3);
+}
+.score-scale__row {
+  display: grid;
+  grid-template-columns: 104px 1fr;
+  gap: 4px 14px;
+  padding: 12px 14px;
+  background: var(--bg-1);
+}
+.score-scale__band {
+  font-family: var(--font-press-start), monospace;
+  font-size: 11px;
+  color: var(--neon-3);
+  align-self: start;
+  line-height: 1.5;
+}
+.score-scale__label {
+  color: var(--ink);
+  font-weight: 700;
+  font-size: 14px;
+}
+.score-scale__blurb {
+  grid-column: 2;
+  color: var(--ink-dim);
+  font-size: 13px;
+  line-height: 1.6;
+}
+@media (max-width: 560px) {
+  .score-scale__row {
+    grid-template-columns: 1fr;
+  }
+  .score-scale__blurb {
+    grid-column: 1;
+  }
+}

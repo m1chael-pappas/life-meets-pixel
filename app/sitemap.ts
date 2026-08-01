@@ -1,5 +1,5 @@
 import { MetadataRoute } from 'next';
-import { HIDDEN_AUTHOR_IDS } from '@/lib/queries';
+import { HIDDEN_AUTHOR_IDS, INDEXABLE_NEWS_SLUGS_QUERY } from '@/lib/queries';
 import { client } from '@/sanity/client';
 
 // Fetch all reviews, news, and authors for sitemap
@@ -11,11 +11,10 @@ async function getContent() {
         publishedAt
       }`
     ),
+    // Only news posts substantial enough to index. The short ones are marked
+    // noindex in their own metadata, so listing them here would contradict that.
     client.fetch<Array<{ slug: { current: string }; publishedAt: string }>>(
-      `*[_type == "newsPost" && defined(slug.current)]{
-        "slug": slug,
-        publishedAt
-      }`
+      INDEXABLE_NEWS_SLUGS_QUERY
     ),
     client.fetch<Array<{ slug: { current: string }; _updatedAt: string }>>(
       `*[_type == "author" && defined(slug.current) && !(_id in $hidden)]{
@@ -54,10 +53,22 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.9,
     },
     {
+      url: `${baseUrl}/about`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.7,
+    },
+    {
       url: `${baseUrl}/membership`,
       lastModified: new Date(),
       changeFrequency: 'monthly',
       priority: 0.6,
+    },
+    {
+      url: `${baseUrl}/contact`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.5,
     },
   ];
 

@@ -3,19 +3,34 @@ import Link from "next/link";
 
 import { HeartRow } from "@/components/retro/heart-row";
 import { itemTypeToCat, scoreTone } from "@/lib/mappings";
-import { FEATURED_REVIEWS_QUERY, TOP_PICKS_QUERY, fetchOptions } from "@/lib/queries";
+import { HERO_TOP_RATED_QUERY, fetchOptions } from "@/lib/queries";
 import type { Review } from "@/lib/types";
 import { client } from "@/sanity/client";
 
-type TopPick = { _id: string; title: string; slug: { current: string }; reviewScore: number };
+// How far back "lately" reaches, and how many reviews that window has to hold
+// before we trust it. Below MIN_POOL the list would render with one or two rows,
+// so we widen to best-of-all-time instead.
+const WINDOW_DAYS = 60;
+const MIN_POOL = 5;
+
+/** Midnight UTC, WINDOW_DAYS ago. Rounded to the day so the query params are
+ *  stable and the `revalidate` fetch cache is not busted on every render. */
+function windowStart(): string {
+  const d = new Date();
+  d.setUTCHours(0, 0, 0, 0);
+  d.setUTCDate(d.getUTCDate() - WINDOW_DAYS);
+  return d.toISOString();
+}
 
 export default async function HeroSection() {
-  const [featured, topPicks] = await Promise.all([
-    client.fetch<Review[]>(FEATURED_REVIEWS_QUERY, {}, fetchOptions),
-    client.fetch<TopPick[]>(TOP_PICKS_QUERY, {}, fetchOptions),
-  ]);
+  const { recent, allTime } = await client.fetch<{
+    recent: Review[];
+    allTime: Review[];
+  }>(HERO_TOP_RATED_QUERY, { cutoff: windowStart() }, fetchOptions);
 
-  const hero = featured[0];
+  const pool = recent.length >= MIN_POOL ? recent : allTime;
+  const isRecent = pool === recent;
+  const hero = pool[0];
 
   if (!hero) {
     return null;
@@ -49,7 +64,7 @@ export default async function HeroSection() {
               )}
             </div>
             <div className="hero-feature__body">
-              <div className="hero-feature__overline">★ EDITOR&apos;S CHOICE · {cat.toUpperCase()}</div>
+              <div className="hero-feature__overline">★ TOP RATED · {cat.toUpperCase()}</div>
               <h2 className="hero-feature__title">{hero.title}</h2>
               <p className="hero-feature__sub">
                 {item.title}
@@ -74,11 +89,13 @@ export default async function HeroSection() {
 
           <aside className="hero-side">
             <div className="hero-side__head">
-              <span>◆ TOP PICKS THIS WEEK</span>
+              {/* Say what the list actually is. The old "THIS WEEK" heading sat
+                  above reviews from the previous October for months. */}
+              <span>◆ {isRecent ? "TOP RATED LATELY" : "TOP RATED"}</span>
               <span className="blink">●</span>
             </div>
             <div className="hero-side__list">
-              {topPicks
+              {pool
                 .filter((p) => p._id !== hero._id)
                 .slice(0, 4)
                 .map((pick, i) => (

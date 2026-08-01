@@ -16,6 +16,7 @@ import {
   NEWS_POST_QUERY,
   NEWS_SLUGS_QUERY,
   RELATED_NEWS_QUERY,
+  THIN_POST_WORDS,
 } from "@/lib/queries";
 import type { Category, NewsPost } from "@/lib/types";
 import { client } from "@/sanity/client";
@@ -51,10 +52,17 @@ export async function generateMetadata({ params }: NewsPostPageProps): Promise<M
     : null;
   const canonicalUrl = `${siteUrl}/news/${post.slug.current}`;
 
+  // Thin news posts are summaries of someone else's reporting and add nothing a
+  // reader could not get from the source, which is what AdSense's "Low value
+  // content" review penalises. Keep them out of the index but keep following
+  // their links, so the page still works for readers and passes crawl equity on.
+  const isThin = (post.wordCount ?? 0) < THIN_POST_WORDS;
+
   return {
     title: post.title,
     description: post.excerpt,
     alternates: { canonical: canonicalUrl },
+    ...(isThin && { robots: { index: false, follow: true } }),
     openGraph: {
       type: "article",
       title: post.title,
