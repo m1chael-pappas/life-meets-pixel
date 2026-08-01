@@ -203,10 +203,16 @@ export default async function NewsPage({ searchParams }: NewsPageProps) {
       <main id="main-content" className="container mx-auto max-w-7xl p-6">
         {/* Page Header */}
         <div className="mb-8">
-          <h1 className="text-4xl font-bold text-white drop-shadow-md mb-2 font-mono">
+          {/* Was `text-white` with no dark surface behind it, so it worked in the
+              three dark palettes by accident and rendered at 1.07:1 on the light
+              one, i.e. the page heading was invisible. Use the palette's ink. */}
+          <h1
+            className="text-4xl font-bold drop-shadow-md mb-2 font-mono"
+            style={{ color: "var(--ink)" }}
+          >
             News & Previews
           </h1>
-          <p className="text-white/80">
+          <p style={{ color: "var(--ink-dim)" }}>
             Stay up to date with the latest gaming news, previews, and thoughts
             on games we&apos;re playing
           </p>

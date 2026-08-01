@@ -20,10 +20,22 @@
 
   --pixel: 4px;
   --radius: 0;
+  /* Focus ring is its own token because the accent that works on a dark ground
+     is invisible on the light one. Never point this at --neon-* directly. */
+  --focus-ring: #3ee8ff;
+  /* Scrim + hard shadow follow the palette's own ground. Hardcoding midnight's
+     #0a0820 here is what put the hero headline at 1.31:1 on the light palette. */
+  --scrim-rgb: 10, 8, 32;
+  --shadow-hard: #000;
+  --frame-ground: #000;
 }
 
 /* Alternate palettes — switched via data-palette on <html> */
 [data-palette="gameboy"] {
+  --scrim-rgb: 15, 56, 15;
+  --shadow-hard: #0f380f;
+  --frame-ground: #0f380f;
+  --focus-ring: #c4dd5a;
   --bg-0: #0f380f;
   --bg-1: #173e17;
   --bg-2: #306230;
@@ -40,6 +52,10 @@
 }
 
 [data-palette="amber"] {
+  --scrim-rgb: 13, 7, 0;
+  --shadow-hard: #0d0700;
+  --frame-ground: #0d0700;
+  --focus-ring: #ffd23d;
   --bg-0: #0d0700;
   --bg-1: #1a0f00;
   --bg-2: #2a1a05;
@@ -56,6 +72,10 @@
 }
 
 [data-palette="candy"] {
+  --scrim-rgb: 253, 244, 255;
+  --shadow-hard: rgba(255,255,255,0.9);
+  --frame-ground: #f5e8ff;
+  --focus-ring: #2a1a3d;
   --bg-0: #fdf4ff;
   --bg-1: #f5e8ff;
   --bg-2: #ead0ff;
@@ -63,11 +83,11 @@
   --ink: #2a1a3d;
   --ink-dim: #5a4a7a;
   --ink-mute: #64587d; /* ≥4.5:1 on bg-0/1/2 (WCAG AA) */
-  --neon-1: #ff3d8b;
-  --neon-2: #00b8d4;
-  --neon-3: #6bc94a;
-  --neon-4: #ff8a00;
-  --heart: #ff3d8b;
+  --neon-1: #bf004d;  /* was #ff3d8b, 3.1:1 on bg-0 */
+  --neon-2: #006979;  /* was #00b8d4, 2.2:1 on bg-0 */
+  --neon-3: #346c20;  /* was #6bc94a, 1.9:1 on bg-0 */
+  --neon-4: #914f00;  /* was #ff8a00, 2.2:1 on bg-0 */
+  --heart: #bf004d;  /* was #ff3d8b, 3.1:1 on bg-0 */
   --grid: rgba(42, 26, 61, 0.04);
 }
 
@@ -602,7 +622,7 @@ a:hover { color: var(--neon-1); }
 /* ===== HERO (CRT frame) ===== */
 .hero { padding: 48px 0 32px; position: relative; }
 .crt-frame {
-  background: #000;
+  background: var(--frame-ground);
   border: 6px solid var(--bg-3);
   padding: 20px;
   position: relative;
@@ -660,8 +680,8 @@ a:hover { color: var(--neon-1); }
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(180deg, rgba(10, 8, 32, 0.1) 0%, rgba(10, 8, 32, 0.95) 100%),
-    linear-gradient(90deg, rgba(10, 8, 32, 0.6) 0%, transparent 60%);
+    linear-gradient(180deg, rgba(var(--scrim-rgb), 0.1) 0%, rgba(var(--scrim-rgb), 0.95) 100%),
+    linear-gradient(90deg, rgba(var(--scrim-rgb), 0.6) 0%, transparent 60%);
 }
 .hero-feature__body {
   position: absolute;
@@ -692,7 +712,7 @@ a:hover { color: var(--neon-1); }
   font-size: 20px;
   line-height: 1.4;
   color: var(--ink);
-  text-shadow: 4px 4px 0 #000;
+  text-shadow: 4px 4px 0 var(--shadow-hard);
   max-width: 90%;
 }
 .hero-feature__sub {
@@ -1124,7 +1144,7 @@ a:hover { color: var(--neon-1); }
   font-size: 24px;
   line-height: 1.4;
   color: var(--ink);
-  text-shadow: 4px 4px 0 #000;
+  text-shadow: 4px 4px 0 var(--shadow-hard);
 }
 .article-meta__sub {
   font-family: var(--font-jetbrains-mono), ui-monospace, monospace;
@@ -1404,7 +1424,7 @@ a:hover { color: var(--neon-1); }
   font-size: 28px;
   line-height: 1.4;
   color: var(--ink);
-  text-shadow: 4px 4px 0 #000;
+  text-shadow: 4px 4px 0 var(--shadow-hard);
   margin-bottom: 16px;
 }
 .contact-hero__sub {
@@ -2277,7 +2297,7 @@ textarea.field-input { min-height: 140px; resize: vertical; line-height: 1.6; }
 }
 
 /* Mobile (phones, phablets) -------------------------------------------- */
-@media (max-width: 720px) {
+@media (max-width: 1023.98px) {
   .lmp-container { padding: 0 16px; }
   .lmp-section { padding: 36px 0; }
 
@@ -2522,6 +2542,40 @@ textarea.field-input { min-height: 140px; resize: vertical; line-height: 1.6; }
   .section-head__action { align-self: flex-end; }
 }
 
+/* /contact overflowed below ~383px: aside.contact-side is a grid item with the
+   default min-width:auto, and its min-content floor was 355px because
+   .inbox-row lays a label and an unbreakable 26-char email on one flex line. */
+.contact-side {
+  min-width: 0;
+}
+.inbox-row {
+  flex-wrap: wrap;
+}
+.inbox-row .val,
+.inbox-row .val a {
+  overflow-wrap: anywhere;
+}
+
+/* ---------- Focus visibility ---------- */
+/* There was no :focus-visible rule anywhere in this file, so every focus
+   indicator was the Chrome UA default, whose colour derives from the element's
+   computed `color`. On .hero-feature (714x420, the biggest target on the site)
+   that resolved to a 1px near-black hairline on a near-black ground: invisible.
+   WCAG 2.4.7 / 2.4.11. :where() keeps specificity at 0 so components can still
+   override deliberately. */
+:where(a, button, [role="button"], input, textarea, select, summary, [tabindex]):focus-visible {
+  outline: 3px solid var(--focus-ring);
+  outline-offset: 2px;
+  border-radius: 0;
+}
+/* Inputs clear the UA outline on :focus; restore a real one for :focus-visible. */
+.contact-form input:focus-visible,
+.contact-form textarea:focus-visible,
+.comments__composer textarea:focus-visible {
+  outline: 3px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+
 /* ---------- About / editorial standards page ---------- */
 /* Built from the incumbent recipe rather than a fresh look: bg-1 panels, 3px
    neon borders, zero radius, hard black offset shadows, Press Start 2P titles
@@ -2546,7 +2600,7 @@ textarea.field-input { min-height: 140px; resize: vertical; line-height: 1.6; }
   font-size: 40px;
   line-height: 1.35;
   color: var(--ink);
-  text-shadow: 4px 4px 0 #000;
+  text-shadow: 4px 4px 0 var(--shadow-hard);
   margin: 0 0 16px;
 }
 .about-hero__sub {
