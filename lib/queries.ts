@@ -532,6 +532,61 @@ export const NEWS_COUNT_QUERY = `count(*[
   && defined(slug.current)
 ])`;
 
+// News category filter bar.
+//
+// Only categories that actually hold a post are returned. 35 of 57 news posts
+// currently carry no category at all, and of the 20 categories in the dataset
+// only 5 are used by news, so listing them all would render a row of chips that
+// lead to an empty page. That is the same dead-filter trap as the `COMIC 0` chip
+// on /reviews, and it reads as a broken page rather than an empty category.
+export const NEWS_CATEGORY_COUNTS_QUERY = `{
+  "all": count(*[_type == "newsPost" && defined(slug.current)]),
+  "categories": *[
+    _type == "category"
+    && count(*[_type == "newsPost" && defined(slug.current) && references(^._id)]) > 0
+  ]{
+    title,
+    "slug": slug.current,
+    "color": color.hex,
+    "count": count(*[_type == "newsPost" && defined(slug.current) && references(^._id)])
+  }|order(count desc)
+}`;
+
+export const NEWS_BY_CATEGORY_PAGINATED_QUERY = `*[
+  _type == "newsPost"
+  && defined(slug.current)
+  && $category in categories[]->slug.current
+]|order(publishedAt desc)[$start...$end]{
+  _id,
+  title,
+  slug,
+  excerpt,
+  publishedAt,
+  breaking,
+  featuredImage{
+    asset->{
+      url
+    },
+    alt
+  },
+  author->{
+    name,
+    slug,
+    "accentColor": accentColor.hex
+  },
+  categories[]->{
+    title,
+    slug,
+    "color": color.hex
+  }
+}`;
+
+export const NEWS_COUNT_BY_CATEGORY_QUERY = `count(*[
+  _type == "newsPost"
+  && defined(slug.current)
+  && $category in categories[]->slug.current
+])`;
+
 // Single News Post Query
 export const NEWS_POST_QUERY = `*[
   _type == "newsPost"

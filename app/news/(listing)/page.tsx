@@ -1,65 +1,88 @@
-import { Suspense } from 'react';
+import { Suspense } from "react";
 
-import { formatDistanceToNow } from 'date-fns';
-import { Metadata } from 'next';
-import { type SanityDocument } from 'next-sanity';
-import Image from 'next/image';
-import Link from 'next/link';
+import { Metadata } from "next";
 
-import { SiteHeader } from '@/components/site-header';
-import { Badge } from '@/components/ui/badge';
-import Pagination from '@/components/ui/pagination';
+import NewsCategoryTabs, { type NewsCategoryCount } from "@/components/news-category-tabs";
+import { NewsCard } from "@/components/retro/news-card";
+import { SiteHeader } from "@/components/site-header";
+import Pagination from "@/components/ui/pagination";
 import {
   fetchOptions,
+  NEWS_BY_CATEGORY_PAGINATED_QUERY,
+  NEWS_CATEGORY_COUNTS_QUERY,
+  NEWS_COUNT_BY_CATEGORY_QUERY,
   NEWS_COUNT_QUERY,
   NEWS_PAGINATED_QUERY,
-} from '@/lib/queries';
-import { client } from '@/sanity/client';
+} from "@/lib/queries";
+import type { NewsPost } from "@/lib/types";
+import { client } from "@/sanity/client";
 
-const siteUrl =
-  process.env.NEXT_PUBLIC_SITE_URL || "https://lifemeetspixel.com";
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://lifemeetspixel.com";
 
-export const metadata: Metadata = {
-  title: "Gaming News & Previews",
-  description: "Stay up to date with the latest gaming news, previews, and geek culture updates.",
-  alternates: {
-    canonical: `${siteUrl}/news`,
-  },
-  openGraph: {
-    title: "Gaming News & Previews | Life Meets Pixel",
-    description:
-      "Stay up to date with the latest gaming news, previews, and geek culture updates.",
-    url: `${siteUrl}/news`,
-    type: "website",
-  },
-};
+type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>;
+
+interface NewsPageProps {
+  searchParams: SearchParams;
+}
+
+type CountsShape = { all: number; categories: NewsCategoryCount[] };
+
+export async function generateMetadata({ searchParams }: NewsPageProps): Promise<Metadata> {
+  const params = await searchParams;
+  const category = typeof params.category === "string" ? params.category : undefined;
+
+  const counts = await client
+    .fetch<CountsShape>(NEWS_CATEGORY_COUNTS_QUERY, {}, fetchOptions)
+    .catch(() => null);
+  const match = counts?.categories.find((c) => c.slug === category);
+
+  const title = match ? `${match.title} News` : "Gaming News & Previews";
+  const description = match
+    ? `The latest ${match.title.toLowerCase()} news and previews from Life Meets Pixel.`
+    : "Stay up to date with the latest gaming news, previews, and geek culture updates.";
+  const canonicalUrl = match ? `${siteUrl}/news?category=${match.slug}` : `${siteUrl}/news`;
+
+  return {
+    title,
+    description,
+    alternates: { canonical: canonicalUrl },
+    openGraph: {
+      title: `${title} | Life Meets Pixel`,
+      description,
+      url: canonicalUrl,
+      type: "website",
+    },
+  };
+}
 
 const ITEMS_PER_PAGE = 12;
 
-async function NewsList({ page }: { page: number }) {
+async function NewsList({ category, page }: { category?: string; page: number }) {
   const start = (page - 1) * ITEMS_PER_PAGE;
   const end = start + ITEMS_PER_PAGE;
 
-  const [news, totalCount] = await Promise.all([
-    client.fetch<SanityDocument[]>(
-      NEWS_PAGINATED_QUERY,
-      { start, end },
-      fetchOptions
-    ),
-    client.fetch<number>(NEWS_COUNT_QUERY, {}, fetchOptions),
-  ]);
+  const [news, totalCount] = category
+    ? await Promise.all([
+        client.fetch<NewsPost[]>(
+          NEWS_BY_CATEGORY_PAGINATED_QUERY,
+          { category, start, end },
+          fetchOptions,
+        ),
+        client.fetch<number>(NEWS_COUNT_BY_CATEGORY_QUERY, { category }, fetchOptions),
+      ])
+    : await Promise.all([
+        client.fetch<NewsPost[]>(NEWS_PAGINATED_QUERY, { start, end }, fetchOptions),
+        client.fetch<number>(NEWS_COUNT_QUERY, {}, fetchOptions),
+      ]);
 
   const totalPages = Math.ceil(totalCount / ITEMS_PER_PAGE);
 
   if (news.length === 0) {
     return (
-      <div className="text-center py-16">
-        <div className="text-6xl mb-4">📰</div>
-        <h3 className="text-2xl font-bold text-muted-foreground mb-2 font-mono">
-          No news yet
-        </h3>
-        <p className="text-muted-foreground">
-          Check back soon for the latest gaming news and previews!
+      <div className="stat-block" style={{ textAlign: "center", padding: 48 }}>
+        <h3 style={{ color: "var(--neon-1)", marginBottom: 8 }}>NO NEWS FOUND</h3>
+        <p style={{ color: "var(--ink-dim)", fontSize: 13 }}>
+          Nothing filed under this category yet. Check back soon.
         </p>
       </div>
     );
@@ -67,108 +90,10 @@ async function NewsList({ page }: { page: number }) {
 
   return (
     <>
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {news.map((article) => {
-          const relativeDate = formatDistanceToNow(
-            new Date(article.publishedAt),
-            {
-              addSuffix: true,
-            }
-          );
-
-          return (
-            <article key={article._id} className="group">
-              <Link href={`/news/${article.slug.current}`} className="block">
-                <div
-                  className={`relative bg-card border overflow-hidden hover:shadow-lg transition-all duration-300 hover:scale-[1.02] rounded-lg ${
-                    article.breaking ? "ring-2 ring-red-500" : "border-border"
-                  }`}
-                >
-                  {/* Breaking News Badge — overlays the image so the card
-                      stays the same height as its grid siblings */}
-                  {article.breaking && (
-                    <div className="absolute top-0 inset-x-0 z-10 bg-red-500 text-white text-xs font-mono px-3 py-1 text-center">
-                      🚨 BREAKING NEWS
-                    </div>
-                  )}
-
-                  {/* Featured Image */}
-                  {article.featuredImage?.asset?.url ? (
-                    <div className="relative aspect-video overflow-hidden">
-                      <Image
-                        src={article.featuredImage.asset.url}
-                        alt={article.featuredImage.alt || article.title}
-                        fill
-                        className="object-cover transition-transform duration-300 group-hover:scale-105"
-                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                      />
-                    </div>
-                  ) : (
-                    <div className="relative aspect-video overflow-hidden bg-muted flex items-center justify-center">
-                      <span className="text-6xl opacity-20">📰</span>
-                    </div>
-                  )}
-
-                  <div className="p-5">
-                    {/* Meta */}
-                    <div className="flex items-center gap-2 mb-3">
-                      <time className="text-xs text-muted-foreground font-mono">
-                        {relativeDate}
-                      </time>
-                      {article.categories?.[0] && (
-                        <>
-                          <span className="text-xs text-muted-foreground">
-                            •
-                          </span>
-                          <Badge
-                            variant="secondary"
-                            className="text-xs"
-                            style={
-                              article.categories[0].color
-                                ? {
-                                    backgroundColor:
-                                      article.categories[0].color,
-                                    color: "#ffffff",
-                                    border: "none",
-                                  }
-                                : {}
-                            }
-                          >
-                            {article.categories[0].title}
-                          </Badge>
-                        </>
-                      )}
-                    </div>
-
-                    {/* Title */}
-                    <h3 className="font-bold text-lg text-foreground mb-2 line-clamp-2 group-hover:text-primary transition-colors">
-                      {article.title}
-                    </h3>
-
-                    {/* Excerpt */}
-                    {article.excerpt && (
-                      <p className="text-sm text-muted-foreground line-clamp-3 leading-relaxed mb-3">
-                        {article.excerpt}
-                      </p>
-                    )}
-
-                    {/* Author */}
-                    {article.author && (
-                      <div className="flex items-center gap-2 pt-3 border-t border-border">
-                        <span className="text-xs text-muted-foreground">
-                          By{" "}
-                          <span className="text-primary">
-                            {article.author.name}
-                          </span>
-                        </span>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </Link>
-            </article>
-          );
-        })}
+      <div className="news-grid news-grid--listing">
+        {news.map((post, i) => (
+          <NewsCard key={post._id} post={post} priority={i < 3} />
+        ))}
       </div>
       <Pagination currentPage={page} totalPages={totalPages} />
     </>
@@ -177,52 +102,64 @@ async function NewsList({ page }: { page: number }) {
 
 function NewsListSkeleton() {
   return (
-    <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-      {[...Array(6)].map((_, i) => (
-        <div key={i} className="h-96 bg-muted/20 rounded-lg animate-pulse" />
+    <div className="news-grid news-grid--listing">
+      {Array.from({ length: 6 }).map((_, i) => (
+        <div
+          key={i}
+          style={{ height: 380, background: "var(--bg-1)", border: "3px solid var(--bg-3)" }}
+        />
       ))}
     </div>
   );
 }
 
-type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>;
-
-interface NewsPageProps {
-  searchParams: SearchParams;
-}
-
 export default async function NewsPage({ searchParams }: NewsPageProps) {
   const params = await searchParams;
-  const currentPage = Number(params.page) || 1;
+  const currentPage = Math.max(1, Number(params.page) || 1);
+
+  const counts = await client.fetch<CountsShape>(NEWS_CATEGORY_COUNTS_QUERY, {}, fetchOptions);
+
+  const requested = typeof params.category === "string" ? params.category : undefined;
+  // Ignore an unknown ?category= rather than rendering an empty page for it.
+  const category = counts.categories.some((c) => c.slug === requested) ? requested : undefined;
+  const active = counts.categories.find((c) => c.slug === category);
+
+  const pageTitle = active ? `${active.title} News` : "News & Previews";
+  const entryCount = active ? active.count : counts.all;
 
   return (
-    <div className="min-h-screen">
+    <>
       <SiteHeader currentPage="news" />
-
-      {/* Main Content */}
-      <main id="main-content" className="container mx-auto max-w-7xl p-6">
-        {/* Page Header */}
-        <div className="mb-8">
-          {/* Was `text-white` with no dark surface behind it, so it worked in the
-              three dark palettes by accident and rendered at 1.07:1 on the light
-              one, i.e. the page heading was invisible. Use the palette's ink. */}
-          <h1
-            className="text-4xl font-bold drop-shadow-md mb-2 font-mono"
-            style={{ color: "var(--ink)" }}
+      <main id="main-content" className="lmp-container" style={{ paddingTop: 32, paddingBottom: 32 }}>
+        <div className="section-head">
+          <div className="section-head__title">
+            <span className="num">RSS</span>
+            <h1>{pageTitle.toUpperCase()}</h1>
+          </div>
+          <span
+            style={{
+              fontFamily: "var(--font-press-start-2p)",
+              fontSize: 10,
+              color: "var(--ink-mute)",
+            }}
           >
-            News & Previews
-          </h1>
-          <p style={{ color: "var(--ink-dim)" }}>
-            Stay up to date with the latest gaming news, previews, and thoughts
-            on games we&apos;re playing
-          </p>
+            {entryCount} {entryCount === 1 ? "ENTRY" : "ENTRIES"}
+          </span>
         </div>
 
-        {/* News Grid */}
+        <NewsCategoryTabs
+          currentCategory={category}
+          all={counts.all}
+          categories={counts.categories}
+        />
+
+        {/* The page previously went h1 -> h3 with no h2 anywhere, a skipped
+            level. Matches the /reviews listing, which uses the same device. */}
+        <h2 className="sr-only">Results</h2>
         <Suspense fallback={<NewsListSkeleton />}>
-          <NewsList page={currentPage} />
+          <NewsList category={category} page={currentPage} />
         </Suspense>
       </main>
-    </div>
+    </>
   );
 }

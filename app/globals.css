@@ -23,6 +23,7 @@
   /* Focus ring is its own token because the accent that works on a dark ground
      is invisible on the light one. Never point this at --neon-* directly. */
   --focus-ring: #3ee8ff;
+  --on-accent: #0a0820;
   /* Scrim + hard shadow follow the palette's own ground. Hardcoding midnight's
      #0a0820 here is what put the hero headline at 1.31:1 on the light palette. */
   --scrim-rgb: 10, 8, 32;
@@ -32,6 +33,7 @@
 
 /* Alternate palettes — switched via data-palette on <html> */
 [data-palette="gameboy"] {
+  --on-accent: #0f380f;
   --scrim-rgb: 15, 56, 15;
   --shadow-hard: #0f380f;
   --frame-ground: #0f380f;
@@ -52,6 +54,7 @@
 }
 
 [data-palette="amber"] {
+  --on-accent: #0d0700;
   --scrim-rgb: 13, 7, 0;
   --shadow-hard: #0d0700;
   --frame-ground: #0d0700;
@@ -72,6 +75,7 @@
 }
 
 [data-palette="candy"] {
+  --on-accent: #fdf4ff;
   --scrim-rgb: 253, 244, 255;
   --shadow-hard: rgba(255,255,255,0.9);
   --frame-ground: #f5e8ff;
@@ -347,9 +351,14 @@ a:hover { color: var(--neon-1); }
   display: flex;
   align-items: stretch;
 }
+/* --on-accent is the page ground, so text on a neon fill inverts with the
+   palette. Hardcoding #000 here worked only while every accent was light:
+   once candy's accents were darkened for legibility as TEXT, black on
+   var(--neon-1) fell to 3.32:1 as a BACKGROUND. A token used both ways needs
+   its counterpart tokenised too. */
 .lmp-ticker__label {
   background: var(--neon-1);
-  color: #000;
+  color: var(--on-accent);
   font-family: var(--font-press-start-2p), system-ui, monospace;
   font-size: 11px;
   padding: 0 14px;
@@ -397,13 +406,13 @@ a:hover { color: var(--neon-1); }
   transform: translate(-2px, -2px);
   box-shadow: 6px 6px 0 #000;
   background: var(--neon-2);
-  color: #000;
+  color: var(--on-accent);
 }
 .retro-btn:active { transform: translate(2px, 2px); box-shadow: 0 0 0 #000; }
 .retro-btn--magenta { border-color: var(--neon-1); }
-.retro-btn--magenta:hover { background: var(--neon-1); color: #000; }
+.retro-btn--magenta:hover { background: var(--neon-1); color: var(--on-accent); }
 .retro-btn--lime { border-color: var(--neon-3); }
-.retro-btn--lime:hover { background: var(--neon-3); color: #000; }
+.retro-btn--lime:hover { background: var(--neon-3); color: var(--on-accent); }
 
 /* ===== CARDS / REVIEW CARDS ===== */
 .review-card {
@@ -470,8 +479,8 @@ a:hover { color: var(--neon-1); }
 }
 .cat-badge.featured {
   background: var(--neon-1);
-  color: #000;
-  border-color: #000;
+  color: var(--on-accent);
+  border-color: var(--on-accent);
 }
 .cat-badge svg { display: block; }
 
@@ -1040,8 +1049,8 @@ a:hover { color: var(--neon-1); }
 .filter-btn:hover { color: var(--ink); border-color: var(--neon-2); }
 .filter-btn.is-on {
   background: var(--neon-1);
-  color: #000;
-  border-color: #000;
+  color: var(--on-accent);
+  border-color: var(--on-accent);
 }
 .filter-count {
   font-family: var(--font-jetbrains-mono), ui-monospace, monospace;
@@ -1556,7 +1565,7 @@ textarea.field-input { min-height: 140px; resize: vertical; line-height: 1.6; }
   transition: all 0.12s;
 }
 .topic-opt:hover { border-color: var(--neon-2); color: var(--ink); }
-.topic-opt.is-on { background: var(--neon-1); border-color: #000; color: #000; }
+.topic-opt.is-on { background: var(--neon-1); border-color: var(--on-accent); color: var(--on-accent); }
 .send-row {
   display: flex;
   align-items: center;
@@ -1741,7 +1750,7 @@ textarea.field-input { min-height: 140px; resize: vertical; line-height: 1.6; }
   transform: translate(-2px, -2px);
   box-shadow: 6px 6px 0 #000;
   background: var(--neon-2);
-  color: #000;
+  color: var(--on-accent);
 }
 .tweaks {
   position: fixed;
@@ -1818,8 +1827,8 @@ textarea.field-input { min-height: 140px; resize: vertical; line-height: 1.6; }
 .retro-pagination a:hover { color: var(--ink); border-color: var(--neon-2); }
 .retro-pagination .is-active {
   background: var(--neon-1);
-  color: #000;
-  border-color: #000;
+  color: var(--on-accent);
+  border-color: var(--on-accent);
 }
 .retro-pagination .disabled { opacity: 0.4; cursor: not-allowed; }
 
@@ -1831,7 +1840,7 @@ textarea.field-input { min-height: 140px; resize: vertical; line-height: 1.6; }
   z-index: 100;
   font-family: var(--font-press-start-2p), system-ui, monospace;
   font-size: 11px;
-  color: #000;
+  color: var(--on-accent);
   background: var(--neon-4);
   padding: 12px 16px;
   border: 3px solid #000;
@@ -2554,6 +2563,66 @@ textarea.field-input { min-height: 140px; resize: vertical; line-height: 1.6; }
 .inbox-row .val,
 .inbox-row .val a {
   overflow-wrap: anywhere;
+}
+
+/* The count badge dims itself with rgba(0,0,0,0.3), which is fine on the
+   inactive chip but stacks dark-on-dark once the chip is filled with an accent
+   and the label flips to --on-accent (3.34:1). Drop the overlay on the active
+   chip and keep the badge shape with a border, so the count matches the label's
+   contrast in every palette. */
+.filter-btn.is-on .filter-count {
+  background: transparent;
+  border: 1px solid var(--on-accent);
+  color: var(--on-accent);
+}
+
+/* ---------- News listing ---------- */
+/* .news-grid is 1.4fr 1fr 1fr, sized for the homepage's lead-plus-two row.
+   A paginated listing wants equal columns. */
+.news-grid--listing {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+.news-card__meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.news-card__cat {
+  font-family: var(--font-press-start-2p), system-ui, monospace;
+  font-size: 8px;
+  line-height: 1.4;
+  color: var(--neon-2);
+  border: 1px solid currentColor;
+  padding: 4px 6px;
+}
+/* Overlays the media rather than sitting above it, so a breaking card keeps the
+   same height as its grid siblings. */
+.news-card__flag {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 2;
+  font-family: var(--font-press-start-2p), system-ui, monospace;
+  font-size: 9px;
+  line-height: 1;
+  padding: 7px 10px;
+  background: var(--heart);
+  color: var(--on-accent);
+  letter-spacing: 0.04em;
+}
+.news-card.is-breaking {
+  border-color: var(--heart);
+}
+.news-card.is-breaking:hover {
+  border-color: var(--heart);
+}
+
+@media (max-width: 1024px) {
+  .news-grid--listing { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 640px) {
+  .news-grid--listing { grid-template-columns: 1fr; }
 }
 
 /* ---------- Focus visibility ---------- */
