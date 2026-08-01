@@ -114,6 +114,76 @@ export const REVIEWS_PAGINATED_QUERY = `*[
   }
 }`;
 
+// Homepage hero + Top Rated list.
+//
+// This used to be driven purely by the manual `featured == true` tickbox, which
+// is why the front page froze: the newest flagged review was 19 April 2026 while
+// six newer ones sat unflagged, and the sidebar was still headed "TOP PICKS THIS
+// WEEK" over reviews from October 2025. A slot that only moves when someone
+// remembers to tick a box does not move.
+//
+// It is now score-ranked inside a rolling window, so it re-sorts itself every
+// time something is published and can never go stale. `featured` is left on the
+// schema and is no longer read here.
+//
+// `allTime` is the fallback for a quiet stretch: if the window holds fewer than
+// MIN_POOL reviews the section would otherwise render nearly empty, so the
+// component widens to the best-rated of all time rather than showing one item.
+const HERO_PROJECTION = `
+  _id,
+  title,
+  slug,
+  reviewScore,
+  summary,
+  publishedAt,
+  featured,
+  reviewableItem->{
+    title,
+    slug,
+    itemType,
+    coverImage{
+      asset->{
+        url
+      },
+      alt
+    },
+    creator,
+    publisher,
+    genres[]->{
+      title,
+      slug,
+      "color": color.hex
+    }
+  },
+  author->{
+    name,
+    slug,
+    "accentColor": accentColor.hex,
+    avatar{
+      asset->{
+        url
+      },
+      alt
+    }
+  }`;
+
+// $cutoff is an ISO date string. Pass it rounded to midnight UTC, not to the
+// current instant, or the value changes on every render and busts the fetch
+// cache that `fetchOptions` sets up.
+export const HERO_TOP_RATED_QUERY = `{
+  "recent": *[
+    _type == "review"
+    && defined(slug.current)
+    && publishedAt >= $cutoff
+  ]|order(reviewScore desc, publishedAt desc)[0...6]{${HERO_PROJECTION}
+  },
+  "allTime": *[
+    _type == "review"
+    && defined(slug.current)
+  ]|order(reviewScore desc, publishedAt desc)[0...6]{${HERO_PROJECTION}
+  }
+}`;
+
 // Featured Reviews Query
 export const FEATURED_REVIEWS_QUERY = `*[
   _type == "review"
@@ -462,6 +532,61 @@ export const NEWS_COUNT_QUERY = `count(*[
   && defined(slug.current)
 ])`;
 
+// News category filter bar.
+//
+// Only categories that actually hold a post are returned. 35 of 57 news posts
+// currently carry no category at all, and of the 20 categories in the dataset
+// only 5 are used by news, so listing them all would render a row of chips that
+// lead to an empty page. That is the same dead-filter trap as the `COMIC 0` chip
+// on /reviews, and it reads as a broken page rather than an empty category.
+export const NEWS_CATEGORY_COUNTS_QUERY = `{
+  "all": count(*[_type == "newsPost" && defined(slug.current)]),
+  "categories": *[
+    _type == "category"
+    && count(*[_type == "newsPost" && defined(slug.current) && references(^._id)]) > 0
+  ]{
+    title,
+    "slug": slug.current,
+    "color": color.hex,
+    "count": count(*[_type == "newsPost" && defined(slug.current) && references(^._id)])
+  }|order(count desc)
+}`;
+
+export const NEWS_BY_CATEGORY_PAGINATED_QUERY = `*[
+  _type == "newsPost"
+  && defined(slug.current)
+  && $category in categories[]->slug.current
+]|order(publishedAt desc)[$start...$end]{
+  _id,
+  title,
+  slug,
+  excerpt,
+  publishedAt,
+  breaking,
+  featuredImage{
+    asset->{
+      url
+    },
+    alt
+  },
+  author->{
+    name,
+    slug,
+    "accentColor": accentColor.hex
+  },
+  categories[]->{
+    title,
+    slug,
+    "color": color.hex
+  }
+}`;
+
+export const NEWS_COUNT_BY_CATEGORY_QUERY = `count(*[
+  _type == "newsPost"
+  && defined(slug.current)
+  && $category in categories[]->slug.current
+])`;
+
 // Single News Post Query
 export const NEWS_POST_QUERY = `*[
   _type == "newsPost"
@@ -471,6 +596,7 @@ export const NEWS_POST_QUERY = `*[
   title,
   slug,
   excerpt,
+  "wordCount": length(string::split(pt::text(content), " ")),
   content[]{
     ...,
     _type == "image" => {
@@ -691,3 +817,28 @@ export const NEWS_SLUGS_QUERY = `*[_type == "newsPost" && defined(slug.current)]
 }`;
 
 export const fetchOptions = { next: { revalidate: 30 } };
+
+// AdSense flagged the site "Low value content" on 2026-07-29. The likely driver
+// is the mix rather than the volume: 57 of 98 published pages are news posts,
+// and they summarise what other outlets reported first, so the shortest ones
+// carry no added value for a reader who could just read the source.
+//
+// Posts under this many words are kept out of the index and out of the sitemap.
+// They still render and are still linked, so readers and crawlers can reach
+// them, they just stop counting as indexable thin pages. Raise the word count
+// on a post and it returns to the index on the next revalidate.
+export const THIN_POST_WORDS = 300;
+
+// Word count for the thin-content check above. `pt::text` flattens Portable Text
+// to a plain string, so this counts prose only and ignores images and embeds.
+export const NEWS_WORD_COUNT_GROQ = `"wordCount": length(string::split(pt::text(content), " "))`;
+
+// Slugs of news posts substantial enough to index. Used by the sitemap.
+export const INDEXABLE_NEWS_SLUGS_QUERY = `*[
+  _type == "newsPost"
+  && defined(slug.current)
+  && length(string::split(pt::text(content), " ")) >= ${THIN_POST_WORDS}
+]{
+  "slug": slug,
+  publishedAt
+}`;

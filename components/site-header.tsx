@@ -20,6 +20,7 @@ type PageKey =
   | "reviews"
   | "news"
   | "membership"
+  | "about"
   | "contact"
   | "author";
 
@@ -39,6 +40,8 @@ const LINKS: Array<{
   { id: "membership", label: "JOIN", icon: "heart", href: "/membership" },
   { id: "contact", label: "CONTACT", icon: "mail", href: "/contact" },
 ];
+// About lives in the footer, not here. `.lmp-nav` is a nowrap flex row and
+// AuthControls is its last child, so a sixth link pushes SIGN IN off the end.
 
 function formatClock(d: Date) {
   const pad = (n: number) => String(n).padStart(2, "0");

@@ -20,10 +20,24 @@
 
   --pixel: 4px;
   --radius: 0;
+  /* Focus ring is its own token because the accent that works on a dark ground
+     is invisible on the light one. Never point this at --neon-* directly. */
+  --focus-ring: #3ee8ff;
+  --on-accent: #0a0820;
+  /* Scrim + hard shadow follow the palette's own ground. Hardcoding midnight's
+     #0a0820 here is what put the hero headline at 1.31:1 on the light palette. */
+  --scrim-rgb: 10, 8, 32;
+  --shadow-hard: #000;
+  --frame-ground: #000;
 }
 
 /* Alternate palettes — switched via data-palette on <html> */
 [data-palette="gameboy"] {
+  --on-accent: #0f380f;
+  --scrim-rgb: 15, 56, 15;
+  --shadow-hard: #0f380f;
+  --frame-ground: #0f380f;
+  --focus-ring: #c4dd5a;
   --bg-0: #0f380f;
   --bg-1: #173e17;
   --bg-2: #306230;
@@ -40,6 +54,11 @@
 }
 
 [data-palette="amber"] {
+  --on-accent: #0d0700;
+  --scrim-rgb: 13, 7, 0;
+  --shadow-hard: #0d0700;
+  --frame-ground: #0d0700;
+  --focus-ring: #ffd23d;
   --bg-0: #0d0700;
   --bg-1: #1a0f00;
   --bg-2: #2a1a05;
@@ -56,6 +75,11 @@
 }
 
 [data-palette="candy"] {
+  --on-accent: #fdf4ff;
+  --scrim-rgb: 253, 244, 255;
+  --shadow-hard: rgba(255,255,255,0.9);
+  --frame-ground: #f5e8ff;
+  --focus-ring: #2a1a3d;
   --bg-0: #fdf4ff;
   --bg-1: #f5e8ff;
   --bg-2: #ead0ff;
@@ -63,11 +87,11 @@
   --ink: #2a1a3d;
   --ink-dim: #5a4a7a;
   --ink-mute: #64587d; /* ≥4.5:1 on bg-0/1/2 (WCAG AA) */
-  --neon-1: #ff3d8b;
-  --neon-2: #00b8d4;
-  --neon-3: #6bc94a;
-  --neon-4: #ff8a00;
-  --heart: #ff3d8b;
+  --neon-1: #bf004d;  /* was #ff3d8b, 3.1:1 on bg-0 */
+  --neon-2: #006979;  /* was #00b8d4, 2.2:1 on bg-0 */
+  --neon-3: #346c20;  /* was #6bc94a, 1.9:1 on bg-0 */
+  --neon-4: #914f00;  /* was #ff8a00, 2.2:1 on bg-0 */
+  --heart: #bf004d;  /* was #ff3d8b, 3.1:1 on bg-0 */
   --grid: rgba(42, 26, 61, 0.04);
 }
 
@@ -327,9 +351,14 @@ a:hover { color: var(--neon-1); }
   display: flex;
   align-items: stretch;
 }
+/* --on-accent is the page ground, so text on a neon fill inverts with the
+   palette. Hardcoding #000 here worked only while every accent was light:
+   once candy's accents were darkened for legibility as TEXT, black on
+   var(--neon-1) fell to 3.32:1 as a BACKGROUND. A token used both ways needs
+   its counterpart tokenised too. */
 .lmp-ticker__label {
   background: var(--neon-1);
-  color: #000;
+  color: var(--on-accent);
   font-family: var(--font-press-start-2p), system-ui, monospace;
   font-size: 11px;
   padding: 0 14px;
@@ -377,13 +406,13 @@ a:hover { color: var(--neon-1); }
   transform: translate(-2px, -2px);
   box-shadow: 6px 6px 0 #000;
   background: var(--neon-2);
-  color: #000;
+  color: var(--on-accent);
 }
 .retro-btn:active { transform: translate(2px, 2px); box-shadow: 0 0 0 #000; }
 .retro-btn--magenta { border-color: var(--neon-1); }
-.retro-btn--magenta:hover { background: var(--neon-1); color: #000; }
+.retro-btn--magenta:hover { background: var(--neon-1); color: var(--on-accent); }
 .retro-btn--lime { border-color: var(--neon-3); }
-.retro-btn--lime:hover { background: var(--neon-3); color: #000; }
+.retro-btn--lime:hover { background: var(--neon-3); color: var(--on-accent); }
 
 /* ===== CARDS / REVIEW CARDS ===== */
 .review-card {
@@ -450,8 +479,8 @@ a:hover { color: var(--neon-1); }
 }
 .cat-badge.featured {
   background: var(--neon-1);
-  color: #000;
-  border-color: #000;
+  color: var(--on-accent);
+  border-color: var(--on-accent);
 }
 .cat-badge svg { display: block; }
 
@@ -602,7 +631,7 @@ a:hover { color: var(--neon-1); }
 /* ===== HERO (CRT frame) ===== */
 .hero { padding: 48px 0 32px; position: relative; }
 .crt-frame {
-  background: #000;
+  background: var(--frame-ground);
   border: 6px solid var(--bg-3);
   padding: 20px;
   position: relative;
@@ -660,8 +689,8 @@ a:hover { color: var(--neon-1); }
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(180deg, rgba(10, 8, 32, 0.1) 0%, rgba(10, 8, 32, 0.95) 100%),
-    linear-gradient(90deg, rgba(10, 8, 32, 0.6) 0%, transparent 60%);
+    linear-gradient(180deg, rgba(var(--scrim-rgb), 0.1) 0%, rgba(var(--scrim-rgb), 0.95) 100%),
+    linear-gradient(90deg, rgba(var(--scrim-rgb), 0.6) 0%, transparent 60%);
 }
 .hero-feature__body {
   position: absolute;
@@ -692,7 +721,7 @@ a:hover { color: var(--neon-1); }
   font-size: 20px;
   line-height: 1.4;
   color: var(--ink);
-  text-shadow: 4px 4px 0 #000;
+  text-shadow: 4px 4px 0 var(--shadow-hard);
   max-width: 90%;
 }
 .hero-feature__sub {
@@ -1020,8 +1049,8 @@ a:hover { color: var(--neon-1); }
 .filter-btn:hover { color: var(--ink); border-color: var(--neon-2); }
 .filter-btn.is-on {
   background: var(--neon-1);
-  color: #000;
-  border-color: #000;
+  color: var(--on-accent);
+  border-color: var(--on-accent);
 }
 .filter-count {
   font-family: var(--font-jetbrains-mono), ui-monospace, monospace;
@@ -1124,7 +1153,7 @@ a:hover { color: var(--neon-1); }
   font-size: 24px;
   line-height: 1.4;
   color: var(--ink);
-  text-shadow: 4px 4px 0 #000;
+  text-shadow: 4px 4px 0 var(--shadow-hard);
 }
 .article-meta__sub {
   font-family: var(--font-jetbrains-mono), ui-monospace, monospace;
@@ -1404,7 +1433,7 @@ a:hover { color: var(--neon-1); }
   font-size: 28px;
   line-height: 1.4;
   color: var(--ink);
-  text-shadow: 4px 4px 0 #000;
+  text-shadow: 4px 4px 0 var(--shadow-hard);
   margin-bottom: 16px;
 }
 .contact-hero__sub {
@@ -1536,7 +1565,7 @@ textarea.field-input { min-height: 140px; resize: vertical; line-height: 1.6; }
   transition: all 0.12s;
 }
 .topic-opt:hover { border-color: var(--neon-2); color: var(--ink); }
-.topic-opt.is-on { background: var(--neon-1); border-color: #000; color: #000; }
+.topic-opt.is-on { background: var(--neon-1); border-color: var(--on-accent); color: var(--on-accent); }
 .send-row {
   display: flex;
   align-items: center;
@@ -1721,7 +1750,7 @@ textarea.field-input { min-height: 140px; resize: vertical; line-height: 1.6; }
   transform: translate(-2px, -2px);
   box-shadow: 6px 6px 0 #000;
   background: var(--neon-2);
-  color: #000;
+  color: var(--on-accent);
 }
 .tweaks {
   position: fixed;
@@ -1798,8 +1827,8 @@ textarea.field-input { min-height: 140px; resize: vertical; line-height: 1.6; }
 .retro-pagination a:hover { color: var(--ink); border-color: var(--neon-2); }
 .retro-pagination .is-active {
   background: var(--neon-1);
-  color: #000;
-  border-color: #000;
+  color: var(--on-accent);
+  border-color: var(--on-accent);
 }
 .retro-pagination .disabled { opacity: 0.4; cursor: not-allowed; }
 
@@ -1811,7 +1840,7 @@ textarea.field-input { min-height: 140px; resize: vertical; line-height: 1.6; }
   z-index: 100;
   font-family: var(--font-press-start-2p), system-ui, monospace;
   font-size: 11px;
-  color: #000;
+  color: var(--on-accent);
   background: var(--neon-4);
   padding: 12px 16px;
   border: 3px solid #000;
@@ -2277,7 +2306,7 @@ textarea.field-input { min-height: 140px; resize: vertical; line-height: 1.6; }
 }
 
 /* Mobile (phones, phablets) -------------------------------------------- */
-@media (max-width: 720px) {
+@media (max-width: 1023.98px) {
   .lmp-container { padding: 0 16px; }
   .lmp-section { padding: 36px 0; }
 
@@ -2520,4 +2549,364 @@ textarea.field-input { min-height: 140px; resize: vertical; line-height: 1.6; }
 
   .section-head { flex-direction: column; align-items: flex-start; }
   .section-head__action { align-self: flex-end; }
+}
+
+/* /contact overflowed below ~383px: aside.contact-side is a grid item with the
+   default min-width:auto, and its min-content floor was 355px because
+   .inbox-row lays a label and an unbreakable 26-char email on one flex line. */
+.contact-side {
+  min-width: 0;
+}
+.inbox-row {
+  flex-wrap: wrap;
+}
+.inbox-row .val,
+.inbox-row .val a {
+  overflow-wrap: anywhere;
+}
+
+/* The count badge dims itself with rgba(0,0,0,0.3), which is fine on the
+   inactive chip but stacks dark-on-dark once the chip is filled with an accent
+   and the label flips to --on-accent (3.34:1). Drop the overlay on the active
+   chip and keep the badge shape with a border, so the count matches the label's
+   contrast in every palette. */
+.filter-btn.is-on .filter-count {
+  background: transparent;
+  border: 1px solid var(--on-accent);
+  color: var(--on-accent);
+}
+
+/* ---------- News listing ---------- */
+/* .news-grid is 1.4fr 1fr 1fr, sized for the homepage's lead-plus-two row.
+   A paginated listing wants equal columns. */
+.news-grid--listing {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+.news-card__meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.news-card__cat {
+  font-family: var(--font-press-start-2p), system-ui, monospace;
+  font-size: 8px;
+  line-height: 1.4;
+  color: var(--neon-2);
+  border: 1px solid currentColor;
+  padding: 4px 6px;
+}
+/* Overlays the media rather than sitting above it, so a breaking card keeps the
+   same height as its grid siblings. */
+.news-card__flag {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 2;
+  font-family: var(--font-press-start-2p), system-ui, monospace;
+  font-size: 9px;
+  line-height: 1;
+  padding: 7px 10px;
+  background: var(--heart);
+  color: var(--on-accent);
+  letter-spacing: 0.04em;
+}
+.news-card.is-breaking {
+  border-color: var(--heart);
+}
+.news-card.is-breaking:hover {
+  border-color: var(--heart);
+}
+
+@media (max-width: 1024px) {
+  .news-grid--listing { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 640px) {
+  .news-grid--listing { grid-template-columns: 1fr; }
+}
+
+/* ---------- Focus visibility ---------- */
+/* There was no :focus-visible rule anywhere in this file, so every focus
+   indicator was the Chrome UA default, whose colour derives from the element's
+   computed `color`. On .hero-feature (714x420, the biggest target on the site)
+   that resolved to a 1px near-black hairline on a near-black ground: invisible.
+   WCAG 2.4.7 / 2.4.11. :where() keeps specificity at 0 so components can still
+   override deliberately. */
+:where(a, button, [role="button"], input, textarea, select, summary, [tabindex]):focus-visible {
+  outline: 3px solid var(--focus-ring);
+  outline-offset: 2px;
+  border-radius: 0;
+}
+/* Inputs clear the UA outline on :focus; restore a real one for :focus-visible. */
+.contact-form input:focus-visible,
+.contact-form textarea:focus-visible,
+.comments__composer textarea:focus-visible {
+  outline: 3px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+
+/* ---------- About / editorial standards page ---------- */
+/* Built from the incumbent recipe rather than a fresh look: bg-1 panels, 3px
+   neon borders, zero radius, hard black offset shadows, Press Start 2P titles
+   with a 4px text-shadow. The first draft wrapped the whole page in .crt-frame,
+   which is a media frame (black ground, inner pink glow) and turned 1000 words
+   into one undifferentiated slab. */
+.about-hero {
+  background: var(--bg-1);
+  border: 3px solid var(--neon-1);
+  box-shadow: 6px 6px 0 #000;
+  padding: 40px;
+  margin-bottom: 24px;
+}
+.about-hero__grid {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 32px;
+  align-items: center;
+}
+.about-hero__title {
+  font-family: var(--font-press-start-2p), system-ui, monospace;
+  font-size: 40px;
+  line-height: 1.35;
+  color: var(--ink);
+  text-shadow: 4px 4px 0 var(--shadow-hard);
+  margin: 0 0 16px;
+}
+.about-hero__sub {
+  color: var(--ink-dim);
+  line-height: 1.75;
+  max-width: 62ch;
+  margin: 0 0 18px;
+}
+.about-hero__pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+/* Same recipe as .staff-card__lvl, so the tags read as the site's badge, not a
+   new component. */
+.about-tag {
+  font-family: var(--font-press-start-2p), system-ui, monospace;
+  font-size: 9px;
+  color: var(--neon-3);
+  background: rgba(170, 255, 61, 0.08);
+  border: 1px solid var(--neon-3);
+  padding: 5px 8px;
+}
+.about-hero__badge {
+  width: 140px;
+  height: 140px;
+  background: var(--bg-2);
+  border: 4px solid var(--neon-2);
+  display: grid;
+  place-items: center;
+}
+
+.about-grid {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap: 24px;
+  align-items: start;
+}
+.about-main {
+  display: grid;
+  gap: 20px;
+}
+.about-block {
+  background: var(--bg-1);
+  border: 3px solid var(--bg-3);
+  box-shadow: 4px 4px 0 #000;
+  padding: 24px;
+}
+.about-block__head {
+  font-family: var(--font-press-start-2p), system-ui, monospace;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--neon-2);
+  margin: 0 0 16px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid var(--bg-3);
+}
+.about-block p,
+.about-list li {
+  color: var(--ink-dim);
+  line-height: 1.75;
+  max-width: 68ch;
+  margin: 0 0 14px;
+}
+.about-block p:last-child,
+.about-list li:last-child {
+  margin-bottom: 0;
+}
+.about-block__note {
+  color: var(--ink) !important;
+  border-top: 2px solid var(--bg-3);
+  padding-top: 14px;
+  margin-top: 18px !important;
+}
+.about-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 12px;
+}
+.about-list li {
+  padding-left: 20px;
+  position: relative;
+}
+.about-list li::before {
+  content: "\25B8";
+  position: absolute;
+  left: 0;
+  color: var(--neon-1);
+}
+.about-block a,
+.about-side a:not(.retro-btn) {
+  color: var(--neon-4);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.about-block a:hover {
+  color: var(--neon-3);
+}
+
+/* Score bands are colour-coded by the same scoreTone thresholds the review
+   pages use, so lime/yellow/red mean the same thing here as on a card. */
+.score-scale {
+  display: grid;
+  gap: 0;
+  margin: 20px 0;
+  border: 2px solid var(--bg-3);
+}
+.score-scale__row {
+  display: grid;
+  grid-template-columns: 92px 1fr;
+  gap: 16px;
+  align-items: start;
+  padding: 14px 16px;
+  border-bottom: 1px dotted var(--bg-3);
+}
+.score-scale__row:last-child {
+  border-bottom: none;
+}
+.score-scale__chip {
+  font-family: var(--font-press-start-2p), system-ui, monospace;
+  font-size: 10px;
+  line-height: 1.5;
+  text-align: center;
+  padding: 6px 4px;
+  border: 2px solid currentColor;
+  background: var(--bg-2);
+}
+.score-scale__text {
+  display: grid;
+  gap: 4px;
+}
+.score-scale__label {
+  color: var(--ink);
+  font-weight: 700;
+}
+.score-scale__blurb {
+  color: var(--ink-dim);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.about-side {
+  display: grid;
+  gap: 16px;
+  position: sticky;
+  top: 24px;
+}
+.about-side__head {
+  font-family: var(--font-press-start-2p), system-ui, monospace;
+  font-size: 11px;
+  color: var(--neon-1);
+  margin-bottom: 12px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid var(--bg-3);
+}
+.about-side .stat-block {
+  margin-bottom: 0;
+}
+.about-side__val {
+  color: var(--ink);
+  font-weight: 700;
+}
+.about-side__rules {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 10px;
+}
+.about-side__rules li {
+  color: var(--ink-dim);
+  font-size: 13px;
+  line-height: 1.6;
+  padding-left: 18px;
+  position: relative;
+}
+.about-side__rules li::before {
+  content: "\25B8";
+  position: absolute;
+  left: 0;
+  color: var(--neon-3);
+}
+.about-side__cta {
+  display: grid;
+  gap: 10px;
+}
+.about-side__cta .retro-btn {
+  width: 100%;
+  justify-content: center;
+}
+
+@media (max-width: 980px) {
+  .about-grid {
+    grid-template-columns: 1fr;
+  }
+  .about-side {
+    position: static;
+  }
+  .about-hero {
+    padding: 28px;
+  }
+  .about-hero__title {
+    font-size: 26px;
+  }
+}
+@media (max-width: 640px) {
+  .about-hero {
+    padding: 20px 18px;
+    box-shadow: 4px 4px 0 #000;
+  }
+  .about-hero__grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  .about-hero__title {
+    font-size: 18px;
+    text-shadow: 2px 2px 0 #000;
+  }
+  .about-hero__badge {
+    width: 96px;
+    height: 96px;
+    border-width: 3px;
+  }
+  .about-block {
+    padding: 18px;
+  }
+  .about-block__head {
+    font-size: 11px;
+  }
+  .score-scale__row {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+  .score-scale__chip {
+    justify-self: start;
+    padding: 6px 10px;
+  }
 }

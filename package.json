@@ -57,6 +57,7 @@
     "dotenv": "^16.4.5",
     "eslint": "^9",
     "eslint-config-next": "15.5.9",
+    "impeccable": "^3.5.0",
     "tailwindcss": "^4",
     "tsx": "^4.7.1",
     "tw-animate-css": "^1.3.3",

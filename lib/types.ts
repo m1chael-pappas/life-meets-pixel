@@ -154,6 +154,8 @@ export interface NewsPost {
   };
   excerpt: string;
   content?: PortableTextBlock[];
+  /** Prose word count from `pt::text`, used for the thin-content noindex check. */
+  wordCount?: number;
   publishedAt: string;
   breaking: boolean;
   featuredImage: {
