@@ -7,8 +7,10 @@ import { notFound } from "next/navigation";
 
 import { NewsCard } from "@/components/retro/news-card";
 import { ReviewCard } from "@/components/retro/review-card";
+import { JsonLd } from "@/components/seo/json-ld";
 import { SiteHeader } from "@/components/site-header";
 import { authorInitial } from "@/lib/mappings";
+import { breadcrumbSchema, graph, profilePageSchema } from "@/lib/schema";
 import { fetchOptions, HIDDEN_AUTHOR_IDS } from "@/lib/queries";
 import type { Author, NewsPost, Review } from "@/lib/types";
 import { client } from "@/sanity/client";
@@ -79,6 +81,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     description: author.bio || `Meet ${author.name}, a writer at Life Meets Pixel.`,
     alternates: { canonical: canonicalUrl },
     openGraph: {
+      // Next.js REPLACES a parent openGraph object rather than merging it,
+      // so the locale has to be restated on every page that defines its own.
+      locale: "en_AU",
       title: `${author.name} - Author | Life Meets Pixel`,
       description: author.bio || `Meet ${author.name}, a writer at Life Meets Pixel.`,
       url: canonicalUrl,
@@ -262,6 +267,20 @@ export default async function AuthorPage({ params }: Props) {
   return (
     <>
       <SiteHeader currentPage="author" />
+      <JsonLd
+        data={graph(
+          profilePageSchema({
+            name: author.name,
+            slug: author.slug,
+            bio: author.bio,
+            avatarUrl: author.avatar?.asset?.url,
+          }),
+          breadcrumbSchema([
+            { name: "Home", path: "/" },
+            { name: author.name, path: `/author/${author.slug.current}` },
+          ]),
+        )}
+      />
       <main id="main-content" className="lmp-container" style={{ paddingTop: 32, paddingBottom: 48 }}>
         <Suspense fallback={<AuthorSkeleton />}>
           <AuthorContent author={author} />

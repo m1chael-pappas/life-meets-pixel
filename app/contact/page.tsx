@@ -17,6 +17,9 @@ export const metadata: Metadata = {
     "Drop us a line — review requests, news tips, collabs, or just to say g'day.",
   alternates: { canonical: `${siteUrl}/contact` },
   openGraph: {
+    // Next.js REPLACES a parent openGraph object rather than merging it,
+    // so the locale has to be restated on every page that defines its own.
+    locale: "en_AU",
     title: "Contact | Life Meets Pixel",
     description: "Drop us a line — review requests, news tips, collabs.",
     url: `${siteUrl}/contact`,

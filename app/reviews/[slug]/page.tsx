@@ -12,7 +12,9 @@ import { CatBadge } from "@/components/retro/cat-badge";
 import { HeartRow } from "@/components/retro/heart-row";
 import { HPBar } from "@/components/retro/hp-bar";
 import { ReviewCard } from "@/components/retro/review-card";
+import { JsonLd } from "@/components/seo/json-ld";
 import { SiteHeader } from "@/components/site-header";
+import { breadcrumbSchema, graph, reviewSchema } from "@/lib/schema";
 import {
   authorInitial,
   authorLevel,
@@ -86,6 +88,9 @@ export async function generateMetadata({
     authors: [{ name: review.author?.name || "Life Meets Pixel" }],
     alternates: { canonical: canonicalUrl },
     openGraph: {
+      // Next.js REPLACES a parent openGraph object rather than merging it,
+      // so the locale has to be restated on every page that defines its own.
+      locale: "en_AU",
       type: "article",
       title: seoTitle,
       description: seoDescription,
@@ -273,51 +278,32 @@ export default async function ReviewPage({ params }: { params: Promise<{ slug: s
   const relativeDate = formatDistanceToNow(publishDate, { addSuffix: true });
   const itemImageUrl = item?.coverImage?.asset?.url ?? null;
 
-  const structuredData = {
-    "@context": "https://schema.org",
-    "@type": "Review",
-    itemReviewed: {
-      "@type":
-        item.itemType === "videogame" || item.itemType === "boardgame"
-          ? "Game"
-          : item.itemType === "movie"
-            ? "Movie"
-            : item.itemType === "tvseries" || item.itemType === "anime"
-              ? "TVSeries"
-              : item.itemType === "book" || item.itemType === "comic"
-                ? "Book"
-                : item.itemType === "gadget"
-                  ? "Product"
-                  : "CreativeWork",
-      name: item.title,
-      image: itemImageUrl || undefined,
-      description: item.description || review.summary,
-    },
-    reviewRating: {
-      "@type": "Rating",
-      ratingValue: review.reviewScore,
-      bestRating: 10,
-      worstRating: 0,
-    },
-    author: { "@type": "Person", name: review.author?.name || "Life Meets Pixel" },
-    datePublished: review.publishedAt,
-    publisher: {
-      "@type": "Organization",
-      name: "Life Meets Pixel",
-      logo: { "@type": "ImageObject", url: "https://lifemeetspixel.com/logo.svg" },
-    },
-    headline: review.title,
-    reviewBody: review.summary || "",
-    inLanguage: "en-US",
-  };
+  const structuredData = graph(
+    reviewSchema({
+      title: review.title,
+      slug: review.slug,
+      summary: review.summary,
+      reviewScore: review.reviewScore,
+      publishedAt: review.publishedAt,
+      author: review.author,
+      item: {
+        title: item.title,
+        itemType: item.itemType,
+        description: item.description || review.summary,
+      },
+      itemImageUrl,
+    }),
+    breadcrumbSchema([
+      { name: "Home", path: "/" },
+      { name: "Reviews", path: "/reviews" },
+      { name: item.title, path: `/reviews/${review.slug.current}` },
+    ]),
+  );
 
   return (
     <>
       <SiteHeader currentPage="reviews" />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
-      />
+      <JsonLd data={structuredData} />
 
       <main id="main-content" className="lmp-container" style={{ paddingTop: 32, paddingBottom: 48 }}>
         <nav className="article-breadcrumb" aria-label="Breadcrumb">

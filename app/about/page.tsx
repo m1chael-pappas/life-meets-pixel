@@ -16,6 +16,9 @@ export const metadata: Metadata = {
     "Who writes Life Meets Pixel, how we score reviews out of 10, how we handle affiliate links and review copies, and how to correct us when we get something wrong.",
   alternates: { canonical: `${siteUrl}/about` },
   openGraph: {
+    // Next.js REPLACES a parent openGraph object rather than merging it,
+    // so the locale has to be restated on every page that defines its own.
+    locale: "en_AU",
     type: "profile",
     title: "About and Editorial Standards | Life Meets Pixel",
     description:

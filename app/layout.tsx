@@ -9,6 +9,8 @@ import dynamic from "next/dynamic";
 import { ClerkProvider } from "@clerk/nextjs";
 
 import { KonamiEasterEgg } from "@/components/retro/konami";
+import { JsonLd } from "@/components/seo/json-ld";
+import { graph, organizationSchema, websiteSchema } from "@/lib/schema";
 import { clerkAppearance } from "@/lib/clerk-appearance";
 import { SoundEffects } from "@/components/retro/sound-effects";
 import { TweaksPanel } from "@/components/retro/tweaks-panel";
@@ -66,7 +68,9 @@ export const metadata: Metadata = {
   ),
   openGraph: {
     type: "website",
-    locale: "en_US",
+    // Australian site: the RSS feeds and comment timestamps already say en-AU,
+    // so the OG locale and JSON-LD inLanguage must agree rather than say en_US.
+    locale: "en_AU",
     url: "/",
     siteName: "Life Meets Pixel",
     title: "Life Meets Pixel - Reviews & News",
@@ -133,11 +137,14 @@ export default function RootLayout({
   const clerkEnabled = Boolean(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY);
 
   const tree = (
-    <html lang="en" data-palette="midnight" suppressHydrationWarning>
+    <html lang="en-AU" data-palette="midnight" suppressHydrationWarning>
       <head>
         <link rel="icon" href="/logo.svg" type="image/svg+xml" />
         <link rel="apple-touch-icon" href="/logo.svg" />
         <link rel="manifest" href="/site.webmanifest" />
+        {/* Organization + WebSite, emitted once sitewide. Every per-page graph
+            references these by @id instead of restating the publisher. */}
+        <JsonLd data={graph(organizationSchema(), websiteSchema())} />
       </head>
       <body
         className={`${pressStart2P.variable} ${jetbrainsMono.variable} ${vt323.variable} antialiased`}

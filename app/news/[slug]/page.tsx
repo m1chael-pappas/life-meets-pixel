@@ -9,7 +9,9 @@ import AdBreak from "@/components/ads/ad-break";
 import Comments from "@/components/comments/comments";
 import { AuthorChip } from "@/components/retro/author-chip";
 import { NewsCard } from "@/components/retro/news-card";
+import { JsonLd } from "@/components/seo/json-ld";
 import { SiteHeader } from "@/components/site-header";
+import { breadcrumbSchema, graph, newsArticleSchema } from "@/lib/schema";
 import { authorInitial, authorLevel } from "@/lib/mappings";
 import {
   fetchOptions,
@@ -64,6 +66,9 @@ export async function generateMetadata({ params }: NewsPostPageProps): Promise<M
     alternates: { canonical: canonicalUrl },
     ...(isThin && { robots: { index: false, follow: true } }),
     openGraph: {
+      // Next.js REPLACES a parent openGraph object rather than merging it,
+      // so the locale has to be restated on every page that defines its own.
+      locale: "en_AU",
       type: "article",
       title: post.title,
       description: post.excerpt,
@@ -191,9 +196,35 @@ export default async function NewsPostPage({ params }: NewsPostPageProps) {
   const wordCount = countWords(post.content);
   const readMin = Math.max(1, Math.round(wordCount / 220));
 
+  // Thin posts are noindex (see generateMetadata), so emitting rich-result
+  // markup for them would advertise a page we are asking Google to skip.
+  const isThin = (post.wordCount ?? 0) < THIN_POST_WORDS;
+
   return (
     <>
       <SiteHeader currentPage="news" />
+      {!isThin && (
+        <JsonLd
+          data={graph(
+            newsArticleSchema({
+              title: post.title,
+              excerpt: post.excerpt,
+              slug: post.slug,
+              publishedAt: post.publishedAt,
+              imageUrl: post.featuredImage
+                ? urlFor(post.featuredImage)?.width(1200).height(630).url()
+                : null,
+              author: post.author,
+              categories: post.categories,
+            }),
+            breadcrumbSchema([
+              { name: "Home", path: "/" },
+              { name: "News", path: "/news" },
+              { name: post.title, path: `/news/${post.slug.current}` },
+            ]),
+          )}
+        />
+      )}
       <main id="main-content" className="lmp-container" style={{ paddingTop: 32, paddingBottom: 48 }}>
         <nav className="article-breadcrumb" aria-label="Breadcrumb">
           <Link href="/">HOME</Link>
