@@ -4,8 +4,10 @@ import { Metadata } from "next";
 
 import NewsCategoryTabs, { type NewsCategoryCount } from "@/components/news-category-tabs";
 import { NewsCard } from "@/components/retro/news-card";
+import { JsonLd } from "@/components/seo/json-ld";
 import { SiteHeader } from "@/components/site-header";
 import Pagination from "@/components/ui/pagination";
+import { breadcrumbSchema, collectionPageSchema, graph } from "@/lib/schema";
 import {
   fetchOptions,
   NEWS_BY_CATEGORY_PAGINATED_QUERY,
@@ -47,6 +49,9 @@ export async function generateMetadata({ searchParams }: NewsPageProps): Promise
     description,
     alternates: { canonical: canonicalUrl },
     openGraph: {
+      // Next.js REPLACES a parent openGraph object rather than merging it,
+      // so the locale has to be restated on every page that defines its own.
+      locale: "en_AU",
       title: `${title} | Life Meets Pixel`,
       description,
       url: canonicalUrl,
@@ -130,6 +135,19 @@ export default async function NewsPage({ searchParams }: NewsPageProps) {
   return (
     <>
       <SiteHeader currentPage="news" />
+      <JsonLd
+        data={graph(
+          collectionPageSchema({
+            name: pageTitle,
+            path: category ? `/news?category=${category}` : "/news",
+          }),
+          breadcrumbSchema([
+            { name: "Home", path: "/" },
+            { name: "News", path: "/news" },
+            ...(active ? [{ name: active.title, path: `/news?category=${active.slug}` }] : []),
+          ]),
+        )}
+      />
       <main id="main-content" className="lmp-container" style={{ paddingTop: 32, paddingBottom: 32 }}>
         <div className="section-head">
           <div className="section-head__title">

@@ -29,6 +29,9 @@ export const metadata: Metadata = {
     "entertainment reviews",
   ],
   openGraph: {
+    // Next.js REPLACES a parent openGraph object rather than merging it,
+    // so the locale has to be restated on every page that defines its own.
+    locale: "en_AU",
     type: "website",
     title: "Life Meets Pixel - Reviews & News",
     description:

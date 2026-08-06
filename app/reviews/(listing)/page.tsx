@@ -4,8 +4,10 @@ import { Metadata } from "next";
 
 import { ReviewCard } from "@/components/retro/review-card";
 import ReviewTypeTabs from "@/components/review-type-tabs";
+import { JsonLd } from "@/components/seo/json-ld";
 import { SiteHeader } from "@/components/site-header";
 import Pagination from "@/components/ui/pagination";
+import { breadcrumbSchema, collectionPageSchema, graph } from "@/lib/schema";
 import { CAT_TYPE_LABEL, ITEM_TYPES } from "@/lib/mappings";
 import {
   fetchOptions,
@@ -54,6 +56,9 @@ export async function generateMetadata({
     description: meta.description,
     alternates: { canonical: canonicalUrl },
     openGraph: {
+      // Next.js REPLACES a parent openGraph object rather than merging it,
+      // so the locale has to be restated on every page that defines its own.
+      locale: "en_AU",
       title: `${meta.title} | Life Meets Pixel`,
       description: meta.description,
       url: canonicalUrl,
@@ -140,6 +145,19 @@ export default async function ReviewsPage({ searchParams }: ReviewsPageProps) {
   return (
     <>
       <SiteHeader currentPage="reviews" />
+      <JsonLd
+        data={graph(
+          collectionPageSchema({
+            name: pageTitle,
+            path: type ? `/reviews?type=${type}` : "/reviews",
+          }),
+          breadcrumbSchema([
+            { name: "Home", path: "/" },
+            { name: "Reviews", path: "/reviews" },
+            ...(type ? [{ name: CAT_TYPE_LABEL[type], path: `/reviews?type=${type}` }] : []),
+          ]),
+        )}
+      />
       <main id="main-content" className="lmp-container" style={{ paddingTop: 32, paddingBottom: 32 }}>
         <div className="section-head">
           <div className="section-head__title">
