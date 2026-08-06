@@ -816,7 +816,27 @@ export const NEWS_SLUGS_QUERY = `*[_type == "newsPost" && defined(slug.current)]
   "slug": slug.current
 }`;
 
-export const fetchOptions = { next: { revalidate: 30 } };
+// Author profiles were the one [slug] route without a prerender list, so unlike
+// articles they rendered on demand for every request and never cached. Hidden
+// authors are excluded here for the same reason the sitemap excludes them: their
+// profile 404s, so there is nothing to prerender.
+export const AUTHOR_SLUGS_QUERY = `*[_type == "author" && defined(slug.current) && ${HIDDEN_AUTHORS_GROQ}]{
+  "slug": slug.current
+}`;
+
+// Freshness comes from the Sanity webhook (`/api/revalidate` -> `revalidatePath`),
+// NOT from this window, which is only the fallback for when the webhook does not
+// fire. It used to be 30s, which quietly cancelled the whole webhook design: ISR
+// regenerates ON REQUEST rather than on a timer, so at this site's traffic almost
+// every visitor arrived outside the 30s window and paid for a full server render
+// plus the Sanity round-trips. Measured on production: articles sat STALE at
+// age ~1790s, regenerated on the visit, then served HIT at age 2. A near-zero
+// cache hit rate on ~100 prerendered pages.
+//
+// One hour keeps a sane safety net (a missed webhook self-heals within the hour)
+// while cutting time-driven regenerations by 120x. If you add a new Sanity _type,
+// wire it into the webhook's switch rather than lowering this.
+export const fetchOptions = { next: { revalidate: 3600 } };
 
 // AdSense flagged the site "Low value content" on 2026-07-29. The likely driver
 // is the mix rather than the volume: 57 of 98 published pages are news posts,
