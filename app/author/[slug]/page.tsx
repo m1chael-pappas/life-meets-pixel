@@ -11,7 +11,7 @@ import { JsonLd } from "@/components/seo/json-ld";
 import { SiteHeader } from "@/components/site-header";
 import { authorInitial } from "@/lib/mappings";
 import { breadcrumbSchema, graph, profilePageSchema } from "@/lib/schema";
-import { fetchOptions, HIDDEN_AUTHOR_IDS } from "@/lib/queries";
+import { AUTHOR_SLUGS_QUERY, fetchOptions, HIDDEN_AUTHOR_IDS } from "@/lib/queries";
 import type { Author, NewsPost, Review } from "@/lib/types";
 import { client } from "@/sanity/client";
 
@@ -69,6 +69,14 @@ const AUTHOR_NEWS_QUERY = `*[_type == "newsPost" && author._ref == $authorId && 
   author->{ name, slug, "accentColor": accentColor.hex, avatar{ asset->{ url }, alt } },
   categories[]->{ title, slug, "color": color.hex }
 }`;
+
+// Prerender profiles so the route is served from the full route cache instead of
+// rendering per request. Authors published after a build still resolve, because
+// dynamicParams defaults to true, and the Sanity webhook revalidates the path.
+export async function generateStaticParams() {
+  const authors = await client.fetch<Array<{ slug: string }>>(AUTHOR_SLUGS_QUERY);
+  return authors.map(({ slug }) => ({ slug }));
+}
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
