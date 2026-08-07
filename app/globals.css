@@ -714,20 +714,11 @@ a:hover { color: var(--neon-1); }
   border: 1px solid rgba(62, 232, 255, 0.3);
   pointer-events: none;
 }
-.crt-frame::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background: repeating-linear-gradient(
-    0deg,
-    rgba(0, 0, 0, 0.25) 0px,
-    rgba(0, 0, 0, 0.25) 1px,
-    transparent 1px,
-    transparent 3px
-  );
-  z-index: 5;
-}
+/* The scanline overlay used to sit here, at inset:0 z-index:5 — i.e. painted
+   across the ENTIRE frame, including the side rail. A 1px black line every 3px
+   on top of 11px pixel type slices every glyph, which reads as blur and is not
+   fixable by changing the face or the size. The texture belongs on the artwork,
+   so it now lives on .hero-feature__media::after, underneath the text. */
 .hero-grid {
   display: grid;
   grid-template-columns: 1.6fr 1fr;
@@ -760,6 +751,13 @@ a:hover { color: var(--neon-1); }
      measured 1.72:1 on midnight / 1.03:1 on candy when sampled against real
      painted pixels rather than composited ancestor backgrounds. */
   background:
+    repeating-linear-gradient(
+      0deg,
+      rgba(0, 0, 0, 0.25) 0px,
+      rgba(0, 0, 0, 0.25) 1px,
+      transparent 1px,
+      transparent 3px
+    ),
     linear-gradient(
       180deg,
       rgba(var(--scrim-rgb), 0.05) 25%,
