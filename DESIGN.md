@@ -322,8 +322,8 @@ Two tiers sit outside that ramp on purpose, and neither is text:
 
 **JetBrains Mono (everything read as prose):**
 
-- **Lede** (20px, 1.6, max 72ch): the article standfirst.
-- **Body** (18px, 1.7, max 72ch): article copy. Renders 72 characters per line in the 651px column.
+- **Lede** (20px, 1.6, max 34em): the article standfirst, rendered from `review.summary`.
+- **Body** (18px, 1.7, max 34em): article copy. Renders ~68 characters per line.
 - **Body-lg** (16px, 1.55): the hero feature subtitle.
 - **Body-ui** (15px, 1.55): the document base size.
 - **Body-sm** (14px): card excerpts, footer links, form inputs.
@@ -340,7 +340,7 @@ Two tiers sit outside that ramp on purpose, and neither is text:
 
 **The No-Weight Rule.** Press Start 2P and VT323 ship at 400 only, and headings explicitly set `font-weight: normal`. Hierarchy is built from size, colour and tracking, never from weight. JetBrains Mono loads 400/500/700 and is the only place a bold is available.
 
-**The 72ch Rule.** Body copy is capped at 72 characters (`max-width: 72ch` on article paragraphs and the standfirst). A monospaced body face runs wide; without the cap, line length breaks long before the container does.
+**The Measure Rule.** Body copy is capped at **34em** on the prose face (18px x 34 = 612px, which measures ~68 characters). It is NOT capped in `ch`. `ch` is the advance of the character `0`: on a monospace face that equals one character, but on a proportional face it is much narrower than the average glyph, so the inherited `72ch` rendered **95 characters** at 1024px+ and 39 at 390px — further from the 65-75 band than the 64 of the mono it replaced. Any surface still set in JetBrains Mono may keep `ch`; anything on IBM Plex Sans uses `em`. **When a face changes, every `ch`-based cap silently stops meaning what it says.**
 
 ## Layout
 

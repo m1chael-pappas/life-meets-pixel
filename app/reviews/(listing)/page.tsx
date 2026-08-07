@@ -1,20 +1,30 @@
 import { Suspense } from "react";
 
 import { Metadata } from "next";
+import Link from "next/link";
+import { notFound } from "next/navigation";
 
 import { ReviewCard } from "@/components/retro/review-card";
+import { CatSprite } from "@/components/retro/sprites";
 import ReviewTypeTabs from "@/components/review-type-tabs";
 import { JsonLd } from "@/components/seo/json-ld";
 import { SiteHeader } from "@/components/site-header";
 import Pagination from "@/components/ui/pagination";
 import { breadcrumbSchema, collectionPageSchema, graph } from "@/lib/schema";
-import { CAT_TYPE_LABEL, ITEM_TYPES } from "@/lib/mappings";
+import {
+  CAT_TYPE_HEADING,
+  CAT_TYPE_LABEL,
+  ITEM_TYPES,
+  itemTypeToCat,
+} from "@/lib/mappings";
 import {
   fetchOptions,
   REVIEW_COUNTS_BY_TYPE_QUERY,
+  REVIEWS_BY_TYPE_PAGINATED_BY_SCORE_QUERY,
   REVIEWS_BY_TYPE_PAGINATED_QUERY,
   REVIEWS_COUNT_BY_TYPE_QUERY,
   REVIEWS_COUNT_QUERY,
+  REVIEWS_PAGINATED_BY_SCORE_QUERY,
   REVIEWS_PAGINATED_QUERY,
 } from "@/lib/queries";
 import type { Review, ReviewableItem } from "@/lib/types";
@@ -26,41 +36,40 @@ interface ReviewsPageProps {
   searchParams: SearchParams;
 }
 
+/** Recency answers "what's new". It does not answer "what's good" — the
+ *  question this site is uniquely equipped to answer, and until now the one it
+ *  gave browsers no way to ask. Two options, not a dropdown, so the decision
+ *  point stays at 2. */
+type Sort = "new" | "score";
+
 export async function generateMetadata({
   searchParams,
 }: ReviewsPageProps): Promise<Metadata> {
   const params = await searchParams;
-  const type = params.type as string | undefined;
+  const typeParam = params.type as string | undefined;
+  const type = (ITEM_TYPES as string[]).includes(typeParam ?? "")
+    ? (typeParam as ReviewableItem["itemType"])
+    : undefined;
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://lifemeetspixel.com";
 
-  const typeMetadata: Record<string, { title: string; description: string }> = {
-    videogame: { title: "Video Game Reviews", description: "Honest reviews of the latest and greatest video games." },
-    movie: { title: "Movie Reviews", description: "In-depth movie reviews covering latest releases and classic films." },
-    anime: { title: "Anime Reviews", description: "Reviews of anime series and films from seasoned fans." },
-    book: { title: "Book Reviews", description: "In-depth reviews of books spanning fiction, non-fiction, and more." },
-    comic: { title: "Comic & Manga Reviews", description: "Reviews of comics, graphic novels, and manga." },
-    boardgame: { title: "Board Game Reviews", description: "Detailed reviews of board games and tabletop experiences." },
-    tvseries: { title: "TV Series Reviews", description: "Reviews of TV shows and streaming series worth your time." },
-    gadget: { title: "Tech & Gadget Reviews", description: "Reviews of the latest tech gadgets and gaming peripherals." },
-  };
+  const title = type ? `${CAT_TYPE_HEADING[type]} Reviews` : "All Reviews";
+  const description = type
+    ? `Honest, scored reviews of ${CAT_TYPE_LABEL[type].toLowerCase()} — no sponsors, no PR fluff.`
+    : "Browse all our reviews of games, movies, books, anime, and more.";
 
-  const meta = type && typeMetadata[type] ? typeMetadata[type] : {
-    title: "All Reviews",
-    description: "Browse all our reviews of games, movies, books, anime, and more.",
-  };
   const canonicalPath = type ? `/reviews?type=${type}` : "/reviews";
   const canonicalUrl = `${siteUrl}${canonicalPath}`;
 
   return {
-    title: meta.title,
-    description: meta.description,
+    title,
+    description,
     alternates: { canonical: canonicalUrl },
     openGraph: {
       // Next.js REPLACES a parent openGraph object rather than merging it,
       // so the locale has to be restated on every page that defines its own.
       locale: "en_AU",
-      title: `${meta.title} | Life Meets Pixel`,
-      description: meta.description,
+      title: `${title} | Life Meets Pixel`,
+      description,
       url: canonicalUrl,
       type: "website",
     },
@@ -71,36 +80,90 @@ const ITEMS_PER_PAGE = 12;
 
 type CountsShape = Record<ReviewableItem["itemType"] | "all", number>;
 
-async function ReviewsList({ type, page }: { type?: ReviewableItem["itemType"]; page: number }) {
+/** Mediums with at least one review, best-populated first — used to give the
+ *  empty state real exits instead of "check back soon". */
+function populatedTypes(counts: CountsShape, exclude?: ReviewableItem["itemType"]) {
+  return ITEM_TYPES.filter((t) => t !== exclude && (counts[t] ?? 0) > 0)
+    .sort((a, b) => (counts[b] ?? 0) - (counts[a] ?? 0))
+    .slice(0, 3);
+}
+
+function EmptyState({
+  type,
+  counts,
+}: {
+  type?: ReviewableItem["itemType"];
+  counts: CountsShape;
+}) {
+  const nearby = populatedTypes(counts, type);
+  return (
+    <div className="stat-block empty-state">
+      {/* The category's own 9x9 sprite, not the 48px emoji this used to be:
+          full-colour vector glyphs beside hand-plotted pixel art are the
+          Pixel-Icon Rule's exact failure mode, and land in the confirmed
+          nostalgia-kitsch anti-reference. */}
+      <div className="empty-state__sprite" aria-hidden="true">
+        <CatSprite cat={type ? itemTypeToCat(type) : "game"} size={48} />
+      </div>
+      <h3 className="empty-state__title">NOTHING HERE YET</h3>
+      <p className="empty-state__body">
+        {type
+          ? `No ${CAT_TYPE_LABEL[type].toLowerCase()} reviewed yet — we're working on it.`
+          : "No reviews published yet."}
+      </p>
+      {/* Always an exit. This panel is reached by a chip the page itself
+          renders at 0, so a dead end here is a guaranteed bounce on a surface
+          whose success metric is another page read. */}
+      <div className="empty-state__exits">
+        <Link href="/reviews" className="retro-btn retro-btn--lime">
+          ► ALL {counts.all ?? 0} REVIEWS
+        </Link>
+        {nearby.map((t) => (
+          <Link key={t} href={`/reviews?type=${t}`} className="retro-btn">
+            {CAT_TYPE_HEADING[t].toUpperCase()} {counts[t]}
+          </Link>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+async function ReviewsList({
+  type,
+  page,
+  sort,
+  counts,
+}: {
+  type?: ReviewableItem["itemType"];
+  page: number;
+  sort: Sort;
+  counts: CountsShape;
+}) {
   const start = (page - 1) * ITEMS_PER_PAGE;
   const end = start + ITEMS_PER_PAGE;
 
+  const listQuery = type
+    ? sort === "score"
+      ? REVIEWS_BY_TYPE_PAGINATED_BY_SCORE_QUERY
+      : REVIEWS_BY_TYPE_PAGINATED_QUERY
+    : sort === "score"
+      ? REVIEWS_PAGINATED_BY_SCORE_QUERY
+      : REVIEWS_PAGINATED_QUERY;
+
   const [reviews, totalCount] = type
     ? await Promise.all([
-        client.fetch<Review[]>(REVIEWS_BY_TYPE_PAGINATED_QUERY, { itemType: type, start, end }, fetchOptions),
+        client.fetch<Review[]>(listQuery, { itemType: type, start, end }, fetchOptions),
         client.fetch<number>(REVIEWS_COUNT_BY_TYPE_QUERY, { itemType: type }, fetchOptions),
       ])
     : await Promise.all([
-        client.fetch<Review[]>(REVIEWS_PAGINATED_QUERY, { start, end }, fetchOptions),
+        client.fetch<Review[]>(listQuery, { start, end }, fetchOptions),
         client.fetch<number>(REVIEWS_COUNT_QUERY, {}, fetchOptions),
       ]);
 
-  const totalPages = Math.ceil(totalCount / ITEMS_PER_PAGE);
+  const totalPages = Math.max(1, Math.ceil(totalCount / ITEMS_PER_PAGE));
 
   if (reviews.length === 0) {
-    return (
-      <div
-        className="stat-block"
-        style={{ textAlign: "center", padding: 48 }}
-      >
-        <div style={{ fontSize: 48, marginBottom: 12 }}>📝</div>
-        <h3 style={{ color: "var(--neon-1)", marginBottom: 8 }}>NO REVIEWS FOUND</h3>
-        <p style={{ color: "var(--ink-dim)", fontSize: 13 }}>
-          {type ? `No ${CAT_TYPE_LABEL[type]?.toLowerCase() ?? type} reviews yet. ` : "No reviews yet. "}
-          Check back soon.
-        </p>
-      </div>
-    );
+    return <EmptyState type={type} counts={counts} />;
   }
 
   return (
@@ -119,7 +182,7 @@ function ReviewsListSkeleton() {
   return (
     <div className="reviews-grid">
       {Array.from({ length: 6 }).map((_, i) => (
-        <div key={i} style={{ height: 420, background: "var(--bg-1)", border: "3px solid var(--bg-3)" }} />
+        <div key={i} style={{ height: 507, background: "var(--bg-1)", border: "3px solid var(--bg-3)" }} />
       ))}
     </div>
   );
@@ -132,6 +195,7 @@ export default async function ReviewsPage({ searchParams }: ReviewsPageProps) {
     ? (typeParam as ReviewableItem["itemType"])
     : undefined;
   const currentPage = Math.max(1, Number(params.page) || 1);
+  const sort: Sort = params.sort === "score" ? "score" : "new";
 
   const counts = await client.fetch<CountsShape>(
     REVIEW_COUNTS_BY_TYPE_QUERY,
@@ -139,8 +203,24 @@ export default async function ReviewsPage({ searchParams }: ReviewsPageProps) {
     fetchOptions,
   );
 
-  const pageTitle = type ? `${CAT_TYPE_LABEL[type]} Reviews` : "All Reviews";
+  const pageTitle = type ? `${CAT_TYPE_HEADING[type]} Reviews` : "All Reviews";
   const entryCount = type ? (counts[type] ?? 0) : (counts.all ?? 0);
+
+  // The out-of-range guard has to run HERE, above the Suspense boundary. Inside
+  // it, the shell has already flushed a 200 and notFound() can no longer change
+  // the status — the same soft-404 trap documented in pixel-loading.tsx. A page
+  // past the end used to answer 200 with "42 ENTRIES" above "No reviews yet"
+  // and no way back, which crawlers index as thin content.
+  const totalPages = Math.max(1, Math.ceil(entryCount / ITEMS_PER_PAGE));
+  if (entryCount > 0 && currentPage > totalPages) notFound();
+
+  const sortHref = (s: Sort) => {
+    const qs = new URLSearchParams();
+    if (type) qs.set("type", type);
+    if (s === "score") qs.set("sort", "score");
+    const q = qs.toString();
+    return q ? `/reviews?${q}` : "/reviews";
+  };
 
   return (
     <>
@@ -154,7 +234,7 @@ export default async function ReviewsPage({ searchParams }: ReviewsPageProps) {
           breadcrumbSchema([
             { name: "Home", path: "/" },
             { name: "Reviews", path: "/reviews" },
-            ...(type ? [{ name: CAT_TYPE_LABEL[type], path: `/reviews?type=${type}` }] : []),
+            ...(type ? [{ name: CAT_TYPE_HEADING[type], path: `/reviews?type=${type}` }] : []),
           ]),
         )}
       />
@@ -164,16 +244,62 @@ export default async function ReviewsPage({ searchParams }: ReviewsPageProps) {
             <span className="num">DB</span>
             <h1>{pageTitle.toUpperCase()}</h1>
           </div>
-          <span style={{ fontFamily: "var(--font-press-start-2p)", fontSize: 10, color: "var(--ink-mute)" }}>
+          <span className="listing-count" style={{ fontFamily: "var(--font-press-start-2p)", color: "var(--ink-mute)" }}>
             {entryCount} {entryCount === 1 ? "ENTRY" : "ENTRIES"}
           </span>
         </div>
 
         <ReviewTypeTabs currentType={type} counts={counts} />
 
-        <h2 className="sr-only">Results</h2>
+        <div className="sort-bar">
+          <span className="sort-bar__label">SORT</span>
+          <Link
+            href={sortHref("new")}
+            className={`filter-btn ${sort === "new" ? "is-on" : ""}`}
+            aria-current={sort === "new" ? "true" : undefined}
+          >
+            NEWEST
+          </Link>
+          <Link
+            href={sortHref("score")}
+            className={`filter-btn ${sort === "score" ? "is-on" : ""}`}
+            aria-current={sort === "score" ? "true" : undefined}
+          >
+            HIGHEST SCORED
+          </Link>
+        </div>
+
+        {/* The scores were the only thing on this page with no key: twelve
+            tone-coded numbers, no legend, and no route to the published scale
+            on a site whose positioning is auditable scoring. */}
+        <Link href="/about" className="score-key" style={{ marginBottom: 20 }}>
+          <span className="score-key__head">◆ HOW WE SCORE</span>
+          <span className="score-key__bands">
+            <span className="score-key__band">
+              <i style={{ background: "var(--neon-3)" }} aria-hidden="true" />
+              8.0+
+            </span>
+            <span className="score-key__band">
+              <i style={{ background: "var(--neon-4)" }} aria-hidden="true" />
+              6.0&ndash;7.9
+            </span>
+            <span className="score-key__band">
+              <i style={{ background: "var(--heart)" }} aria-hidden="true" />
+              &lt;6.0
+            </span>
+          </span>
+          <span className="score-key__more">
+            Every score breaks down into the 3&ndash;5 things it is made of. Read the full scale &rarr;
+          </span>
+        </Link>
+
+        <h2 className="sr-only">
+          {entryCount} {entryCount === 1 ? "review" : "reviews"}
+          {type ? ` in ${CAT_TYPE_LABEL[type]}` : ""}
+          {sort === "score" ? ", highest scored first" : ", newest first"}
+        </h2>
         <Suspense fallback={<ReviewsListSkeleton />}>
-          <ReviewsList type={type} page={currentPage} />
+          <ReviewsList type={type} page={currentPage} sort={sort} counts={counts} />
         </Suspense>
       </main>
     </>

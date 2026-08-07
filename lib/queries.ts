@@ -114,6 +114,59 @@ export const REVIEWS_PAGINATED_QUERY = `*[
   }
 }`;
 
+export const REVIEWS_PAGINATED_BY_SCORE_QUERY = `*[
+  _type == "review"
+  && defined(slug.current)
+]|order(reviewScore desc, publishedAt desc)[$start...$end]{
+  _id,
+  title,
+  slug,
+  reviewScore,
+  summary,
+  publishedAt,
+  featured,
+  reviewableItem->{
+    title,
+    slug,
+    itemType,
+    coverImage{
+      asset->{
+        url
+      },
+      alt
+    },
+    creator,
+    publisher,
+    releaseDate,
+    genres[]->{
+      title,
+      slug,
+      "color": color.hex
+    }
+  },
+  author->{
+    name,
+    slug,
+    "accentColor": accentColor.hex,
+    avatar{
+      asset->{
+        url
+      },
+      alt
+    }
+  },
+  categories[]->{
+    title,
+    slug,
+    "color": color.hex
+  },
+  tags[]->{
+    _id,
+    title,
+    slug
+  }
+}`;
+
 // Homepage hero + Top Rated list.
 //
 // This used to be driven purely by the manual `featured == true` tickbox, which
@@ -304,6 +357,59 @@ export const REVIEWS_BY_TYPE_PAGINATED_QUERY = `*[
   && reviewableItem->itemType == $itemType
   && defined(slug.current)
 ]|order(publishedAt desc)[$start...$end]{
+  _id,
+  title,
+  slug,
+  reviewScore,
+  summary,
+  publishedAt,
+  featured,
+  reviewableItem->{
+    title,
+    slug,
+    itemType,
+    coverImage{
+      asset->{
+        url
+      },
+      alt
+    },
+    creator,
+    publisher,
+    genres[]->{
+      title,
+      slug,
+      "color": color.hex
+    }
+  },
+  author->{
+    name,
+    slug,
+    "accentColor": accentColor.hex,
+    avatar{
+      asset->{
+        url
+      },
+      alt
+    }
+  },
+  categories[]->{
+    title,
+    slug,
+    "color": color.hex
+  },
+  tags[]->{
+    _id,
+    title,
+    slug
+  }
+}`;
+
+export const REVIEWS_BY_TYPE_PAGINATED_BY_SCORE_QUERY = `*[
+  _type == "review"
+  && reviewableItem->itemType == $itemType
+  && defined(slug.current)
+]|order(reviewScore desc, publishedAt desc)[$start...$end]{
   _id,
   title,
   slug,
@@ -696,12 +802,71 @@ export const SITE_STATS_QUERY = `{
 }`;
 
 // Related Reviews Query (by item type, excluding current slug)
+// Same-medium related. Kept, but the article now pairs it with the ADJACENT
+// query below: filtering on itemType alone meant "MORE LIKE THIS" could only
+// ever return the same medium, which is the one movement PRODUCT.md says the
+// browsing reader is worth designing for.
 export const RELATED_REVIEWS_QUERY = `*[
   _type == "review"
   && defined(slug.current)
   && reviewableItem->itemType == $itemType
   && slug.current != $slug
 ]|order(publishedAt desc)[0...3]{
+  _id,
+  title,
+  slug,
+  reviewScore,
+  summary,
+  publishedAt,
+  featured,
+  reviewableItem->{
+    title,
+    slug,
+    itemType,
+    coverImage{
+      asset->{
+        url
+      },
+      alt
+    },
+    creator,
+    publisher,
+    genres[]->{
+      title,
+      slug,
+      "color": color.hex
+    }
+  },
+  author->{
+    name,
+    slug,
+    "accentColor": accentColor.hex,
+    avatar{
+      asset->{
+        url
+      },
+      alt
+    }
+  },
+  categories[]->{
+    title,
+    slug,
+    "color": color.hex
+  },
+  tags[]->{
+    _id,
+    title,
+    slug
+  }
+}`;
+
+// Deliberately a DIFFERENT medium, so the article can offer a sideways exit.
+export const ADJACENT_REVIEWS_QUERY = `*[
+  _type == "review"
+  && defined(slug.current)
+  && reviewableItem->itemType != $itemType
+  && slug.current != $slug
+]|order(publishedAt desc)[0...2]{
   _id,
   title,
   slug,

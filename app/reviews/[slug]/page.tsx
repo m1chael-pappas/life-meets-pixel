@@ -20,10 +20,14 @@ import {
   authorLevel,
   CAT_LABELS,
   itemTypeToCat,
+  CAT_TYPE_HEADING,
+  paletteAccent,
+  scoreBand,
   scoreTone,
 } from "@/lib/mappings";
 import {
   fetchOptions,
+  ADJACENT_REVIEWS_QUERY,
   RELATED_REVIEWS_QUERY,
   REVIEW_QUERY,
   REVIEW_SLUGS_QUERY,
@@ -263,15 +267,33 @@ export default async function ReviewPage({ params }: { params: Promise<{ slug: s
 
   if (!review) notFound();
 
-  const related = await client.fetch<Review[]>(
-    RELATED_REVIEWS_QUERY,
-    { itemType: review.reviewableItem?.itemType, slug: resolvedParams.slug },
-    fetchOptions,
-  );
+  // Same-medium plus one from a DIFFERENT medium. Filtering on itemType alone
+  // meant "MORE LIKE THIS" could only ever return the same medium — the one
+  // movement the browsing reader is worth designing for.
+  const [related, adjacent] = await Promise.all([
+    client.fetch<Review[]>(
+      RELATED_REVIEWS_QUERY,
+      { itemType: review.reviewableItem?.itemType, slug: resolvedParams.slug },
+      fetchOptions,
+    ),
+    client
+      .fetch<Review[]>(
+        ADJACENT_REVIEWS_QUERY,
+        { itemType: review.reviewableItem?.itemType, slug: resolvedParams.slug },
+        fetchOptions,
+      )
+      .catch(() => [] as Review[]),
+  ]);
 
   const item = review.reviewableItem;
   const cat = itemTypeToCat(item.itemType);
   const tone = scoreTone(review.reviewScore);
+  const band = scoreBand(review.reviewScore);
+  // Two same-medium, one adjacent, so the exit is not always sideways into
+  // more of the same thing.
+  const onwards = [...related.slice(0, 2), ...adjacent.slice(0, 1)];
+  const hasBreakdown =
+    Array.isArray(review.scoreBreakdown) && review.scoreBreakdown.length > 0;
   const toneColor =
     tone === "low" ? "var(--heart)" : tone === "mid" ? "var(--neon-4)" : "var(--neon-3)";
   const publishDate = new Date(review.publishedAt);
@@ -335,7 +357,9 @@ export default async function ReviewPage({ params }: { params: Promise<{ slug: s
                   src={itemImageUrl}
                   alt={item.coverImage.alt || item.title}
                   fill
-                  sizes="(max-width: 980px) 200px, 280px"
+                  // `cover` on a landscape source makes height binding, so a width-only
+                  // `sizes` under-served the 232x312 crop by 2.5x.
+                  sizes="(max-width: 980px) 400px, 560px"
                 />
               )}
             </div>
@@ -353,13 +377,23 @@ export default async function ReviewPage({ params }: { params: Promise<{ slug: s
                   </>
                 )}
               </div>
+              {review.summary && (
+                <p className="article-meta__lead">{review.summary}</p>
+              )}
               <div className="article-meta__hpwrap">
                 <span className="label">▶ SCORE</span>
                 <span className="score" style={{ color: toneColor }}>
                   {review.reviewScore.toFixed(1)}/10
                 </span>
                 <HeartRow score={review.reviewScore} size={18} />
+                {/* The band name sits with the number rather than in its own
+                    chip: a second "how we score" link here duplicated the one
+                    in the breakdown head ~100px below. */}
+                <span className="article-meta__band" style={{ color: toneColor }}>
+                  {band.label.toUpperCase()}
+                </span>
               </div>
+
               <div style={{ display: "flex", alignItems: "center", gap: 16, flexWrap: "wrap" }}>
                 <AuthorChip
                   name={review.author.name}
@@ -385,11 +419,44 @@ export default async function ReviewPage({ params }: { params: Promise<{ slug: s
           </div>
         </div>
 
+        {/* The breakdown is the VERDICT, not metadata. In the sidebar it landed
+            37px below the desktop fold and at 61% scroll depth on mobile — the
+            footnote case PRODUCT.md names explicitly. It renders here at every
+            width, and when a review has no breakdown it says so and links the
+            scale rather than failing silently. */}
+        <section className="score-breakdown">
+          <div className="section-head">
+            <div className="section-head__title">
+              <span className="num">◆</span>
+              <h2>HOW {review.reviewScore.toFixed(1)} BREAKS DOWN</h2>
+            </div>
+            <Link href="/about" className="section-head__action">
+              HOW WE SCORE
+            </Link>
+          </div>
+          {hasBreakdown ? (
+            <div className="score-breakdown__rows">
+              {review.scoreBreakdown!.map((row, i) => (
+                <HPBar
+                  key={row._key ?? `${row.label}-${i}`}
+                  label={row.label.toUpperCase()}
+                  score={row.score}
+                />
+              ))}
+            </div>
+          ) : (
+            <p className="score-breakdown__missing">
+              This review carries a single score rather than a per-criterion
+              breakdown. <Link href="/about">See how we score</Link>.
+            </p>
+          )}
+        </section>
+
         <div className="article-body">
           <article className="article-content">
             {review.verdict && (
-              <blockquote>
-                <strong style={{ display: "block", fontFamily: "var(--font-press-start-2p)", fontSize: 10, color: "var(--neon-1)", marginBottom: 8 }}>
+              <blockquote className="tldr">
+                <strong style={{ display: "block", fontFamily: "var(--font-press-start-2p)", fontSize: 11, color: "var(--neon-1)", marginBottom: 8 }}>
                   ▶ TL;DR
                 </strong>
                 {review.verdict}
@@ -540,19 +607,6 @@ export default async function ReviewPage({ params }: { params: Promise<{ slug: s
               </div>
             ) : null}
 
-            {Array.isArray(review.scoreBreakdown) && review.scoreBreakdown.length > 0 && (
-              <div className="stat-block">
-                <h3>◆ SCORE BREAKDOWN</h3>
-                {review.scoreBreakdown.map((row, i) => (
-                  <HPBar
-                    key={row._key ?? `${row.label}-${i}`}
-                    label={row.label.toUpperCase()}
-                    score={row.score}
-                  />
-                ))}
-              </div>
-            )}
-
             {(item.officialWebsite || item.affiliateLink) && (
               <div className="stat-block">
                 <h3>◆ PLAYER OPTIONS</h3>
@@ -607,11 +661,14 @@ export default async function ReviewPage({ params }: { params: Promise<{ slug: s
                 href={`/author/${review.author.slug.current}`}
                 className="reviewed-by"
               >
+                {/* Through paletteAccent(), not raw. The stored hex was applied
+                    directly here and rendered midnight's cyan on every palette —
+                    1.05:1 on candy. Same No-CMS-Colour bug that AuthorChip had. */}
                 <div
                   className="reviewed-by__avatar"
                   style={{
-                    borderColor: review.author.accentColor || "var(--neon-2)",
-                    color: review.author.accentColor || "var(--neon-2)",
+                    borderColor: paletteAccent(review.author.accentColor),
+                    color: paletteAccent(review.author.accentColor),
                   }}
                 >
                   {authorInitial(review.author.name)}
@@ -633,23 +690,39 @@ export default async function ReviewPage({ params }: { params: Promise<{ slug: s
         </div>
 
         <AdBreak />
-        <Comments postId={review._id} />
 
-        {related.length > 0 && (
+        {/* Related BEFORE comments. The read used to end on a zero-state and an
+            auth gate — the last two beats a signed-out search arrival saw, on a
+            site whose non-negotiable is free-site/paid-perks and whose success
+            metric is another page read. */}
+        {onwards.length > 0 && (
           <section className="lmp-section--tight">
             <div className="section-head">
               <div className="section-head__title">
                 <span className="num">◆</span>
-                <h2>SIDE QUESTS · MORE LIKE THIS</h2>
+                <h2>SIDE QUESTS · WHAT TO READ NEXT</h2>
               </div>
+              <Link href="/reviews" className="section-head__action">
+                ALL REVIEWS
+              </Link>
             </div>
             <div className="reviews-grid">
-              {related.map((r) => (
+              {onwards.map((r) => (
                 <ReviewCard key={r._id} review={r} />
               ))}
             </div>
+            <div className="article-onwards">
+              <Link href={`/author/${review.author.slug?.current ?? ""}`} className="retro-btn">
+                ► MORE FROM {review.author.name.toUpperCase()}
+              </Link>
+              <Link href={`/reviews?type=${item.itemType}`} className="retro-btn retro-btn--lime">
+                ► ALL {CAT_TYPE_HEADING[item.itemType].toUpperCase()} REVIEWS
+              </Link>
+            </div>
           </section>
         )}
+
+        <Comments postId={review._id} />
       </main>
     </>
   );

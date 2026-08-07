@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-08-07T09:05:00Z",
+  "generatedAt": "2026-08-07T12:05:00Z",
   "title": "Design System: Life Meets Pixel",
   "extensions": {
     "colorMeta": {
@@ -518,8 +518,8 @@
         "section": "typography"
       },
       {
-        "name": "The 72ch Rule",
-        "body": "Body copy is capped at 72 characters (max-width: 72ch on article paragraphs and the standfirst). A monospaced body face runs wide; without the cap, line length breaks long before the container does.",
+        "name": "The Measure Rule",
+        "body": "Body copy is capped at 34em on the prose face (18px x 34 = 612px, ~68 characters), NOT in ch. ch is the advance of the character 0: on a monospace face that equals one character, but on a proportional face it is much narrower than the average glyph, so the inherited 72ch rendered 95 characters at 1024px+ and 39 at 390px. Surfaces still set in JetBrains Mono may keep ch; anything on IBM Plex Sans uses em. When a face changes, every ch-based cap silently stops meaning what it says.",
         "section": "typography"
       },
       {
@@ -551,6 +551,11 @@
         "name": "The Pixel-Icon Rule",
         "body": "Site-facing iconography is the sprite system, never a vector icon set. Lucide exists in the repo for one shadcn primitive's internals and must not migrate into site chrome — a smooth 24px stroke icon next to a 9×9 sprite instantly reads as a different product.",
         "section": "shapes"
+      },
+      {
+        "name": "The Score Needs Its Scale Rule",
+        "body": "Any surface that renders a score carries a route to the published scale at /about, and names the band where there is room. Three surfaces shipped four visual encodings of a number with zero legend and zero links to the scale, which makes the score decorative — the exact failure PRODUCT.md says weakens the product.",
+        "section": "components"
       }
     ],
     "dos": [
@@ -580,7 +585,8 @@
       "Don't reach for SaaS-minimal, mainstream-games-press, or kitsch-retro moves: soft gradients and glassmorphism, red-and-white brand bars and ad rails, or star fields, spinning GIFs and joke fonts.",
       "Don't apply a stored hex — an author accent, a category colour, a brand colour — as an inline style. It is the same colour on all four palettes and no CSS audit will ever find it.",
       "Don't ship an infinite animation without a pause control; prefers-reduced-motion is not a mechanism, it only reaches readers who set the OS flag.",
-      "Don't set running prose in JetBrains Mono. Mono is the data voice; using it for everything means it signals nothing, and it renders 64 characters per line where 72 is the target."
+      "Don't set running prose in JetBrains Mono. Mono is the data voice; using it for everything means it signals nothing, and it renders 64 characters per line where 72 is the target.",
+      "Don't cap a proportional face in `ch`. It is the width of the character `0`, not of an average glyph, and a cap carried across a face change silently stops meaning what it says."
     ]
   }
 }

@@ -3,7 +3,7 @@ import Link from "next/link";
 
 import { NavGlyph } from "@/components/retro/sprites";
 import { SiteHeader } from "@/components/site-header";
-import { scoreTone } from "@/lib/mappings";
+import { SCORE_BANDS, scoreTone } from "@/lib/mappings";
 import { SITE_STATS_QUERY, fetchOptions } from "@/lib/queries";
 import type { SiteStats } from "@/lib/types";
 import { client } from "@/sanity/client";
@@ -28,17 +28,8 @@ export const metadata: Metadata = {
   },
 };
 
-/** What each band on the 10 point scale means, so a score is a claim a reader
- *  can hold us to. `mid` is the representative score for the band, which drives
- *  the chip colour through the same `scoreTone` the review pages use. */
-const SCALE: Array<{ band: string; mid: number; label: string; blurb: string }> = [
-  { band: "9.0-10", mid: 9.5, label: "Drop what you are doing", blurb: "Genuinely special. We will still be talking about it next year." },
-  { band: "8.0-8.9", mid: 8.4, label: "Great, go play it", blurb: "Does what it set out to do, and the flaws never spoil it." },
-  { band: "7.0-7.9", mid: 7.4, label: "Good, with caveats", blurb: "Worth your time if the premise appeals. Something real is holding it back." },
-  { band: "6.0-6.9", mid: 6.4, label: "For the curious only", blurb: "Interesting ideas, uneven delivery. Wait for a sale." },
-  { band: "4.0-5.9", mid: 5.0, label: "Not worth it yet", blurb: "Hollow, broken or unfinished. Maybe later, after patches." },
-  { band: "0-3.9", mid: 2.0, label: "Avoid", blurb: "We would be asking for our money back." },
-];
+/* The scale now lives in lib/mappings.ts as SCORE_BANDS, so the pages that
+   render a score can name the band and link back here. */
 
 const TONE_VAR: Record<ReturnType<typeof scoreTone>, string> = {
   high: "var(--neon-3)",
@@ -93,7 +84,7 @@ export default async function AboutPage() {
               </p>
 
               <div className="score-scale">
-                {SCALE.map((s) => {
+                {SCORE_BANDS.map((s) => {
                   const colour = TONE_VAR[scoreTone(s.mid)];
                   return (
                     <div key={s.band} className="score-scale__row">

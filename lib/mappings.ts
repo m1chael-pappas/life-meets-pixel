@@ -36,6 +36,25 @@ export const CAT_LABELS: Record<RetroCat, string> = {
   tech: "TECH",
 };
 
+/**
+ * Singular/adjectival form, for headings that append their own noun.
+ *
+ * `CAT_TYPE_LABEL` is plural, so `${CAT_TYPE_LABEL[type]} Reviews` produced
+ * "BOOKS REVIEWS" and "VIDEO GAMES REVIEWS" in the listing h1 — while the page
+ * `<title>` used a second, correct map of its own. Two label systems, one
+ * ungrammatical; this is now the single source for both.
+ */
+export const CAT_TYPE_HEADING: Record<ReviewableItem["itemType"], string> = {
+  videogame: "Video Game",
+  boardgame: "Board Game",
+  movie: "Movie",
+  tvseries: "TV Series",
+  anime: "Anime",
+  book: "Book",
+  comic: "Comic & Manga",
+  gadget: "Tech & Gadget",
+};
+
 export const CAT_TYPE_LABEL: Record<ReviewableItem["itemType"], string> = {
   videogame: "Video Games",
   boardgame: "Board Games",
@@ -62,6 +81,36 @@ export function scoreTone(score: number): "low" | "mid" | "high" {
   if (score < 6) return "low";
   if (score < 8) return "mid";
   return "high";
+}
+
+/**
+ * The published scale. This lived only inside `app/about/page.tsx`, which meant
+ * the pages that actually RENDER a score — the article, the listing, the
+ * homepage — had no access to what a number means, and none of them linked to
+ * it either. A reader saw four encodings of 8.5 and no legend, on a site whose
+ * positioning is transparent scoring.
+ *
+ * `min` is inclusive. The three `scoreTone()` colours group these six bands.
+ */
+export const SCORE_BANDS: Array<{
+  min: number;
+  band: string;
+  mid: number;
+  label: string;
+  blurb: string;
+}> = [
+  { min: 9, band: "9.0-10", mid: 9.5, label: "Drop what you are doing", blurb: "Genuinely special. We will still be talking about it next year." },
+  { min: 8, band: "8.0-8.9", mid: 8.4, label: "Great, go play it", blurb: "Does what it set out to do, and the flaws never spoil it." },
+  { min: 7, band: "7.0-7.9", mid: 7.4, label: "Good, with caveats", blurb: "Worth your time if the premise appeals. Something real is holding it back." },
+  { min: 6, band: "6.0-6.9", mid: 6.4, label: "For the curious only", blurb: "Interesting ideas, uneven delivery. Wait for a sale." },
+  { min: 4, band: "4.0-5.9", mid: 5.0, label: "Not worth it yet", blurb: "Hollow, broken or unfinished. Maybe later, after patches." },
+  { min: 0, band: "0-3.9", mid: 2.0, label: "Avoid", blurb: "We would be asking for our money back." },
+];
+
+/** The band a score falls in, for surfaces that show a number and need to say
+ *  what it means. */
+export function scoreBand(score: number) {
+  return SCORE_BANDS.find((b) => score >= b.min) ?? SCORE_BANDS[SCORE_BANDS.length - 1];
 }
 
 export function authorInitial(name: string): string {

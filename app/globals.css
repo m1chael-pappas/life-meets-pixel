@@ -508,7 +508,8 @@ a:hover { color: var(--neon-1); }
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, transparent 50%, rgba(10, 8, 32, 0.85) 100%);
+  /* Tokenised: this hardcoded midnight and so rendered identically on candy. */
+  background: linear-gradient(180deg, transparent 45%, rgba(var(--scrim-rgb), 0.88) 100%);
   pointer-events: none;
 }
 
@@ -754,8 +755,17 @@ a:hover { color: var(--neon-1); }
   content: '';
   position: absolute;
   inset: 0;
+  /* Mid-stop strengthened. A straight 0.1 -> 0.95 ramp leaves the TOP line of
+     the bottom-anchored body over near-raw artwork, and `.hero-feature__overline`
+     measured 1.72:1 on midnight / 1.03:1 on candy when sampled against real
+     painted pixels rather than composited ancestor backgrounds. */
   background:
-    linear-gradient(180deg, rgba(var(--scrim-rgb), 0.1) 0%, rgba(var(--scrim-rgb), 0.95) 100%),
+    linear-gradient(
+      180deg,
+      rgba(var(--scrim-rgb), 0.05) 25%,
+      rgba(var(--scrim-rgb), 0.80) 58%,
+      rgba(var(--scrim-rgb), 0.97) 100%
+    ),
     linear-gradient(90deg, rgba(var(--scrim-rgb), 0.6) 0%, transparent 60%);
 }
 .hero-feature__body {
@@ -1127,13 +1137,19 @@ a:hover { color: var(--neon-1); }
   color: var(--on-accent);
   border-color: var(--on-accent);
 }
+/* The count badge carries the only signal telling a visitor how much content
+   each medium holds, and on candy it measured 2.71:1 — the ACTIVE chip had been
+   audited and fixed while the eight inactive ones were left failing. A black
+   plate under palette-coloured text cannot work on a light ground, so the plate
+   is gone and the badge sits on its chip with a hairline instead. */
 .filter-count {
   font-family: var(--font-jetbrains-mono), ui-monospace, monospace;
-  font-size: 10px;
-  background: rgba(0, 0, 0, 0.3);
-  padding: 2px 5px;
+  font-size: 11px;
+  background: transparent;
+  border: 1px solid currentColor;
+  padding: 1px 5px;
 }
-.filter-btn.is-on .filter-count { background: rgba(0, 0, 0, 0.4); color: #fff; }
+.filter-btn.is-on .filter-count { background: transparent; color: inherit; }
 .reviews-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -1168,11 +1184,24 @@ a:hover { color: var(--neon-1); }
   object-fit: cover;
   filter: blur(4px) saturate(1.2) brightness(0.5);
 }
+/* Tokenised, and strengthened. This hardcoded `rgba(10, 8, 32, 0.85)` put the
+   article h1 at 1.06:1 on candy with 33 of 33 sampled points failing — the
+   Palette-Agnostic Rule breaking on the exact element the rule was written
+   about. The radial form also left the corners nearly unscrimmed, which is
+   where the byline and timestamp sit; those measured 1.42:1 and 3.02:1 on
+   MIDNIGHT, so this was never only a light-palette problem. A linear scrim
+   that reaches full strength behind the meta column fixes both. */
 .article-hero__overlay {
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(circle at 30% 50%, transparent, rgba(10, 8, 32, 0.85)),
+    linear-gradient(
+      90deg,
+      rgba(var(--scrim-rgb), 0.94) 0%,
+      rgba(var(--scrim-rgb), 0.88) 55%,
+      rgba(var(--scrim-rgb), 0.6) 100%
+    ),
+    radial-gradient(circle at 30% 50%, transparent, rgba(var(--scrim-rgb), 0.85)),
     repeating-linear-gradient(
       0deg,
       rgba(0, 0, 0, 0.3) 0,
@@ -1245,7 +1274,9 @@ a:hover { color: var(--neon-1); }
   margin: 0;
 }
 .article-meta__hpwrap {
-  background: rgba(0, 0, 0, 0.6);
+  /* Was rgba(0,0,0,0.6): a black plate under palette-coloured text, which put
+     the score at 2.50:1 on candy. */
+  background: rgba(var(--scrim-rgb), 0.72);
   border: 2px solid var(--bg-3);
   padding: 14px 16px;
   display: flex;
@@ -1396,7 +1427,9 @@ a:hover { color: var(--neon-1); }
 .reviewed-by__avatar {
   width: 56px;
   height: 56px;
-  background: var(--bg-2);
+  /* --chip-ground, not --bg-2: the accent sits on this plate and measured
+     1.05:1 on candy against the lighter panel. */
+  background: var(--chip-ground);
   border: 3px solid var(--neon-2);
   display: grid;
   place-items: center;
@@ -1460,7 +1493,9 @@ a:hover { color: var(--neon-1); }
 .cons { border-top-color: var(--heart); }
 .pros h3, .cons h3 {
   font-family: var(--font-press-start-2p), system-ui, monospace;
-  font-size: 11px;
+  /* 14px, not 11: no review in the sample carries a body-level h3, so this is
+     the ONLY h3 a reader ever meets, and it was sized like a nav chip. */
+  font-size: 14px;
   margin-bottom: 12px;
   color: var(--neon-3);
 }
@@ -1905,7 +1940,11 @@ textarea.field-input { min-height: 140px; resize: vertical; line-height: 1.6; }
   color: var(--on-accent);
   border-color: var(--on-accent);
 }
-.retro-pagination .disabled { opacity: 0.4; cursor: not-allowed; }
+/* Was `opacity: 0.4`, which drove this to 2.44:1 (midnight), 1.88:1 (candy) and
+   2.25:1 (gameboy) — the colour alone passes; the opacity was the whole defect.
+   Disabled still has to be readable: it is the only thing telling a reader they
+   are on page 1. */
+.retro-pagination .disabled { color: var(--ink-mute); cursor: not-allowed; }
 
 /* ===== A11Y (2026-07-16 audit) ===== */
 .skip-link {
@@ -2461,8 +2500,13 @@ textarea.field-input { min-height: 140px; resize: vertical; line-height: 1.6; }
      matters most. */
   .about-pill { font-size: 11px; padding: 6px 10px; }
 
-  /* News + Reviews grids */
-  .news-grid, .reviews-grid { grid-template-columns: 1fr; gap: 14px; }
+  /* News + Reviews grids. The 1fr collapse used to live here, inside the
+     1023.98px DRAWER block, and so overrode the 1fr 1fr set at <=1024 — which
+     made 641-1023px render one card per row and the tablet a TALLER page than
+     the phone (9,788px at 800 vs 8,259px at 390). Only the gap belongs here;
+     the single column now lives in the <=640 block where the design table
+     already put it. */
+  .news-grid, .reviews-grid { gap: 14px; }
   .membership-perks { grid-template-columns: 1fr; }
   .membership-hero h1 { font-size: 16px; }
   .membership-hero p { font-size: 15px; }
@@ -3251,3 +3295,210 @@ h1 { font-size: 24px; }
 .reviewed-by__avatar { font-size: 16px; }
 .review-card__title { font-size: 16px; }
 .news-card__title { font-size: 16px; }
+
+/* ===== CRITIQUE FIXES: LISTING + ARTICLE (2026-08-07) ===== */
+
+/* ---------- Reading measure ----------
+   `max-width: 72ch` was carried over from the mono era. `ch` is the advance of
+   the character `0`; on a proportional face that renders ~90-95 REAL characters,
+   so the prose measured 95 median at 1024+ and 39 at 390 — further from the
+   65-75 band than the 64 of the monospace it replaced. `em` is the honest unit
+   for a proportional face: 34em at 18px = 612px, which measures ~68. */
+.article-content p,
+.article-content li,
+.article-meta__lead { max-width: 34em; }
+
+/* The single-column grid belongs at the phone breakpoint, not the drawer one. */
+@media (max-width: 640px) {
+  .news-grid, .reviews-grid { grid-template-columns: 1fr; }
+}
+
+/* ---------- The type split, applied by ROLE rather than by selector list ----------
+   The split's whole value is that mono now means "data". Every element on the
+   wrong side spends that meaning. */
+
+/* Credits are metadata — the exact thing mono was reserved for. They were
+   rendering in the prose face at 12px, reading as small body copy rather than
+   as a different register. */
+.article-content figcaption {
+  font-family: var(--font-jetbrains-mono), ui-monospace, monospace;
+  font-size: 13px;
+  color: var(--ink-mute);
+}
+/* Pros and cons are prose sentences; the article's own <ul> is the prose face
+   at 18px while these were mono at 14. */
+.pros ul li,
+.cons ul li {
+  font-family: var(--font-plex-sans), system-ui, sans-serif;
+  font-size: 16px;
+}
+/* The author bio sits inside an all-mono stat block. */
+.reviewed-by__bio {
+  font-family: var(--font-jetbrains-mono), ui-monospace, monospace;
+  font-size: 13px;
+}
+
+/* ---------- TL;DR is not a pull quote ----------
+   Both rendered VT323 26px on the same cyan-ruled plate, so the forty most
+   valuable words on the page got the same treatment as a decorative
+   restatement. The verdict summary belongs in the data voice, on the magenta
+   rule that marks importance everywhere else in this system. */
+.article-content blockquote.tldr {
+  font-family: var(--font-jetbrains-mono), ui-monospace, monospace;
+  font-size: 16px;
+  line-height: 1.7;
+  color: var(--ink);
+  border-left-color: var(--neon-1);
+  background: var(--bg-2);
+}
+
+/* ---------- Standfirst ----------
+   `review.summary` is queried, used in metadata and JSON-LD, and was never
+   rendered — this rule existed and matched nothing, which is also why the hero
+   carried ~120px of empty scrim under the meta column. */
+.article-meta__lead {
+  font-family: var(--font-plex-sans), system-ui, sans-serif;
+}
+
+/* ---------- Score band chip ----------
+   The number now carries its band name and links the published scale, so the
+   page that renders a score finally routes to what it means. */
+.score-band {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-press-start-2p), system-ui, monospace;
+  font-size: 11px;
+  color: var(--ink-dim);
+  text-decoration: none;
+  border: 2px solid var(--bg-3);
+  background: var(--bg-2);
+  padding: 8px 10px;
+  min-height: 44px;
+  transition: border-color 0.15s, color 0.15s;
+}
+.score-band:hover { border-color: var(--neon-2); color: var(--ink); }
+.score-band__name { color: var(--tone, var(--neon-3)); }
+.score-band__more {
+  color: var(--ink-mute);
+  font-family: var(--font-jetbrains-mono), ui-monospace, monospace;
+  font-size: 12px;
+}
+/* The band name and the link ran together as one string without this. */
+.score-band__more::before { content: '·'; margin-right: 8px; color: var(--bg-3); }
+
+/* ---------- Listing: floors the surface missed ----------
+   10 elements rendered at 10px and 13 controls came in under 44px on a stylesheet
+   that already carries a "Tap-target floors" section fixing twenty others. */
+.filter-btn { font-size: 11px; min-height: 44px; }
+.retro-pagination a,
+.retro-pagination span {
+  font-size: 11px;
+  min-width: 44px;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.listing-count { font-size: 11px; }
+
+/* ---------- Listing: empty state ----------
+   Was a 48px emoji with no route out, reached via a chip the page itself renders
+   at 0. Now a category sprite and real exits. */
+.empty-state { text-align: center; padding: 48px 24px; }
+.empty-state__sprite { display: grid; place-items: center; margin-bottom: 16px; }
+.empty-state__title { color: var(--neon-1); margin-bottom: 10px; }
+.empty-state__body {
+  font-family: var(--font-plex-sans), system-ui, sans-serif;
+  color: var(--ink-dim);
+  font-size: 15px;
+  max-width: 46em;
+  margin: 0 auto 20px;
+}
+.empty-state__exits { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
+
+/* ---------- Listing: sort ----------
+   Two options, not a dropdown, so the decision point stays at 2. Recency answers
+   "what's new"; it does not answer "what's good", which is the question this
+   site is uniquely equipped to answer. */
+.sort-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin: 0 0 20px;
+}
+.sort-bar__label {
+  font-family: var(--font-press-start-2p), system-ui, monospace;
+  font-size: 11px;
+  color: var(--ink-mute);
+}
+
+/* ---------- Article: the breakdown, promoted out of the sidebar ---------- */
+.score-breakdown {
+  background: var(--bg-1);
+  border: 3px solid var(--bg-3);
+  box-shadow: 4px 4px 0 var(--shadow-hard);
+  padding: 24px 28px;
+  margin-bottom: 32px;
+}
+.score-breakdown .section-head { margin-bottom: 16px; }
+.score-breakdown__rows { display: grid; grid-template-columns: 1fr 1fr; gap: 0 32px; }
+@media (max-width: 720px) { .score-breakdown__rows { grid-template-columns: 1fr; } }
+.score-breakdown__missing {
+  font-family: var(--font-plex-sans), system-ui, sans-serif;
+  font-size: 15px;
+  color: var(--ink-dim);
+  margin: 0;
+  max-width: 34em;
+}
+.article-onwards { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 20px; }
+
+/* ---------- Article: the last three sub-44px targets ----------
+   Breadcrumb links measured 33px tall and the comments sign-in link 77x11 —
+   the smallest target on any surface. */
+.article-breadcrumb a {
+  min-height: 44px;
+  align-items: center;
+}
+.comments__gate a,
+.comments__empty a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+}
+
+/* ---------- 11px floor: the article's own stragglers ----------
+   Missed on the first pass because the floor was verified on the listing and
+   the article's rendered size set was never printed. */
+.article-meta__hpwrap .label,
+.article-meta__cat,
+.comment__author,
+.ad-slot__label { font-size: 11px; }
+
+/* ===== SMALL LABELS COME OFF THE PIXEL FACE (2026-08-07) =====
+   Press Start 2P is drawn on an 8px grid and is pixel-exact ONLY at multiples
+   of 8. Every small label on the site sat at 10-14px, so every one of them
+   rendered with 16-55% of its pixels anti-aliased — measurably, and visibly:
+   the listing's filter and sort controls read as blurry at a glance.
+
+   8px is illegible and 16px would reflow these rails, so the honest fix is to
+   stop asking a bitmap face to do a job it cannot do at this size. JetBrains
+   Mono is an outline face and renders cleanly at any size, it is already the
+   system's data voice, and uppercase with 0.08em tracking keeps the arcade
+   label feel. Press Start 2P keeps everything it is actually crisp at —
+   headings and display type at 16, 24 and 32. */
+.filter-btn,
+.sort-bar__label,
+.retro-pagination a,
+.retro-pagination span,
+.listing-count {
+  font-family: var(--font-jetbrains-mono), ui-monospace, monospace;
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  font-weight: 500;
+}
+.filter-count {
+  font-size: 12px;
+  letter-spacing: 0.04em;
+}
