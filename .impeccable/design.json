@@ -1,0 +1,306 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-08-07T09:05:00Z",
+  "title": "Design System: Life Meets Pixel",
+  "extensions": {
+    "colorMeta": {
+      "chip-ground": {
+        "role": "neutral",
+        "displayName": "Chip Ground",
+        "canonical": "var(--bg-0)",
+        "tonalRamp": ["#09071f", "#22223c", "#3e3f5c", "#5d5e7d", "#7e7fa0", "#a0a2c4", "#c4c6e9", "#e9ebff"]
+      },
+      "ground-deep": {
+        "role": "neutral",
+        "displayName": "Void",
+        "canonical": "oklch(15.5% 0.049 283.0)",
+        "tonalRamp": ["#09071f", "#22223c", "#3e3f5c", "#5d5e7d", "#7e7fa0", "#a0a2c4", "#c4c6e9", "#e9ebff"]
+      },
+      "ground": {
+        "role": "neutral",
+        "displayName": "Deep Panel",
+        "canonical": "oklch(20.0% 0.056 284.8)",
+        "tonalRamp": ["#0a0621", "#22203f", "#3f3e5f", "#5d5d80", "#7e7ea3", "#a1a1c8", "#c5c5ed", "#eaeaff"]
+      },
+      "ground-raised": {
+        "role": "neutral",
+        "displayName": "Mid Panel",
+        "canonical": "oklch(24.4% 0.065 287.2)",
+        "tonalRamp": ["#0b0424", "#241f42", "#403c63", "#5f5c84", "#7f7da8", "#a29fcc", "#c6c3f2", "#ebe9ff"]
+      },
+      "ground-edge": {
+        "role": "neutral",
+        "displayName": "Edge",
+        "canonical": "oklch(29.0% 0.079 287.5)",
+        "tonalRamp": ["#0c012a", "#241c49", "#403a6a", "#5f5a8c", "#7f7bb0", "#a29ed5", "#c5c2fb", "#ebe7ff"]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Paper White",
+        "canonical": "oklch(96.3% 0.021 301.1)",
+        "tonalRamp": ["#0d0912", "#27232e", "#44404b", "#635f6b", "#84808d", "#a7a2b0", "#cbc6d5", "#f1ecfb"]
+      },
+      "ink-dim": {
+        "role": "neutral",
+        "displayName": "Dim Ink",
+        "canonical": "oklch(77.8% 0.057 295.4)",
+        "tonalRamp": ["#0e0520", "#271f3e", "#443c5d", "#635b7f", "#857ca1", "#a79ec6", "#cbc2eb", "#f1e8ff"]
+      },
+      "ink-mute": {
+        "role": "neutral",
+        "displayName": "Muted Ink",
+        "canonical": "oklch(63.6% 0.061 294.7)",
+        "tonalRamp": ["#0e0422", "#271e40", "#443b5f", "#635a81", "#847ba4", "#a79ec8", "#cbc2ee", "#f1e7ff"]
+      },
+      "attract-magenta": {
+        "role": "primary",
+        "displayName": "Attract-Mode Magenta",
+        "canonical": "oklch(67.3% 0.233 1.9)",
+        "tonalRamp": ["#410005", "#6a001c", "#940038", "#bd0057", "#e71d78", "#ff509a", "#ff79be", "#ffa1e2"]
+      },
+      "phosphor-cyan": {
+        "role": "primary",
+        "displayName": "Phosphor Cyan",
+        "canonical": "oklch(85.7% 0.135 208.7)",
+        "tonalRamp": ["#001229", "#003247", "#005268", "#00748a", "#0097ad", "#00bbd2", "#32e1f8", "#68ffff"]
+      },
+      "insert-coin-lime": {
+        "role": "secondary",
+        "displayName": "Insert-Coin Lime",
+        "canonical": "oklch(91.2% 0.229 131.0)",
+        "tonalRamp": ["#001400", "#003300", "#005400", "#297600", "#4c9a00", "#6ebf00", "#92e500", "#b6ff4f"]
+      },
+      "coin-op-gold": {
+        "role": "secondary",
+        "displayName": "Coin-Op Gold",
+        "canonical": "oklch(87.9% 0.163 91.1)",
+        "tonalRamp": ["#220000", "#421800", "#623800", "#845900", "#a77c00", "#cb9f00", "#f1c427", "#ffea5b"]
+      },
+      "damage-red": {
+        "role": "tertiary",
+        "displayName": "Damage Red",
+        "canonical": "oklch(68.5% 0.208 12.8)",
+        "tonalRamp": ["#3f0000", "#680004", "#900021", "#b9003f", "#e2355e", "#ff5f80", "#ff86a3", "#ffacc7"]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display — VT323",
+        "purpose": "Pull quotes inside article body copy. Nowhere else in the system; its scarcity is what keeps it an event."
+      },
+      "headline": {
+        "displayName": "Headline — Press Start 2P",
+        "purpose": "The article title in the hero, carrying a 4px hard text-shadow as part of the role."
+      },
+      "title": {
+        "displayName": "Title — Press Start 2P",
+        "purpose": "Page h1 and article-body h2 (magenta, 2px dashed underline)."
+      },
+      "title-md": {
+        "displayName": "Title md — Press Start 2P",
+        "purpose": "The homepage hero feature title."
+      },
+      "subhead": {
+        "displayName": "Subhead — Press Start 2P",
+        "purpose": "h2, article-body h3, the hero feature's score."
+      },
+      "subhead-sm": {
+        "displayName": "Subhead sm — Press Start 2P",
+        "purpose": "h3, card titles, score boxes."
+      },
+      "lede": {
+        "displayName": "Lede — JetBrains Mono",
+        "purpose": "Article standfirst and hero subtitle. Capped at 72ch."
+      },
+      "body": {
+        "displayName": "Body — JetBrains Mono",
+        "purpose": "Article copy. 17px/1.8, capped at 72ch."
+      },
+      "body-lg": {
+        "displayName": "Body lg — JetBrains Mono",
+        "purpose": "The hero feature subtitle."
+      },
+      "body-ui": {
+        "displayName": "Body ui — JetBrains Mono",
+        "purpose": "The document base size."
+      },
+      "body-sm": {
+        "displayName": "Body sm — JetBrains Mono",
+        "purpose": "Card excerpts, footer links, form inputs."
+      },
+      "caption": {
+        "displayName": "Caption — JetBrains Mono",
+        "purpose": "Card subjects, stat rows, author bios."
+      },
+      "meta": {
+        "displayName": "Meta — JetBrains Mono",
+        "purpose": "Timestamps, tags, breadcrumb trails, ticker items, score-key bands. Often uppercased with 0.1em tracking."
+      },
+      "label-lg": {
+        "displayName": "Label lg — Press Start 2P",
+        "purpose": "Nav links, buttons, section numerals, stat keys."
+      },
+      "label": {
+        "displayName": "Label — Press Start 2P",
+        "purpose": "Badges, field labels, HP row heads, breadcrumbs, section-header actions. The most-used role by count, and the floor of the ramp."
+      }
+    },
+    "shadows": [
+      { "name": "rest", "value": "4px 4px 0 var(--shadow-hard)", "purpose": "Default offset for cards, buttons, stat blocks, article panels and body images." },
+      { "name": "raised", "value": "6px 6px 0 var(--shadow-hard)", "purpose": "Surfaces that outrank an ordinary card: the about strip, the about hero, the article cover plate." },
+      { "name": "hover-card", "value": "8px 8px 0 var(--shadow-hard)", "purpose": "Paired with translate(-3px, -3px) on card hover. The offset deepens because the element moved, not because a shadow appeared." },
+      { "name": "hover-control", "value": "6px 6px 0 var(--shadow-hard)", "purpose": "Paired with translate(-2px, -2px) on button and nav hover." },
+      { "name": "pressed", "value": "0 0 0 var(--shadow-hard)", "purpose": "Paired with translate(2px, 2px) on :active. The shadow is consumed as the element goes down." },
+      { "name": "header-structural", "value": "0 4px 0 0 #000, 0 8px 24px rgba(0, 0, 0, 0.5)", "purpose": "The sticky header only — the single place a hard offset and a blurred drop are stacked, because it floats over scrolling content." },
+      { "name": "crt-bloom", "value": "inset 0 0 60px rgba(255, 61, 139, 0.15), 0 0 0 2px var(--neon-1), 8px 8px 0 #000", "purpose": "The hero CRT frame only. The one place soft light is permitted inside a surface." }
+    ],
+    "motion": [
+      { "name": "control", "value": "0.12s", "purpose": "Buttons and form fields — the fastest transition in the system, so a press feels mechanical." },
+      { "name": "chrome", "value": "0.15s", "purpose": "Nav links, hero side items, section-header actions." },
+      { "name": "surface", "value": "0.18s", "purpose": "Card transform, border-color and box-shadow on hover." },
+      { "name": "imagery", "value": "0.4s", "purpose": "Card media scale to 1.04 on hover. The only slow transition, and it belongs to imagery rather than chrome." },
+      { "name": "blink", "value": "blink 1.6s steps(2) infinite", "purpose": "Status dots and LIVE indicators. Stepped, never eased — a CRT indicator does not fade." },
+      { "name": "scroll-left", "value": "scroll-left 60s linear infinite", "purpose": "The headline ticker track." },
+      { "name": "borderpulse", "value": "borderpulse 2s ease-in-out infinite", "purpose": "The logo mark's outer hairline." },
+      { "name": "reduced-motion", "value": "@media (prefers-reduced-motion: reduce) { animation-duration: 0.01ms; transition-duration: 0.01ms }", "purpose": "Global override. Every new animation inherits it; none may opt out." }
+    ],
+    "breakpoints": [
+      { "name": "laptop", "value": "1280px" },
+      { "name": "tablet", "value": "1024px" },
+      { "name": "mobile-nav", "value": "1023.98px" },
+      { "name": "phone", "value": "640px" },
+      { "name": "phone-sm", "value": "480px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The default action. Tactile: lifts on hover with a deeper offset and inverts to a solid cyan slab, depresses flat on click.",
+      "html": "<a class=\"ds-btn\" href=\"#\">► READ THE REVIEWS</a>",
+      "css": ".ds-btn { font-family: var(--font-press-start-2p), system-ui, monospace; font-size: 12px; padding: 12px 18px; background: var(--bg-1, #14112e); color: var(--ink, #f5f0ff); border: 3px solid var(--neon-2, #3ee8ff); cursor: pointer; transition: all 0.12s; display: inline-flex; align-items: center; gap: 8px; box-shadow: 4px 4px 0 var(--shadow-hard, #000); text-decoration: none; } .ds-btn:hover { transform: translate(-2px, -2px); box-shadow: 6px 6px 0 var(--shadow-hard, #000); background: var(--neon-2, #3ee8ff); color: var(--on-accent, #0a0820); } .ds-btn:active { transform: translate(2px, 2px); box-shadow: 0 0 0 var(--shadow-hard, #000); } .ds-btn:focus-visible { outline: 3px solid var(--focus-ring, #3ee8ff); outline-offset: 2px; border-radius: 0; }"
+    },
+    {
+      "name": "Lime CTA Button",
+      "kind": "button",
+      "refersTo": "button-lime-hover",
+      "description": "The affirmative call to action. Identical mechanics, lime border, so the hover inversion fills with the good-news accent.",
+      "html": "<a class=\"ds-btn-lime\" href=\"#\">► START HERE</a>",
+      "css": ".ds-btn-lime { font-family: var(--font-press-start-2p), system-ui, monospace; font-size: 12px; padding: 12px 18px; background: var(--bg-1, #14112e); color: var(--ink, #f5f0ff); border: 3px solid var(--neon-3, #aaff3d); cursor: pointer; transition: all 0.12s; display: inline-flex; align-items: center; gap: 8px; box-shadow: 4px 4px 0 var(--shadow-hard, #000); text-decoration: none; } .ds-btn-lime:hover { transform: translate(-2px, -2px); box-shadow: 6px 6px 0 var(--shadow-hard, #000); background: var(--neon-3, #aaff3d); color: var(--on-accent, #0a0820); } .ds-btn-lime:active { transform: translate(2px, 2px); box-shadow: 0 0 0 var(--shadow-hard, #000); } .ds-btn-lime:focus-visible { outline: 3px solid var(--focus-ring, #3ee8ff); outline-offset: 2px; }"
+    },
+    {
+      "name": "Review Card",
+      "kind": "card",
+      "refersTo": "card-review",
+      "description": "The workhorse. One component renders all eight item types; the category badge and sprite change, the frame never does. Hover deepens the offset and turns the border cyan.",
+      "html": "<a class=\"ds-card\" href=\"#\"><div class=\"ds-card__media\"><div class=\"ds-card__badges\"><span class=\"ds-badge\"><svg viewBox=\"0 0 9 9\" width=\"11\" height=\"11\" shape-rendering=\"crispEdges\"><rect x=\"4\" y=\"0\" width=\"1\" height=\"1\" fill=\"currentColor\"/><rect x=\"4\" y=\"1\" width=\"1\" height=\"1\" fill=\"currentColor\"/><rect x=\"3\" y=\"2\" width=\"3\" height=\"1\" fill=\"currentColor\"/><rect x=\"0\" y=\"3\" width=\"1\" height=\"1\" fill=\"currentColor\"/><rect x=\"2\" y=\"3\" width=\"5\" height=\"1\" fill=\"currentColor\"/><rect x=\"8\" y=\"3\" width=\"1\" height=\"1\" fill=\"currentColor\"/><rect x=\"0\" y=\"4\" width=\"9\" height=\"1\" fill=\"currentColor\"/><rect x=\"2\" y=\"5\" width=\"5\" height=\"1\" fill=\"currentColor\"/><rect x=\"2\" y=\"6\" width=\"2\" height=\"1\" fill=\"currentColor\"/><rect x=\"5\" y=\"6\" width=\"2\" height=\"1\" fill=\"currentColor\"/><rect x=\"1\" y=\"7\" width=\"2\" height=\"1\" fill=\"currentColor\"/><rect x=\"6\" y=\"7\" width=\"2\" height=\"1\" fill=\"currentColor\"/><rect x=\"1\" y=\"8\" width=\"1\" height=\"1\" fill=\"currentColor\"/><rect x=\"7\" y=\"8\" width=\"1\" height=\"1\" fill=\"currentColor\"/></svg>GAME</span></div><span class=\"ds-score\">8.4</span></div><div class=\"ds-card__body\"><span class=\"ds-card__date\">07 AUG 2026</span><h3 class=\"ds-card__title\">SILKSONG REVIEW</h3><span class=\"ds-card__subject\">Team Cherry <span class=\"ds-by\">· by Michael</span></span><p class=\"ds-card__excerpt\">Six years of waiting, and the answer is a bigger, meaner, more generous game than the one it follows.</p><div class=\"ds-card__footer\"><span class=\"ds-tag\">METROIDVANIA</span></div></div></a>",
+      "css": ".ds-card { background: var(--bg-1, #14112e); border: 3px solid var(--bg-3, #2a2350); position: relative; display: flex; flex-direction: column; max-width: 340px; transition: transform 0.18s, border-color 0.18s, box-shadow 0.18s; overflow: hidden; box-shadow: 4px 4px 0 var(--shadow-hard, #000); text-decoration: none; color: inherit; } .ds-card:hover { transform: translate(-3px, -3px); border-color: var(--neon-2, #3ee8ff); box-shadow: 8px 8px 0 var(--shadow-hard, #000); } .ds-card:focus-visible { outline: 3px solid var(--focus-ring, #3ee8ff); outline-offset: 2px; } .ds-card__media { aspect-ratio: 16 / 9; background: linear-gradient(135deg, var(--bg-2, #1f1a3d), var(--bg-1, #14112e)); position: relative; } .ds-card__badges { position: absolute; top: 10px; left: 10px; display: flex; gap: 6px; z-index: 2; } .ds-badge { background: #000; color: #fff; font-family: var(--font-press-start-2p), system-ui, monospace; font-size: 10px; padding: 6px 8px; display: inline-flex; align-items: center; gap: 6px; border: 2px solid var(--neon-2, #3ee8ff); } .ds-score { position: absolute; bottom: 10px; right: 10px; background: #000; color: var(--neon-3, #aaff3d); font-family: var(--font-press-start-2p), system-ui, monospace; font-size: 14px; padding: 8px 10px; border: 2px solid var(--neon-3, #aaff3d); z-index: 2; } .ds-card__body { padding: 16px; display: flex; flex-direction: column; gap: 10px; } .ds-card__date { font-family: var(--font-jetbrains-mono), ui-monospace, monospace; font-size: 12px; color: var(--ink-mute, #8d84ad); text-transform: uppercase; letter-spacing: 0.1em; display: flex; align-items: center; gap: 8px; } .ds-card__date::before { content: ''; width: 6px; height: 6px; background: var(--neon-2, #3ee8ff); } .ds-card__title { font-family: var(--font-press-start-2p), system-ui, monospace; font-weight: normal; font-size: 14px; line-height: 1.5; color: var(--ink, #f5f0ff); margin: 0; } .ds-card__subject { font-family: var(--font-jetbrains-mono), ui-monospace, monospace; font-size: 13px; color: var(--neon-2, #3ee8ff); } .ds-by { color: var(--ink-mute, #8d84ad); } .ds-card__excerpt { font-family: var(--font-jetbrains-mono), ui-monospace, monospace; font-size: 14px; color: var(--ink-dim, #b9b0d8); line-height: 1.55; margin: 0; } .ds-card__footer { display: flex; justify-content: space-between; align-items: center; border-top: 1px dashed var(--bg-3, #2a2350); padding-top: 12px; margin-top: 4px; } .ds-tag { font-family: var(--font-jetbrains-mono), ui-monospace, monospace; font-size: 11px; color: var(--ink-dim, #b9b0d8); background: var(--bg-2, #1f1a3d); padding: 3px 6px; border: 1px solid var(--bg-3, #2a2350); text-transform: uppercase; letter-spacing: 0.05em; }"
+    },
+    {
+      "name": "HP Bar",
+      "kind": "custom",
+      "refersTo": null,
+      "description": "The core editorial artifact: one labelled row per score component, twenty discrete cells, tone-coloured by the same thresholds as the score box. Never render this as a smooth or gradient bar — the discreteness is the point.",
+      "html": "<div class=\"ds-hp\"><div class=\"ds-hp__row\"><div class=\"ds-hp__head\"><span>COMBAT</span><span>8.4/10</span></div><div class=\"ds-hp__bar\" role=\"progressbar\" aria-label=\"Combat: 8.4 out of 10\" aria-valuenow=\"8.4\" aria-valuemin=\"0\" aria-valuemax=\"10\"><span class=\"ds-hp__cell is-fill\"></span><span class=\"ds-hp__cell is-fill\"></span><span class=\"ds-hp__cell is-fill\"></span><span class=\"ds-hp__cell is-fill\"></span><span class=\"ds-hp__cell is-fill\"></span><span class=\"ds-hp__cell is-fill\"></span><span class=\"ds-hp__cell is-fill\"></span><span class=\"ds-hp__cell is-fill\"></span><span class=\"ds-hp__cell is-fill\"></span><span class=\"ds-hp__cell is-fill\"></span><span class=\"ds-hp__cell is-fill\"></span><span class=\"ds-hp__cell is-fill\"></span><span class=\"ds-hp__cell is-fill\"></span><span class=\"ds-hp__cell is-fill\"></span><span class=\"ds-hp__cell is-fill\"></span><span class=\"ds-hp__cell is-fill\"></span><span class=\"ds-hp__cell is-fill\"></span><span class=\"ds-hp__cell\"></span><span class=\"ds-hp__cell\"></span><span class=\"ds-hp__cell\"></span></div></div><div class=\"ds-hp__row\"><div class=\"ds-hp__head\"><span>STORY</span><span>6.2/10</span></div><div class=\"ds-hp__bar\" role=\"progressbar\" aria-label=\"Story: 6.2 out of 10\" aria-valuenow=\"6.2\" aria-valuemin=\"0\" aria-valuemax=\"10\"><span class=\"ds-hp__cell is-mid\"></span><span class=\"ds-hp__cell is-mid\"></span><span class=\"ds-hp__cell is-mid\"></span><span class=\"ds-hp__cell is-mid\"></span><span class=\"ds-hp__cell is-mid\"></span><span class=\"ds-hp__cell is-mid\"></span><span class=\"ds-hp__cell is-mid\"></span><span class=\"ds-hp__cell is-mid\"></span><span class=\"ds-hp__cell is-mid\"></span><span class=\"ds-hp__cell is-mid\"></span><span class=\"ds-hp__cell is-mid\"></span><span class=\"ds-hp__cell is-mid\"></span><span class=\"ds-hp__cell\"></span><span class=\"ds-hp__cell\"></span><span class=\"ds-hp__cell\"></span><span class=\"ds-hp__cell\"></span><span class=\"ds-hp__cell\"></span><span class=\"ds-hp__cell\"></span><span class=\"ds-hp__cell\"></span><span class=\"ds-hp__cell\"></span></div></div></div>",
+      "css": ".ds-hp { background: var(--bg-1, #14112e); border: 3px solid var(--bg-3, #2a2350); box-shadow: 4px 4px 0 var(--shadow-hard, #000); padding: 20px; max-width: 380px; } .ds-hp__row { display: flex; flex-direction: column; gap: 6px; padding: 8px 0; border-bottom: 1px dotted var(--bg-3, #2a2350); } .ds-hp__row:last-child { border-bottom: none; } .ds-hp__head { display: flex; justify-content: space-between; font-family: var(--font-press-start-2p), system-ui, monospace; font-size: 10px; color: var(--ink-dim, #b9b0d8); } .ds-hp__bar { display: flex; gap: 2px; height: 12px; } .ds-hp__cell { flex: 1; background: var(--bg-3, #2a2350); } .ds-hp__cell.is-fill { background: var(--neon-3, #aaff3d); } .ds-hp__cell.is-mid { background: var(--neon-4, #ffd23d); } .ds-hp__cell.is-low { background: var(--heart, #ff5275); }"
+    },
+    {
+      "name": "Score Box",
+      "kind": "custom",
+      "refersTo": "score-box",
+      "description": "The headline verdict. Black fill, 2px border, one decimal, colour-coded by tone with border and text always matching: lime ≥8.0, gold 6.0–7.9, damage red <6.0, per scoreTone() in lib/mappings.ts.",
+      "html": "<div class=\"ds-scores\"><span class=\"ds-scorebox\">9.1</span><span class=\"ds-scorebox is-mid\">6.4</span><span class=\"ds-scorebox is-low\">3.2</span></div>",
+      "css": ".ds-scores { display: inline-flex; gap: 10px; } .ds-scorebox { background: #000; color: var(--neon-3, #aaff3d); font-family: var(--font-press-start-2p), system-ui, monospace; font-size: 14px; padding: 8px 10px; border: 2px solid var(--neon-3, #aaff3d); } .ds-scorebox.is-mid { color: var(--neon-4, #ffd23d); border-color: var(--neon-4, #ffd23d); } .ds-scorebox.is-low { color: var(--heart, #ff5275); border-color: var(--heart, #ff5275); }"
+    },
+    {
+      "name": "Text Field",
+      "kind": "input",
+      "refersTo": "input-field",
+      "description": "Terminal-flavoured input: a 4%-cyan tinted fill, lime caret, pixel label above. Focus shifts the border magenta and the fill to a magenta tint, on top of the global focus ring.",
+      "html": "<div class=\"ds-field\"><label class=\"ds-field__label\" for=\"ds-f1\">CALLSIGN <span class=\"ds-req\">*</span></label><input class=\"ds-field__input\" id=\"ds-f1\" type=\"text\" placeholder=\"player_two\" /></div>",
+      "css": ".ds-field { display: flex; flex-direction: column; gap: 6px; max-width: 320px; } .ds-field__label { font-family: var(--font-press-start-2p), system-ui, monospace; font-size: 10px; color: var(--neon-2, #3ee8ff); display: flex; align-items: center; gap: 8px; } .ds-req { color: var(--heart, #ff5275); } .ds-field__input { font-family: var(--font-jetbrains-mono), ui-monospace, monospace; font-size: 14px; background: rgba(62, 232, 255, 0.04); border: 2px solid var(--bg-3, #2a2350); color: var(--ink, #f5f0ff); padding: 12px 14px; outline: none; caret-color: var(--neon-3, #aaff3d); transition: border-color 0.12s, background 0.12s; width: 100%; } .ds-field__input::placeholder { color: var(--ink-mute, #8d84ad); } .ds-field__input:focus { border-color: var(--neon-1, #ff3d8b); background: rgba(255, 61, 139, 0.06); } .ds-field__input:focus-visible { outline: 3px solid var(--focus-ring, #3ee8ff); outline-offset: 2px; }"
+    },
+    {
+      "name": "Navigation",
+      "kind": "nav",
+      "refersTo": "nav-link",
+      "description": "Pixel-type links with the same lift-and-press mechanics as a button. Active state is a magenta border on a mid-panel fill; the sprite glyph sits inline at 13px.",
+      "html": "<nav class=\"ds-nav\"><a class=\"ds-nav__link is-active\" href=\"#\"><svg viewBox=\"0 0 9 9\" width=\"13\" height=\"13\" shape-rendering=\"crispEdges\"><rect x=\"4\" y=\"0\" width=\"1\" height=\"1\" fill=\"currentColor\"/><rect x=\"4\" y=\"1\" width=\"1\" height=\"1\" fill=\"currentColor\"/><rect x=\"3\" y=\"2\" width=\"3\" height=\"1\" fill=\"currentColor\"/><rect x=\"0\" y=\"3\" width=\"1\" height=\"1\" fill=\"currentColor\"/><rect x=\"2\" y=\"3\" width=\"5\" height=\"1\" fill=\"currentColor\"/><rect x=\"8\" y=\"3\" width=\"1\" height=\"1\" fill=\"currentColor\"/><rect x=\"0\" y=\"4\" width=\"9\" height=\"1\" fill=\"currentColor\"/><rect x=\"2\" y=\"5\" width=\"5\" height=\"1\" fill=\"currentColor\"/><rect x=\"2\" y=\"6\" width=\"2\" height=\"1\" fill=\"currentColor\"/><rect x=\"5\" y=\"6\" width=\"2\" height=\"1\" fill=\"currentColor\"/><rect x=\"1\" y=\"7\" width=\"2\" height=\"1\" fill=\"currentColor\"/><rect x=\"6\" y=\"7\" width=\"2\" height=\"1\" fill=\"currentColor\"/><rect x=\"1\" y=\"8\" width=\"1\" height=\"1\" fill=\"currentColor\"/><rect x=\"7\" y=\"8\" width=\"1\" height=\"1\" fill=\"currentColor\"/></svg>REVIEWS</a><a class=\"ds-nav__link\" href=\"#\">NEWS</a><a class=\"ds-nav__link\" href=\"#\">ABOUT</a></nav>",
+      "css": ".ds-nav { display: flex; gap: 4px; background: var(--bg-1, #14112e); border-bottom: 3px solid var(--neon-1, #ff3d8b); padding: 8px; } .ds-nav__link { font-family: var(--font-press-start-2p), system-ui, monospace; font-size: 12px; color: var(--ink-dim, #b9b0d8); padding: 12px 14px; display: inline-flex; align-items: center; gap: 8px; border: 2px solid transparent; transition: all 0.15s; text-decoration: none; } .ds-nav__link:hover { color: var(--ink, #f5f0ff); background: var(--bg-2, #1f1a3d); border-color: var(--neon-2, #3ee8ff); transform: translate(-2px, -2px); box-shadow: 2px 2px 0 var(--shadow-hard, #000); } .ds-nav__link.is-active { color: var(--ink, #f5f0ff); background: var(--bg-2, #1f1a3d); border-color: var(--neon-1, #ff3d8b); } .ds-nav__link:focus-visible { outline: 3px solid var(--focus-ring, #3ee8ff); outline-offset: 2px; }"
+    },
+    {
+      "name": "Score Key",
+      "kind": "custom",
+      "refersTo": null,
+      "description": "Closes the hero's right column. Pairs each tone swatch with its band and links the published scale. Any surface that shows a score without its breakdown should carry one of these.",
+      "html": "<a class=\"ds-key\" href=\"#\"><span class=\"ds-key__head\">◆ HOW WE SCORE</span><span class=\"ds-key__bands\"><span class=\"ds-key__band\"><i style=\"background:var(--neon-3,#aaff3d)\"></i>8.0+</span><span class=\"ds-key__band\"><i style=\"background:var(--neon-4,#ffd23d)\"></i>6.0–7.9</span><span class=\"ds-key__band\"><i style=\"background:var(--heart,#ff5275)\"></i>&lt;6.0</span></span><span class=\"ds-key__more\">Every score breaks down into the 3–5 things it is made of. Read the full scale →</span></a>",
+      "css": ".ds-key { display: flex; flex-direction: column; gap: 10px; background: var(--bg-2, #1f1a3d); border: 2px solid var(--bg-3, #2a2350); padding: 12px 14px; text-decoration: none; color: inherit; max-width: 320px; transition: border-color 0.15s, transform 0.15s, box-shadow 0.15s; } .ds-key:hover { border-color: var(--neon-2, #3ee8ff); transform: translate(-2px, -2px); box-shadow: 2px 2px 0 var(--shadow-hard, #000); } .ds-key:focus-visible { outline: 3px solid var(--focus-ring, #3ee8ff); outline-offset: 2px; } .ds-key__head { font-family: var(--font-press-start-2p), system-ui, monospace; font-size: 11px; color: var(--neon-1, #ff3d8b); } .ds-key__bands { display: flex; gap: 14px; flex-wrap: wrap; } .ds-key__band { display: inline-flex; align-items: center; gap: 6px; font-family: var(--font-jetbrains-mono), ui-monospace, monospace; font-size: 12px; color: var(--ink-dim, #b9b0d8); } .ds-key__band i { width: 10px; height: 10px; display: block; flex-shrink: 0; } .ds-key__more { font-family: var(--font-jetbrains-mono), ui-monospace, monospace; font-size: 12px; line-height: 1.5; color: var(--ink-mute, #8d84ad); }"
+    },
+    {
+      "name": "Section Header",
+      "kind": "custom",
+      "refersTo": null,
+      "description": "The magazine's section furniture: a bordered numeral, a pixel title, a 2px rule under the whole row with a 96px magenta overrun at the left, and an arrow action that slides on hover.",
+      "html": "<div class=\"ds-sechead\"><div class=\"ds-sechead__title\"><span class=\"ds-sechead__num\">01</span><h2 class=\"ds-sechead__h\">LATEST REVIEWS</h2></div><a class=\"ds-sechead__action\" href=\"#\">ALL REVIEWS</a></div>",
+      "css": ".ds-sechead { display: flex; align-items: end; justify-content: space-between; gap: 24px; padding-bottom: 12px; border-bottom: 2px solid var(--bg-3, #2a2350); position: relative; max-width: 560px; } .ds-sechead::after { content: ''; position: absolute; bottom: -2px; left: 0; width: 96px; height: 2px; background: var(--neon-1, #ff3d8b); } .ds-sechead__title { display: flex; align-items: center; gap: 12px; } .ds-sechead__num { font-family: var(--font-press-start-2p), system-ui, monospace; font-size: 11px; color: var(--neon-1, #ff3d8b); background: var(--bg-1, #14112e); padding: 6px 8px; border: 2px solid var(--neon-1, #ff3d8b); } .ds-sechead__h { font-family: var(--font-press-start-2p), system-ui, monospace; font-weight: normal; font-size: 16px; line-height: 1.4; color: var(--ink, #f5f0ff); margin: 0; } .ds-sechead__action { font-family: var(--font-press-start-2p), system-ui, monospace; font-size: 11px; color: var(--neon-2, #3ee8ff); display: inline-flex; align-items: center; gap: 6px; transition: all 0.15s; text-decoration: none; } .ds-sechead__action::after { content: '→'; } .ds-sechead__action:hover { color: var(--neon-1, #ff3d8b); transform: translateX(4px); } .ds-sechead__action:focus-visible { outline: 3px solid var(--focus-ring, #3ee8ff); outline-offset: 2px; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The 1998 Games Magazine",
+    "overview": "This is a newsstand games magazine that happens to be rendered in pixels. Not an arcade cabinet, not a nostalgia gag — a publication. The density is editorial: numbered section headers, boxed sidebars, ruled dividers, pull quotes, a scored verdict with its workings printed alongside. Every surface behaves like a page that was laid out by someone with an opinion and a deadline, then reproduced on a CRT instead of on paper.\n\nThe mood is warm and nostalgic, playful and irreverent. The pixels are affection, not costume — the system loves the era it borrows from and never winks at it. That affection shows up as craft (a 9×9 hand-plotted sprite for every category, hearts that render in halves, a score meter built from twenty discrete cells) and the irreverence shows up as voice (◆ NPC ENCOUNTER ◆ stamped on the about strip, a ► TELL US WE ARE WRONG button, a Konami code, an optional scanline overlay you can switch off). The distinction matters more than any single token: an era rendered with care reads as design; an era rendered as a joke reads as kitsch, and kitsch is a confirmed anti-reference.\n\nThe system is built to survive a full palette swap. Four complete palettes — Midnight Neon, Gameboy, Amber and Candy — swap under identical markup via data-palette on <html>, and Candy inverts the whole thing to a light ground. Nothing in the system may assume a dark background, a light accent, or a specific hue. That single constraint explains most of the token architecture: --on-accent, --scrim-rgb, --shadow-hard, --frame-ground and --focus-ring all exist because a literal colour that worked on Midnight broke on Candy.\n\nConfirmed anti-references, all three binding: modern SaaS minimalism (soft gradients, rounded cards, glassmorphism, thin grey type on white), mainstream games press (IGN/GameSpot chrome, red-and-white brand bars, dense ad rails, autoplay video), and nostalgia kitsch (Comic Sans, star fields, spinning GIFs, 'under construction' gags).",
+    "keyCharacteristics": [
+      "Zero radius everywhere — not one rounded corner in the system",
+      "Three fonts with three strictly separate jobs: Press Start 2P labels and headings, JetBrains Mono body, VT323 pull quotes only",
+      "Hard, un-blurred, pure-black offset shadows as the entire depth model",
+      "Four complete palettes under one markup, each independently WCAG AA",
+      "Border weight (1 / 2 / 3 / 4 / 6px) encodes hierarchy the way a magazine uses rules",
+      "Hand-plotted pixel sprites, never a vector icon set",
+      "Controls are tactile: they lift toward you on hover and depress on click"
+    ],
+    "rules": [
+      { "name": "The Palette-Agnostic Rule", "body": "Never hardcode a colour that already exists as a token. Four palettes swap under identical markup, so a literal rgba(10, 8, 32, …) in a scrim is not a shortcut, it is a defect on the other three — this exact mistake put the hero headline at 1.31:1 on Candy. Scrims use rgba(var(--scrim-rgb), …), hard shadows use var(--shadow-hard), media frames use var(--frame-ground).", "section": "colors" },
+      { "name": "The Both-Ways Rule", "body": "Any token used as both a foreground and a background needs its counterpart tokenised too. Text sitting on a neon fill is var(--on-accent), never #000 — when Candy's accents were darkened for legibility as text, black-on-accent fell to 3.32:1 as a background. The same trap runs the other way: the hard chips that sit on imagery (score box, category badge, social mark, author avatar) hardcoded a #000 ground under a tokenised color, which put Candy's darkened accents at 3.31:1 on black. Those grounds are now var(--chip-ground), defined once as var(--bg-0) so it re-resolves per palette without an override. After changing any colour token, grep for it as a background: value, not just as a color: value.", "section": "colors" },
+      { "name": "The No-CMS-Colour Rule", "body": "A colour that arrives from Sanity is a literal hex and knows nothing about the palette. An author's accentColor was applied inline and rendered #3ee8ff on every palette — 1.24:1 on Candy — and no CSS audit could ever find it, because the value never appears in a stylesheet. Stored colours are snapped to the nearest accent token with paletteAccent() in lib/mappings.ts before they reach a style prop. Brand colours are subject to the same rule: Discord's blurple is a token here, not #a3adf6.", "section": "colors" },
+      { "name": "The Focus Ring Is Not An Accent Rule", "body": "--focus-ring is its own token and must never be pointed at --neon-*. The accent that reads on a dark ground is invisible on the light one; Candy's focus ring is near-black by design.", "section": "colors" },
+      { "name": "The Four-Ground Audit Rule", "body": "Contrast is checked against every background token the colour can land on (--bg-0 through --bg-3), not just the page ground. Checking --bg-0 alone is how --ink-dim on --bg-2 shipped at 2.75:1 in Gameboy — body copy inside every card.", "section": "colors" },
+      { "name": "The 11px Floor Rule", "body": "No functional text below 11px, at any breakpoint. Press Start 2P is a bitmap face with no anti-aliasing headroom, so 10px is not a smaller version of the type, it is a broken one. Check the responsive blocks when raising a base size — there are five of them, and .about-pill and .hp-row__head were both being quietly reset to 10px on phones after their base rules had been fixed.", "section": "typography" },
+      { "name": "The Press-Start-Is-A-Label-Font Rule", "body": "Press Start 2P never sets a paragraph. It sets headings, labels, numbers and buttons. Any run of pixel type longer than about eight words is a defect — the reader's eye stalls and the nostalgia turns into work.", "section": "typography" },
+      { "name": "The No-Weight Rule", "body": "Press Start 2P and VT323 ship at 400 only, and headings explicitly set font-weight: normal. Hierarchy is built from size, colour and tracking, never from weight. JetBrains Mono loads 400/500/700 and is the only place a bold is available.", "section": "typography" },
+      { "name": "The 72ch Rule", "body": "Body copy is capped at 72 characters (max-width: 72ch on article paragraphs and the standfirst). A monospaced body face runs wide; without the cap, line length breaks long before the container does.", "section": "typography" },
+      { "name": "The Zero-Overflow Rule", "body": "No route may scroll horizontally at any width from 320px up. The historical failure was the 721–831px band, where .lmp-nav was a nowrap flex row with a constant 832px right edge while the hamburger only engaged at 720px. Test the band, not just the breakpoints.", "section": "layout" },
+      { "name": "The Min-Width-Auto Rule", "body": "Any grid or flex child that can receive unbreakable content (an email address, a URL, a long title) needs an explicit min-width: 0. Default min-width: auto is what set a 355px min-content floor on the contact page and overflowed every viewport below ~383px.", "section": "layout" },
+      { "name": "The No-Blur Rule", "body": "A UI shadow has a blur radius of zero and is pure black. Blur exists in exactly two places in this system — the header drop and the CRT inner bloom — and adding a third is a defect, not a refinement.", "section": "elevation" },
+      { "name": "The Lift-And-Press Rule", "body": "Interactive surfaces move. Hover is translate(-2px, -2px) (cards: -3px) with a deeper offset; active is translate(2px, 2px) with the offset removed. The shadow and the transform always change together — a shadow change without movement reads as a glow, which this system does not have.", "section": "elevation" },
+      { "name": "The Zero-Radius Rule", "body": "Nothing in this system is rounded — no card, no button, no input, no avatar, no focus ring. A single border-radius above 0 breaks the whole material premise, and there is no exception for third-party embeds; Clerk's UI is overridden to match.", "section": "shapes" },
+      { "name": "The Pixel-Icon Rule", "body": "Site-facing iconography is the sprite system, never a vector icon set. Lucide exists in the repo for one shadcn primitive's internals and must not migrate into site chrome — a smooth 24px stroke icon next to a 9×9 sprite instantly reads as a different product.", "section": "shapes" }
+    ],
+    "dos": [
+      "Do reach for a token before a literal. --on-accent for text on an accent fill, rgba(var(--scrim-rgb), …) for scrims, var(--shadow-hard) for offsets, var(--frame-ground) for media frames.",
+      "Do verify every new surface in all four palettes, with scanlines on, before calling it finished. Candy is the one that breaks things — it is the only light ground.",
+      "Do check contrast against all four ground tokens (--bg-0 … --bg-3), and check accents in both roles, as text and as fill.",
+      "Do keep body copy in JetBrains Mono at ≤72ch, and reserve Press Start 2P for headings, labels, numbers and buttons.",
+      "Do pair every hover transform with its shadow change (-2px / deeper offset), and give pressable things a real :active state (+2px / no offset).",
+      "Do use border weight as hierarchy: 1px divides, 2px trims a control, 3px builds a card, 4px frames an article, 6px is the CRT.",
+      "Do render new iconography as pixel-grid sprites in components/retro/sprites.tsx and new item types through lib/mappings.ts — one card component serves all eight types.",
+      "Do give focusable elements a visible ring; the global :where(…):focus-visible rule at 3px solid var(--focus-ring) with a 2px offset is the floor, and components that clear the UA outline must restore it explicitly.",
+      "Do state a score in more than one channel — number, colour tone, and meter fill — so the verdict never depends on colour alone.",
+      "Do snap any colour arriving from Sanity through paletteAccent() before it reaches a style prop, so a CMS field cannot bypass the palette.",
+      "Do give any surface that shows a score a route to the published scale at /about."
+    ],
+    "donts": [
+      "Don't introduce a border radius. Anywhere. Including third-party embedded UI, which is overridden to match.",
+      "Don't add a blurred shadow. The header drop and the CRT bloom are the only two in the system; everything else is a zero-blur black offset.",
+      "Don't set body copy, or any run longer than roughly eight words, in Press Start 2P.",
+      "Don't hardcode #000 as the text colour on a neon fill, or rgba(10, 8, 32, …) in a gradient. Both break the moment the palette changes.",
+      "Don't point --focus-ring at an accent token, or drop a focus indicator to the UA default — that default resolves from the element's own color and produced an invisible hairline on the largest target on the site.",
+      "Don't bring in a vector icon set (Lucide, Heroicons, react-icons) for site-facing chrome. Smooth strokes beside 9×9 sprites read as two different products.",
+      "Don't render a score as a smooth or gradient-filled bar; the meter is 20 discrete cells.",
+      "Don't wrap long-form text in .crt-frame. It is a media frame, and it turns an article into a slab.",
+      "Don't let any route scroll horizontally between 320px and 1280px — test the 721–831px band specifically, and give grid children that hold unbreakable strings an explicit min-width: 0.",
+      "Don't reach for SaaS-minimal, mainstream-games-press, or kitsch-retro moves: soft gradients and glassmorphism, red-and-white brand bars and ad rails, or star fields, spinning GIFs and joke fonts.",
+      "Don't apply a stored hex — an author accent, a category colour, a brand colour — as an inline style. It is the same colour on all four palettes and no CSS audit will ever find it.",
+      "Don't ship an infinite animation without a pause control; prefers-reduced-motion is not a mechanism, it only reaches readers who set the OS flag."
+    ]
+  }
+}
