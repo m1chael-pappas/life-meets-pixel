@@ -18,8 +18,9 @@ export function SiteFooter() {
           <div className="footer-col">
             <h3>► LIFE MEETS PIXEL</h3>
             <p className="footer-about">
-              Honest reviews of games, movies, books, anime, and tech. Plus gaming news, previews,
-              and thoughts on what we&apos;re playing. No sponsors. No PR fluff.
+              <strong>Life Meets Pixel (LMP)</strong> is an independent Australian review
+              publication covering games, anime, film, TV, books, comics, board games and tech.
+              Every verdict is scored and broken down. No sponsors. No PR fluff.
             </p>
           </div>
           <div className="footer-col">

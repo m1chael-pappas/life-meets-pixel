@@ -10,6 +10,7 @@ import ReviewTypeTabs from "@/components/review-type-tabs";
 import { JsonLd } from "@/components/seo/json-ld";
 import { SiteHeader } from "@/components/site-header";
 import Pagination from "@/components/ui/pagination";
+import { OG_IMAGE } from "@/lib/constants";
 import { breadcrumbSchema, collectionPageSchema, graph } from "@/lib/schema";
 import {
   CAT_TYPE_HEADING,
@@ -72,6 +73,7 @@ export async function generateMetadata({
       description,
       url: canonicalUrl,
       type: "website",
+      images: [OG_IMAGE],
     },
   };
 }

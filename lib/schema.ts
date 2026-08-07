@@ -6,6 +6,8 @@
 // the locale consistently: `<html lang>`, OG locale and `inLanguage` all say
 // en-AU. Add hreflang only if a second locale ever ships.
 
+import { SITE_CONFIG } from "@/lib/constants";
+
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://lifemeetspixel.com";
 const SITE_NAME = "Life Meets Pixel";
 export const LOCALE = "en-AU";
@@ -14,17 +16,70 @@ export const LOCALE = "en-AU";
 const ORG_ID = `${SITE_URL}/#organization`;
 const SITE_ID = `${SITE_URL}/#website`;
 
+/**
+ * NewsMediaOrganization, not bare Organization.
+ *
+ * "Life Meets Pixel" is three common dictionary words, so search and LLM systems
+ * default to parsing it as a phrase (smartphone photography, journaling apps)
+ * rather than resolving it to an entity. Everything here exists to force the
+ * entity reading: a specific type, an explicit country, an alternate name, and
+ * verifiable links out to profiles that corroborate all three.
+ *
+ * Every policy URL below points at a section that actually exists. Claiming an
+ * ethicsPolicy or a diversityPolicy we do not publish would be a fabricated
+ * trust signal, which is exactly what these properties are checked for.
+ */
 export const organizationSchema = () => ({
-  "@type": "Organization",
+  // Both types: NewsMediaOrganization is the specific claim, Organization keeps
+  // consumers that only understand the base type working.
+  "@type": ["NewsMediaOrganization", "Organization"],
   "@id": ORG_ID,
   name: SITE_NAME,
+  alternateName: "LMP",
   url: SITE_URL,
   logo: {
     "@type": "ImageObject",
-    url: `${SITE_URL}/logo.svg`,
+    url: `${SITE_URL}/og-default.png`,
+    width: 1200,
+    height: 630,
   },
+  image: `${SITE_URL}/og-default.png`,
   description:
-    "Honest reviews of games, movies, books, anime, board games, and tech. No sponsors. No PR fluff.",
+    "An independent Australian review publication covering games, anime, film, " +
+    "TV, books, comics, board games and tech. No sponsors. No PR fluff.",
+  foundingDate: "2025",
+  inLanguage: LOCALE,
+  // The geographic anchor. addressCountry is the machine-readable half;
+  // areaServed states who the coverage is written for.
+  address: {
+    "@type": "PostalAddress",
+    addressCountry: "AU",
+  },
+  areaServed: {
+    "@type": "Country",
+    name: "Australia",
+  },
+  knowsAbout: [
+    "video game reviews",
+    "anime reviews",
+    "film reviews",
+    "television reviews",
+    "book reviews",
+    "comic book reviews",
+    "board game reviews",
+    "consumer technology reviews",
+    "geek culture",
+  ],
+  publishingPrinciples: `${SITE_URL}/about`,
+  correctionsPolicy: `${SITE_URL}/about`,
+  ownershipFundingInfo: `${SITE_URL}/legal/affiliate-disclosure`,
+  // sameAs is what actually resolves the entity: profiles a crawler can fetch
+  // and cross-check against the same name and description.
+  sameAs: [
+    SITE_CONFIG.social.facebook,
+    SITE_CONFIG.social.instagram,
+    `https://twitter.com/${SITE_CONFIG.social.twitter.replace("@", "")}`,
+  ],
 });
 
 export const websiteSchema = () => ({
@@ -32,6 +87,12 @@ export const websiteSchema = () => ({
   "@id": SITE_ID,
   url: SITE_URL,
   name: SITE_NAME,
+  // Repeated from the Organization on purpose: a WebSite carrying the same
+  // alternateName is a second, independent signal that the phrase is a name.
+  alternateName: "LMP",
+  description:
+    "An independent Australian review publication covering games, anime, film, " +
+    "TV, books, comics, board games and tech.",
   inLanguage: LOCALE,
   publisher: { "@id": ORG_ID },
 });

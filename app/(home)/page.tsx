@@ -38,26 +38,30 @@ export const metadata: Metadata = {
     // so the locale has to be restated on every page that defines its own.
     locale: "en_AU",
     type: "website",
-    title: "Life Meets Pixel - Reviews & News",
+    title: "Life Meets Pixel (LMP) — Independent Australian Reviews",
     description:
-      "Honest reviews of games, movies, books, anime, board games, and more.",
+      "An independent Australian review publication covering games, anime, film, TV, books, comics, board games and tech. Honest scored reviews — no sponsors, no PR fluff.",
     url: siteUrl,
     siteName: "Life Meets Pixel",
     images: [
       {
-        url: `${siteUrl}/logo.svg`,
+        // PNG, not the SVG this used to point at: no social platform and no
+        // Google surface renders an SVG og:image, so the site was shipping
+        // link previews with no image at all.
+        url: `${siteUrl}/og-default.png`,
         width: 1200,
         height: 630,
-        alt: "Life Meets Pixel - Reviews & News",
+        type: "image/png",
+        alt: "Life Meets Pixel — independent Australian reviews of games, anime, film and tech",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Life Meets Pixel - Reviews & News",
+    title: "Life Meets Pixel (LMP) — Independent Australian Reviews",
     description:
-      "Honest reviews of games, movies, books, anime, and more.",
-    images: [`${siteUrl}/logo.svg`],
+      "An independent Australian review publication covering games, anime, film, TV, books, comics, board games and tech. Honest scored reviews — no sponsors, no PR fluff.",
+    images: [`${siteUrl}/og-default.png`],
   },
   alternates: {
     canonical: siteUrl,

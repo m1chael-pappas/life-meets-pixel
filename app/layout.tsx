@@ -59,12 +59,17 @@ const vt323 = VT323({
 
 export const metadata: Metadata = {
   title: {
-    default: "Life Meets Pixel - Reviews & News",
+    default: "Life Meets Pixel — Independent Australian Game, Anime & Film Reviews",
     template: "%s | Life Meets Pixel",
   },
   description:
-    "Honest reviews of games, movies, books, anime, board games, and tech. No sponsors. No PR fluff. Just real reviews from a fellow nerd.",
+    "An independent Australian review publication covering games, anime, film, TV, books, comics, board games and tech. Honest scored reviews — no sponsors, no PR fluff.",
   keywords: [
+    "Australian gaming site",
+    "Australian game reviews",
+    "independent game reviews",
+    "Life Meets Pixel",
+    "LMP",
     "gaming",
     "game reviews",
     "movie reviews",
@@ -75,7 +80,7 @@ export const metadata: Metadata = {
     "geek culture",
     "entertainment reviews",
   ],
-  authors: [{ name: "Life Meets Pixel Team" }],
+  authors: [{ name: "The Life Meets Pixel Editorial Team" }],
   creator: "Life Meets Pixel",
   publisher: "Life Meets Pixel",
   metadataBase: new URL(
@@ -88,15 +93,16 @@ export const metadata: Metadata = {
     locale: "en_AU",
     url: "/",
     siteName: "Life Meets Pixel",
-    title: "Life Meets Pixel - Reviews & News",
+    title: "Life Meets Pixel (LMP) — Independent Australian Reviews",
     description:
-      "Honest reviews of games, movies, books, anime, board games, and more. No sponsors. No PR fluff. Just real reviews from a fellow nerd.",
+      "An independent Australian review publication covering games, anime, film, TV, books, comics, board games and tech. Honest scored reviews — no sponsors, no PR fluff.",
     images: [
       {
-        url: "/logo.svg",
+        url: "/og-default.png",
         width: 1200,
         height: 630,
-        alt: "Life Meets Pixel - Reviews & News",
+        type: "image/png",
+        alt: "Life Meets Pixel — independent Australian reviews of games, anime, film and tech",
       },
     ],
   },
@@ -120,10 +126,10 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Life Meets Pixel - Reviews & News",
+    title: "Life Meets Pixel (LMP) — Independent Australian Reviews",
     description:
-      "Honest reviews of games, movies, books, anime, and more. No sponsors. No PR fluff.",
-    images: ["/logo.svg"],
+      "Independent Australian reviews of games, anime, film, TV, books, board games and tech. Scored, honest, no sponsors.",
+    images: ["/og-default.png"],
     creator: "@lifemeetspixel",
   },
   robots: {
@@ -140,6 +146,18 @@ export const metadata: Metadata = {
   verification: {
     // Already verified
   },
+  // Declared here rather than as hand-written <link> tags, which pointed at the
+  // 615KB logo.svg — a 615KB download for a 16px tab icon, and Safari does not
+  // accept an SVG apple-touch-icon at all, so iOS had no home-screen icon.
+  icons: {
+    icon: [
+      { url: "/favicon.ico", sizes: "16x16 32x32 48x48" },
+      { url: "/favicon-32x32.png", type: "image/png", sizes: "32x32" },
+      { url: "/favicon-16x16.png", type: "image/png", sizes: "16x16" },
+    ],
+    apple: [{ url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" }],
+  },
+  manifest: "/site.webmanifest",
 };
 
 export default function RootLayout({
@@ -154,9 +172,6 @@ export default function RootLayout({
   const tree = (
     <html lang="en-AU" data-palette="midnight" suppressHydrationWarning>
       <head>
-        <link rel="icon" href="/logo.svg" type="image/svg+xml" />
-        <link rel="apple-touch-icon" href="/logo.svg" />
-        <link rel="manifest" href="/site.webmanifest" />
         {/* Organization + WebSite, emitted once sitewide. Every per-page graph
             references these by @id instead of restating the publisher. */}
         <JsonLd data={graph(organizationSchema(), websiteSchema())} />

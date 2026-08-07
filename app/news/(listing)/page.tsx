@@ -7,6 +7,7 @@ import { NewsCard } from "@/components/retro/news-card";
 import { JsonLd } from "@/components/seo/json-ld";
 import { SiteHeader } from "@/components/site-header";
 import Pagination from "@/components/ui/pagination";
+import { OG_IMAGE } from "@/lib/constants";
 import { breadcrumbSchema, collectionPageSchema, graph } from "@/lib/schema";
 import {
   fetchOptions,
@@ -56,6 +57,7 @@ export async function generateMetadata({ searchParams }: NewsPageProps): Promise
       description,
       url: canonicalUrl,
       type: "website",
+      images: [OG_IMAGE],
     },
   };
 }

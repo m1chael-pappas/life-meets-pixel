@@ -9,6 +9,7 @@ import { NewsCard } from "@/components/retro/news-card";
 import { ReviewCard } from "@/components/retro/review-card";
 import { JsonLd } from "@/components/seo/json-ld";
 import { SiteHeader } from "@/components/site-header";
+import { OG_IMAGE } from "@/lib/constants";
 import { authorInitial } from "@/lib/mappings";
 import { breadcrumbSchema, graph, profilePageSchema } from "@/lib/schema";
 import { AUTHOR_SLUGS_QUERY, fetchOptions, HIDDEN_AUTHOR_IDS } from "@/lib/queries";
@@ -96,6 +97,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       description: author.bio || `Meet ${author.name}, a writer at Life Meets Pixel.`,
       url: canonicalUrl,
       type: "profile",
+      images: [OG_IMAGE],
     },
   };
 }

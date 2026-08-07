@@ -1,6 +1,8 @@
 # Life Meets Pixel
 
-> A geek culture review website covering video games, movies, TV series, anime, books, comics, board games, and gadgets. Reviews include scores from 1-10 with detailed analysis, pros/cons, and structured metadata.
+> Life Meets Pixel (LMP) is an independent Australian review publication covering video games, movies, TV series, anime, books, comics, board games, and gadgets. Reviews include scores from 1-10 with detailed analysis, pros/cons, and structured metadata.
+
+Entity: Life Meets Pixel (also: LMP) — a NewsMediaOrganization based in Australia, publishing Review and NewsArticle content in en-AU. Independent and reader-funded; no sponsored reviews. Editorial standards and corrections policy: https://lifemeetspixel.com/about
 
 Life Meets Pixel provides in-depth reviews, news, and previews for gaming and entertainment enthusiasts. Each review includes a numerical score (1-10), editorial analysis, and type-specific metadata (platforms, runtime, page count, etc.). The news section also features game previews and casual thoughts on games being played.
 

@@ -1,17 +1,27 @@
 {
-    "name": "Life Meets Pixel",
-    "short_name": "LMP",
-    "description": "Honest reviews of games, movies, books, anime, board games, and more",
-    "start_url": "/",
-    "display": "standalone",
-    "background_color": "#fff0e5",
-    "theme_color": "#975af9",
-    "icons": [
-        {
-            "src": "/logo.svg",
-            "sizes": "any",
-            "type": "image/svg+xml",
-            "purpose": "any maskable"
-        }
-    ]
+  "name": "Life Meets Pixel",
+  "short_name": "LMP",
+  "description": "Independent Australian reviews of games, anime, film, TV, books, board games and tech.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a0820",
+  "theme_color": "#ff3d8b",
+  "lang": "en-AU",
+  "icons": [
+    {
+      "src": "/favicon-32x32.png",
+      "sizes": "32x32",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
 }

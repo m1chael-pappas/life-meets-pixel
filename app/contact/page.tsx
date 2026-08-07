@@ -3,7 +3,7 @@ import Link from "next/link";
 
 import { ContactForm } from "@/components/retro/contact-form";
 import { SiteHeader } from "@/components/site-header";
-import { SITE_CONFIG } from "@/lib/constants";
+import { SITE_CONFIG, OG_IMAGE } from "@/lib/constants";
 import { authorInitial, authorLevel } from "@/lib/mappings";
 import { ALL_AUTHORS_QUERY, fetchOptions } from "@/lib/queries";
 import type { Author } from "@/lib/types";
@@ -24,6 +24,7 @@ export const metadata: Metadata = {
     description: "Drop us a line — review requests, news tips, collabs.",
     url: `${siteUrl}/contact`,
     type: "website",
+    images: [OG_IMAGE],
   },
 };
 
