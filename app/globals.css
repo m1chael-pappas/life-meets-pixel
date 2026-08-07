@@ -3222,8 +3222,10 @@ a.lmp-ticker__item:focus-visible {
   line-height: 1.7;
 }
 
-/* The standfirst keeps its step above body, now on the prose face. */
-.article-meta__lead { font-size: 19px; line-height: 1.6; }
+/* The standfirst keeps its step above body, now on the prose face. 20px, not
+   19: 19 is not a step on the documented ramp, and inventing one to get a
+   slightly smaller lede is how a type scale stops being a scale. */
+.article-meta__lead { font-size: 20px; line-height: 1.6; }
 
 /* Pull quotes stay VT323 and body-adjacent blocks stay mono: the contrast is
    the point. */

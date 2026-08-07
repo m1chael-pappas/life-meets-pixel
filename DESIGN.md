@@ -80,19 +80,19 @@ typography:
     lineHeight: 1.5
     letterSpacing: "0.02em"
   lede:
-    fontFamily: "JetBrains Mono, ui-monospace, monospace"
-    fontSize: "18px"
+    fontFamily: "IBM Plex Sans, system-ui, sans-serif"
+    fontSize: "20px"
     fontWeight: 400
-    lineHeight: 1.65
+    lineHeight: 1.6
     letterSpacing: "normal"
   body:
-    fontFamily: "JetBrains Mono, ui-monospace, monospace"
-    fontSize: "17px"
+    fontFamily: "IBM Plex Sans, system-ui, sans-serif"
+    fontSize: "18px"
     fontWeight: 400
-    lineHeight: 1.8
+    lineHeight: 1.7
     letterSpacing: "normal"
   body-lg:
-    fontFamily: "JetBrains Mono, ui-monospace, monospace"
+    fontFamily: "IBM Plex Sans, system-ui, sans-serif"
     fontSize: "16px"
     fontWeight: 400
     lineHeight: 1.55
@@ -322,8 +322,8 @@ Two tiers sit outside that ramp on purpose, and neither is text:
 
 **JetBrains Mono (everything read as prose):**
 
-- **Lede** (18px, 1.65, max 72ch): the article standfirst and hero subtitle.
-- **Body** (17px, 1.8, max 72ch): article copy.
+- **Lede** (20px, 1.6, max 72ch): the article standfirst.
+- **Body** (18px, 1.7, max 72ch): article copy. Renders 72 characters per line in the 651px column.
 - **Body-lg** (16px, 1.55): the hero feature subtitle.
 - **Body-ui** (15px, 1.55): the document base size.
 - **Body-sm** (14px): card excerpts, footer links, form inputs.
