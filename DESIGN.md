@@ -19,6 +19,30 @@ colors:
   focus-ring: "#3ee8ff"
   shadow-hard: "#000000"
 typography:
+  hero-numeral:
+    fontFamily: "Press Start 2P, system-ui, monospace"
+    fontSize: "64px"
+    fontWeight: 400
+    lineHeight: 1
+    letterSpacing: "normal"
+  portrait-initial:
+    fontFamily: "Press Start 2P, system-ui, monospace"
+    fontSize: "52px"
+    fontWeight: 400
+    lineHeight: 1
+    letterSpacing: "normal"
+  badge-glyph:
+    fontFamily: "Press Start 2P, system-ui, monospace"
+    fontSize: "44px"
+    fontWeight: 400
+    lineHeight: 1
+    letterSpacing: "normal"
+  badge-glyph-sm:
+    fontFamily: "Press Start 2P, system-ui, monospace"
+    fontSize: "32px"
+    fontWeight: 400
+    lineHeight: 1
+    letterSpacing: "normal"
   display:
     fontFamily: "VT323, monospace"
     fontSize: "26px"
@@ -109,6 +133,18 @@ typography:
     fontWeight: 400
     lineHeight: 1.4
     letterSpacing: "0.1em"
+  glyph:
+    fontFamily: "JetBrains Mono, ui-monospace, monospace"
+    fontSize: "9px"
+    fontWeight: 400
+    lineHeight: 1
+    letterSpacing: "normal"
+  glyph-sm:
+    fontFamily: "JetBrains Mono, ui-monospace, monospace"
+    fontSize: "8px"
+    fontWeight: 400
+    lineHeight: 1
+    letterSpacing: "normal"
 rounded:
   none: "0"
 spacing:
@@ -261,7 +297,14 @@ Three complete re-mappings ship alongside Midnight Neon, switched by `data-palet
 
 ### Hierarchy
 
-The ramp is 11 · 12 · 13 · 14 · 15 · 16 · 17 · 18 · 20 · 22 · 24 · 26px. Two faces run it in parallel — Press Start 2P owns the heading and label steps, JetBrains Mono owns the reading steps — and they never occupy the same step for the same purpose.
+The text ramp is 11 · 12 · 13 · 14 · 15 · 16 · 17 · 18 · 20 · 22 · 24 · 26px. Two faces run it in parallel — Press Start 2P owns the heading and label steps, JetBrains Mono owns the reading steps — and they never occupy the same step for the same purpose.
+
+Two tiers sit outside that ramp on purpose, and neither is text:
+
+- **Display tier** (32 · 44 · 52 · 64px, Press Start 2P): single characters used as artwork — the portrait initial on the about strip, the badge glyph on the contact and about heroes. These are shapes, not words, so the reading ramp does not apply.
+- **Glyph tier** (8 · 9px, JetBrains Mono): the `◆` and `▸` marks in `::before` pseudo-elements. Decorative punctuation standing in as a bullet, never a label a reader has to parse.
+
+**Anything a reader reads sits on the text ramp, at 11px or above.** If a value between 10px and the glyph tier appears, it is a defect rather than a new step.
 
 **Press Start 2P (headings, labels, numbers):**
 

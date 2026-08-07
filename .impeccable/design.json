@@ -84,6 +84,22 @@
       }
     },
     "typographyMeta": {
+      "hero-numeral": {
+        "displayName": "Hero numeral — Press Start 2P",
+        "purpose": "Display tier, not text. A single character used as artwork on a hero. 64px."
+      },
+      "portrait-initial": {
+        "displayName": "Portrait initial — Press Start 2P",
+        "purpose": "Display tier. The author initial on the about strip. 52px."
+      },
+      "badge-glyph": {
+        "displayName": "Badge glyph — Press Start 2P",
+        "purpose": "Display tier. The single glyph inside the contact and about hero badges. 44px, 32px when compressed."
+      },
+      "glyph": {
+        "displayName": "Glyph — JetBrains Mono",
+        "purpose": "Decorative ◆ and ▸ marks in ::before pseudo-elements, standing in as bullets. 8-9px. Never a label a reader parses, which is why it sits below the 11px text floor."
+      },
       "display": {
         "displayName": "Display — VT323",
         "purpose": "Pull quotes inside article body copy. Nowhere else in the system; its scarcity is what keeps it an event."
@@ -264,6 +280,7 @@
       { "name": "The No-CMS-Colour Rule", "body": "A colour that arrives from Sanity is a literal hex and knows nothing about the palette. An author's accentColor was applied inline and rendered #3ee8ff on every palette — 1.24:1 on Candy — and no CSS audit could ever find it, because the value never appears in a stylesheet. Stored colours are snapped to the nearest accent token with paletteAccent() in lib/mappings.ts before they reach a style prop. Brand colours are subject to the same rule: Discord's blurple is a token here, not #a3adf6.", "section": "colors" },
       { "name": "The Focus Ring Is Not An Accent Rule", "body": "--focus-ring is its own token and must never be pointed at --neon-*. The accent that reads on a dark ground is invisible on the light one; Candy's focus ring is near-black by design.", "section": "colors" },
       { "name": "The Four-Ground Audit Rule", "body": "Contrast is checked against every background token the colour can land on (--bg-0 through --bg-3), not just the page ground. Checking --bg-0 alone is how --ink-dim on --bg-2 shipped at 2.75:1 in Gameboy — body copy inside every card.", "section": "colors" },
+      { "name": "The Two-Tiers-Are-Not-Text Rule", "body": "The display tier (32-64px single characters used as artwork) and the glyph tier (8-9px decorative ◆ and ▸ marks in ::before) sit outside the text ramp on purpose, because neither is read. Anything a reader actually reads sits on the 11-26px text ramp. A value between 10px and the glyph tier is a defect, not a new step.", "section": "typography" },
       { "name": "The 11px Floor Rule", "body": "No functional text below 11px, at any breakpoint. Press Start 2P is a bitmap face with no anti-aliasing headroom, so 10px is not a smaller version of the type, it is a broken one. Check the responsive blocks when raising a base size — there are five of them, and .about-pill and .hp-row__head were both being quietly reset to 10px on phones after their base rules had been fixed.", "section": "typography" },
       { "name": "The Press-Start-Is-A-Label-Font Rule", "body": "Press Start 2P never sets a paragraph. It sets headings, labels, numbers and buttons. Any run of pixel type longer than about eight words is a defect — the reader's eye stalls and the nostalgia turns into work.", "section": "typography" },
       { "name": "The No-Weight Rule", "body": "Press Start 2P and VT323 ship at 400 only, and headings explicitly set font-weight: normal. Hierarchy is built from size, colour and tracking, never from weight. JetBrains Mono loads 400/500/700 and is the only place a bold is available.", "section": "typography" },
