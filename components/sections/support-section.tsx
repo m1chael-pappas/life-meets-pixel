@@ -5,7 +5,11 @@ export default function SupportSection() {
     <section className="lmp-section--tight">
       <div className="cta-strip">
         <div>
-          <h3 className="cta-strip__title">◆ PLAYER 2 WANTED</h3>
+          {/* h2: the membership strip is its own section, not a sub-part of
+              whatever precedes it. As an h3 it outlined as a child of NEWS &
+              PREVIEWS. Styling is class-based, so the level change is
+              invisible. */}
+          <h2 className="cta-strip__title">◆ PLAYER 2 WANTED</h2>
           <p className="cta-strip__sub">
             No sponsors, no PR fluff. Members keep it that way: ad-free
             reading, comments, full-text RSS, and member-only posts.

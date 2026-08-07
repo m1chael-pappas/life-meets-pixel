@@ -8,6 +8,12 @@ export function SiteFooter() {
   return (
     <footer className="lmp-footer">
       <div className="lmp-container">
+        {/* The footer had no heading of its own, so its four column headings
+            outlined as children of whichever section happened to precede it —
+            the social section. The four columns are peers, not a hierarchy, so
+            the fix is a region heading above them rather than promoting one
+            column to parent. */}
+        <h2 className="sr-only">Site footer</h2>
         <div className="footer-grid">
           <div className="footer-col">
             <h3>► LIFE MEETS PIXEL</h3>
@@ -69,7 +75,11 @@ export function SiteFooter() {
                 </a>
               </li>
               <li>
-                <Link href="/feed.xml">RSS Feed</Link>
+                {/* Plain anchor, not Link. As a Link, Next prefetched it on
+                    every page that renders the footer — 27kb of XML downloaded
+                    on load for a document that is never a client-side
+                    navigation. */}
+                <a href="/feed.xml">RSS Feed</a>
               </li>
             </ul>
           </div>

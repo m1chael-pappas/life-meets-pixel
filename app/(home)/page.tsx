@@ -15,7 +15,12 @@ import { SiteHeader } from "@/components/site-header";
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://lifemeetspixel.com";
 
 export const metadata: Metadata = {
-  title: "Life Meets Pixel - Reviews & News",
+  // `absolute` bypasses the root layout's "%s | Life Meets Pixel" template.
+  // As a plain string this rendered "Life Meets Pixel - Reviews & News | Life
+  // Meets Pixel" — the brand twice, 17 wasted characters, on the page that
+  // matters most for search. Other pages set a plain string on purpose,
+  // because their titles do not already contain the brand.
+  title: { absolute: "Life Meets Pixel - Reviews & News" },
   description:
     "Honest reviews of games, movies, books, anime, board games, and tech. No sponsors. No PR fluff. Just real reviews from a fellow nerd.",
   keywords: [

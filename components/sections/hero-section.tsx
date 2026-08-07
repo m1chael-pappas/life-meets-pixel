@@ -73,12 +73,17 @@ export default async function HeroSection() {
           </Link>
 
           <aside className="hero-side">
-            <div className="hero-side__head">
+            {/* A real h2, not a styled div. The four ranked links underneath
+                sat under no heading at all in the document outline, so a
+                screen-reader user reached them with no idea what the list was.
+                `.hero-side__head` sets its own size and family, so promoting
+                the element changes nothing visually. */}
+            <h2 className="hero-side__head">
               {/* Say what the list actually is. The old "THIS WEEK" heading sat
                   above reviews from the previous October for months. */}
               <span>◆ {isRecent ? "TOP RATED LATELY" : "TOP RATED"}</span>
               <span className="blink">●</span>
-            </div>
+            </h2>
             <div className="hero-side__list">
               {pool
                 .filter((p) => p._id !== hero._id)
