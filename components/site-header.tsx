@@ -75,7 +75,11 @@ export function SiteHeader({ currentPage = "home" }: SiteHeaderProps) {
           <div className="lmp-header__status">
             <span suppressHydrationWarning>{time || "--:--:--"}</span>
             <span>v2.6.18</span>
-            <span style={{ color: "var(--neon-3)" }}>EST. 2026</span>
+            {/* 2025, not 2026. The site's own /about page says "publishing
+                since 2025", and a wrong founding year sitting next to the
+                deliberately-fictional arcade flavour (HI-SCORE, P1 READY) is
+                what makes a reader unsure which of these numbers are real. */}
+            <span style={{ color: "var(--neon-3)" }}>EST. 2025</span>
           </div>
         </div>
       </div>

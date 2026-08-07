@@ -24,6 +24,12 @@
      is invisible on the light one. Never point this at --neon-* directly. */
   --focus-ring: #3ee8ff;
   --on-accent: #0a0820;
+  /* Ground for the hard chips that sit on top of imagery: score boxes, category
+     badges, social marks. Defined as the palette's own ground rather than a
+     literal #000, so it re-resolves per palette without a per-palette override.
+     Black was fine while every accent was light; candy deliberately darkens its
+     accents for a light page, which put dark-green-on-black at 3.31:1. */
+  --chip-ground: var(--bg-0);
   /* Scrim + hard shadow follow the palette's own ground. Hardcoding midnight's
      #0a0820 here is what put the hero headline at 1.31:1 on the light palette. */
   --scrim-rgb: 10, 8, 32;
@@ -40,13 +46,27 @@
   --focus-ring: #c4dd5a;
   --bg-0: #0f380f;
   --bg-1: #173e17;
-  --bg-2: #306230;
+  /* #1f421f, was #306230. The four authentic DMG shades cannot serve as both
+     grounds and inks and still clear AA: --ink-dim (#8bac0f) sat at 2.75:1 on
+     the old --bg-2, which is the ground under every card tag, about pill,
+     hero-side row and footer social. Darkened until --ink-dim clears 4.5:1.
+     --bg-3 stays light because it is a border colour; it is only a text ground
+     on .hero-side-item:hover, which is still below AA and wants a dedicated
+     palette pass. */
+  --bg-2: #1f421f;
   --bg-3: #4a7c4a;
   --ink: #9bbc0f;
-  --ink-dim: #8bac0f;
+  /* #a8c818, was #8bac0f. Paired with the darkened --bg-2 above: the authentic
+     mid shade landed at 4.31:1 there, and darkening --bg-2 any further would
+     have collapsed its tonal step against --bg-1. Lifting the ink instead
+     keeps four distinct ground levels and clears AA with margin (5.3:1). */
+  --ink-dim: #a8c818;
   --ink-mute: #c4dd5a; /* ≥4.5:1 on bg-0/1/2 (WCAG AA) */
   --neon-1: #9bbc0f;
-  --neon-2: #8bac0f;
+  /* Lifted with --ink-dim above, and for the same reason: as the link and
+     numeral colour it lands on --bg-2 constantly, where the authentic mid
+     shade measured 4.31:1. */
+  --neon-2: #a8c818;
   --neon-3: #c4dd5a;
   --neon-4: #c4dd5a;
   --heart: #c4dd5a;
@@ -237,7 +257,7 @@ a:hover { color: var(--neon-1); }
   z-index: 500;
   background: var(--bg-1);
   border-bottom: 3px solid var(--neon-1);
-  box-shadow: 0 4px 0 0 #000, 0 8px 24px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 4px 0 0 var(--shadow-hard), 0 8px 24px rgba(0, 0, 0, 0.5);
 }
 .lmp-header__topbar {
   background: var(--bg-0);
@@ -322,7 +342,7 @@ a:hover { color: var(--neon-1); }
   background: var(--bg-2);
   border-color: var(--neon-2);
   transform: translate(-2px, -2px);
-  box-shadow: 2px 2px 0 #000;
+  box-shadow: 2px 2px 0 var(--shadow-hard);
 }
 .lmp-nav a.is-active {
   color: var(--ink);
@@ -379,8 +399,12 @@ a:hover { color: var(--neon-1); }
   color: var(--ink-dim);
   padding-left: 24px;
 }
-.lmp-ticker__track span { display: inline-flex; align-items: center; gap: 8px; }
-.lmp-ticker__track span::before {
+/* Scoped to __item, not to any span: the track now wraps each of its three
+   duplicated sequences in a span so the copies can be aria-hidden, and a bare
+   `span` selector would put a diamond before every sequence too. */
+.lmp-ticker__seq { display: flex; align-items: center; gap: 48px; }
+.lmp-ticker__item { display: inline-flex; align-items: center; gap: 8px; }
+.lmp-ticker__item::before {
   content: '◆';
   color: var(--neon-2);
   font-size: 8px;
@@ -399,16 +423,16 @@ a:hover { color: var(--neon-1); }
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  box-shadow: 4px 4px 0 #000;
+  box-shadow: 4px 4px 0 var(--shadow-hard);
   text-decoration: none;
 }
 .retro-btn:hover {
   transform: translate(-2px, -2px);
-  box-shadow: 6px 6px 0 #000;
+  box-shadow: 6px 6px 0 var(--shadow-hard);
   background: var(--neon-2);
   color: var(--on-accent);
 }
-.retro-btn:active { transform: translate(2px, 2px); box-shadow: 0 0 0 #000; }
+.retro-btn:active { transform: translate(2px, 2px); box-shadow: 0 0 0 var(--shadow-hard); }
 .retro-btn--magenta { border-color: var(--neon-1); }
 .retro-btn--magenta:hover { background: var(--neon-1); color: var(--on-accent); }
 .retro-btn--lime { border-color: var(--neon-3); }
@@ -423,14 +447,14 @@ a:hover { color: var(--neon-1); }
   flex-direction: column;
   transition: transform 0.18s, border-color 0.18s, box-shadow 0.18s;
   overflow: hidden;
-  box-shadow: 4px 4px 0 #000;
+  box-shadow: 4px 4px 0 var(--shadow-hard);
   text-decoration: none;
   color: inherit;
 }
 .review-card:hover {
   transform: translate(-3px, -3px);
   border-color: var(--neon-2);
-  box-shadow: 8px 8px 0 #000;
+  box-shadow: 8px 8px 0 var(--shadow-hard);
 }
 .review-card.is-featured { border-color: var(--neon-1); }
 .review-card.is-featured:hover { border-color: var(--neon-3); }
@@ -467,10 +491,10 @@ a:hover { color: var(--neon-1); }
 }
 
 .cat-badge {
-  background: #000;
-  color: #fff;
+  background: var(--chip-ground);
+  color: var(--ink);
   font-family: var(--font-press-start-2p), system-ui, monospace;
-  font-size: 10px;
+  font-size: 11px;
   padding: 6px 8px;
   display: inline-flex;
   align-items: center;
@@ -488,7 +512,7 @@ a:hover { color: var(--neon-1); }
   position: absolute;
   bottom: 10px;
   right: 10px;
-  background: #000;
+  background: var(--chip-ground);
   color: var(--neon-3);
   font-family: var(--font-press-start-2p), system-ui, monospace;
   font-size: 14px;
@@ -534,11 +558,19 @@ a:hover { color: var(--neon-1); }
   color: var(--neon-2);
 }
 .review-card__subject .by { color: var(--ink-mute); }
+/* Clamped to 3 lines. Unclamped summaries ran to seven lines per card and made
+   the news section alone 1,786px tall on a 390px screen — the excerpt's job is
+   to earn the click, not to substitute for the article. */
 .review-card__excerpt {
   font-size: 14px;
   color: var(--ink-dim);
   line-height: 1.55;
   flex: 1;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 .review-card__hearts {
   display: flex;
@@ -576,15 +608,18 @@ a:hover { color: var(--neon-1); }
   font-size: 12px;
   color: var(--ink-dim);
 }
+/* Ground is --chip-ground, not --bg-3: the initial sits in the author's accent
+   colour, and an accent on the lighter panel ground measured 4.33:1 at 10px.
+   Dropping to the page ground clears AA in every palette. */
 .author-chip__avatar {
   width: 22px;
   height: 22px;
-  background: var(--bg-3);
+  background: var(--chip-ground);
   border: 2px solid currentColor;
   display: grid;
   place-items: center;
   font-family: var(--font-press-start-2p), system-ui, monospace;
-  font-size: 10px;
+  font-size: 11px;
 }
 
 /* ===== SECTION HEADERS ===== */
@@ -638,7 +673,7 @@ a:hover { color: var(--neon-1); }
   box-shadow:
     inset 0 0 60px rgba(255, 61, 139, 0.15),
     0 0 0 2px var(--neon-1),
-    8px 8px 0 #000;
+    8px 8px 0 var(--shadow-hard);
 }
 .crt-frame::before {
   content: '';
@@ -701,9 +736,11 @@ a:hover { color: var(--neon-1); }
   flex-direction: column;
   gap: 14px;
 }
+/* 11px, not 10: Press Start 2P has no anti-aliasing headroom and 10px
+   functional text sits under the legibility floor. */
 .hero-feature__overline {
   font-family: var(--font-press-start-2p), system-ui, monospace;
-  font-size: 10px;
+  font-size: 11px;
   color: var(--neon-1);
   letter-spacing: 0.2em;
   display: flex;
@@ -741,7 +778,7 @@ a:hover { color: var(--neon-1); }
   font-family: var(--font-press-start-2p), system-ui, monospace;
   font-size: 16px;
   color: var(--neon-3);
-  background: #000;
+  background: var(--chip-ground);
   padding: 8px 12px;
   border: 2px solid var(--neon-3);
 }
@@ -809,7 +846,7 @@ a:hover { color: var(--neon-1); }
   grid-template-columns: auto 1fr auto;
   gap: 32px;
   align-items: center;
-  box-shadow: 6px 6px 0 #000;
+  box-shadow: 6px 6px 0 var(--shadow-hard);
   position: relative;
 }
 .about-strip::before {
@@ -857,7 +894,7 @@ a:hover { color: var(--neon-1); }
 .about-pills { display: flex; flex-direction: column; gap: 8px; }
 .about-pill {
   font-family: var(--font-press-start-2p), system-ui, monospace;
-  font-size: 10px;
+  font-size: 11px;
   padding: 8px 12px;
   background: var(--bg-2);
   border-left: 4px solid var(--neon-1);
@@ -879,7 +916,7 @@ a:hover { color: var(--neon-1); }
   display: flex;
   flex-direction: column;
   transition: all 0.18s;
-  box-shadow: 4px 4px 0 #000;
+  box-shadow: 4px 4px 0 var(--shadow-hard);
   overflow: hidden;
   text-decoration: none;
   color: inherit;
@@ -887,7 +924,7 @@ a:hover { color: var(--neon-1); }
 .news-card:hover {
   transform: translate(-3px, -3px);
   border-color: var(--neon-2);
-  box-shadow: 7px 7px 0 #000;
+  box-shadow: 7px 7px 0 var(--shadow-hard);
 }
 .news-card__media {
   aspect-ratio: 16 / 10;
@@ -919,6 +956,11 @@ a:hover { color: var(--neon-1); }
   font-size: 14px;
   color: var(--ink-dim);
   flex: 1;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 .news-card__author {
   font-family: var(--font-jetbrains-mono), ui-monospace, monospace;
@@ -936,7 +978,7 @@ a:hover { color: var(--neon-1); }
   align-items: center;
   justify-content: space-between;
   gap: 24px;
-  box-shadow: 6px 6px 0 #000;
+  box-shadow: 6px 6px 0 var(--shadow-hard);
   flex-wrap: wrap;
 }
 .cta-strip__title {
@@ -1003,9 +1045,11 @@ a:hover { color: var(--neon-1); }
   gap: 12px;
 }
 .footer-bot .socials { display: flex; gap: 12px; }
+/* 44, not 36 — these were the only width-deficient targets on the page, and
+   the mobile breakpoint already sized them to 44. */
 .footer-bot .socials a {
-  width: 36px;
-  height: 36px;
+  width: 44px;
+  height: 44px;
   background: var(--bg-2);
   border: 2px solid var(--bg-3);
   display: grid;
@@ -1030,7 +1074,7 @@ a:hover { color: var(--neon-1); }
   padding: 16px;
   background: var(--bg-1);
   border: 3px solid var(--bg-3);
-  box-shadow: 4px 4px 0 #000;
+  box-shadow: 4px 4px 0 var(--shadow-hard);
 }
 .filter-btn {
   font-family: var(--font-press-start-2p), system-ui, monospace;
@@ -1084,7 +1128,7 @@ a:hover { color: var(--neon-1); }
   border: 4px solid var(--neon-1);
   margin-bottom: 32px;
   overflow: hidden;
-  box-shadow: 8px 8px 0 #000;
+  box-shadow: 8px 8px 0 var(--shadow-hard);
 }
 .article-hero__bg { position: absolute; inset: 0; }
 .article-hero__bg img {
@@ -1120,7 +1164,7 @@ a:hover { color: var(--neon-1); }
   aspect-ratio: 3 / 4;
   background: var(--bg-3);
   border: 4px solid var(--neon-2);
-  box-shadow: 6px 6px 0 #000;
+  box-shadow: 6px 6px 0 var(--shadow-hard);
   overflow: hidden;
   position: relative;
 }
@@ -1199,7 +1243,7 @@ a:hover { color: var(--neon-1); }
   background: var(--bg-1);
   border: 3px solid var(--bg-3);
   padding: 36px 40px;
-  box-shadow: 4px 4px 0 #000;
+  box-shadow: 4px 4px 0 var(--shadow-hard);
   font-family: var(--font-jetbrains-mono), ui-monospace, monospace;
   font-size: 17px;
   line-height: 1.8;
@@ -1272,14 +1316,14 @@ a:hover { color: var(--neon-1); }
   height: auto;
   margin: 20px 0;
   border: 3px solid var(--bg-3);
-  box-shadow: 4px 4px 0 #000;
+  box-shadow: 4px 4px 0 var(--shadow-hard);
 }
 
 .stat-block {
   background: var(--bg-1);
   border: 3px solid var(--bg-3);
   padding: 20px;
-  box-shadow: 4px 4px 0 #000;
+  box-shadow: 4px 4px 0 var(--shadow-hard);
   margin-bottom: 16px;
 }
 .stat-block h3 {
@@ -1405,7 +1449,7 @@ a:hover { color: var(--neon-1); }
 .contact-hero {
   background: var(--bg-1);
   border: 3px solid var(--neon-1);
-  box-shadow: 6px 6px 0 #000;
+  box-shadow: 6px 6px 0 var(--shadow-hard);
   padding: 40px;
   margin-bottom: 32px;
   position: relative;
@@ -1470,7 +1514,7 @@ a:hover { color: var(--neon-1); }
 .terminal {
   background: #000;
   border: 3px solid var(--bg-3);
-  box-shadow: 6px 6px 0 #000;
+  box-shadow: 6px 6px 0 var(--shadow-hard);
   overflow: hidden;
   font-family: var(--font-jetbrains-mono), ui-monospace, monospace;
   position: relative;
@@ -1603,7 +1647,7 @@ textarea.field-input { min-height: 140px; resize: vertical; line-height: 1.6; }
 .staff-card {
   background: var(--bg-1);
   border: 3px solid var(--bg-3);
-  box-shadow: 4px 4px 0 #000;
+  box-shadow: 4px 4px 0 var(--shadow-hard);
   padding: 20px;
   display: grid;
   grid-template-columns: 72px 1fr;
@@ -1657,7 +1701,7 @@ textarea.field-input { min-height: 140px; resize: vertical; line-height: 1.6; }
 .inbox-card {
   background: var(--bg-1);
   border: 3px solid var(--bg-3);
-  box-shadow: 4px 4px 0 #000;
+  box-shadow: 4px 4px 0 var(--shadow-hard);
   padding: 18px;
 }
 .inbox-card h3 {
@@ -1693,7 +1737,7 @@ textarea.field-input { min-height: 140px; resize: vertical; line-height: 1.6; }
 .social-tile {
   background: var(--bg-1);
   border: 3px solid var(--bg-3);
-  box-shadow: 4px 4px 0 #000;
+  box-shadow: 4px 4px 0 var(--shadow-hard);
   padding: 20px;
   display: flex;
   flex-direction: column;
@@ -1706,13 +1750,13 @@ textarea.field-input { min-height: 140px; resize: vertical; line-height: 1.6; }
 }
 .social-tile:hover {
   transform: translate(-3px, -3px);
-  box-shadow: 7px 7px 0 #000;
+  box-shadow: 7px 7px 0 var(--shadow-hard);
 }
 .social-tile__mark {
   width: 48px;
   height: 48px;
   border: 3px solid currentColor;
-  background: #000;
+  background: var(--chip-ground);
   display: grid;
   place-items: center;
   font-family: var(--font-press-start-2p), system-ui, monospace;
@@ -1738,7 +1782,7 @@ textarea.field-input { min-height: 140px; resize: vertical; line-height: 1.6; }
   z-index: 9999;
   background: var(--bg-1);
   border: 3px solid var(--neon-2);
-  box-shadow: 4px 4px 0 #000;
+  box-shadow: 4px 4px 0 var(--shadow-hard);
   padding: 10px 14px;
   font-family: var(--font-press-start-2p), system-ui, monospace;
   font-size: 11px;
@@ -1748,7 +1792,7 @@ textarea.field-input { min-height: 140px; resize: vertical; line-height: 1.6; }
 }
 .tweaks-btn:hover {
   transform: translate(-2px, -2px);
-  box-shadow: 6px 6px 0 #000;
+  box-shadow: 6px 6px 0 var(--shadow-hard);
   background: var(--neon-2);
   color: var(--on-accent);
 }
@@ -1759,7 +1803,7 @@ textarea.field-input { min-height: 140px; resize: vertical; line-height: 1.6; }
   z-index: 10000;
   background: var(--bg-1);
   border: 3px solid var(--neon-2);
-  box-shadow: 6px 6px 0 #000;
+  box-shadow: 6px 6px 0 var(--shadow-hard);
   padding: 16px;
   width: 280px;
   font-family: var(--font-jetbrains-mono), ui-monospace, monospace;
@@ -2337,7 +2381,7 @@ textarea.field-input { min-height: 140px; resize: vertical; line-height: 1.6; }
 
   /* Ticker slightly smaller */
   .lmp-ticker { height: 28px; }
-  .lmp-ticker__label { font-size: 10px; padding: 0 10px; }
+  .lmp-ticker__label { font-size: 11px; padding: 0 10px; }
   .lmp-ticker__track { font-size: 12px; gap: 32px; padding-left: 16px; }
 
   /* Hero frame — drop visual chrome so content fits */
@@ -2345,28 +2389,28 @@ textarea.field-input { min-height: 140px; resize: vertical; line-height: 1.6; }
   .crt-frame {
     padding: 10px;
     border-width: 4px;
-    box-shadow: inset 0 0 40px rgba(255, 61, 139, 0.15), 0 0 0 1px var(--neon-1), 4px 4px 0 #000;
+    box-shadow: inset 0 0 40px rgba(255, 61, 139, 0.15), 0 0 0 1px var(--neon-1), 4px 4px 0 var(--shadow-hard);
   }
   .crt-frame::before { inset: 6px; }
 
   .hero-grid { gap: 12px; }
   .hero-feature { min-height: 280px; border-width: 2px; }
   .hero-feature__body { padding: 16px; gap: 10px; }
-  .hero-feature__title { font-size: 14px; text-shadow: 2px 2px 0 #000; max-width: 100%; }
+  .hero-feature__title { font-size: 14px; text-shadow: 2px 2px 0 var(--shadow-hard); max-width: 100%; }
   .hero-feature__sub { font-size: 14px; max-width: 100%; line-height: 1.5; }
   .hero-feature__meta { gap: 10px; flex-wrap: wrap; }
   .hero-feature__score { font-size: 14px; padding: 6px 10px; }
 
-  .hero-side__head { font-size: 10px; padding: 6px 8px; }
+  .hero-side__head { font-size: 11px; padding: 6px 8px; }
   .hero-side-item { padding: 8px 10px; gap: 10px; }
   .hero-side-item__num { width: 18px; font-size: 11px; }
-  .hero-side-item__title { font-size: 10px; }
+  .hero-side-item__title { font-size: 11px; }
 
   /* Section heads */
   .section-head { gap: 12px; margin-bottom: 18px; padding-bottom: 10px; }
   .section-head__title { gap: 10px; }
-  .section-head__title .num { font-size: 10px; padding: 5px 7px; }
-  .section-head__action { font-size: 10px; }
+  .section-head__title .num { font-size: 11px; padding: 5px 7px; }
+  .section-head__action { font-size: 11px; }
 
   /* NPC Encounter strip — stack everything */
   .about-strip {
@@ -2374,14 +2418,17 @@ textarea.field-input { min-height: 140px; resize: vertical; line-height: 1.6; }
     padding: 22px 18px;
     gap: 16px;
     text-align: left;
-    box-shadow: 4px 4px 0 #000;
+    box-shadow: 4px 4px 0 var(--shadow-hard);
   }
   .about-strip::before { left: 16px; }
   .about-portrait { width: 80px; height: 80px; font-size: 40px; margin: 0 auto; }
   .about-portrait::after { inset: -6px; }
   .about-text { font-size: 14px; line-height: 1.6; }
   .about-pills { flex-direction: row; flex-wrap: wrap; gap: 6px; }
-  .about-pill { font-size: 10px; padding: 6px 10px; }
+  /* Stays 11px. The base rule was raised off 10px for legibility and this
+     override was quietly putting it back on exactly the screens where it
+     matters most. */
+  .about-pill { font-size: 11px; padding: 6px 10px; }
 
   /* News + Reviews grids */
   .news-grid, .reviews-grid { grid-template-columns: 1fr; gap: 14px; }
@@ -2393,24 +2440,24 @@ textarea.field-input { min-height: 140px; resize: vertical; line-height: 1.6; }
   .review-card__title { font-size: 13px; }
 
   /* CTA strip */
-  .cta-strip { padding: 22px 18px; gap: 16px; box-shadow: 4px 4px 0 #000; }
+  .cta-strip { padding: 22px 18px; gap: 16px; box-shadow: 4px 4px 0 var(--shadow-hard); }
   .cta-strip__title { font-size: 13px; }
   .cta-strip__sub { font-size: 13px; }
-  .retro-btn { font-size: 11px; padding: 10px 14px; box-shadow: 3px 3px 0 #000; }
-  .retro-btn:hover { box-shadow: 5px 5px 0 #000; }
+  .retro-btn { font-size: 11px; padding: 10px 14px; box-shadow: 3px 3px 0 var(--shadow-hard); }
+  .retro-btn:hover { box-shadow: 5px 5px 0 var(--shadow-hard); }
 
   /* Filters bar */
-  .filters-bar { gap: 8px; padding: 12px; box-shadow: 3px 3px 0 #000; margin-bottom: 24px; }
+  .filters-bar { gap: 8px; padding: 12px; box-shadow: 3px 3px 0 var(--shadow-hard); margin-bottom: 24px; }
   .filter-btn { font-size: 10px; padding: 8px 10px; }
 
   /* Article page */
   .article-breadcrumb { font-size: 11px; margin-bottom: 12px; }
   .article-breadcrumb .sep { margin: 0 6px; }
-  .article-hero { border-width: 3px; box-shadow: 4px 4px 0 #000; margin-bottom: 20px; }
+  .article-hero { border-width: 3px; box-shadow: 4px 4px 0 var(--shadow-hard); margin-bottom: 20px; }
   .article-hero__inner { padding: 18px 16px; gap: 16px; }
-  .article-cover { width: 160px; border-width: 3px; box-shadow: 4px 4px 0 #000; }
+  .article-cover { width: 160px; border-width: 3px; box-shadow: 4px 4px 0 var(--shadow-hard); }
   .article-meta { gap: 12px; }
-  .article-meta__title { font-size: 15px; text-shadow: 2px 2px 0 #000; }
+  .article-meta__title { font-size: 15px; text-shadow: 2px 2px 0 var(--shadow-hard); }
   .article-meta__sub { font-size: 14px; }
   .article-meta__lead { font-size: 14px; line-height: 1.6; }
   .article-meta__hpwrap { padding: 10px 12px; gap: 12px; flex-wrap: wrap; }
@@ -2422,7 +2469,7 @@ textarea.field-input { min-height: 140px; resize: vertical; line-height: 1.6; }
     padding: 20px 16px;
     font-size: 15px;
     line-height: 1.7;
-    box-shadow: 3px 3px 0 #000;
+    box-shadow: 3px 3px 0 var(--shadow-hard);
   }
   .article-content h2 {
     font-size: 16px;
@@ -2433,13 +2480,13 @@ textarea.field-input { min-height: 140px; resize: vertical; line-height: 1.6; }
   .article-content h3 { font-size: 12px; margin: 22px 0 12px; }
   .article-content blockquote { font-size: 20px; padding: 14px 16px; margin: 18px 0; }
   .article-content p { margin-bottom: 12px; }
-  .article-content img { margin: 14px 0; box-shadow: 3px 3px 0 #000; }
+  .article-content img { margin: 14px 0; box-shadow: 3px 3px 0 var(--shadow-hard); }
 
   .pros-cons { grid-template-columns: 1fr; gap: 10px; margin: 20px 0; }
   .pros, .cons { padding: 14px; }
   .pros ul li, .cons ul li { font-size: 12px; }
 
-  .stat-block { padding: 16px; box-shadow: 3px 3px 0 #000; margin-bottom: 14px; }
+  .stat-block { padding: 16px; box-shadow: 3px 3px 0 var(--shadow-hard); margin-bottom: 14px; }
   .stat-block h3 { font-size: 11px; margin-bottom: 10px; }
   .stat-row { font-size: 11px; padding: 6px 0; }
   .stat-row .lbl { font-size: 10px; }
@@ -2449,24 +2496,24 @@ textarea.field-input { min-height: 140px; resize: vertical; line-height: 1.6; }
   .reviewed-by__lvl { font-size: 11px; }
   .reviewed-by__bio { font-size: 11px; }
 
-  .hp-row__head { font-size: 10px; }
+  .hp-row__head { font-size: 11px; }
   .hp-row__bar { height: 10px; }
 
   /* Contact page */
   .contact-hero {
     padding: 22px 18px;
     margin-bottom: 20px;
-    box-shadow: 4px 4px 0 #000;
+    box-shadow: 4px 4px 0 var(--shadow-hard);
   }
   .contact-hero::before { left: 16px; font-size: 9px; padding: 0 10px; }
   .contact-hero__grid { gap: 16px; }
-  .contact-hero__title { font-size: 16px; margin-bottom: 12px; text-shadow: 2px 2px 0 #000; }
+  .contact-hero__title { font-size: 16px; margin-bottom: 12px; text-shadow: 2px 2px 0 var(--shadow-hard); }
   .contact-hero__sub { font-size: 13px; line-height: 1.65; }
   .contact-hero__badge { width: 72px; height: 72px; font-size: 32px; border-width: 3px; justify-self: start; }
   .contact-hero__badge::after { inset: -6px; }
 
   .contact-grid { gap: 18px; margin-bottom: 24px; }
-  .terminal { box-shadow: 4px 4px 0 #000; }
+  .terminal { box-shadow: 4px 4px 0 var(--shadow-hard); }
   .terminal__chrome { font-size: 10px; padding: 8px 12px; gap: 10px; }
   .terminal__dots span { width: 10px; height: 10px; }
   .terminal__body { padding: 16px; font-size: 12px; }
@@ -2478,7 +2525,7 @@ textarea.field-input { min-height: 140px; resize: vertical; line-height: 1.6; }
   .send-row { flex-wrap: wrap; gap: 10px 14px; }
   .send-row .retro-btn { margin-left: auto; }
 
-  .staff-card { padding: 16px; grid-template-columns: 56px 1fr; gap: 12px; box-shadow: 3px 3px 0 #000; }
+  .staff-card { padding: 16px; grid-template-columns: 56px 1fr; gap: 12px; box-shadow: 3px 3px 0 var(--shadow-hard); }
   .staff-card__avatar { width: 56px; height: 56px; font-size: 18px; border-width: 2px; }
   .staff-card__name { font-size: 11px; }
   .staff-card__role { font-size: 11px; }
@@ -2491,7 +2538,7 @@ textarea.field-input { min-height: 140px; resize: vertical; line-height: 1.6; }
 
   /* Socials grid */
   .socials-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
-  .social-tile { padding: 16px; box-shadow: 3px 3px 0 #000; }
+  .social-tile { padding: 16px; box-shadow: 3px 3px 0 var(--shadow-hard); }
   .social-tile__mark { width: 40px; height: 40px; font-size: 14px; border-width: 2px; }
   .social-tile__name { font-size: 11px; }
   .social-tile__handle { font-size: 11px; }
@@ -2502,7 +2549,7 @@ textarea.field-input { min-height: 140px; resize: vertical; line-height: 1.6; }
   .footer-col h3 { font-size: 11px; margin-bottom: 12px; }
   .footer-col a { font-size: 12px; }
   .footer-about { font-size: 12px; }
-  .footer-bot { margin-top: 24px; padding-top: 14px; gap: 10px; font-size: 10px; }
+  .footer-bot { margin-top: 24px; padding-top: 14px; gap: 10px; font-size: 11px; }
   .footer-bot .socials a { width: 44px; height: 44px; font-size: 11px; }
   .footer-col a { padding: 5px 0; }
 
@@ -2511,7 +2558,7 @@ textarea.field-input { min-height: 140px; resize: vertical; line-height: 1.6; }
   .retro-pagination a, .retro-pagination span { font-size: 10px; padding: 8px 10px; min-width: 32px; }
 
   /* Tweaks button */
-  .tweaks-btn { bottom: 16px; right: 16px; padding: 8px 12px; font-size: 10px; }
+  .tweaks-btn { bottom: 16px; right: 16px; padding: 8px 12px; font-size: 11px; }
   .tweaks { bottom: 16px; right: 16px; left: 16px; width: auto; padding: 14px; }
 
   /* Global heading scale */
@@ -2654,7 +2701,7 @@ textarea.field-input { min-height: 140px; resize: vertical; line-height: 1.6; }
 .about-hero {
   background: var(--bg-1);
   border: 3px solid var(--neon-1);
-  box-shadow: 6px 6px 0 #000;
+  box-shadow: 6px 6px 0 var(--shadow-hard);
   padding: 40px;
   margin-bottom: 24px;
 }
@@ -2715,7 +2762,7 @@ textarea.field-input { min-height: 140px; resize: vertical; line-height: 1.6; }
 .about-block {
   background: var(--bg-1);
   border: 3px solid var(--bg-3);
-  box-shadow: 4px 4px 0 #000;
+  box-shadow: 4px 4px 0 var(--shadow-hard);
   padding: 24px;
 }
 .about-block__head {
@@ -2880,7 +2927,7 @@ textarea.field-input { min-height: 140px; resize: vertical; line-height: 1.6; }
 @media (max-width: 640px) {
   .about-hero {
     padding: 20px 18px;
-    box-shadow: 4px 4px 0 #000;
+    box-shadow: 4px 4px 0 var(--shadow-hard);
   }
   .about-hero__grid {
     grid-template-columns: 1fr;
@@ -2888,7 +2935,7 @@ textarea.field-input { min-height: 140px; resize: vertical; line-height: 1.6; }
   }
   .about-hero__title {
     font-size: 18px;
-    text-shadow: 2px 2px 0 #000;
+    text-shadow: 2px 2px 0 var(--shadow-hard);
   }
   .about-hero__badge {
     width: 96px;
@@ -2910,3 +2957,194 @@ textarea.field-input { min-height: 140px; resize: vertical; line-height: 1.6; }
     padding: 6px 10px;
   }
 }
+
+/* ===== HOMEPAGE CRITIQUE FIXES (2026-08-07) =====
+   Everything below came out of the dual-agent homepage critique. Appended as
+   one block so the tap-target floors win over the earlier responsive
+   overrides on cascade order rather than by raising specificity. */
+
+/* ---------- Ticker: pause control (WCAG 2.2.2, Level A) ----------
+   A 60s infinite marquee with no way to stop it fails at Level A. The global
+   prefers-reduced-motion block only covers readers who set the OS flag, which
+   is not a mechanism. Pauses on explicit toggle, on hover, and on keyboard
+   focus. */
+.lmp-ticker[data-paused="true"] .lmp-ticker__track,
+.lmp-ticker:hover .lmp-ticker__track,
+.lmp-ticker:focus-within .lmp-ticker__track {
+  animation-play-state: paused;
+}
+.lmp-ticker__label { gap: 10px; }
+.lmp-ticker__toggle {
+  font-family: var(--font-press-start-2p), system-ui, monospace;
+  font-size: 11px;
+  line-height: 1;
+  color: var(--on-accent);
+  background: transparent;
+  border: 2px solid var(--on-accent);
+  padding: 4px 6px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 26px;
+  transition: background 0.12s, color 0.12s;
+}
+.lmp-ticker__toggle:hover {
+  background: var(--on-accent);
+  color: var(--neon-1);
+}
+
+/* ---------- Hero score key ----------
+   The scores were the only thing on the page with no legend, and /about — the
+   published scale — had no link anywhere in <main>. Occupies the dead space
+   the flexed hero-side list left at the bottom of the column. */
+.score-key {
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background: var(--bg-2);
+  border: 2px solid var(--bg-3);
+  padding: 12px 14px;
+  color: inherit;
+}
+/* The panel is a container, not a link — it holds the featured review's real
+   HP breakdown. Only the scale key at the bottom navigates. */
+.score-key__rows { display: flex; flex-direction: column; }
+.score-key__link {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  text-decoration: none;
+  color: inherit;
+  padding-top: 10px;
+  border-top: 1px dashed var(--bg-3);
+}
+.score-key__rows + .score-key__link { margin-top: 2px; }
+.score-key:not(:has(.score-key__rows)) .score-key__link {
+  border-top: none;
+  padding-top: 0;
+}
+.score-key__link:hover .score-key__more { color: var(--neon-2); }
+.score-key__head {
+  font-family: var(--font-press-start-2p), system-ui, monospace;
+  font-size: 11px;
+  color: var(--neon-1);
+}
+.score-key__bands { display: flex; gap: 14px; flex-wrap: wrap; }
+.score-key__band {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-jetbrains-mono), ui-monospace, monospace;
+  font-size: 12px;
+  color: var(--ink-dim);
+}
+.score-key__band i { width: 10px; height: 10px; display: block; flex-shrink: 0; }
+.score-key__more {
+  font-family: var(--font-jetbrains-mono), ui-monospace, monospace;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--ink-mute);
+}
+
+/* ---------- Loading screen ---------- */
+@keyframes loadsweep {
+  0%, 100% { background: var(--bg-3); }
+  50% { background: var(--neon-3); }
+}
+.pixel-loading {
+  min-height: 60vh;
+  display: grid;
+  place-items: center;
+  padding: 48px 16px;
+}
+.pixel-loading__panel {
+  background: var(--bg-1);
+  border: 3px solid var(--bg-3);
+  box-shadow: 4px 4px 0 var(--shadow-hard);
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  max-width: 420px;
+  width: 100%;
+}
+.pixel-loading__hearts { display: flex; gap: 6px; }
+.pixel-loading__title {
+  font-family: var(--font-press-start-2p), system-ui, monospace;
+  font-size: 14px;
+  color: var(--ink);
+  text-align: center;
+  margin: 0;
+}
+.pixel-loading__bar { display: flex; gap: 2px; height: 12px; width: 100%; }
+.pixel-loading__cell {
+  flex: 1;
+  background: var(--bg-3);
+  animation: loadsweep 1.6s steps(1) infinite;
+}
+.pixel-loading__note {
+  font-family: var(--font-jetbrains-mono), ui-monospace, monospace;
+  font-size: 12px;
+  color: var(--ink-mute);
+  margin: 0;
+}
+
+/* ---------- Tap-target floors (44x44) ----------
+   Twenty interactive elements measured under 44px at 390px width, every one of
+   them height-deficient and none width-deficient, so this is uniformly
+   vertical. */
+.section-head__action { min-height: 44px; }
+.footer-col a { padding: 8px 0; min-height: 44px; }
+.footer-bot a,
+.footer-socials a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  min-width: 44px;
+}
+.lmp-logo,
+.lmp-nav-toggle,
+.retro-btn,
+.tweaks-btn { min-height: 44px; }
+
+/* The ticker bar is 32px tall by design, so its pause control cannot reach the
+   44px comfort target without changing the bar's proportions. It meets WCAG
+   2.2 AA 2.5.8 (Target Size Minimum, 24x24) instead, which is the applicable
+   conformance requirement. */
+.lmp-ticker__toggle { min-width: 24px; min-height: 24px; }
+
+/* The tweaks button is fixed bottom-right and was sitting on top of the
+   footer's last row — elementFromPoint at the page end returned the button
+   rather than the Facebook link under it. */
+.lmp-footer { padding-bottom: 96px; }
+
+/* Measure. This ran ~139 characters per line against the system's 72ch rule. */
+.cta-strip__sub { max-width: 72ch; }
+
+/* ---------- Ticker headlines are links (2026-08-07) ----------
+   Ten real review titles with scores sat in the most prominent strip above the
+   fold and could not be clicked. They inherit the track's colour rather than
+   the global link cyan, so the strip still reads as one continuous line. */
+.lmp-ticker__item {
+  color: var(--ink-dim);
+  text-decoration: none;
+  transition: color 0.12s;
+  /* 24px clears WCAG 2.2 AA 2.5.8 inside a 32px bar. 44 does not fit here, and
+     the bar's proportions are part of the identity. */
+  min-height: 24px;
+}
+a.lmp-ticker__item:hover { color: var(--neon-2); }
+a.lmp-ticker__item:focus-visible {
+  outline: 3px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+
+/* ---------- HP row label legibility ----------
+   10px was under the functional-text floor, and this is the label on the
+   product's core artifact. The mobile override that was putting it back is
+   fixed at its own line rather than shadowed from here. */
+.hp-row__head { font-size: 11px; }

@@ -9,40 +9,44 @@
 // It now lives only in (listing) route groups, which exclude the [slug]
 // segments that call notFound(). Do NOT add a loading.tsx to a segment that
 // has a notFound()-calling child, or the soft 404s come straight back.
+//
+// Rewritten 2026-08-07. The previous version broke four of the design system's
+// named rules in one file: a ❤️ emoji standing in for the sprite set
+// (Pixel-Icon Rule), three `rounded-full` elements and a `rounded-full`
+// progress bar (Zero-Radius Rule), `font-bold` on a face that ships one weight
+// (No-Weight Rule), and shadcn semantic tokens that never respond to
+// `data-palette` (Palette-Agnostic Rule) — so on the Gameboy and Amber
+// palettes it was the only full-colour thing on screen.
+
+import { PixelHeart } from "@/components/retro/sprites";
+
+/** Cells in the loading meter — the same 20 the HP bar uses, so a loading
+ *  state reads as the same instrument as a score. */
+const CELLS = 20;
 
 export function PixelLoading() {
   return (
-    <div className="min-h-screen flex items-center justify-center">
-      <div className="text-center space-y-8">
-        {/* Pixel Heart Loading Animation */}
-        <div className="relative">
-          <div className="text-6xl animate-pulse">❤️</div>
-          <div className="absolute inset-0 flex items-center justify-center">
-            <div className="w-20 h-20 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
-          </div>
+    <div className="pixel-loading" role="status" aria-live="polite">
+      <div className="pixel-loading__panel">
+        <span className="pixel-loading__hearts" aria-hidden="true">
+          {[0, 1, 2].map((i) => (
+            <PixelHeart key={i} state="full" size={20} />
+          ))}
+        </span>
+
+        <h2 className="pixel-loading__title">LOADING PIXELS...</h2>
+
+        <div className="pixel-loading__bar" aria-hidden="true">
+          {Array.from({ length: CELLS }).map((_, i) => (
+            <span
+              key={i}
+              className="pixel-loading__cell"
+              style={{ animationDelay: `${i * 60}ms` }}
+            />
+          ))}
         </div>
 
-        {/* Loading Text */}
-        <div className="space-y-2">
-          <h2 className="text-2xl font-bold text-foreground font-mono animate-pulse">
-            LOADING PIXELS...
-          </h2>
-          <div className="flex justify-center gap-1">
-            <div className="w-2 h-2 bg-primary rounded-full animate-bounce [animation-delay:0ms]"></div>
-            <div className="w-2 h-2 bg-primary rounded-full animate-bounce [animation-delay:150ms]"></div>
-            <div className="w-2 h-2 bg-primary rounded-full animate-bounce [animation-delay:300ms]"></div>
-          </div>
-        </div>
-
-        {/* Loading Bar */}
-        <div className="w-64 h-2 bg-muted rounded-full overflow-hidden mx-auto">
-          <div className="h-full bg-primary animate-pulse"></div>
-        </div>
-
-        {/* Nerdy Loading Messages */}
-        <p className="text-sm text-muted-foreground font-mono">
-          {"//"} Compiling awesome content...
-        </p>
+        <p className="pixel-loading__note">{"//"} Compiling awesome content...</p>
       </div>
     </div>
   );

@@ -95,7 +95,14 @@ export default function HomePage() {
           <HeroSection />
         </Suspense>
 
-        <AboutStrip />
+        {/* Editorial first. This used to run hero → about → news → ad →
+            membership → reviews, which put the reviews grid 4.2 viewports down
+            on a 390px screen and asked for money before the site had shown any
+            work. The reader is here to browse reviews; the bio and the pitch
+            are what they read after being convinced, not before. */}
+        <Suspense fallback={<GridSkeleton />}>
+          <ReviewsSection />
+        </Suspense>
 
         <Suspense fallback={<GridSkeleton />}>
           <NewsSection />
@@ -103,11 +110,9 @@ export default function HomePage() {
 
         <AdBreak />
 
-        <SupportSection />
+        <AboutStrip />
 
-        <Suspense fallback={<GridSkeleton />}>
-          <ReviewsSection />
-        </Suspense>
+        <SupportSection />
 
         <SocialSection />
       </main>

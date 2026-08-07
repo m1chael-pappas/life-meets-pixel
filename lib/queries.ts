@@ -129,6 +129,11 @@ export const REVIEWS_PAGINATED_QUERY = `*[
 // `allTime` is the fallback for a quiet stretch: if the window holds fewer than
 // MIN_POOL reviews the section would otherwise render nearly empty, so the
 // component widens to the best-rated of all time rather than showing one item.
+// `scoreBreakdown` is the per-criterion rows the hero renders as HP bars. It was
+// previously projected only on the single-review query, so the homepage — the
+// surface most strangers land on — showed seven scores and never once showed
+// how one was built. The field is optional; the hero falls back to the score
+// key alone when a review has no breakdown.
 const HERO_PROJECTION = `
   _id,
   title,
@@ -137,6 +142,7 @@ const HERO_PROJECTION = `
   summary,
   publishedAt,
   featured,
+  scoreBreakdown,
   reviewableItem->{
     title,
     slug,
@@ -861,4 +867,16 @@ export const INDEXABLE_NEWS_SLUGS_QUERY = `*[
 ]{
   "slug": slug,
   publishedAt
+}`;
+
+// Headline ticker. Lived inline in components/retro/ticker.tsx until 2026-08-07;
+// moved here because all GROQ belongs in this file.
+export const TICKER_QUERY = `*[
+  _type == "review"
+  && defined(slug.current)
+]|order(publishedAt desc)[0...10]{
+  _id,
+  title,
+  reviewScore,
+  "slug": slug.current
 }`;
