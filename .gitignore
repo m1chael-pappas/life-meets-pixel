@@ -52,3 +52,8 @@ New folder/
 # python bytecode
 __pycache__/
 *.pyc
+
+# Impeccable: local hook cache and live-session scratch (design.json and
+# critique snapshots are tracked, these are machine-local)
+.impeccable/hook.cache.json
+.impeccable/live/
