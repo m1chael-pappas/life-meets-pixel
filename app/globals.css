@@ -232,11 +232,42 @@ a:hover { color: var(--neon-1); }
   50% { opacity: 0.9; }
 }
 
+/* Reduced motion removes MOVEMENT, not feedback.
+   This used to be a blanket `animation-duration: 0.01ms` on every element,
+   which also destroyed the things a reader needs to see: the button
+   lift-and-press, card hover, the focus ring arriving, the loading meter. A
+   reduced-motion reader got a UI that snapped with no acknowledgement, which
+   is worse than one that moves. Vestibular risk comes from travel and from
+   looping decoration, so those stop outright while colour, border and shadow
+   transitions survive at a shortened duration. */
 @media (prefers-reduced-motion: reduce) {
+  /* Looping decoration: stop entirely. */
+  .lmp-ticker__track,
+  .lmp-header__status .dot,
+  .hero-side__head .blink,
+  .lmp-logo__mark::after,
+  .pixel-loading__cell {
+    animation: none !important;
+  }
+
+  /* Anything else that animates runs once, quickly, instead of looping. */
   *, *::before, *::after {
-    animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.08s !important;
+  }
+
+  /* Travel is the trigger, so the lift-and-press becomes a colour-only state
+     change — still a state change. */
+  .retro-btn:hover,
+  .retro-btn:active,
+  .review-card:hover,
+  .lmp-nav a:hover,
+  .hero-side-item:hover,
+  .score-key:hover,
+  .section-head__action:hover,
+  .review-card:hover .review-card__media img {
+    transform: none !important;
   }
 }
 
