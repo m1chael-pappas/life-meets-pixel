@@ -15,7 +15,12 @@ import { SiteHeader } from "@/components/site-header";
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://lifemeetspixel.com";
 
 export const metadata: Metadata = {
-  title: "Life Meets Pixel - Reviews & News",
+  // `absolute` bypasses the root layout's "%s | Life Meets Pixel" template.
+  // As a plain string this rendered "Life Meets Pixel - Reviews & News | Life
+  // Meets Pixel" — the brand twice, 17 wasted characters, on the page that
+  // matters most for search. Other pages set a plain string on purpose,
+  // because their titles do not already contain the brand.
+  title: { absolute: "Life Meets Pixel - Reviews & News" },
   description:
     "Honest reviews of games, movies, books, anime, board games, and tech. No sponsors. No PR fluff. Just real reviews from a fellow nerd.",
   keywords: [
@@ -95,7 +100,14 @@ export default function HomePage() {
           <HeroSection />
         </Suspense>
 
-        <AboutStrip />
+        {/* Editorial first. This used to run hero → about → news → ad →
+            membership → reviews, which put the reviews grid 4.2 viewports down
+            on a 390px screen and asked for money before the site had shown any
+            work. The reader is here to browse reviews; the bio and the pitch
+            are what they read after being convinced, not before. */}
+        <Suspense fallback={<GridSkeleton />}>
+          <ReviewsSection />
+        </Suspense>
 
         <Suspense fallback={<GridSkeleton />}>
           <NewsSection />
@@ -103,11 +115,9 @@ export default function HomePage() {
 
         <AdBreak />
 
-        <SupportSection />
+        <AboutStrip />
 
-        <Suspense fallback={<GridSkeleton />}>
-          <ReviewsSection />
-        </Suspense>
+        <SupportSection />
 
         <SocialSection />
       </main>

@@ -39,8 +39,12 @@ const TILES: Tile[] = [
   },
 ];
 
+// One palette token each, so the four tiles stay distinguishable and every one
+// of them follows the palette. Discord used to carry its brand blurple
+// (#a3adf6) as a literal, which is a light violet: fine on the dark palettes,
+// 1.98:1 on the light one.
 const VARIANT_COLOR: Record<string, string> = {
-  discord: "#a3adf6",
+  discord: "var(--neon-3)",
   insta: "var(--neon-1)",
   fb: "var(--neon-2)",
   rss: "var(--neon-4)",
@@ -51,7 +55,7 @@ export default function SocialSection() {
     <section className="lmp-section--tight">
       <div className="section-head">
         <div className="section-head__title">
-          <span className="num">04</span>
+          <span className="num">03</span>
           <h2>CONNECT WITH US</h2>
         </div>
       </div>

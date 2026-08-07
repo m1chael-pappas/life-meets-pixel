@@ -2,6 +2,7 @@ import { format } from "date-fns";
 import Image from "next/image";
 import Link from "next/link";
 
+import { paletteAccent } from "@/lib/mappings";
 import type { NewsPost } from "@/lib/types";
 
 export function NewsCard({
@@ -14,8 +15,11 @@ export function NewsCard({
   /** Skip lazy-loading for above-the-fold cards on the listing. */
   priority?: boolean;
 }) {
+  // "d MMM yyyy", not "M/d/yyyy". This is an en-AU site — the numeric US form
+  // rendered 5 August as "8/5/2026", which an Australian reader reads as
+  // 8 May. A named month is unambiguous in both conventions.
   const date = post.publishedAt
-    ? format(new Date(post.publishedAt), "M/d/yyyy")
+    ? format(new Date(post.publishedAt), "d MMM yyyy")
     : "";
   const category = post.categories?.[0];
   return (
@@ -41,10 +45,20 @@ export function NewsCard({
       <div className="news-card__body">
         <div className="news-card__meta">
           <span className="news-card__date">{date}</span>
+          {/* Snapped to a palette token, not applied raw: a stored hex is the
+              same colour on all four palettes and fails contrast on the light
+              one. */}
           {category && (
             <span
               className="news-card__cat"
-              style={category.color ? { color: category.color, borderColor: category.color } : undefined}
+              style={
+                category.color
+                  ? {
+                      color: paletteAccent(category.color),
+                      borderColor: paletteAccent(category.color),
+                    }
+                  : undefined
+              }
             >
               {category.title.toUpperCase()}
             </span>
