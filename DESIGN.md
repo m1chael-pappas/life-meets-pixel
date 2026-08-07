@@ -290,10 +290,13 @@ Three complete re-mappings ship alongside Midnight Neon, switched by `data-palet
 ## Typography
 
 **Display Font:** VT323 (with `monospace`)
-**Body Font:** JetBrains Mono (with `ui-monospace, monospace`)
-**Label/Heading Font:** Press Start 2P (with `system-ui, monospace`)
+**Prose Font:** IBM Plex Sans (with `system-ui, sans-serif`)
+**Data/Label Font:** JetBrains Mono (with `ui-monospace, monospace`)
+**Heading Font:** Press Start 2P (with `system-ui, monospace`)
 
-**Character:** Three fonts, three jobs, no overlap. Press Start 2P is the magazine's cover type — chunky, all-caps by habit, used at small sizes for labels and at large sizes for headlines, and physically unreadable in a paragraph. JetBrains Mono carries every word a reader actually reads; choosing a mono for body copy is what keeps long-form text feeling like a terminal readout rather than a blog. VT323 appears exactly once in the vocabulary, as the pull-quote voice, which is why it still feels like an event.
+**Character:** Four fonts, four jobs, no overlap. Press Start 2P is the magazine's cover type — chunky, all-caps by habit, and physically unreadable in a paragraph. IBM Plex Sans carries running prose. JetBrains Mono carries everything that is *read as data*: summaries, stat rows, scores, tags, timestamps, metadata, code. VT323 appears exactly once in the vocabulary, as the pull-quote voice, which is why it still feels like an event.
+
+**Why prose left the mono.** Until 2026-08-07 JetBrains Mono set every word on the site, which meant monospace signalled nothing — a TL;DR block read with exactly the texture of the paragraph beneath it. Measured on a real review at the 651px column, mono at 17px rendered **64 characters per line**: below the healthy 65–75 band and below this system's own 72ch cap, because monospace is wide by construction. Plex Sans at 18px lands on **72** in the identical column and runs 9% shorter. Plex Sans specifically because it is the sans sibling of a mono superfamily and sits beside JetBrains Mono without argument; not Inter, which walks into the SaaS-minimalism anti-reference; not a serif, which pulls toward a broadsheet arts page.
 
 ### Hierarchy
 
@@ -328,6 +331,8 @@ Two tiers sit outside that ramp on purpose, and neither is text:
 - **Meta** (12px, 0.1em, often uppercased): timestamps, tags, breadcrumb trails, ticker items, score-key bands.
 
 ### Named Rules
+
+**The 8px Grid Rule.** Press Start 2P is drawn on an 8px grid and renders with **zero anti-aliasing only at multiples of 8** — 8, 16, 24, 32. Measured across 8–32px, every other size fringes 16–55% of its inked pixels, and `-webkit-font-smoothing: none` changes nothing (verified: byte-identical output). Display type is therefore snapped to 16 or 24. The small labels at 11–14px are a known, accepted exception: 8px is illegible and 16px would reflow the nav, badges and cards. **Any new Press Start 2P at display size must be 16, 24 or 32.**
 
 **The 11px Floor Rule.** No functional text below 11px, at any breakpoint. Press Start 2P is a bitmap face with no anti-aliasing headroom, so 10px is not a smaller version of the type, it is a broken one. Check the responsive blocks when raising a base size — there are five of them, and `.about-pill` and `.hp-row__head` were both being quietly reset to 10px on phones after their base rules had been fixed.
 

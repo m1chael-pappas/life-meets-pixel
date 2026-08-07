@@ -1,7 +1,7 @@
 import "./globals.css";
 
 import type { Metadata } from "next";
-import { JetBrains_Mono, Press_Start_2P, VT323 } from "next/font/google";
+import { IBM_Plex_Sans, JetBrains_Mono, Press_Start_2P, VT323 } from "next/font/google";
 import Script from "next/script";
 
 import dynamic from "next/dynamic";
@@ -28,6 +28,21 @@ const pressStart2P = Press_Start_2P({
 const jetbrainsMono = JetBrains_Mono({
   variable: "--font-jetbrains-mono",
   weight: ["400", "500", "700"],
+  subsets: ["latin"],
+  display: "swap",
+});
+
+// Running prose only. JetBrains Mono carried every word on the site, which
+// meant monospace signalled nothing — a TL;DR block read with the same texture
+// as the paragraph under it. Measured on a real review: mono at 17px renders
+// 64 characters per line in the 651px column, below the healthy 65-75 band and
+// below the 72ch cap the design system asks for, because monospace is wide by
+// construction. Plex Sans at 18px lands on 72 in the identical column and runs
+// 9% shorter. Chosen over Inter, which would walk into the SaaS-minimalism
+// anti-reference, and over a serif, which pulls toward a broadsheet arts page.
+const plexSans = IBM_Plex_Sans({
+  variable: "--font-plex-sans",
+  weight: ["400", "600"],
   subsets: ["latin"],
   display: "swap",
 });
@@ -147,7 +162,7 @@ export default function RootLayout({
         <JsonLd data={graph(organizationSchema(), websiteSchema())} />
       </head>
       <body
-        className={`${pressStart2P.variable} ${jetbrainsMono.variable} ${vt323.variable} antialiased`}
+        className={`${pressStart2P.variable} ${jetbrainsMono.variable} ${plexSans.variable} ${vt323.variable} antialiased`}
         data-scanlines="off"
       >
         {children}

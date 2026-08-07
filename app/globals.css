@@ -3179,3 +3179,73 @@ a.lmp-ticker__item:focus-visible {
    product's core artifact. The mobile override that was putting it back is
    fixed at its own line rather than shadowed from here. */
 .hp-row__head { font-size: 11px; }
+
+/* ===== PROSE FACE (2026-08-07) =====
+   Running prose moves to IBM Plex Sans; everything structured stays JetBrains
+   Mono. The site used one monospace face for every word, which meant monospace
+   signalled nothing — a TL;DR block read with exactly the texture of the
+   paragraph beneath it. Now the mono means something: this is data, a summary,
+   a label.
+
+   Measured on a real review at the 651px column: mono 17px rendered 64
+   characters per line, below the healthy 65-75 band and below the 72ch cap
+   this system asks for, because monospace is wide by construction. Plex Sans
+   at 18px lands on 72 in the identical column and runs 9% shorter.
+
+   Scope is deliberately narrow. Anything tabular, labelled, numeric or
+   metadata keeps the mono. */
+.article-content,
+.article-content p,
+.article-content li,
+.article-meta__lead,
+.about-block p,
+.about-block li,
+.about-hero__sub,
+.about-list li,
+.cta-strip__sub,
+.footer-about,
+.reviewed-by__bio,
+.review-card__excerpt,
+.news-card__excerpt {
+  /* The next/font variable directly, with explicit fallbacks, the way every
+     other rule in this file references a face. Routing it through a `--font-prose`
+     alias in Tailwind's @theme did not work: the theme block tree-shakes and the
+     alias computed to an empty string on the element, which silently invalidated
+     the whole declaration and left the text inheriting the body's mono. */
+  font-family: var(--font-plex-sans), system-ui, sans-serif;
+}
+
+.article-content,
+.article-content p,
+.article-content li {
+  font-size: 18px;
+  line-height: 1.7;
+}
+
+/* The standfirst keeps its step above body, now on the prose face. */
+.article-meta__lead { font-size: 19px; line-height: 1.6; }
+
+/* Pull quotes stay VT323 and body-adjacent blocks stay mono: the contrast is
+   the point. */
+.article-content blockquote { font-family: var(--font-vt323), monospace; }
+.article-content code,
+.article-content pre { font-family: var(--font-jetbrains-mono), ui-monospace, monospace; }
+
+/* ===== PIXEL GRID (2026-08-07) =====
+   Press Start 2P is drawn on an 8px grid and renders with zero anti-aliasing
+   ONLY at multiples of 8. Measured across 8-32px: 8/16/24/32 are pixel-exact,
+   every other size fringes 16-55% of its inked pixels. `-webkit-font-smoothing:
+   none` changes nothing (verified — identical output).
+
+   Display type is snapped to the grid here. The small labels (11-14px) cannot
+   be: 8px is illegible and 16px would reflow the nav, badges and cards, so
+   they stay soft pending a decision about moving small labels off the pixel
+   face entirely. */
+.hero-feature__title { font-size: 24px; }
+h1 { font-size: 24px; }
+.article-content h2 { font-size: 24px; }
+.contact-hero__title { font-size: 24px; }
+.staff-card__avatar { font-size: 24px; }
+.reviewed-by__avatar { font-size: 16px; }
+.review-card__title { font-size: 16px; }
+.news-card__title { font-size: 16px; }

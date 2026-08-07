@@ -8,79 +8,196 @@
         "role": "neutral",
         "displayName": "Chip Ground",
         "canonical": "var(--bg-0)",
-        "tonalRamp": ["#09071f", "#22223c", "#3e3f5c", "#5d5e7d", "#7e7fa0", "#a0a2c4", "#c4c6e9", "#e9ebff"]
+        "tonalRamp": [
+          "#09071f",
+          "#22223c",
+          "#3e3f5c",
+          "#5d5e7d",
+          "#7e7fa0",
+          "#a0a2c4",
+          "#c4c6e9",
+          "#e9ebff"
+        ]
       },
       "ground-deep": {
         "role": "neutral",
         "displayName": "Void",
         "canonical": "oklch(15.5% 0.049 283.0)",
-        "tonalRamp": ["#09071f", "#22223c", "#3e3f5c", "#5d5e7d", "#7e7fa0", "#a0a2c4", "#c4c6e9", "#e9ebff"]
+        "tonalRamp": [
+          "#09071f",
+          "#22223c",
+          "#3e3f5c",
+          "#5d5e7d",
+          "#7e7fa0",
+          "#a0a2c4",
+          "#c4c6e9",
+          "#e9ebff"
+        ]
       },
       "ground": {
         "role": "neutral",
         "displayName": "Deep Panel",
         "canonical": "oklch(20.0% 0.056 284.8)",
-        "tonalRamp": ["#0a0621", "#22203f", "#3f3e5f", "#5d5d80", "#7e7ea3", "#a1a1c8", "#c5c5ed", "#eaeaff"]
+        "tonalRamp": [
+          "#0a0621",
+          "#22203f",
+          "#3f3e5f",
+          "#5d5d80",
+          "#7e7ea3",
+          "#a1a1c8",
+          "#c5c5ed",
+          "#eaeaff"
+        ]
       },
       "ground-raised": {
         "role": "neutral",
         "displayName": "Mid Panel",
         "canonical": "oklch(24.4% 0.065 287.2)",
-        "tonalRamp": ["#0b0424", "#241f42", "#403c63", "#5f5c84", "#7f7da8", "#a29fcc", "#c6c3f2", "#ebe9ff"]
+        "tonalRamp": [
+          "#0b0424",
+          "#241f42",
+          "#403c63",
+          "#5f5c84",
+          "#7f7da8",
+          "#a29fcc",
+          "#c6c3f2",
+          "#ebe9ff"
+        ]
       },
       "ground-edge": {
         "role": "neutral",
         "displayName": "Edge",
         "canonical": "oklch(29.0% 0.079 287.5)",
-        "tonalRamp": ["#0c012a", "#241c49", "#403a6a", "#5f5a8c", "#7f7bb0", "#a29ed5", "#c5c2fb", "#ebe7ff"]
+        "tonalRamp": [
+          "#0c012a",
+          "#241c49",
+          "#403a6a",
+          "#5f5a8c",
+          "#7f7bb0",
+          "#a29ed5",
+          "#c5c2fb",
+          "#ebe7ff"
+        ]
       },
       "ink": {
         "role": "neutral",
         "displayName": "Paper White",
         "canonical": "oklch(96.3% 0.021 301.1)",
-        "tonalRamp": ["#0d0912", "#27232e", "#44404b", "#635f6b", "#84808d", "#a7a2b0", "#cbc6d5", "#f1ecfb"]
+        "tonalRamp": [
+          "#0d0912",
+          "#27232e",
+          "#44404b",
+          "#635f6b",
+          "#84808d",
+          "#a7a2b0",
+          "#cbc6d5",
+          "#f1ecfb"
+        ]
       },
       "ink-dim": {
         "role": "neutral",
         "displayName": "Dim Ink",
         "canonical": "oklch(77.8% 0.057 295.4)",
-        "tonalRamp": ["#0e0520", "#271f3e", "#443c5d", "#635b7f", "#857ca1", "#a79ec6", "#cbc2eb", "#f1e8ff"]
+        "tonalRamp": [
+          "#0e0520",
+          "#271f3e",
+          "#443c5d",
+          "#635b7f",
+          "#857ca1",
+          "#a79ec6",
+          "#cbc2eb",
+          "#f1e8ff"
+        ]
       },
       "ink-mute": {
         "role": "neutral",
         "displayName": "Muted Ink",
         "canonical": "oklch(63.6% 0.061 294.7)",
-        "tonalRamp": ["#0e0422", "#271e40", "#443b5f", "#635a81", "#847ba4", "#a79ec8", "#cbc2ee", "#f1e7ff"]
+        "tonalRamp": [
+          "#0e0422",
+          "#271e40",
+          "#443b5f",
+          "#635a81",
+          "#847ba4",
+          "#a79ec8",
+          "#cbc2ee",
+          "#f1e7ff"
+        ]
       },
       "attract-magenta": {
         "role": "primary",
         "displayName": "Attract-Mode Magenta",
         "canonical": "oklch(67.3% 0.233 1.9)",
-        "tonalRamp": ["#410005", "#6a001c", "#940038", "#bd0057", "#e71d78", "#ff509a", "#ff79be", "#ffa1e2"]
+        "tonalRamp": [
+          "#410005",
+          "#6a001c",
+          "#940038",
+          "#bd0057",
+          "#e71d78",
+          "#ff509a",
+          "#ff79be",
+          "#ffa1e2"
+        ]
       },
       "phosphor-cyan": {
         "role": "primary",
         "displayName": "Phosphor Cyan",
         "canonical": "oklch(85.7% 0.135 208.7)",
-        "tonalRamp": ["#001229", "#003247", "#005268", "#00748a", "#0097ad", "#00bbd2", "#32e1f8", "#68ffff"]
+        "tonalRamp": [
+          "#001229",
+          "#003247",
+          "#005268",
+          "#00748a",
+          "#0097ad",
+          "#00bbd2",
+          "#32e1f8",
+          "#68ffff"
+        ]
       },
       "insert-coin-lime": {
         "role": "secondary",
         "displayName": "Insert-Coin Lime",
         "canonical": "oklch(91.2% 0.229 131.0)",
-        "tonalRamp": ["#001400", "#003300", "#005400", "#297600", "#4c9a00", "#6ebf00", "#92e500", "#b6ff4f"]
+        "tonalRamp": [
+          "#001400",
+          "#003300",
+          "#005400",
+          "#297600",
+          "#4c9a00",
+          "#6ebf00",
+          "#92e500",
+          "#b6ff4f"
+        ]
       },
       "coin-op-gold": {
         "role": "secondary",
         "displayName": "Coin-Op Gold",
         "canonical": "oklch(87.9% 0.163 91.1)",
-        "tonalRamp": ["#220000", "#421800", "#623800", "#845900", "#a77c00", "#cb9f00", "#f1c427", "#ffea5b"]
+        "tonalRamp": [
+          "#220000",
+          "#421800",
+          "#623800",
+          "#845900",
+          "#a77c00",
+          "#cb9f00",
+          "#f1c427",
+          "#ffea5b"
+        ]
       },
       "damage-red": {
         "role": "tertiary",
         "displayName": "Damage Red",
         "canonical": "oklch(68.5% 0.208 12.8)",
-        "tonalRamp": ["#3f0000", "#680004", "#900021", "#b9003f", "#e2355e", "#ff5f80", "#ff86a3", "#ffacc7"]
+        "tonalRamp": [
+          "#3f0000",
+          "#680004",
+          "#900021",
+          "#b9003f",
+          "#e2355e",
+          "#ff5f80",
+          "#ff86a3",
+          "#ffacc7"
+        ]
       }
     },
     "typographyMeta": {
@@ -125,15 +242,15 @@
         "purpose": "h3, card titles, score boxes."
       },
       "lede": {
-        "displayName": "Lede — JetBrains Mono",
+        "displayName": "Lede — IBM Plex Sans",
         "purpose": "Article standfirst and hero subtitle. Capped at 72ch."
       },
       "body": {
-        "displayName": "Body — JetBrains Mono",
-        "purpose": "Article copy. 17px/1.8, capped at 72ch."
+        "displayName": "Body — IBM Plex Sans",
+        "purpose": "Running article prose. 18px/1.7, 72 characters per line in the 651px column — on target for the first time."
       },
       "body-lg": {
-        "displayName": "Body lg — JetBrains Mono",
+        "displayName": "Body lg — IBM Plex Sans",
         "purpose": "The hero feature subtitle."
       },
       "body-ui": {
@@ -162,30 +279,105 @@
       }
     },
     "shadows": [
-      { "name": "rest", "value": "4px 4px 0 var(--shadow-hard)", "purpose": "Default offset for cards, buttons, stat blocks, article panels and body images." },
-      { "name": "raised", "value": "6px 6px 0 var(--shadow-hard)", "purpose": "Surfaces that outrank an ordinary card: the about strip, the about hero, the article cover plate." },
-      { "name": "hover-card", "value": "8px 8px 0 var(--shadow-hard)", "purpose": "Paired with translate(-3px, -3px) on card hover. The offset deepens because the element moved, not because a shadow appeared." },
-      { "name": "hover-control", "value": "6px 6px 0 var(--shadow-hard)", "purpose": "Paired with translate(-2px, -2px) on button and nav hover." },
-      { "name": "pressed", "value": "0 0 0 var(--shadow-hard)", "purpose": "Paired with translate(2px, 2px) on :active. The shadow is consumed as the element goes down." },
-      { "name": "header-structural", "value": "0 4px 0 0 #000, 0 8px 24px rgba(0, 0, 0, 0.5)", "purpose": "The sticky header only — the single place a hard offset and a blurred drop are stacked, because it floats over scrolling content." },
-      { "name": "crt-bloom", "value": "inset 0 0 60px rgba(255, 61, 139, 0.15), 0 0 0 2px var(--neon-1), 8px 8px 0 #000", "purpose": "The hero CRT frame only. The one place soft light is permitted inside a surface." }
+      {
+        "name": "rest",
+        "value": "4px 4px 0 var(--shadow-hard)",
+        "purpose": "Default offset for cards, buttons, stat blocks, article panels and body images."
+      },
+      {
+        "name": "raised",
+        "value": "6px 6px 0 var(--shadow-hard)",
+        "purpose": "Surfaces that outrank an ordinary card: the about strip, the about hero, the article cover plate."
+      },
+      {
+        "name": "hover-card",
+        "value": "8px 8px 0 var(--shadow-hard)",
+        "purpose": "Paired with translate(-3px, -3px) on card hover. The offset deepens because the element moved, not because a shadow appeared."
+      },
+      {
+        "name": "hover-control",
+        "value": "6px 6px 0 var(--shadow-hard)",
+        "purpose": "Paired with translate(-2px, -2px) on button and nav hover."
+      },
+      {
+        "name": "pressed",
+        "value": "0 0 0 var(--shadow-hard)",
+        "purpose": "Paired with translate(2px, 2px) on :active. The shadow is consumed as the element goes down."
+      },
+      {
+        "name": "header-structural",
+        "value": "0 4px 0 0 #000, 0 8px 24px rgba(0, 0, 0, 0.5)",
+        "purpose": "The sticky header only — the single place a hard offset and a blurred drop are stacked, because it floats over scrolling content."
+      },
+      {
+        "name": "crt-bloom",
+        "value": "inset 0 0 60px rgba(255, 61, 139, 0.15), 0 0 0 2px var(--neon-1), 8px 8px 0 #000",
+        "purpose": "The hero CRT frame only. The one place soft light is permitted inside a surface."
+      }
     ],
     "motion": [
-      { "name": "control", "value": "0.12s", "purpose": "Buttons and form fields — the fastest transition in the system, so a press feels mechanical." },
-      { "name": "chrome", "value": "0.15s", "purpose": "Nav links, hero side items, section-header actions." },
-      { "name": "surface", "value": "0.18s", "purpose": "Card transform, border-color and box-shadow on hover." },
-      { "name": "imagery", "value": "0.4s", "purpose": "Card media scale to 1.04 on hover. The only slow transition, and it belongs to imagery rather than chrome." },
-      { "name": "blink", "value": "blink 1.6s steps(2) infinite", "purpose": "Status dots and LIVE indicators. Stepped, never eased — a CRT indicator does not fade." },
-      { "name": "scroll-left", "value": "scroll-left 60s linear infinite", "purpose": "The headline ticker track." },
-      { "name": "borderpulse", "value": "borderpulse 2s ease-in-out infinite", "purpose": "The logo mark's outer hairline." },
-      { "name": "reduced-motion", "value": "@media (prefers-reduced-motion: reduce) { animation-duration: 0.01ms; transition-duration: 0.01ms }", "purpose": "Global override. Every new animation inherits it; none may opt out." }
+      {
+        "name": "control",
+        "value": "0.12s",
+        "purpose": "Buttons and form fields — the fastest transition in the system, so a press feels mechanical."
+      },
+      {
+        "name": "chrome",
+        "value": "0.15s",
+        "purpose": "Nav links, hero side items, section-header actions."
+      },
+      {
+        "name": "surface",
+        "value": "0.18s",
+        "purpose": "Card transform, border-color and box-shadow on hover."
+      },
+      {
+        "name": "imagery",
+        "value": "0.4s",
+        "purpose": "Card media scale to 1.04 on hover. The only slow transition, and it belongs to imagery rather than chrome."
+      },
+      {
+        "name": "blink",
+        "value": "blink 1.6s steps(2) infinite",
+        "purpose": "Status dots and LIVE indicators. Stepped, never eased — a CRT indicator does not fade."
+      },
+      {
+        "name": "scroll-left",
+        "value": "scroll-left 60s linear infinite",
+        "purpose": "The headline ticker track."
+      },
+      {
+        "name": "borderpulse",
+        "value": "borderpulse 2s ease-in-out infinite",
+        "purpose": "The logo mark's outer hairline."
+      },
+      {
+        "name": "reduced-motion",
+        "value": "@media (prefers-reduced-motion: reduce) { animation-duration: 0.01ms; transition-duration: 0.01ms }",
+        "purpose": "Global override. Every new animation inherits it; none may opt out."
+      }
     ],
     "breakpoints": [
-      { "name": "laptop", "value": "1280px" },
-      { "name": "tablet", "value": "1024px" },
-      { "name": "mobile-nav", "value": "1023.98px" },
-      { "name": "phone", "value": "640px" },
-      { "name": "phone-sm", "value": "480px" }
+      {
+        "name": "laptop",
+        "value": "1280px"
+      },
+      {
+        "name": "tablet",
+        "value": "1024px"
+      },
+      {
+        "name": "mobile-nav",
+        "value": "1023.98px"
+      },
+      {
+        "name": "phone",
+        "value": "640px"
+      },
+      {
+        "name": "phone-sm",
+        "value": "480px"
+      }
     ]
   },
   "components": [
@@ -275,22 +467,91 @@
       "Controls are tactile: they lift toward you on hover and depress on click"
     ],
     "rules": [
-      { "name": "The Palette-Agnostic Rule", "body": "Never hardcode a colour that already exists as a token. Four palettes swap under identical markup, so a literal rgba(10, 8, 32, …) in a scrim is not a shortcut, it is a defect on the other three — this exact mistake put the hero headline at 1.31:1 on Candy. Scrims use rgba(var(--scrim-rgb), …), hard shadows use var(--shadow-hard), media frames use var(--frame-ground).", "section": "colors" },
-      { "name": "The Both-Ways Rule", "body": "Any token used as both a foreground and a background needs its counterpart tokenised too. Text sitting on a neon fill is var(--on-accent), never #000 — when Candy's accents were darkened for legibility as text, black-on-accent fell to 3.32:1 as a background. The same trap runs the other way: the hard chips that sit on imagery (score box, category badge, social mark, author avatar) hardcoded a #000 ground under a tokenised color, which put Candy's darkened accents at 3.31:1 on black. Those grounds are now var(--chip-ground), defined once as var(--bg-0) so it re-resolves per palette without an override. After changing any colour token, grep for it as a background: value, not just as a color: value.", "section": "colors" },
-      { "name": "The No-CMS-Colour Rule", "body": "A colour that arrives from Sanity is a literal hex and knows nothing about the palette. An author's accentColor was applied inline and rendered #3ee8ff on every palette — 1.24:1 on Candy — and no CSS audit could ever find it, because the value never appears in a stylesheet. Stored colours are snapped to the nearest accent token with paletteAccent() in lib/mappings.ts before they reach a style prop. Brand colours are subject to the same rule: Discord's blurple is a token here, not #a3adf6.", "section": "colors" },
-      { "name": "The Focus Ring Is Not An Accent Rule", "body": "--focus-ring is its own token and must never be pointed at --neon-*. The accent that reads on a dark ground is invisible on the light one; Candy's focus ring is near-black by design.", "section": "colors" },
-      { "name": "The Four-Ground Audit Rule", "body": "Contrast is checked against every background token the colour can land on (--bg-0 through --bg-3), not just the page ground. Checking --bg-0 alone is how --ink-dim on --bg-2 shipped at 2.75:1 in Gameboy — body copy inside every card.", "section": "colors" },
-      { "name": "The Two-Tiers-Are-Not-Text Rule", "body": "The display tier (32-64px single characters used as artwork) and the glyph tier (8-9px decorative ◆ and ▸ marks in ::before) sit outside the text ramp on purpose, because neither is read. Anything a reader actually reads sits on the 11-26px text ramp. A value between 10px and the glyph tier is a defect, not a new step.", "section": "typography" },
-      { "name": "The 11px Floor Rule", "body": "No functional text below 11px, at any breakpoint. Press Start 2P is a bitmap face with no anti-aliasing headroom, so 10px is not a smaller version of the type, it is a broken one. Check the responsive blocks when raising a base size — there are five of them, and .about-pill and .hp-row__head were both being quietly reset to 10px on phones after their base rules had been fixed.", "section": "typography" },
-      { "name": "The Press-Start-Is-A-Label-Font Rule", "body": "Press Start 2P never sets a paragraph. It sets headings, labels, numbers and buttons. Any run of pixel type longer than about eight words is a defect — the reader's eye stalls and the nostalgia turns into work.", "section": "typography" },
-      { "name": "The No-Weight Rule", "body": "Press Start 2P and VT323 ship at 400 only, and headings explicitly set font-weight: normal. Hierarchy is built from size, colour and tracking, never from weight. JetBrains Mono loads 400/500/700 and is the only place a bold is available.", "section": "typography" },
-      { "name": "The 72ch Rule", "body": "Body copy is capped at 72 characters (max-width: 72ch on article paragraphs and the standfirst). A monospaced body face runs wide; without the cap, line length breaks long before the container does.", "section": "typography" },
-      { "name": "The Zero-Overflow Rule", "body": "No route may scroll horizontally at any width from 320px up. The historical failure was the 721–831px band, where .lmp-nav was a nowrap flex row with a constant 832px right edge while the hamburger only engaged at 720px. Test the band, not just the breakpoints.", "section": "layout" },
-      { "name": "The Min-Width-Auto Rule", "body": "Any grid or flex child that can receive unbreakable content (an email address, a URL, a long title) needs an explicit min-width: 0. Default min-width: auto is what set a 355px min-content floor on the contact page and overflowed every viewport below ~383px.", "section": "layout" },
-      { "name": "The No-Blur Rule", "body": "A UI shadow has a blur radius of zero and is pure black. Blur exists in exactly two places in this system — the header drop and the CRT inner bloom — and adding a third is a defect, not a refinement.", "section": "elevation" },
-      { "name": "The Lift-And-Press Rule", "body": "Interactive surfaces move. Hover is translate(-2px, -2px) (cards: -3px) with a deeper offset; active is translate(2px, 2px) with the offset removed. The shadow and the transform always change together — a shadow change without movement reads as a glow, which this system does not have.", "section": "elevation" },
-      { "name": "The Zero-Radius Rule", "body": "Nothing in this system is rounded — no card, no button, no input, no avatar, no focus ring. A single border-radius above 0 breaks the whole material premise, and there is no exception for third-party embeds; Clerk's UI is overridden to match.", "section": "shapes" },
-      { "name": "The Pixel-Icon Rule", "body": "Site-facing iconography is the sprite system, never a vector icon set. Lucide exists in the repo for one shadcn primitive's internals and must not migrate into site chrome — a smooth 24px stroke icon next to a 9×9 sprite instantly reads as a different product.", "section": "shapes" }
+      {
+        "name": "The Palette-Agnostic Rule",
+        "body": "Never hardcode a colour that already exists as a token. Four palettes swap under identical markup, so a literal rgba(10, 8, 32, …) in a scrim is not a shortcut, it is a defect on the other three — this exact mistake put the hero headline at 1.31:1 on Candy. Scrims use rgba(var(--scrim-rgb), …), hard shadows use var(--shadow-hard), media frames use var(--frame-ground).",
+        "section": "colors"
+      },
+      {
+        "name": "The Both-Ways Rule",
+        "body": "Any token used as both a foreground and a background needs its counterpart tokenised too. Text sitting on a neon fill is var(--on-accent), never #000 — when Candy's accents were darkened for legibility as text, black-on-accent fell to 3.32:1 as a background. The same trap runs the other way: the hard chips that sit on imagery (score box, category badge, social mark, author avatar) hardcoded a #000 ground under a tokenised color, which put Candy's darkened accents at 3.31:1 on black. Those grounds are now var(--chip-ground), defined once as var(--bg-0) so it re-resolves per palette without an override. After changing any colour token, grep for it as a background: value, not just as a color: value.",
+        "section": "colors"
+      },
+      {
+        "name": "The No-CMS-Colour Rule",
+        "body": "A colour that arrives from Sanity is a literal hex and knows nothing about the palette. An author's accentColor was applied inline and rendered #3ee8ff on every palette — 1.24:1 on Candy — and no CSS audit could ever find it, because the value never appears in a stylesheet. Stored colours are snapped to the nearest accent token with paletteAccent() in lib/mappings.ts before they reach a style prop. Brand colours are subject to the same rule: Discord's blurple is a token here, not #a3adf6.",
+        "section": "colors"
+      },
+      {
+        "name": "The Focus Ring Is Not An Accent Rule",
+        "body": "--focus-ring is its own token and must never be pointed at --neon-*. The accent that reads on a dark ground is invisible on the light one; Candy's focus ring is near-black by design.",
+        "section": "colors"
+      },
+      {
+        "name": "The Four-Ground Audit Rule",
+        "body": "Contrast is checked against every background token the colour can land on (--bg-0 through --bg-3), not just the page ground. Checking --bg-0 alone is how --ink-dim on --bg-2 shipped at 2.75:1 in Gameboy — body copy inside every card.",
+        "section": "colors"
+      },
+      {
+        "name": "The Two-Tiers-Are-Not-Text Rule",
+        "body": "The display tier (32-64px single characters used as artwork) and the glyph tier (8-9px decorative ◆ and ▸ marks in ::before) sit outside the text ramp on purpose, because neither is read. Anything a reader actually reads sits on the 11-26px text ramp. A value between 10px and the glyph tier is a defect, not a new step.",
+        "section": "typography"
+      },
+      {
+        "name": "The 8px Grid Rule",
+        "body": "Press Start 2P is drawn on an 8px grid and renders with zero anti-aliasing only at multiples of 8 (8/16/24/32). Measured across 8-32px, every other size fringes 16-55% of its inked pixels, and -webkit-font-smoothing: none changes nothing (verified: byte-identical output). Display type is snapped to 16 or 24. Small labels at 11-14px are a known accepted exception, because 8px is illegible and 16px would reflow the nav, badges and cards.",
+        "section": "typography"
+      },
+      {
+        "name": "The 11px Floor Rule",
+        "body": "No functional text below 11px, at any breakpoint. Press Start 2P is a bitmap face with no anti-aliasing headroom, so 10px is not a smaller version of the type, it is a broken one. Check the responsive blocks when raising a base size — there are five of them, and .about-pill and .hp-row__head were both being quietly reset to 10px on phones after their base rules had been fixed.",
+        "section": "typography"
+      },
+      {
+        "name": "The Press-Start-Is-A-Label-Font Rule",
+        "body": "Press Start 2P never sets a paragraph. It sets headings, labels, numbers and buttons. Any run of pixel type longer than about eight words is a defect — the reader's eye stalls and the nostalgia turns into work.",
+        "section": "typography"
+      },
+      {
+        "name": "The No-Weight Rule",
+        "body": "Press Start 2P and VT323 ship at 400 only, and headings explicitly set font-weight: normal. Hierarchy is built from size, colour and tracking, never from weight. JetBrains Mono loads 400/500/700 and is the only place a bold is available.",
+        "section": "typography"
+      },
+      {
+        "name": "The 72ch Rule",
+        "body": "Body copy is capped at 72 characters (max-width: 72ch on article paragraphs and the standfirst). A monospaced body face runs wide; without the cap, line length breaks long before the container does.",
+        "section": "typography"
+      },
+      {
+        "name": "The Zero-Overflow Rule",
+        "body": "No route may scroll horizontally at any width from 320px up. The historical failure was the 721–831px band, where .lmp-nav was a nowrap flex row with a constant 832px right edge while the hamburger only engaged at 720px. Test the band, not just the breakpoints.",
+        "section": "layout"
+      },
+      {
+        "name": "The Min-Width-Auto Rule",
+        "body": "Any grid or flex child that can receive unbreakable content (an email address, a URL, a long title) needs an explicit min-width: 0. Default min-width: auto is what set a 355px min-content floor on the contact page and overflowed every viewport below ~383px.",
+        "section": "layout"
+      },
+      {
+        "name": "The No-Blur Rule",
+        "body": "A UI shadow has a blur radius of zero and is pure black. Blur exists in exactly two places in this system — the header drop and the CRT inner bloom — and adding a third is a defect, not a refinement.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Lift-And-Press Rule",
+        "body": "Interactive surfaces move. Hover is translate(-2px, -2px) (cards: -3px) with a deeper offset; active is translate(2px, 2px) with the offset removed. The shadow and the transform always change together — a shadow change without movement reads as a glow, which this system does not have.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Zero-Radius Rule",
+        "body": "Nothing in this system is rounded — no card, no button, no input, no avatar, no focus ring. A single border-radius above 0 breaks the whole material premise, and there is no exception for third-party embeds; Clerk's UI is overridden to match.",
+        "section": "shapes"
+      },
+      {
+        "name": "The Pixel-Icon Rule",
+        "body": "Site-facing iconography is the sprite system, never a vector icon set. Lucide exists in the repo for one shadcn primitive's internals and must not migrate into site chrome — a smooth 24px stroke icon next to a 9×9 sprite instantly reads as a different product.",
+        "section": "shapes"
+      }
     ],
     "dos": [
       "Do reach for a token before a literal. --on-accent for text on an accent fill, rgba(var(--scrim-rgb), …) for scrims, var(--shadow-hard) for offsets, var(--frame-ground) for media frames.",
@@ -303,7 +564,8 @@
       "Do give focusable elements a visible ring; the global :where(…):focus-visible rule at 3px solid var(--focus-ring) with a 2px offset is the floor, and components that clear the UA outline must restore it explicitly.",
       "Do state a score in more than one channel — number, colour tone, and meter fill — so the verdict never depends on colour alone.",
       "Do snap any colour arriving from Sanity through paletteAccent() before it reaches a style prop, so a CMS field cannot bypass the palette.",
-      "Do give any surface that shows a score a route to the published scale at /about."
+      "Do give any surface that shows a score a route to the published scale at /about.",
+      "Do size any new Press Start 2P display type at 16, 24 or 32 — the only sizes where it renders without anti-aliasing."
     ],
     "donts": [
       "Don't introduce a border radius. Anywhere. Including third-party embedded UI, which is overridden to match.",
@@ -317,7 +579,8 @@
       "Don't let any route scroll horizontally between 320px and 1280px — test the 721–831px band specifically, and give grid children that hold unbreakable strings an explicit min-width: 0.",
       "Don't reach for SaaS-minimal, mainstream-games-press, or kitsch-retro moves: soft gradients and glassmorphism, red-and-white brand bars and ad rails, or star fields, spinning GIFs and joke fonts.",
       "Don't apply a stored hex — an author accent, a category colour, a brand colour — as an inline style. It is the same colour on all four palettes and no CSS audit will ever find it.",
-      "Don't ship an infinite animation without a pause control; prefers-reduced-motion is not a mechanism, it only reaches readers who set the OS flag."
+      "Don't ship an infinite animation without a pause control; prefers-reduced-motion is not a mechanism, it only reaches readers who set the OS flag.",
+      "Don't set running prose in JetBrains Mono. Mono is the data voice; using it for everything means it signals nothing, and it renders 64 characters per line where 72 is the target."
     ]
   }
 }
