@@ -61,11 +61,46 @@ export async function proxy(
 
 export default proxy;
 
+/**
+ * Scoped deliberately, because this file is the single most expensive thing on
+ * the site per request.
+ *
+ * The old matcher was `/((?!_next|.*\..*).*)` plus `/api/(.*)` — every HTML
+ * page. Measured over 24h that was **118 middleware invocations against 6 page
+ * function invocations**: everything else was a CDN hit, so the proxy was
+ * running on requests that otherwise cost nothing. That mattered more after the
+ * Next 16 upgrade, because `proxy` has no edge runtime — it runs on Node, so
+ * each invocation is Fluid CPU rather than a cheap edge call.
+ *
+ * Clerk does not need to run on content pages. Every consumer of auth on a
+ * public page is a CLIENT hook (`useAuth`/`useUser` in the ad slot and comment
+ * UI) reading session state through `ClerkProvider` in the root layout, which
+ * works without any middleware. The site header touches Clerk not at all.
+ * Server-side Clerk exists in exactly three places: `lib/membership.ts` (only
+ * `/account` calls it), `app/api/comments/route.ts`, and `lib/rss.ts`.
+ *
+ * So the list below is: the routes that read auth on the server, Clerk's own
+ * endpoints, and the two listings — those last two are NOT about auth, they are
+ * where `guardPagination` has to run. Removing them silently breaks the
+ * out-of-range 308 and nothing else would fail loudly.
+ *
+ * `/api/clerk` is intentionally absent: it authenticates with a Svix signature
+ * via `verifyWebhook()` and never reads a session.
+ */
 export const config = {
   matcher: [
-    // Skip Next.js internals and any path with a file extension
-    "/((?!_next|.*\\..*).*)",
-    // Always run for API routes
-    "/api/(.*)",
+    // Pagination bounds — not auth. See guardPagination above.
+    "/reviews",
+    "/news",
+    // Server-side auth.
+    "/account/:path*",
+    "/api/comments/:path*",
+    "/feed/:path*",
+    // Clerk-rendered UI and billing.
+    "/sign-in/:path*",
+    "/sign-up/:path*",
+    "/membership",
+    // Clerk's own frontend-API proxy endpoints.
+    "/__clerk/:path*",
   ],
 };
