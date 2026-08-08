@@ -1,9 +1,10 @@
 import Link from "next/link";
 
+import { currentYear } from "@/lib/clock";
 import { SITE_CONFIG } from "@/lib/constants";
 
-export function SiteFooter() {
-  const currentYear = new Date().getFullYear();
+export async function SiteFooter() {
+  const year = await currentYear();
 
   return (
     <footer className="lmp-footer">
@@ -87,7 +88,7 @@ export function SiteFooter() {
         </div>
         <div className="footer-bot">
           <span>
-            © {currentYear} LIFE MEETS PIXEL · INSERT COIN TO CONTINUE ·{" "}
+            © {year} LIFE MEETS PIXEL · INSERT COIN TO CONTINUE ·{" "}
             <a
               href="https://onthedot.au/?utm_source=life-meets-pixel&utm_medium=built-by&utm_campaign=footer"
               target="_blank"

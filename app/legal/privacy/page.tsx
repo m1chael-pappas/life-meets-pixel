@@ -1,4 +1,5 @@
 import { Metadata } from 'next';
+import { longDate } from "@/lib/clock";
 import Link from 'next/link';
 
 import { SiteHeader } from '@/components/site-header';
@@ -15,12 +16,8 @@ export const metadata: Metadata = {
   },
 };
 
-export default function PrivacyPolicyPage() {
-  const lastUpdated = new Date().toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
+export default async function PrivacyPolicyPage() {
+  const lastUpdated = await longDate();
 
   return (
     <div className="min-h-screen">

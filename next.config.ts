@@ -1,6 +1,11 @@
 import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
+  // Partial Prerendering. Next 16 removed experimental.ppr in favour of this:
+  // every route ships a static shell and only the genuinely request-bound parts
+  // stream in. Nothing is cached unless it says 'use cache'.
+  cacheComponents: true,
+
   // Headless Chromium (social template renderer) must not be bundled;
   // chromium-min downloads its binary pack to /tmp at cold start, so no
   // file-tracing includes are needed (pnpm symlinks break those anyway).

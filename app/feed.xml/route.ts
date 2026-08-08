@@ -1,4 +1,6 @@
-import { fetchOptions } from "@/lib/queries";
+import { cacheLife, cacheTag } from "next/cache";
+
+import { TAGS } from "@/lib/cache-tags";
 import { client } from "@/sanity/client";
 
 type FeedReview = {
@@ -67,13 +69,26 @@ function cdata(s: string): string {
   return `<![CDATA[${s.replace(/\]\]>/g, "]]]]><![CDATA[>")}]]>`;
 }
 
+/**
+ * `use cache` cannot go on the GET export itself, so the data access lives in
+ * its own cached function and the handler calls it. Replaces the old
+ * `export const revalidate = 1800`, which cacheComponents rejects.
+ */
+async function getFeedContent() {
+  "use cache";
+  cacheLife("hours");
+  cacheTag(TAGS.reviews, TAGS.news, TAGS.feeds);
+  const [reviews, news] = await Promise.all([
+    client.fetch<FeedReview[]>(FEED_REVIEWS_QUERY),
+    client.fetch<FeedNews[]>(FEED_NEWS_QUERY),
+  ]);
+  return { reviews, news };
+}
+
 export async function GET() {
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://lifemeetspixel.com";
 
-  const [reviews, news] = await Promise.all([
-    client.fetch<FeedReview[]>(FEED_REVIEWS_QUERY, {}, fetchOptions),
-    client.fetch<FeedNews[]>(FEED_NEWS_QUERY, {}, fetchOptions),
-  ]);
+  const { reviews, news } = await getFeedContent();
 
   type Item = {
     title: string;
@@ -152,4 +167,3 @@ export async function GET() {
   });
 }
 
-export const revalidate = 1800;

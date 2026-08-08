@@ -1,9 +1,11 @@
 /* eslint-disable no-console */
-import { revalidatePath } from 'next/cache';
+import { revalidatePath, revalidateTag } from 'next/cache';
 import {
   NextRequest,
   NextResponse,
 } from 'next/server';
+
+import { PUBLISH_TAGS, TAGS } from '@/lib/cache-tags';
 
 // Secret token to secure the webhook
 const REVALIDATE_SECRET = process.env.REVALIDATE_SECRET;
@@ -18,6 +20,27 @@ const REVALIDATE_SECRET = process.env.REVALIDATE_SECRET;
  */
 const FEEDS = ["/sitemap.xml", "/feed.xml"] as const;
 const revalidateFeeds = () => FEEDS.forEach((p) => revalidatePath(p));
+
+/**
+ * Both mechanisms fire, on purpose, because the site currently runs both
+ * caching models side by side:
+ *
+ *  - `use cache` functions (hero pool, sitemap, feed, date helpers) are tagged
+ *    with `cacheTag` and can only be expired by `revalidateTag`.
+ *  - Everything still reading through `fetchOptions` sits in the fetch Data
+ *    Cache, which `revalidatePath` expires.
+ *
+ * Dropping either one now would silently strand half the site's content. When
+ * the last `fetchOptions` call site is converted, the `revalidatePath` calls
+ * below can go.
+ *
+ * `revalidateTag` requires a cache profile as its second argument in Next 16.
+ * 'max' gives stale-while-revalidate: readers keep getting the cached page
+ * while the refresh happens behind them, which is right for a webhook. The
+ * read-your-own-writes alternative, `updateTag`, is Server-Action-only and
+ * throws in a route handler.
+ */
+const expire = (...tags: string[]) => tags.forEach((t) => revalidateTag(t, "max"));
 
 export async function POST(request: NextRequest) {
   // Verify secret token
@@ -44,6 +67,7 @@ export async function POST(request: NextRequest) {
         revalidatePath("/reviews");
         revalidatePath("/");
         revalidateFeeds();
+        expire(TAGS.reviews, TAGS.feeds);
         break;
 
       case "newsPost":
@@ -55,6 +79,7 @@ export async function POST(request: NextRequest) {
         revalidatePath("/news");
         revalidatePath("/");
         revalidateFeeds();
+        expire(TAGS.news, TAGS.feeds);
         break;
 
       case "author":
@@ -67,6 +92,7 @@ export async function POST(request: NextRequest) {
         revalidatePath("/news", "page");
         revalidatePath("/");
         revalidateFeeds();
+        expire(...PUBLISH_TAGS);
         break;
 
       case "reviewableItem":
@@ -78,16 +104,19 @@ export async function POST(request: NextRequest) {
         revalidatePath("/reviews", "page");
         revalidatePath("/");
         revalidateFeeds();
+        expire(TAGS.reviews, TAGS.feeds);
         break;
 
       case "siteStats":
         // Revalidate homepage (shows stats)
         revalidatePath("/");
+        expire(TAGS.reviews);
         break;
 
       default:
         // For any other document type, revalidate homepage
         revalidatePath("/");
+        expire(...PUBLISH_TAGS);
     }
 
     return NextResponse.json({

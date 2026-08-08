@@ -1,39 +1,40 @@
 import { MetadataRoute } from 'next';
-import { fetchOptions, HIDDEN_AUTHOR_IDS, INDEXABLE_NEWS_SLUGS_QUERY } from '@/lib/queries';
+import { cacheLife, cacheTag } from 'next/cache';
+import { PUBLISH_TAGS } from '@/lib/cache-tags';
+import { HIDDEN_AUTHOR_IDS, INDEXABLE_NEWS_SLUGS_QUERY } from '@/lib/queries';
 import { client } from '@/sanity/client';
 
-// Without this the sitemap carries no revalidate at all — the build listed it
-// as a fully static route with no expiry, so it froze at deploy time and a
-// review published afterwards never reached it. The Sanity webhook revalidates
-// /sitemap.xml directly; this hour is only the same self-heal fallback used
-// everywhere else (see fetchOptions in lib/queries.ts).
-export const revalidate = 3600;
-
-// Fetch all reviews, news, and authors for sitemap
+/**
+ * `export const revalidate` is not allowed alongside cacheComponents, so the
+ * hour lives on the cached function instead. The substance is unchanged: this
+ * route once carried no expiry at all and froze at deploy time, so a review
+ * published between deploys never entered the sitemap.
+ *
+ * Tagged with every publish tag because the sitemap embeds the full URL set —
+ * a new review, news post or author all invalidate it.
+ */
 async function getContent() {
+  'use cache';
+  cacheLife('hours');
+  cacheTag(...PUBLISH_TAGS);
   const [reviews, news, authors] = await Promise.all([
     client.fetch<Array<{ slug: { current: string }; publishedAt: string }>>(
       `*[_type == "review" && defined(slug.current)]{
         "slug": slug,
         publishedAt
       }`,
-      {},
-      fetchOptions
     ),
     // Only news posts substantial enough to index. The short ones are marked
     // noindex in their own metadata, so listing them here would contradict that.
     client.fetch<Array<{ slug: { current: string }; publishedAt: string }>>(
       INDEXABLE_NEWS_SLUGS_QUERY,
-      {},
-      fetchOptions
     ),
     client.fetch<Array<{ slug: { current: string }; _updatedAt: string }>>(
       `*[_type == "author" && defined(slug.current) && !(_id in $hidden)]{
         "slug": slug,
         _updatedAt
       }`,
-      { hidden: HIDDEN_AUTHOR_IDS },
-      fetchOptions
+      { hidden: HIDDEN_AUTHOR_IDS }
     ),
   ]);
 
@@ -41,6 +42,15 @@ async function getContent() {
 }
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  // Cached at the top level, not just around the queries. The `lastModified:
+  // new Date()` stamps below are unstable values, and in a route handler an
+  // unstable value does not error — it silently bails out of prerendering, so
+  // the route went back to being computed per request. Caching the whole
+  // function keeps it prerendered and keeps the stamps stable for the window.
+  'use cache';
+  cacheLife('hours');
+  cacheTag(...PUBLISH_TAGS);
+
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://lifemeetspixel.com';
   const { reviews, news, authors } = await getContent();
 

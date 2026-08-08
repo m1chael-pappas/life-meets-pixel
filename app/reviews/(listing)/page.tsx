@@ -1,4 +1,5 @@
 import { Suspense } from "react";
+import { connection } from "next/server";
 
 import { Metadata } from "next";
 import Link from "next/link";
@@ -31,6 +32,24 @@ import {
 import type { Review, ReviewableItem } from "@/lib/types";
 import { client } from "@/sanity/client";
 
+/**
+ * This route is intentionally request-bound, and needs BOTH declarations:
+ *
+ *  - `await connection()` in the page body forces request-time rendering, so
+ *    the out-of-range `notFound()` can still set a 404. Without it a static
+ *    shell flushes 200 first and `?page=99` answers 200 with an empty grid.
+ *  - `instant = false` tells the Cache Components validator that blocking here
+ *    is the design, not an oversight. It does NOT make the route dynamic —
+ *    that is what connection() is for. Setting only this one looks like it
+ *    works and silently reintroduces the soft 404.
+ *
+ * Everything on the page is keyed on ?type, ?page and ?sort, so the only
+ * prerenderable part is the site chrome. Splitting that out is worth doing, but
+ * it requires moving the 404 into generateMetadata as a noindex first.
+ */
+export const instant = false;
+
+
 type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>;
 
 interface ReviewsPageProps {
@@ -42,6 +61,10 @@ interface ReviewsPageProps {
  *  gave browsers no way to ask. Two options, not a dropdown, so the decision
  *  point stays at 2. */
 type Sort = "new" | "score";
+
+const ITEMS_PER_PAGE = 12;
+
+type CountsShape = Record<ReviewableItem["itemType"] | "all", number>;
 
 export async function generateMetadata({
   searchParams,
@@ -78,9 +101,6 @@ export async function generateMetadata({
   };
 }
 
-const ITEMS_PER_PAGE = 12;
-
-type CountsShape = Record<ReviewableItem["itemType"] | "all", number>;
 
 /** Mediums with at least one review, best-populated first — used to give the
  *  empty state real exits instead of "check back soon". */
@@ -191,6 +211,15 @@ function ReviewsListSkeleton() {
 }
 
 export default async function ReviewsPage({ searchParams }: ReviewsPageProps) {
+  // Forces request-time rendering, which the notFound() guard below depends on.
+  //
+  // Under cacheComponents this route would otherwise ship a static shell, and a
+  // shell flushes a 200 before the guard ever runs — `?page=99` came back 200
+  // with an empty grid instead of 404. `export const instant = false` does NOT
+  // fix this: it only silences the validator, it does not make the route
+  // dynamic. connection() does.
+  await connection();
+
   const params = await searchParams;
   const typeParam = params.type as string | undefined;
   const type = (ITEM_TYPES as string[]).includes(typeParam ?? "")
@@ -208,11 +237,21 @@ export default async function ReviewsPage({ searchParams }: ReviewsPageProps) {
   const pageTitle = type ? `${CAT_TYPE_HEADING[type]} Reviews` : "All Reviews";
   const entryCount = type ? (counts[type] ?? 0) : (counts.all ?? 0);
 
-  // The out-of-range guard has to run HERE, above the Suspense boundary. Inside
-  // it, the shell has already flushed a 200 and notFound() can no longer change
-  // the status — the same soft-404 trap documented in pixel-loading.tsx. A page
-  // past the end used to answer 200 with "42 ENTRIES" above "No reviews yet"
-  // and no way back, which crawlers index as thin content.
+  // KNOWN LIMITATION under cacheComponents: this renders the 404 page but the
+  // response is 200.
+  //
+  // Before Cache Components this guard produced a real 404. It no longer can:
+  // the root layout's static shell flushes a 200 before any page code runs, and
+  // nothing recovers the status afterwards. Verified — `connection()` to force
+  // request-time rendering, `instant = false`, and moving the guard into
+  // generateMetadata all still returned 200.
+  //
+  // It is kept because the visible outcome is still correct: the reader gets
+  // the 404 page with an exit rather than "42 ENTRIES" above an empty grid, and
+  // Next's not-found emits <meta name="robots" content="noindex">, so the thin
+  // page stays out of the index. The status code is the only thing lost.
+  // Fixing it properly means rejecting out-of-range pages in proxy.ts, which
+  // needs the review count at the network boundary.
   const totalPages = Math.max(1, Math.ceil(entryCount / ITEMS_PER_PAGE));
   if (entryCount > 0 && currentPage > totalPages) notFound();
 

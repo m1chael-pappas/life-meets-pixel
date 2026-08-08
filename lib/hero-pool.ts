@@ -1,4 +1,7 @@
-import { HERO_TOP_RATED_QUERY, fetchOptions } from "@/lib/queries";
+import { cacheLife, cacheTag } from "next/cache";
+
+import { TAGS } from "@/lib/cache-tags";
+import { HERO_TOP_RATED_QUERY } from "@/lib/queries";
 import type { Review } from "@/lib/types";
 import { client } from "@/sanity/client";
 
@@ -26,7 +29,7 @@ const MIN_POOL = 5;
 const HERO_SLOTS = 5;
 
 /** Midnight UTC, WINDOW_DAYS ago. Rounded to the day so the query params are
- *  stable and the `revalidate` fetch cache is not busted on every render. */
+ *  stable and an identical call inside the same cache scope hits. */
 function windowStart(): string {
   const d = new Date();
   d.setUTCHours(0, 0, 0, 0);
@@ -42,10 +45,19 @@ export interface HeroPool {
 }
 
 export async function getHeroPool(): Promise<HeroPool> {
+  // `use cache` here does double duty. It caches the query, and it is also the
+  // documented fix for the `new Date()` inside windowStart(): Cache Components
+  // refuses to prerender an unstable value unless it sits in a cached scope,
+  // and the cutoff is deliberately rounded to the day so the cache key is
+  // stable for 24 hours rather than changing on every render.
+  "use cache";
+  cacheLife("hours");
+  cacheTag(TAGS.reviews);
+
   const { recent, allTime } = await client.fetch<{
     recent: Review[];
     allTime: Review[];
-  }>(HERO_TOP_RATED_QUERY, { cutoff: windowStart() }, fetchOptions);
+  }>(HERO_TOP_RATED_QUERY, { cutoff: windowStart() });
 
   const pool = recent.length >= MIN_POOL ? recent : allTime;
   return { pool, isRecent: pool === recent };

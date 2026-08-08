@@ -1,4 +1,5 @@
 import { Suspense } from "react";
+import { connection } from "next/server";
 
 import { Metadata } from "next";
 
@@ -19,6 +20,24 @@ import {
 } from "@/lib/queries";
 import type { NewsPost } from "@/lib/types";
 import { client } from "@/sanity/client";
+
+/**
+ * This route is intentionally request-bound, and needs BOTH declarations:
+ *
+ *  - `await connection()` in the page body forces request-time rendering, so
+ *    the out-of-range `notFound()` can still set a 404. Without it a static
+ *    shell flushes 200 first and `?page=99` answers 200 with an empty grid.
+ *  - `instant = false` tells the Cache Components validator that blocking here
+ *    is the design, not an oversight. It does NOT make the route dynamic —
+ *    that is what connection() is for. Setting only this one looks like it
+ *    works and silently reintroduces the soft 404.
+ *
+ * Everything on the page is keyed on ?type, ?page and ?sort, so the only
+ * prerenderable part is the site chrome. Splitting that out is worth doing, but
+ * it requires moving the 404 into generateMetadata as a noindex first.
+ */
+export const instant = false;
+
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://lifemeetspixel.com";
 
@@ -121,6 +140,10 @@ function NewsListSkeleton() {
 }
 
 export default async function NewsPage({ searchParams }: NewsPageProps) {
+  // Request-time, so the out-of-range notFound() below can still set the
+  // status. A prerendered shell flushes 200 before the guard runs.
+  await connection();
+
   const params = await searchParams;
   const currentPage = Math.max(1, Number(params.page) || 1);
 

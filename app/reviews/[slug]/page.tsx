@@ -1,5 +1,5 @@
-import { formatDistanceToNow } from "date-fns";
 import { Metadata } from "next";
+import { relativeFromNow } from "@/lib/clock";
 import { PortableText, type PortableTextComponents } from "next-sanity";
 import Image from "next/image";
 import Link from "next/link";
@@ -303,8 +303,7 @@ export default async function ReviewPage({ params }: { params: Promise<{ slug: s
     Array.isArray(review.scoreBreakdown) && review.scoreBreakdown.length > 0;
   const toneColor =
     tone === "low" ? "var(--heart)" : tone === "mid" ? "var(--neon-4)" : "var(--neon-3)";
-  const publishDate = new Date(review.publishedAt);
-  const relativeDate = formatDistanceToNow(publishDate, { addSuffix: true });
+  const relativeDate = await relativeFromNow(review.publishedAt);
   const itemImageUrl = item?.coverImage?.asset?.url ?? null;
 
   const structuredData = graph(

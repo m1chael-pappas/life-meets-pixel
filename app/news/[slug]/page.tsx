@@ -1,5 +1,5 @@
-import { formatDistanceToNow } from "date-fns";
 import { Metadata } from "next";
+import { relativeFromNow } from "@/lib/clock";
 import { PortableText, type PortableTextComponents } from "next-sanity";
 import Image from "next/image";
 import Link from "next/link";
@@ -191,7 +191,7 @@ export default async function NewsPostPage({ params }: NewsPostPageProps) {
   );
 
   const publishDate = new Date(post.publishedAt);
-  const relativeDate = formatDistanceToNow(publishDate, { addSuffix: true });
+  const relativeDate = await relativeFromNow(post.publishedAt);
   const imageUrl = post.featuredImage?.asset?.url ?? null;
   const wordCount = countWords(post.content);
   const readMin = Math.max(1, Math.round(wordCount / 220));

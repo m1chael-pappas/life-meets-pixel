@@ -1,7 +1,7 @@
-import { formatDistanceToNow } from "date-fns";
 import Image from "next/image";
 import Link from "next/link";
 
+import { relativeFromNow } from "@/lib/clock";
 import { itemTypeToCat } from "@/lib/mappings";
 import type { Review } from "@/lib/types";
 
@@ -10,7 +10,7 @@ import { CatBadge } from "./cat-badge";
 import { HeartRow } from "./heart-row";
 import { ScoreBox } from "./score-box";
 
-export function ReviewCard({
+export async function ReviewCard({
   review,
   priority = false,
 }: {
@@ -20,8 +20,12 @@ export function ReviewCard({
   const item = review.reviewableItem;
   const cat = itemTypeToCat(item.itemType);
   const studio = item.publisher || item.creator || "";
+  // Cached rather than computed inline: formatDistanceToNow reads Date.now(),
+  // which Cache Components will not prerender. This card renders on the
+  // homepage and both listings, so an inline call blocked every static shell
+  // on the site.
   const date = review.publishedAt
-    ? formatDistanceToNow(new Date(review.publishedAt), { addSuffix: true })
+    ? await relativeFromNow(review.publishedAt)
     : "";
 
   return (
