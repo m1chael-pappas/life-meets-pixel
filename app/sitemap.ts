@@ -1,6 +1,13 @@
 import { MetadataRoute } from 'next';
-import { HIDDEN_AUTHOR_IDS, INDEXABLE_NEWS_SLUGS_QUERY } from '@/lib/queries';
+import { fetchOptions, HIDDEN_AUTHOR_IDS, INDEXABLE_NEWS_SLUGS_QUERY } from '@/lib/queries';
 import { client } from '@/sanity/client';
+
+// Without this the sitemap carries no revalidate at all — the build listed it
+// as a fully static route with no expiry, so it froze at deploy time and a
+// review published afterwards never reached it. The Sanity webhook revalidates
+// /sitemap.xml directly; this hour is only the same self-heal fallback used
+// everywhere else (see fetchOptions in lib/queries.ts).
+export const revalidate = 3600;
 
 // Fetch all reviews, news, and authors for sitemap
 async function getContent() {
@@ -9,19 +16,24 @@ async function getContent() {
       `*[_type == "review" && defined(slug.current)]{
         "slug": slug,
         publishedAt
-      }`
+      }`,
+      {},
+      fetchOptions
     ),
     // Only news posts substantial enough to index. The short ones are marked
     // noindex in their own metadata, so listing them here would contradict that.
     client.fetch<Array<{ slug: { current: string }; publishedAt: string }>>(
-      INDEXABLE_NEWS_SLUGS_QUERY
+      INDEXABLE_NEWS_SLUGS_QUERY,
+      {},
+      fetchOptions
     ),
     client.fetch<Array<{ slug: { current: string }; _updatedAt: string }>>(
       `*[_type == "author" && defined(slug.current) && !(_id in $hidden)]{
         "slug": slug,
         _updatedAt
       }`,
-      { hidden: HIDDEN_AUTHOR_IDS }
+      { hidden: HIDDEN_AUTHOR_IDS },
+      fetchOptions
     ),
   ]);
 

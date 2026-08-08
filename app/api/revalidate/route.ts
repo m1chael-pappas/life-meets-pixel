@@ -8,6 +8,17 @@ import {
 // Secret token to secure the webhook
 const REVALIDATE_SECRET = process.env.REVALIDATE_SECRET;
 
+/**
+ * The machine-readable surfaces. Neither is reachable from a nav link, so both
+ * were invisible to this webhook and drifted on their own timers instead —
+ * /sitemap.xml had no timer at all and was frozen at whatever the last deploy
+ * built, meaning a newly published review stayed out of the sitemap until the
+ * next deploy. Any mutation that changes the set of published URLs has to
+ * revalidate these two as well as the human pages.
+ */
+const FEEDS = ["/sitemap.xml", "/feed.xml"] as const;
+const revalidateFeeds = () => FEEDS.forEach((p) => revalidatePath(p));
+
 export async function POST(request: NextRequest) {
   // Verify secret token
   const token = request.nextUrl.searchParams.get("secret");
@@ -32,6 +43,7 @@ export async function POST(request: NextRequest) {
         // Also revalidate reviews listing and homepage
         revalidatePath("/reviews");
         revalidatePath("/");
+        revalidateFeeds();
         break;
 
       case "newsPost":
@@ -42,6 +54,7 @@ export async function POST(request: NextRequest) {
         // Also revalidate news listing and homepage
         revalidatePath("/news");
         revalidatePath("/");
+        revalidateFeeds();
         break;
 
       case "author":
@@ -53,6 +66,7 @@ export async function POST(request: NextRequest) {
         revalidatePath("/reviews", "page");
         revalidatePath("/news", "page");
         revalidatePath("/");
+        revalidateFeeds();
         break;
 
       case "reviewableItem":
@@ -63,6 +77,7 @@ export async function POST(request: NextRequest) {
         // These affect reviews, so revalidate reviews and homepage
         revalidatePath("/reviews", "page");
         revalidatePath("/");
+        revalidateFeeds();
         break;
 
       case "siteStats":
