@@ -24,25 +24,6 @@ export async function currentYear(): Promise<number> {
 }
 
 /**
- * A long-form date for the legal pages' "Last updated" stamps.
- *
- * NOTE: those stamps render *today's* date, so every legal page claims to have
- * been revised today, every day. That is misleading rather than merely
- * inaccurate, and it predates this change — caching it here preserves the
- * existing behaviour so the migration stays a migration. The real fix is a
- * hard-coded revision date per document, which is a content decision.
- */
-export async function longDate(): Promise<string> {
-  "use cache";
-  cacheLife("days");
-  return new Date().toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
-}
-
-/**
  * "6 days ago" for an article byline.
  *
  * date-fns's formatDistanceToNow reads Date.now() internally, which is exactly

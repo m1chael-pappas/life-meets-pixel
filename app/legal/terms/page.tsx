@@ -1,5 +1,5 @@
 import { Metadata } from 'next';
-import { longDate } from "@/lib/clock";
+import { formatRevised } from "@/lib/legal";
 import Link from 'next/link';
 
 import { SiteHeader } from '@/components/site-header';
@@ -16,8 +16,8 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function TermsOfUsePage() {
-  const lastUpdated = await longDate();
+export default function TermsOfUsePage() {
+  const lastUpdated = formatRevised("terms");
 
   return (
     <div className="min-h-screen">

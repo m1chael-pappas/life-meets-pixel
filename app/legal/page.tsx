@@ -1,5 +1,5 @@
 import { Metadata } from 'next';
-import { longDate } from "@/lib/clock";
+import { formatLatestRevised } from "@/lib/legal";
 import Link from 'next/link';
 
 import { SiteHeader } from '@/components/site-header';
@@ -17,8 +17,8 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function LegalPage() {
-  const lastUpdated = await longDate();
+export default function LegalPage() {
+  const lastUpdated = formatLatestRevised();
   return (
     <div className="min-h-screen">
       <SiteHeader />
