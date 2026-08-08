@@ -43,6 +43,18 @@ typography:
     fontWeight: 400
     lineHeight: 1
     letterSpacing: "normal"
+  hero-title:
+    fontFamily: "Press Start 2P, system-ui, monospace"
+    fontSize: "40px"
+    fontWeight: 400
+    lineHeight: 1.2
+    letterSpacing: "0.02em"
+  page-title:
+    fontFamily: "Press Start 2P, system-ui, monospace"
+    fontSize: "28px"
+    fontWeight: 400
+    lineHeight: 1.3
+    letterSpacing: "0.02em"
   display:
     fontFamily: "VT323, monospace"
     fontSize: "26px"
@@ -91,6 +103,12 @@ typography:
     fontWeight: 400
     lineHeight: 1.7
     letterSpacing: "normal"
+  body-article:
+    fontFamily: "IBM Plex Sans, system-ui, sans-serif"
+    fontSize: "17px"
+    fontWeight: 400
+    lineHeight: 1.7
+    letterSpacing: "normal"
   body-lg:
     fontFamily: "IBM Plex Sans, system-ui, sans-serif"
     fontSize: "16px"
@@ -130,6 +148,12 @@ typography:
   label:
     fontFamily: "Press Start 2P, system-ui, monospace"
     fontSize: "11px"
+    fontWeight: 400
+    lineHeight: 1.4
+    letterSpacing: "0.1em"
+  micro-label:
+    fontFamily: "Press Start 2P, system-ui, monospace"
+    fontSize: "10px"
     fontWeight: 400
     lineHeight: 1.4
     letterSpacing: "0.1em"
@@ -334,7 +358,20 @@ Two tiers sit outside that ramp on purpose, and neither is text:
 
 **The 8px Grid Rule.** Press Start 2P is drawn on an 8px grid and renders with **zero anti-aliasing only at multiples of 8** — 8, 16, 24, 32. Measured across 8–32px, every other size fringes 16–55% of its inked pixels, and `-webkit-font-smoothing: none` changes nothing (verified: byte-identical output). Display type is therefore snapped to 16 or 24. The small labels at 11–14px are a known, accepted exception: 8px is illegible and 16px would reflow the nav, badges and cards. **Any new Press Start 2P at display size must be 16, 24 or 32.**
 
-**The 11px Floor Rule.** No functional text below 11px, at any breakpoint. Press Start 2P is a bitmap face with no anti-aliasing headroom, so 10px is not a smaller version of the type, it is a broken one. Check the responsive blocks when raising a base size — there are five of them, and `.about-pill` and `.hp-row__head` were both being quietly reset to 10px on phones after their base rules had been fixed.
+**The Legibility Floor Rule.** The target floor for anything a reader has to
+parse is **11px**. Press Start 2P is a bitmap face with no anti-aliasing
+headroom, so 10px is not a smaller version of the type, it is a broken one.
+
+**What actually ships is 10px on 24 rules** — field labels, HP row heads, filter
+chips, tweaks-panel options, comment authors, category badges, terminal chrome,
+stat-row keys. That is recorded here because the design system should not
+describe a site that does not exist, **not because it is endorsed**. It is an
+open item: either those 24 come up to 11px or the reasoning for each is written
+down. Do not cite this paragraph as licence to add a 25th.
+
+Check the responsive blocks when raising a base size — there are five of them,
+and `.about-pill` and `.hp-row__head` were both fixed once and are back at 10px,
+so the regression path is real.
 
 **The Press-Start-Is-A-Label-Font Rule.** Press Start 2P never sets a paragraph. It sets headings, labels, numbers and buttons. Any run of pixel type longer than about eight words is a defect — the reader's eye stalls and the nostalgia turns into work.
 

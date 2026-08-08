@@ -1,0 +1,26 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "side-tab",
+        "value": "*",
+        "files": [
+          "app/globals.css"
+        ],
+        "createdAt": "2026-08-08T00:23:46.159Z",
+        "reason": "The coloured left rule is this site's documented importance marker (DESIGN.md), used on .about-pill, the TL;DR/pull-quote plate and .ack-line. Confirmed intentional by the site owner."
+      },
+      {
+        "rule": "codex-grid-background",
+        "value": "*",
+        "files": [
+          "app/globals.css"
+        ],
+        "createdAt": "2026-08-08T00:23:46.183Z",
+        "reason": "The hairline grid is the CRT/graph-paper ground that carries the site's retro-arcade identity, which PRODUCT.md records as a binding constraint. Confirmed intentional by the site owner."
+      }
+    ]
+  }
+}

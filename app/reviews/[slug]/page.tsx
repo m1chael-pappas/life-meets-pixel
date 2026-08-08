@@ -126,7 +126,11 @@ const getVideoEmbedUrl = (url: string): string | null => {
   return null;
 };
 
-const portableTextComponents: PortableTextComponents = {
+/** Factory, not a constant: the image renderer needs the reviewed item's
+ *  title for its alt fallback, and that only exists inside the page. */
+const makePortableTextComponents = (
+  itemTitle: string,
+): PortableTextComponents => ({
   types: {
     image: ({ value }) => {
       if (!value?.asset) return null;
@@ -136,7 +140,7 @@ const portableTextComponents: PortableTextComponents = {
         <figure style={{ margin: "24px 0" }}>
           <Image
             src={imageUrl}
-            alt={value.caption || "Review image"}
+            alt={value.alt || value.caption || `${itemTitle} screenshot`}
             width={800}
             height={450}
             style={{ width: "100%", height: "auto" }}
@@ -190,7 +194,7 @@ const portableTextComponents: PortableTextComponents = {
       </a>
     ),
   },
-};
+});
 
 // Find the index at which to insert the pros/cons block mid-article.
 // Rule: inject just before the 2nd h2 block, which matches the designer's layout
@@ -286,6 +290,9 @@ export default async function ReviewPage({ params }: { params: Promise<{ slug: s
   ]);
 
   const item = review.reviewableItem;
+  const portableTextComponents = makePortableTextComponents(
+    item?.title ?? review.title,
+  );
   const cat = itemTypeToCat(item.itemType);
   const tone = scoreTone(review.reviewScore);
   const band = scoreBand(review.reviewScore);

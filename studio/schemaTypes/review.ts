@@ -79,6 +79,17 @@ export const reviewType = defineType({
           type: 'image',
           options: {hotspot: true},
           fields: [
+            // Mirrors newPost's body image. Reviews shipped without this field,
+            // so the frontend was falling back to the caption — a source credit
+            // like "Screenshot via Steam" — as the alt text, or to the literal
+            // string "Review image" when there was no caption either.
+            {
+              name: 'alt',
+              type: 'string',
+              title: 'Alternative Text',
+              description: 'Describe the image for SEO and accessibility',
+              validation: (rule: any) => rule.required(),
+            },
             {
               name: 'caption',
               type: 'string',
