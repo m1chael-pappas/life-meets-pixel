@@ -15,16 +15,12 @@ const nextConfig: NextConfig = {
     loaderFile: "./lib/image-loader.ts",
   },
 
-  // Exclude studio folder from compilation
-  webpack: (config, { isServer }) => {
-    if (isServer) {
-      config.watchOptions = {
-        ...config.watchOptions,
-        ignored: ['**/studio/**', '**/node_modules/**'],
-      };
-    }
-    return config;
-  },
+  // The webpack() hook that used to live here is gone. Next 16 builds with
+  // Turbopack by default and FAILS the build outright if a webpack config is
+  // present, to stop a config being silently ignored. All it did was add
+  // `**/studio/**` and `**/node_modules/**` to the dev watcher's ignore list —
+  // Turbopack does not watch unreferenced directories in the first place, and
+  // the Studio is a separate pnpm workspace nothing here imports.
 
   // Exclude studio from TypeScript checking
   typescript: {
