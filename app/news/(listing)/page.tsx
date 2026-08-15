@@ -58,10 +58,21 @@ export async function generateMetadata({ searchParams }: NewsPageProps): Promise
     .catch(() => null);
   const match = counts?.categories.find((c) => c.slug === category);
 
-  const title = match ? `${match.title} News` : "Gaming News & Previews";
+  // Same sizing rule as the reviews listing: ~55 character titles once the
+  // template suffix lands, ~145 character descriptions. The category branch
+  // also has to stop appending "News" to a category already called "Gaming
+  // News", which was shipping the title "Gaming News News".
+  const categoryTitle = match
+    ? match.title.endsWith("News")
+      ? match.title
+      : `${match.title} News`
+    : undefined;
+  const title = categoryTitle
+    ? `${categoryTitle} and Previews, Updated Daily`
+    : "Gaming News, Previews and Anime Updates";
   const description = match
-    ? `The latest ${match.title.toLowerCase()} news and previews from Life Meets Pixel.`
-    : "Stay up to date with the latest gaming news, previews, and geek culture updates.";
+    ? `The latest ${match.title.toLowerCase()} coverage from Life Meets Pixel: announcements, delays, previews and the industry moves that actually change what you play.`
+    : "Gaming news, hands-on previews and anime updates for people who want the detail rather than the press release. Written and scored from Sydney.";
   const canonicalUrl = match ? `${siteUrl}/news?category=${match.slug}` : `${siteUrl}/news`;
 
   return {

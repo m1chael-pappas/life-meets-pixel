@@ -76,10 +76,16 @@ export async function generateMetadata({
     : undefined;
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://lifemeetspixel.com";
 
-  const title = type ? `${CAT_TYPE_HEADING[type]} Reviews` : "All Reviews";
+  // Titles land around 55 characters and descriptions around 145 once the
+  // " | Life Meets Pixel" template suffix is added. "All Reviews" was 30 with
+  // the suffix and a 64 character description, both short enough that Google
+  // rewrites them from page text instead of using what we wrote.
+  const title = type
+    ? `${CAT_TYPE_HEADING[type]} Reviews, Scored Out of 10`
+    : "Reviews: Games, Anime, Movies and Tech";
   const description = type
-    ? `Honest, scored reviews of ${CAT_TYPE_LABEL[type].toLowerCase()} — no sponsors, no PR fluff.`
-    : "Browse all our reviews of games, movies, books, anime, and more.";
+    ? `Honest, scored reviews of ${CAT_TYPE_LABEL[type].toLowerCase()}, with a breakdown of what works and what does not. No sponsors, no PR fluff, written from Sydney.`
+    : "Honest reviews of games, anime, movies, books, board games and tech, each scored out of 10 with a full breakdown. No sponsors and no PR fluff.";
 
   const canonicalPath = type ? `/reviews?type=${type}` : "/reviews";
   const canonicalUrl = `${siteUrl}${canonicalPath}`;

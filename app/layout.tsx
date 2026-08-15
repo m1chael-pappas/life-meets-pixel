@@ -59,11 +59,11 @@ const vt323 = VT323({
 
 export const metadata: Metadata = {
   title: {
-    default: "Life Meets Pixel — Independent Australian Game, Anime & Film Reviews",
+    default: "Life Meets Pixel: Independent Australian Game, Anime and Film Reviews",
     template: "%s | Life Meets Pixel",
   },
   description:
-    "An independent Australian review publication covering games, anime, film, TV, books, comics, board games and tech. Honest scored reviews — no sponsors, no PR fluff.",
+    "An independent Australian review publication covering games, anime, film, TV, books, comics, board games and tech. Honest scored reviews, no sponsors, no PR fluff.",
   keywords: [
     "Australian gaming site",
     "Australian game reviews",
@@ -93,16 +93,16 @@ export const metadata: Metadata = {
     locale: "en_AU",
     url: "/",
     siteName: "Life Meets Pixel",
-    title: "Life Meets Pixel (LMP) — Independent Australian Reviews",
+    title: "Life Meets Pixel (LMP): Independent Australian Reviews",
     description:
-      "An independent Australian review publication covering games, anime, film, TV, books, comics, board games and tech. Honest scored reviews — no sponsors, no PR fluff.",
+      "An independent Australian review publication covering games, anime, film, TV, books, comics, board games and tech. Honest scored reviews, no sponsors, no PR fluff.",
     images: [
       {
         url: "/og-default.png",
         width: 1200,
         height: 630,
         type: "image/png",
-        alt: "Life Meets Pixel — independent Australian reviews of games, anime, film and tech",
+        alt: "Life Meets Pixel, independent Australian reviews of games, anime, film and tech",
       },
     ],
   },
@@ -126,7 +126,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Life Meets Pixel (LMP) — Independent Australian Reviews",
+    title: "Life Meets Pixel (LMP): Independent Australian Reviews",
     description:
       "Independent Australian reviews of games, anime, film, TV, books, board games and tech. Scored, honest, no sponsors.",
     images: ["/og-default.png"],

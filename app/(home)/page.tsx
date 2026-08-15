@@ -20,7 +20,10 @@ export const metadata: Metadata = {
   // Meets Pixel" — the brand twice, 17 wasted characters, on the page that
   // matters most for search. Other pages set a plain string on purpose,
   // because their titles do not already contain the brand.
-  title: { absolute: "Life Meets Pixel - Reviews & News" },
+  // 33 characters was leaving most of the ~60 character allowance unused on the
+  // page that matters most, so the keywords that describe what the site is now
+  // sit in it. Still `absolute`, still the brand once.
+  title: { absolute: "Life Meets Pixel: Game, Anime and Film Reviews" },
   description:
     "Honest reviews of games, movies, books, anime, board games, and tech. No sponsors. No PR fluff. Just real reviews from a fellow nerd.",
   keywords: [
@@ -38,9 +41,9 @@ export const metadata: Metadata = {
     // so the locale has to be restated on every page that defines its own.
     locale: "en_AU",
     type: "website",
-    title: "Life Meets Pixel (LMP) — Independent Australian Reviews",
+    title: "Life Meets Pixel (LMP): Independent Australian Reviews",
     description:
-      "An independent Australian review publication covering games, anime, film, TV, books, comics, board games and tech. Honest scored reviews — no sponsors, no PR fluff.",
+      "An independent Australian review publication covering games, anime, film, TV, books, comics, board games and tech. Honest scored reviews, no sponsors, no PR fluff.",
     url: siteUrl,
     siteName: "Life Meets Pixel",
     images: [
@@ -52,15 +55,15 @@ export const metadata: Metadata = {
         width: 1200,
         height: 630,
         type: "image/png",
-        alt: "Life Meets Pixel — independent Australian reviews of games, anime, film and tech",
+        alt: "Life Meets Pixel, independent Australian reviews of games, anime, film and tech",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Life Meets Pixel (LMP) — Independent Australian Reviews",
+    title: "Life Meets Pixel (LMP): Independent Australian Reviews",
     description:
-      "An independent Australian review publication covering games, anime, film, TV, books, comics, board games and tech. Honest scored reviews — no sponsors, no PR fluff.",
+      "An independent Australian review publication covering games, anime, film, TV, books, comics, board games and tech. Honest scored reviews, no sponsors, no PR fluff.",
     images: [`${siteUrl}/og-default.png`],
   },
   alternates: {
