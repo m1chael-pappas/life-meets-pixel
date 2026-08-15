@@ -6,6 +6,7 @@
 import Anthropic from '@anthropic-ai/sdk';
 import { randomUUID } from 'crypto';
 
+import { THIN_POST_WORDS } from './queries';
 import {
   candidateCallbackData,
   sendMessage,
@@ -26,6 +27,12 @@ const SITE_URL = 'https://lifemeetspixel.com';
 // window), and each phase aborts its API calls at this budget so a slow run
 // fails cleanly (status + Telegram) instead of being killed silently.
 const PHASE_BUDGET_MS = 240_000;
+
+// Aim above THIN_POST_WORDS rather than at it. A draft that lands on 301 words
+// is one editing pass away from dropping out of the index, and the counts do
+// not match exactly anyway: this counts the model's own section text, while the
+// site counts pt::text of the stored Portable Text.
+const MIN_INDEXABLE_WORDS = THIN_POST_WORDS + 30;
 
 interface Candidate {
   _id: string;
@@ -120,7 +127,7 @@ Voice and writing rules:
 - Attribute facts: "Bungie confirmed in a dev blog that...", "According to reporting by Kotaku...". Add inline links to sources via the links array.
 - Australian English (colour, flavour, organise; licence as noun, license as verb).
 - Be skeptical. If a publisher's announcement is clearly spin, say so. Don't parrot marketing copy.
-- Length: 300-600 words of prose; 200-400 for breaking news. 2-4 h2 sections ("What Happened" / "The Details" / "Why It Matters" / "Our Take", pick what fits).
+- Length: 330-600 words of prose, and 330 is a hard floor, not a target. Anything under 300 words is marked noindex by the site and never reaches search, so a short piece is wasted work. This applies to breaking news too: if the news itself is one sentence, carry the rest with context, background and what to watch for. 2-4 h2 sections ("What Happened" / "The Details" / "Why It Matters" / "Our Take", pick what fits).
 - No emoji in the title; at most 1 per section elsewhere.
 - No AI tells: never "In conclusion", "It's worth noting", "Delve", "Tapestry", "Vibrant".
 - NEVER use em dashes (U+2014) anywhere. Use colons, commas, periods, or parentheses instead.
@@ -166,13 +173,36 @@ export async function draftFromCandidate(candidateId: string): Promise<'research
       }`
     );
 
-    const article = await writeArticle(
+    let article = await writeArticle(
       client,
       candidate,
       candidate.researchNotes,
       samples,
       controller.signal
     );
+
+    // The site marks any news post under THIN_POST_WORDS noindex and holds it
+    // out of the sitemap. Nothing used to check that here, so drafts landing at
+    // 288 words shipped looking fine and quietly never entered the index; seven
+    // published posts were sitting under the line before this check existed.
+    // One expansion pass, then hand it over with the number on the card either
+    // way, because a thin story is sometimes genuinely all there is.
+    let words = countProseWords(article.sections);
+    if (words < MIN_INDEXABLE_WORDS && Date.now() < deadline) {
+      const expanded = await writeArticle(
+        client,
+        candidate,
+        candidate.researchNotes,
+        samples,
+        controller.signal,
+        { article, words }
+      );
+      const expandedWords = countProseWords(expanded.sections);
+      if (expandedWords > words) {
+        article = expanded;
+        words = expandedWords;
+      }
+    }
 
     // 3. Unique slug.
     const slug = await ensureUniqueSlug(article.slug);
@@ -231,6 +261,10 @@ export async function draftFromCandidate(candidateId: string): Promise<'research
     await sendMessage(
       `📝 <b>Draft ready: ${escapeHtml(article.title)}</b>\n\n` +
         `${escapeHtml(article.excerpt)}\n\n` +
+        (words < THIN_POST_WORDS
+          ? `⚠️ <b>${words} words, under the ${THIN_POST_WORDS} word floor.</b> ` +
+            `Publishing as-is marks it noindex and keeps it out of the sitemap.\n\n`
+          : `${words} words.\n\n`) +
         `Review: ${STUDIO_URL}/structure/newsPost;${draftId}\n` +
         `Will publish at: ${SITE_URL}/news/${slug}\n\n` +
         (imageAsset
@@ -385,12 +419,30 @@ Report facts only. Do not write the article.`,
   throw new Error('Research did not complete within 5 continuations');
 }
 
+/**
+ * Prose word count, counted the same way the indexing rule counts it.
+ *
+ * `INDEXABLE_NEWS_SLUGS_QUERY` runs `length(string::split(pt::text(content), " "))`,
+ * and `pt::text` flattens every block's text (headings and blockquotes included)
+ * while ignoring videoEmbed and image objects. Mirror that exactly, or the
+ * pipeline will pass a draft that the site then refuses to index.
+ */
+function countProseWords(sections: ArticleSection[]): number {
+  return sections
+    .filter((s) => s.kind !== 'videoEmbed')
+    .map((s) => s.text)
+    .join('\n\n')
+    .split(' ')
+    .length;
+}
+
 async function writeArticle(
   client: Anthropic,
   candidate: Candidate,
   research: string,
   samples: { title: string; excerpt: string; body: string }[],
-  signal: AbortSignal
+  signal: AbortSignal,
+  expandFrom?: { article: Article; words: number }
 ): Promise<Article> {
   const response = await client.messages.create(
     {
@@ -408,6 +460,16 @@ async function writeArticle(
             `Story type: ${candidate.storyType || 'news'}\n` +
             `Suggested author: ${candidate.suggestedAuthor || 'michael'}\n\n` +
             `Research notes (verified facts + sources):\n${research}\n\n` +
+            (expandFrom
+              ? `A previous attempt came in at ${expandFrom.words} words, under the ` +
+                `${MIN_INDEXABLE_WORDS} word floor, so the site would have marked it ` +
+                `noindex. Rewrite it longer using facts from the research notes that ` +
+                `did not make the first cut: more specifics, more context, a fuller ` +
+                `"Why It Matters". Do NOT pad with filler, restatement or hedging, and ` +
+                `do NOT invent facts that are not in the notes. If the notes genuinely ` +
+                `do not carry enough material, return the best version you can.\n\n` +
+                `Previous attempt:\n${JSON.stringify(expandFrom.article.sections)}\n\n`
+              : '') +
             `Write the article now. Original prose only, in the house voice.`,
         },
       ],
