@@ -21,7 +21,7 @@ import { client } from "@/sanity/client";
  * URL is unchanged.
  */
 
-type SlugRow = { slug: { current: string }; publishedAt: string };
+type SlugRow = { slug: { current: string }; publishedAt: string; _updatedAt: string };
 type AuthorRow = { slug: { current: string }; _updatedAt: string };
 
 async function getContent() {
@@ -32,7 +32,8 @@ async function getContent() {
     client.fetch<SlugRow[]>(
       `*[_type == "review" && defined(slug.current)]{
         "slug": slug,
-        publishedAt
+        publishedAt,
+        _updatedAt
       }`,
     ),
     // Only news posts substantial enough to index. The short ones are marked
@@ -67,6 +68,23 @@ const xmlEscape = (s: string) =>
 
 const iso = (d: string) => new Date(d).toISOString();
 
+/**
+ * The later of publish time and last edit, because `lastmod` is the only
+ * freshness signal a sitemap carries and `publishedAt` never moves.
+ *
+ * Advertising publishedAt meant an article edited a year after publication
+ * still looked untouched, so Google had no reason to come back and re-parse it.
+ * That is visible in Search Console: the review-snippet report lists only the
+ * handful of reviews crawled inside its recent window, while the rest sit
+ * indexed and unvisited with perfectly good markup on them.
+ */
+const lastmodOf = (row: { publishedAt?: string; _updatedAt?: string }) => {
+  const stamps = [row.publishedAt, row._updatedAt]
+    .filter((d): d is string => Boolean(d))
+    .map((d) => new Date(d).toISOString());
+  return stamps.sort().at(-1) ?? new Date(0).toISOString();
+};
+
 export async function GET() {
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://lifemeetspixel.com";
   const { reviews, news, authors } = await getContent();
@@ -77,8 +95,7 @@ export async function GET() {
   // route into being cached at the top level in the first place.
   const newest =
     [...reviews, ...news]
-      .map((r) => r.publishedAt)
-      .filter(Boolean)
+      .map(lastmodOf)
       .sort()
       .at(-1) ?? new Date(0).toISOString();
 
@@ -93,14 +110,14 @@ export async function GET() {
 
   const reviewPages: Entry[] = reviews.map((r) => ({
     loc: `${baseUrl}/reviews/${r.slug.current}`,
-    lastmod: iso(r.publishedAt),
+    lastmod: lastmodOf(r),
     changefreq: "weekly",
     priority: "0.8",
   }));
 
   const newsPages: Entry[] = news.map((n) => ({
     loc: `${baseUrl}/news/${n.slug.current}`,
-    lastmod: iso(n.publishedAt),
+    lastmod: lastmodOf(n),
     changefreq: "monthly",
     priority: "0.7",
   }));

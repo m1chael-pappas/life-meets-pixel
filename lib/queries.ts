@@ -1031,7 +1031,8 @@ export const INDEXABLE_NEWS_SLUGS_QUERY = `*[
   && length(string::split(pt::text(content), " ")) >= ${THIN_POST_WORDS}
 ]{
   "slug": slug,
-  publishedAt
+  publishedAt,
+  _updatedAt
 }`;
 
 // Headline ticker. Lived inline in components/retro/ticker.tsx until 2026-08-07;
