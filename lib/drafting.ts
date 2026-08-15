@@ -67,6 +67,7 @@ interface Article {
   keywords: string[];
   imageUrl: string;
   imageAlt: string;
+  categorySlugs: string[];
   sections: ArticleSection[];
 }
 
@@ -84,6 +85,12 @@ const ARTICLE_SCHEMA = {
       description: 'Direct URL of the best official promo/press image found during research (og:image of the primary source, press-kit art, or official screenshot). Empty string if none found.',
     },
     imageAlt: { type: 'string', description: 'Alt text describing the image' },
+    categorySlugs: {
+      type: 'array',
+      items: { type: 'string' },
+      description:
+        'One to three category slugs for this post, chosen ONLY from the allowed list given in the prompt. The first one is the primary category. Never invent a slug.',
+    },
     sections: {
       type: 'array',
       description: 'Article body in order: lede paragraph, h2 sections with paragraphs, optional blockquote, closing take. Optional final videoEmbed for an official trailer.',
@@ -114,7 +121,7 @@ const ARTICLE_SCHEMA = {
   },
   required: [
     'title', 'slug', 'excerpt', 'breaking', 'metaDescription',
-    'keywords', 'imageUrl', 'imageAlt', 'sections',
+    'keywords', 'imageUrl', 'imageAlt', 'categorySlugs', 'sections',
   ],
   additionalProperties: false,
 } as const;
@@ -173,11 +180,14 @@ export async function draftFromCandidate(candidateId: string): Promise<'research
       }`
     );
 
+    const categories = await getCategories();
+
     let article = await writeArticle(
       client,
       candidate,
       candidate.researchNotes,
       samples,
+      categories,
       controller.signal
     );
 
@@ -194,6 +204,7 @@ export async function draftFromCandidate(candidateId: string): Promise<'research
         candidate,
         candidate.researchNotes,
         samples,
+        categories,
         controller.signal,
         { article, words }
       );
@@ -202,6 +213,21 @@ export async function draftFromCandidate(candidateId: string): Promise<'research
         article = expanded;
         words = expandedWords;
       }
+    }
+
+    // Resolved against the vocabulary we handed the writer, so a hallucinated
+    // slug drops out instead of becoming a dangling reference. A post with no
+    // category is invisible to the filter tabs, so fall back rather than ship
+    // an empty array: the story type already tells us which bucket it is.
+    const chosenCategories = (article.categorySlugs || [])
+      .map((s) => categories.find((c) => c.slug === s))
+      .filter((c): c is NonNullable<typeof c> => Boolean(c))
+      .slice(0, 3);
+    if (chosenCategories.length === 0) {
+      const fallbackSlug =
+        candidate.storyType === 'preview' ? 'game-previews' : 'gaming-news';
+      const fallback = categories.find((c) => c.slug === fallbackSlug);
+      if (fallback) chosenCategories.push(fallback);
     }
 
     // 3. Unique slug.
@@ -235,7 +261,11 @@ export async function draftFromCandidate(candidateId: string): Promise<'research
         _type: 'reference',
         _ref: AUTHOR_IDS[candidate.suggestedAuthor || 'michael'] || AUTHOR_IDS.michael,
       },
-      categories: [],
+      categories: chosenCategories.map((c) => ({
+        _type: 'reference',
+        _ref: c._id,
+        _key: key(),
+      })),
       tags: [],
       seo: {
         _type: 'seo',
@@ -265,6 +295,7 @@ export async function draftFromCandidate(candidateId: string): Promise<'research
           ? `⚠️ <b>${words} words, under the ${THIN_POST_WORDS} word floor.</b> ` +
             `Publishing as-is marks it noindex and keeps it out of the sitemap.\n\n`
           : `${words} words.\n\n`) +
+        `Filed under: ${escapeHtml(chosenCategories.map((c) => c.title).join(', '))}\n\n` +
         `Review: ${STUDIO_URL}/structure/newsPost;${draftId}\n` +
         `Will publish at: ${SITE_URL}/news/${slug}\n\n` +
         (imageAsset
@@ -436,11 +467,27 @@ function countProseWords(sections: ArticleSection[]): number {
     .length;
 }
 
+/**
+ * The category vocabulary, read from Sanity rather than hardcoded, so adding a
+ * category in Studio is all it takes for the writer to start using it.
+ *
+ * Categories drive the filter tabs and the chip on every card, and the pipeline
+ * used to ship every post with `categories: []`. 43 of 61 published news posts
+ * were uncategorised before this existed, which meant they were reachable only
+ * from the unfiltered listing.
+ */
+async function getCategories(): Promise<{ _id: string; title: string; slug: string }[]> {
+  return writeClient.fetch(
+    `*[_type == "category" && defined(slug.current)]|order(title asc){_id, title, "slug": slug.current}`
+  );
+}
+
 async function writeArticle(
   client: Anthropic,
   candidate: Candidate,
   research: string,
   samples: { title: string; excerpt: string; body: string }[],
+  categories: { title: string; slug: string }[],
   signal: AbortSignal,
   expandFrom?: { article: Article; words: number }
 ): Promise<Article> {
@@ -459,6 +506,8 @@ async function writeArticle(
             `${JSON.stringify(samples)}\n\n` +
             `Story type: ${candidate.storyType || 'news'}\n` +
             `Suggested author: ${candidate.suggestedAuthor || 'michael'}\n\n` +
+            `Allowed categories (pick 1-3 slugs, most specific first, never invent one):\n` +
+            `${categories.map((c) => `- ${c.slug} (${c.title})`).join('\n')}\n\n` +
             `Research notes (verified facts + sources):\n${research}\n\n` +
             (expandFrom
               ? `A previous attempt came in at ${expandFrom.words} words, under the ` +
