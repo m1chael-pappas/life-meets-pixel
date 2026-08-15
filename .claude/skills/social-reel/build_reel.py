@@ -147,16 +147,46 @@ for b in BEATS:
 lines.append(f"Dialogue: 0,{ts(0)},{ts(TOTAL)},Brand,,0,0,0,,{{\\pos(540,1792)}}LIFE MEETS PIXEL")
 open(ASS, "w", encoding="utf-8").write(header + "\n".join(lines) + "\n")
 
-# --- step 3: measure loudness (two-pass; single-pass loudnorm warbles) --------
-print("step 2: measuring loudness…")
-mp = subprocess.run([FF, "-hide_banner", "-nostats", "-i", CUT,
-                     "-af", "loudnorm=I=-14:TP=-1.5:LRA=11:print_format=json",
-                     "-f", "null", "-"], capture_output=True, text=True)
-m = json.loads(mp.stderr[mp.stderr.rindex("{"): mp.stderr.rindex("}") + 1])
-print("  measured:", {k: m[k] for k in ("input_i", "input_tp", "input_lra")})
-norm = (f"loudnorm=I=-14:TP=-1.5:LRA=11:measured_I={m['input_i']}:"
-        f"measured_TP={m['input_tp']}:measured_LRA={m['input_lra']}:"
-        f"measured_thresh={m['input_thresh']}:offset={m['target_offset']}:linear=true")
+# --- step 3: solve for loudness (no loudnorm in the render) -------------------
+#
+# The loudnorm FILTER is deliberately absent from the render chain. Even with
+# linear=true, where it is documented to be a constant gain, it rewrites frame
+# timestamps: it shifted one PTS by 50ms near the end of a 33s reel with the
+# frame count unchanged, which step 5 correctly refuses to ship.
+#
+# Gain alone does not solve it either. Material with a high crest factor hits
+# the ceiling before it hits the loudness target, so pushing to -14 hands the
+# limiter several dB of work that comes straight back off programme loudness
+# (-18.4 measured on a file aimed at -14). Peak-capping instead undershoots.
+#
+# So: normalise to unity peak, measure what the limiter actually produces, and
+# solve. Post-limiter loudness moves ~0.8 LU per dB of input gain, measured
+# across a 1.0-2.2 sweep on reel material.
+TARGET_LUFS = -15.0
+LIMITER = "alimiter=limit=0.72:attack=5:release=60:level=false"
+SLOPE = 0.81  # LU of programme loudness per dB of input gain, post-limiter
+print("step 2: solving loudness…")
+
+
+def limited_lufs(gain_db):
+    """Programme loudness of the take at `gain_db`, after the limiter + AAC."""
+    subprocess.run([FF, "-hide_banner", "-loglevel", "error", "-i", CUT, "-vn",
+                    "-af", f"volume={gain_db}dB,{LIMITER}", "-c:a", "aac",
+                    "-b:a", "192k", "-ar", "48000", f"{D}/probe.m4a", "-y"],
+                   check=True)
+    r = subprocess.run([FF, "-hide_banner", "-nostats", "-i", f"{D}/probe.m4a",
+                        "-af", "loudnorm=print_format=json", "-f", "null", "-"],
+                       capture_output=True, text=True)
+    j = json.loads(r.stderr[r.stderr.rindex("{"): r.stderr.rindex("}") + 1])
+    return float(j["input_i"]), float(j["input_tp"])
+
+
+base_lufs, _ = limited_lufs(0)
+gain_db = (TARGET_LUFS - base_lufs) / SLOPE
+final_lufs, final_tp = limited_lufs(gain_db)
+print(f"  {base_lufs:.2f} LUFS at unity -> {gain_db:+.2f} dB -> "
+      f"{final_lufs:.2f} LUFS, {final_tp:.2f} dBTP")
+norm = f"volume={gain_db}dB,{LIMITER}"
 
 # --- step 4: render -----------------------------------------------------------
 vf = (

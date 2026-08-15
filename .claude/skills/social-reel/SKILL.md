@@ -193,6 +193,8 @@ curl -sL -O https://github.com/thewh1teagle/kokoro-onnx/releases/download/model-
 
 Kokoro needs `espeak-ng` and there is no sudo on this machine, so use the **`espeakng-loader` pip wheel**, which ships the shared library: set `ESPEAK_DATA_PATH` and `PHONEMIZER_ESPEAK_LIBRARY` from it before importing. Do not `pip install kokoro` (the non-ONNX package): its `misaki` -> `spacy` chain fails to build on Python 3.13.
 
+**Voice: `bm_fable`, not `bm_lewis`.** Lewis was the earlier default and Michael called the read a "continuous monotone". Measuring pitch spread (autocorrelation F0, p10-p90) across the British and American male voices settled it: fable 82 Hz, george 77, lewis 62, michael 55, daniel 50. Pair it with one clip per sentence and a real 0.3-0.55s silence between them, longest before a punchline: generating the whole script as one clip is what made it run together in the first place.
+
 **There is no Australian voice. Do not go looking for one again.** Chatterbox has no voice bank at all: one default American voice, and everything else is zero-shot cloning from an audio prompt (`SUPPORTED_LANGUAGES` is languages, not accents). Kokoro's 54 voices cover American, British, Spanish, French, Hindi, Italian, Japanese, Portuguese and Chinese only. **`bm_lewis`** (British male) is the settled default: it reads far less wrong than American on an Australian site, and it was the only British voice whose lines all fit inside a 3.8s beat at speed 1.0. Cloning Michael's own voice with Chatterbox is the only real route to an Australian accent and needs him to record a sample first.
 
 Budget roughly **8 to 10 words per 3.8s beat**, generate each line separately, and assert every clip fits its beat before mixing.
@@ -207,7 +209,19 @@ Budget roughly **8 to 10 words per 3.8s beat**, generate each line separately, a
   bed_rms = rms(music[active] * env[active])
   vo_gain = bed_rms * 10 ** (13 / 20) / rms(vo[active])
   ```
-- **Finish with a programme loudness pass on the mixed bus, then a limiter.** The numpy mix lands near -18 LUFS, which plays quiet in feed. Two-pass `loudnorm` to `I=-14` with `linear=true` is a constant gain, so the voice/bed balance survives. Its `TP` target does **not** survive the AAC encode though: this content is LRA 2.5, so hitting -14 pushed the true peak to -0.1 dBTP. Chain `alimiter=limit=0.72:attack=5:release=60:level=false` after it, which lands about -15.2 LUFS / -2.7 dBTP. Expect the limiter to cost roughly 2 dB of measured voice-over-bed lift, so aim high.
+- **Keep `loudnorm` out of the render chain entirely, and solve for the gain instead.** The numpy mix lands near -18 LUFS, which plays quiet in feed, but the obvious fix is a trap three ways over:
+  - **`loudnorm` rewrites timestamps even with `linear=true`.** It is documented as a constant gain in that mode and it is not timestamp-neutral: on a 33s reel it shifted one PTS by 50ms near the end (30.635 → 30.706) with the frame count unchanged, and step 5 correctly refused to ship it. Isolated by encoding `mix.wav` three ways: limiter alone was clean, `loudnorm` alone reproduced the gap.
+  - **Matching -14 LUFS by gain alone backfires.** Reel material has a high crest factor, so it reaches the ceiling before the target: gaining to -14 put the peak at 0.99 and gave the limiter 4 dB of work, which came straight back off programme loudness. Measured result on a file aimed at -14: **-18.4**.
+  - **Peak-capping undershoots.** Capping the gain so the true peak lands at 0.85 measured **-19.5**.
+
+  What works: normalise to unity peak, measure what the limiter actually produces, then solve. Post-limiter loudness moves about **0.8 LU per dB of input gain**, measured across a 1.0 to 2.2 sweep, so one probe encode gives you the gain. Target -15.0 LUFS to match what already shipped. Both build scripts do this; `build_reel.py` uses `volume=NdB` in the filter chain, `build_vo_reel.py` applies it to the numpy array.
+
+  | gain | limit 0.90 | limit 0.72 |
+  |---|---|---|
+  | 1.0 | -18.14 LUFS, -0.89 dBTP | -18.32, -2.76 |
+  | 1.4 | -15.40, -0.34 | -15.91, -2.30 |
+  | 1.8 | -13.43, +0.08 | -14.13, -1.88 |
+  | 2.2 | -11.91, +0.74 | -12.87, -0.57 |
 - **The Kokoro model files are not persisted** between sessions. `kokoro-v1.0.onnx` (325 MB) and `voices-v1.0.bin` need re-downloading into the working directory each time.
 - **`loudnorm` is DYNAMIC in single-pass mode.** It spends the first second converging on a gain, which audibly warbles the opening. Always two-pass: measure with `print_format=json`, then re-apply with `measured_I`/`measured_TP`/`measured_LRA`/`measured_thresh`/`offset` and `linear=true`.
 - **Never add `aresample=first_pts=0`.** It pads the stream start and silences the opening segment.
@@ -215,7 +229,7 @@ Budget roughly **8 to 10 words per 3.8s beat**, generate each line separately, a
 
 ## 4b. Voiceover-led reels (the How Many Dudes shape)
 
-Michael's preferred format as of the How Many Dudes reel: **gameplay fills the frame, there are no big text cards at all until the reveal, and the captions render word by word along the bottom as the voice speaks.** He rejected the static top/bottom beat-card layout as "just random words" that reads like a mid-video explainer. Working reference: `build.py` in this directory.
+Michael's preferred format as of the How Many Dudes reel: **gameplay fills the frame, there are no big text cards at all until the reveal, and the captions render word by word along the bottom as the voice speaks.** He rejected the static top/bottom beat-card layout as "just random words" that reads like a mid-video explainer. Working reference: **`build_vo_reel.py`** in this directory, driven by a `config.py` (copy `config.example.py`). It takes the timeline from the measured VO clip lengths plus an explicit silence after each sentence, and hard-fails on timestamp faults the same way `build_reel.py` does.
 
 Write the spoken track as **one continuous paragraph a person would actually say**, then chop it into sentences. Do not write five disconnected stat lines and call it a script. Read it aloud before you build it. Open a loop in the first sentence and close it near the end.
 
@@ -274,6 +288,8 @@ Once approved, use `post_social.py`. Key constraint: **the Instagram Graph API w
 | Opening music warbles | Single-pass `loudnorm` converging | Two-pass with measured values, `linear=true` |
 | First segment silent after ~0.75s | `aresample=first_pts=0` | Remove it |
 | Verification passes but video is broken | Checked levels, not timestamps | Check `pts_time` gaps |
+| Timestamp check fails on an otherwise clean render | `loudnorm` in the render chain, even with `linear=true` | Solve the gain and use `volume` + `alimiter`; see Audio |
+| Reel plays quiet in feed after removing `loudnorm` | Gained to -14 on high-crest material, so the limiter ate it | Solve against measured post-limiter loudness, target -15 |
 | Reel opens on black | Trailer fades from black + `fade=t=in` | Bright start frame, no video fade-in |
 | Text looks like subtitles | Proportional font in a background box | Press Start 2P with outlines |
 | Text runs off frame | Press Start 2P is ~1 char per point of size | Shorten copy or `\N` |
