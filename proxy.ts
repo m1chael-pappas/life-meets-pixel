@@ -77,7 +77,8 @@ export default proxy;
  * UI) reading session state through `ClerkProvider` in the root layout, which
  * works without any middleware. The site header touches Clerk not at all.
  * Server-side Clerk exists in exactly three places: `lib/membership.ts` (called
- * by `/account`, `/api/comments` and `/api/rss-token`), `app/api/comments/route.ts`,
+ * by `/account`, `/admin`, `/api/comments` and `/api/rss-token`),
+ * `app/api/comments/route.ts`,
  * and `lib/rss.ts`. Any new route that calls `auth()` must be listed below, or
  * Clerk throws and the route answers 500.
  *
@@ -96,6 +97,7 @@ export const config = {
     "/news",
     // Server-side auth.
     "/account/:path*",
+    "/admin",
     "/api/comments/:path*",
     "/api/rss-token",
     "/feed/:path*",

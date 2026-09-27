@@ -71,3 +71,28 @@ export function ensureSchema() {
   }
   return schemaReady;
 }
+
+export interface EngagementStats {
+  comments: number;
+  commentsLast30Days: number;
+  commenters: number;
+  rssFeeds: number;
+}
+
+/** Totals across the comment and RSS token tables for the admin dashboard. */
+export async function getEngagementStats(): Promise<EngagementStats> {
+  await ensureSchema();
+  const [row] = (await db()`
+    SELECT
+      (SELECT count(*) FROM comments)::int AS comments,
+      (SELECT count(*) FROM comments WHERE created_at > now() - interval '30 days')::int AS recent,
+      (SELECT count(DISTINCT user_id) FROM comments)::int AS commenters,
+      (SELECT count(*) FROM rss_tokens)::int AS rss_feeds
+  `) as { comments: number; recent: number; commenters: number; rss_feeds: number }[];
+  return {
+    comments: row.comments,
+    commentsLast30Days: row.recent,
+    commenters: row.commenters,
+    rssFeeds: row.rss_feeds,
+  };
+}

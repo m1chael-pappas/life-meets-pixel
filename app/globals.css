@@ -2074,6 +2074,22 @@ textarea.field-input { min-height: 140px; resize: vertical; line-height: 1.6; }
   gap: 10px;
 }
 
+.lmp-container.admin { padding-top: 32px; padding-bottom: 64px; }
+.admin__note {
+  font-family: var(--font-jetbrains-mono), ui-monospace, monospace;
+  font-size: 13px;
+  color: var(--ink-mute);
+  margin: 8px 0 24px;
+}
+.stat-block .admin__note { margin: 0; }
+.admin-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 16px;
+  align-items: start;
+}
+.admin-grid .stat-block { margin-bottom: 0; }
+
 .auth-page {
   display: flex;
   justify-content: center;
