@@ -831,7 +831,7 @@ a:hover { color: var(--neon-1); }
 }
 .hero-feature__hearts { display: flex; gap: 2px; }
 
-.hero-side { display: flex; flex-direction: column; gap: 12px; }
+.hero-side { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
 .hero-side__head {
   font-family: var(--font-press-start-2p), system-ui, monospace;
   font-size: 11px;
@@ -844,11 +844,11 @@ a:hover { color: var(--neon-1); }
   justify-content: space-between;
 }
 .hero-side__head .blink { animation: blink 1s steps(2) infinite; color: var(--neon-3); }
-.hero-side__list { display: flex; flex-direction: column; gap: 8px; flex: 1; }
+.hero-top10 { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 4px; flex: 1; }
 .hero-side-item {
   background: var(--bg-2);
   border: 2px solid var(--bg-3);
-  padding: 10px 12px;
+  padding: 6px 12px;
   display: flex;
   gap: 12px;
   align-items: center;
@@ -873,10 +873,13 @@ a:hover { color: var(--neon-1); }
 }
 .hero-side-item__title {
   flex: 1;
+  min-width: 0;
   color: var(--ink);
-  font-family: var(--font-press-start-2p), system-ui, monospace;
-  font-size: 11px;
+  font-size: 13px;
   line-height: 1.5;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .hero-side-item__score {
   font-family: var(--font-press-start-2p), system-ui, monospace;
@@ -2479,9 +2482,8 @@ textarea.field-input { min-height: 140px; resize: vertical; line-height: 1.6; }
   .hero-feature__score { font-size: 14px; padding: 6px 10px; }
 
   .hero-side__head { font-size: 11px; padding: 6px 8px; }
-  .hero-side-item { padding: 8px 10px; gap: 10px; }
+  .hero-side-item { padding: 6px 10px; gap: 10px; }
   .hero-side-item__num { width: 18px; font-size: 11px; }
-  .hero-side-item__title { font-size: 11px; }
 
   /* Section heads */
   .section-head { gap: 12px; margin-bottom: 18px; padding-bottom: 10px; }
@@ -3078,10 +3080,8 @@ textarea.field-input { min-height: 140px; resize: vertical; line-height: 1.6; }
   color: var(--neon-1);
 }
 
-/* ---------- Hero score key ----------
-   The scores were the only thing on the page with no legend, and /about — the
-   published scale — had no link anywhere in <main>. Occupies the dead space
-   the flexed hero-side list left at the bottom of the column. */
+/* ---------- Score key ----------
+   The scale legend on /reviews, linking to the published scale on /about. */
 .score-key {
   margin-top: 12px;
   display: flex;
@@ -3092,24 +3092,6 @@ textarea.field-input { min-height: 140px; resize: vertical; line-height: 1.6; }
   padding: 12px 14px;
   color: inherit;
 }
-/* The panel is a container, not a link — it holds the featured review's real
-   HP breakdown. Only the scale key at the bottom navigates. */
-.score-key__rows { display: flex; flex-direction: column; }
-.score-key__link {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  text-decoration: none;
-  color: inherit;
-  padding-top: 10px;
-  border-top: 1px dashed var(--bg-3);
-}
-.score-key__rows + .score-key__link { margin-top: 2px; }
-.score-key:not(:has(.score-key__rows)) .score-key__link {
-  border-top: none;
-  padding-top: 0;
-}
-.score-key__link:hover .score-key__more { color: var(--neon-2); }
 .score-key__head {
   font-family: var(--font-press-start-2p), system-ui, monospace;
   font-size: 11px;

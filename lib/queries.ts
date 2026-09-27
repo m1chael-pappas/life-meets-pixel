@@ -167,26 +167,7 @@ export const REVIEWS_PAGINATED_BY_SCORE_QUERY = `*[
   }
 }`;
 
-// Homepage hero + Top Rated list.
-//
-// This used to be driven purely by the manual `featured == true` tickbox, which
-// is why the front page froze: the newest flagged review was 19 April 2026 while
-// six newer ones sat unflagged, and the sidebar was still headed "TOP PICKS THIS
-// WEEK" over reviews from October 2025. A slot that only moves when someone
-// remembers to tick a box does not move.
-//
-// It is now score-ranked inside a rolling window, so it re-sorts itself every
-// time something is published and can never go stale. `featured` is left on the
-// schema and is no longer read here.
-//
-// `allTime` is the fallback for a quiet stretch: if the window holds fewer than
-// MIN_POOL reviews the section would otherwise render nearly empty, so the
-// component widens to the best-rated of all time rather than showing one item.
-// `scoreBreakdown` is the per-criterion rows the hero renders as HP bars. It was
-// previously projected only on the single-review query, so the homepage — the
-// surface most strangers land on — showed seven scores and never once showed
-// how one was built. The field is optional; the hero falls back to the score
-// key alone when a review has no breakdown.
+/** Fields the homepage hero renders for its feature and its TOP 10 rows. */
 const HERO_PROJECTION = `
   _id,
   title,
@@ -195,7 +176,6 @@ const HERO_PROJECTION = `
   summary,
   publishedAt,
   featured,
-  scoreBreakdown,
   reviewableItem->{
     title,
     slug,
@@ -226,9 +206,12 @@ const HERO_PROJECTION = `
     }
   }`;
 
-// $cutoff is an ISO date string. Pass it rounded to midnight UTC, not to the
-// current instant, or the value changes on every render and busts the fetch
-// cache that `fetchOptions` sets up.
+/**
+ * Homepage hero data. `recent`: best-scored reviews published on or after
+ * `$cutoff` (ISO date, rounded to midnight UTC so the cache key is stable).
+ * `allTime`: the ten best-scored reviews overall, which fill the hero's TOP 10
+ * and stand in for `recent` when the window is thin.
+ */
 export const HERO_TOP_RATED_QUERY = `{
   "recent": *[
     _type == "review"
@@ -239,7 +222,7 @@ export const HERO_TOP_RATED_QUERY = `{
   "allTime": *[
     _type == "review"
     && defined(slug.current)
-  ]|order(reviewScore desc, publishedAt desc)[0...6]{${HERO_PROJECTION}
+  ]|order(reviewScore desc, publishedAt desc)[0...10]{${HERO_PROJECTION}
   }
 }`;
 

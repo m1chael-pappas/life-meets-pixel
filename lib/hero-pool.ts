@@ -6,14 +6,14 @@ import type { Review } from "@/lib/types";
 import { client } from "@/sanity/client";
 
 /**
- * The homepage hero's review pool. `HeroSection` renders it and
- * `ReviewsSection` excludes its feature; both call `getHeroPool()` and share
- * one cached fetch.
+ * The homepage hero's data: a feature review and an all-time TOP 10.
+ * `HeroSection` renders it and `ReviewsSection` excludes the feature; both
+ * call `getHeroPool()` and share one cached fetch.
  */
 
 /** How far back "lately" reaches. */
 const WINDOW_DAYS = 60;
-/** Below this many reviews in the window, widen to best-of-all-time. */
+/** Below this many reviews in the window, the feature comes from the all-time list. */
 const MIN_POOL = 5;
 
 /** Midnight UTC, WINDOW_DAYS ago. Rounded to the day so the query params are
@@ -26,10 +26,10 @@ function windowStart(): string {
 }
 
 export interface HeroPool {
-  /** Ranked reviews the hero draws from; `[0]` is the feature. */
-  pool: Review[];
-  /** True when the window had enough reviews to be "lately" rather than all-time. */
-  isRecent: boolean;
+  /** The featured review: best score in the window, or of all time when the window is thin. */
+  feature: Review | undefined;
+  /** The ten best-scored reviews of all time, ranked. May include `feature`. */
+  topTen: Review[];
 }
 
 export async function getHeroPool(): Promise<HeroPool> {
@@ -47,8 +47,8 @@ export async function getHeroPool(): Promise<HeroPool> {
     allTime: Review[];
   }>(HERO_TOP_RATED_QUERY, { cutoff: windowStart() });
 
-  const pool = recent.length >= MIN_POOL ? recent : allTime;
-  return { pool, isRecent: pool === recent };
+  const feature = recent.length >= MIN_POOL ? recent[0] : allTime[0];
+  return { feature, topTen: allTime };
 }
 
 /**
@@ -56,6 +56,6 @@ export async function getHeroPool(): Promise<HeroPool> {
  * renders nothing. Never throws.
  */
 export async function getHeroFeatureId(): Promise<string | undefined> {
-  const { pool } = await getHeroPool().catch(() => ({ pool: [] as Review[] }));
-  return pool[0]?._id;
+  const { feature } = await getHeroPool().catch(() => ({ feature: undefined }));
+  return feature?._id;
 }

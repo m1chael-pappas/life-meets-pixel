@@ -2,19 +2,11 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { HeartRow } from "@/components/retro/heart-row";
-import { HPBar } from "@/components/retro/hp-bar";
 import { getHeroPool } from "@/lib/hero-pool";
 import { itemTypeToCat, scoreTone } from "@/lib/mappings";
 
-/** Rows shown in the hero. The article page shows all of them; the hero is a
- *  teaser sitting in a fixed-height column, so it takes the first few. */
-const HERO_BREAKDOWN_ROWS = 3;
-
 export default async function HeroSection() {
-  // Selection logic lives in lib/hero-pool so ReviewsSection can exclude
-  // whatever the hero used. Next dedupes the shared fetch.
-  const { pool, isRecent } = await getHeroPool();
-  const hero = pool[0];
+  const { feature: hero, topTen } = await getHeroPool();
 
   if (!hero) {
     return null;
@@ -23,7 +15,6 @@ export default async function HeroSection() {
   const item = hero.reviewableItem;
   const cat = itemTypeToCat(item.itemType);
   const studio = item.publisher || item.creator || "";
-  const breakdown = (hero.scoreBreakdown ?? []).slice(0, HERO_BREAKDOWN_ROWS);
   const tone = scoreTone(hero.reviewScore);
   const toneColor =
     tone === "low"
@@ -73,85 +64,21 @@ export default async function HeroSection() {
           </Link>
 
           <aside className="hero-side">
-            {/* A real h2, not a styled div. The four ranked links underneath
-                sat under no heading at all in the document outline, so a
-                screen-reader user reached them with no idea what the list was.
-                `.hero-side__head` sets its own size and family, so promoting
-                the element changes nothing visually. */}
             <h2 className="hero-side__head">
-              {/* Say what the list actually is. The old "THIS WEEK" heading sat
-                  above reviews from the previous October for months. */}
-              <span>◆ {isRecent ? "TOP RATED LATELY" : "TOP RATED"}</span>
+              <span>◆ TOP 10 · ALL TIME</span>
               <span className="blink">●</span>
             </h2>
-            <div className="hero-side__list">
-              {pool
-                .filter((p) => p._id !== hero._id)
-                .slice(0, 4)
-                .map((pick, i) => (
-                  <Link
-                    key={pick._id}
-                    href={`/reviews/${pick.slug.current}`}
-                    className="hero-side-item"
-                  >
-                    {/* The feature is rank 1, so the list starts at 2. It used
-                        to restart at 01 beside the second-best score, which
-                        made the whole ranking read one place too high. */}
-                    <span className="hero-side-item__num">
-                      {String(i + 2).padStart(2, "0")}
-                    </span>
-                    <span className="hero-side-item__title">{pick.title}</span>
-                    <span className="hero-side-item__score">
-                      {pick.reviewScore.toFixed(1)}
-                    </span>
+            <ol className="hero-top10">
+              {topTen.map((pick, i) => (
+                <li key={pick._id}>
+                  <Link href={`/reviews/${pick.slug.current}`} className="hero-side-item">
+                    <span className="hero-side-item__num">{String(i + 1).padStart(2, "0")}</span>
+                    <span className="hero-side-item__title">{pick.reviewableItem.title}</span>
+                    <span className="hero-side-item__score">{pick.reviewScore.toFixed(1)}</span>
                   </Link>
-                ))}
-            </div>
-
-            {/* The proof panel. The homepage used to show seven colour-coded
-                scores with no breakdown and no route to the published scale —
-                on a site whose entire claim is auditable scoring. This fills
-                the dead space the flexed list left at the bottom of the column
-                and carries the only /about link in main. */}
-            <div className="score-key">
-              {breakdown.length > 0 && (
-                <>
-                  <span className="score-key__head">
-                    ◆ HOW {hero.reviewScore.toFixed(1)} BREAKS DOWN
-                  </span>
-                  <div className="score-key__rows">
-                    {breakdown.map((row) => (
-                      <HPBar
-                        key={row._key ?? row.label}
-                        label={row.label}
-                        score={row.score}
-                      />
-                    ))}
-                  </div>
-                </>
-              )}
-              <Link href="/about" className="score-key__link">
-                <span className="score-key__bands">
-                  <span className="score-key__band">
-                    <i style={{ background: "var(--neon-3)" }} aria-hidden="true" />
-                    8.0+
-                  </span>
-                  <span className="score-key__band">
-                    <i style={{ background: "var(--neon-4)" }} aria-hidden="true" />
-                    6.0&ndash;7.9
-                  </span>
-                  <span className="score-key__band">
-                    <i style={{ background: "var(--heart)" }} aria-hidden="true" />
-                    &lt;6.0
-                  </span>
-                </span>
-                <span className="score-key__more">
-                  {breakdown.length > 0
-                    ? "How we score, and what each band means →"
-                    : "Every score breaks down into the 3–5 things it is made of. Read the full scale →"}
-                </span>
-              </Link>
-            </div>
+                </li>
+              ))}
+            </ol>
           </aside>
         </div>
       </div>
