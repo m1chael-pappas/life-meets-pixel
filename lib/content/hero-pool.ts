@@ -12,9 +12,7 @@ import { client } from "@/sanity/client";
  */
 
 /** How far back "lately" reaches. */
-const WINDOW_DAYS = 60;
-/** Below this many reviews in the window, the feature comes from the all-time list. */
-const MIN_POOL = 5;
+const WINDOW_DAYS = 30;
 
 /** Midnight UTC, WINDOW_DAYS ago. Rounded to the day so the query params are
  *  stable and an identical call inside the same cache scope hits. */
@@ -26,7 +24,7 @@ function windowStart(): string {
 }
 
 export interface HeroPool {
-  /** The featured review: best score in the window, or of all time when the window is thin. */
+  /** The featured review: best score in the window, or of all time when the window is empty. */
   feature: Review | undefined;
   /** The ten best-scored reviews of all time, ranked. May include `feature`. */
   topTen: Review[];
@@ -47,7 +45,7 @@ export async function getHeroPool(): Promise<HeroPool> {
     allTime: Review[];
   }>(HERO_TOP_RATED_QUERY, { cutoff: windowStart() });
 
-  const feature = recent.length >= MIN_POOL ? recent[0] : allTime[0];
+  const feature = recent[0] ?? allTime[0];
   return { feature, topTen: allTime };
 }
 
