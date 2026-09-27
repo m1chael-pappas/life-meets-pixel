@@ -14,7 +14,7 @@ export default function NotFound() {
           textAlign: "center",
         }}
       >
-        <div
+        <h1
           style={{
             fontFamily: "var(--font-press-start-2p)",
             fontSize: 72,
@@ -25,7 +25,7 @@ export default function NotFound() {
           }}
         >
           404
-        </div>
+        </h1>
         <div
           style={{
             fontFamily: "var(--font-press-start-2p)",
@@ -41,7 +41,7 @@ export default function NotFound() {
           className="stat-block"
           style={{ maxWidth: 560, margin: "0 auto 32px", textAlign: "left" }}
         >
-          <h3>◆ DEBUG TRACE</h3>
+          <h2>◆ DEBUG TRACE</h2>
           <div className="stat-row">
             <span className="lbl">STATUS</span>
             <span className="val">404</span>

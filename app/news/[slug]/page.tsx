@@ -211,6 +211,7 @@ export default async function NewsPostPage({ params }: NewsPostPageProps) {
               excerpt: post.excerpt,
               slug: post.slug,
               publishedAt: post.publishedAt,
+              updatedAt: post.updatedAt,
               imageUrl: post.featuredImage
                 ? urlFor(post.featuredImage)?.width(1200).height(630).url()
                 : null,

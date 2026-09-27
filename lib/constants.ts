@@ -7,12 +7,42 @@ export const SITE_CONFIG = {
     facebook: "https://www.facebook.com/profile.php?id=61582819127746",
     instagram: "https://www.instagram.com/life_meets_pixel/",
     discord: "https://discord.gg/DpyvRH9K",
+    steam: "https://store.steampowered.com/curator/46217744-Life-Meets-Pixel/",
     twitter: "@lifemeetspixel",
   },
   contact: {
     email: "michael@lifemeetspixel.com",
   },
 } as const;
+
+export interface SocialChannel {
+  label: string;
+  mark: string;
+  handle: string;
+  href: string;
+  /** A palette token, never a literal, so every channel follows the active palette. */
+  color: string;
+}
+
+/**
+ * Outbound social channels in display order. Drives the social tiles on the
+ * homepage and contact page and both link rows in the footer.
+ */
+export const SOCIAL_CHANNELS: readonly SocialChannel[] = [
+  { label: "Discord", mark: "DC", handle: "life_meets_pixel", href: SITE_CONFIG.social.discord, color: "var(--neon-3)" },
+  { label: "Instagram", mark: "IG", handle: "@life_meets_pixel", href: SITE_CONFIG.social.instagram, color: "var(--neon-1)" },
+  { label: "Facebook", mark: "FB", handle: "Life Meets Pixel", href: SITE_CONFIG.social.facebook, color: "var(--neon-2)" },
+  { label: "Steam", mark: "ST", handle: "Curator page", href: SITE_CONFIG.social.steam, color: "var(--ink)" },
+];
+
+/** The site feed, rendered as the last social tile. */
+export const RSS_CHANNEL: SocialChannel = {
+  label: "RSS Feed",
+  mark: "RSS",
+  handle: "/feed.xml",
+  href: "/feed.xml",
+  color: "var(--neon-4)",
+};
 
 /**
  * Default social preview card.
@@ -29,5 +59,5 @@ export const OG_IMAGE = {
   width: 1200,
   height: 630,
   type: "image/png",
-  alt: "Life Meets Pixel \u2014 independent Australian reviews of games, anime, film and tech",
+  alt: "Life Meets Pixel, independent Australian reviews of games, anime, film and tech",
 } as const;

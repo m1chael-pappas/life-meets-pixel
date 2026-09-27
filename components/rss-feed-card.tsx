@@ -42,7 +42,7 @@ export default function RssFeedCard() {
     <div className="rss-card">
       <h2>◉ YOUR FULL-TEXT RSS FEED</h2>
       <p>
-        Complete articles in your feed reader. This URL is personal — if it
+        Complete articles in your feed reader. This URL is personal. If it
         leaks, hit regenerate and the old one stops working.
       </p>
       <code className="rss-card__url">{url}</code>

@@ -1,54 +1,26 @@
-import { SITE_CONFIG } from "@/lib/constants";
+import { RSS_CHANNEL, SOCIAL_CHANNELS } from "@/lib/constants";
 
-type Tile = {
-  name: string;
-  mark: string;
-  handle: string;
-  href: string;
-  variant: string;
-};
-
-const TILES: Tile[] = [
-  {
-    name: "DISCORD",
-    mark: "DC",
-    handle: "life_meets_pixel",
-    href: SITE_CONFIG.social.discord,
-    variant: "discord",
-  },
-  {
-    name: "INSTAGRAM",
-    mark: "IG",
-    handle: "@life_meets_pixel",
-    href: SITE_CONFIG.social.instagram,
-    variant: "insta",
-  },
-  {
-    name: "FACEBOOK",
-    mark: "FB",
-    handle: "Life Meets Pixel",
-    href: SITE_CONFIG.social.facebook,
-    variant: "fb",
-  },
-  {
-    name: "RSS FEED",
-    mark: "RSS",
-    handle: "/feed.xml",
-    href: "/feed.xml",
-    variant: "rss",
-  },
-];
-
-// One palette token each, so the four tiles stay distinguishable and every one
-// of them follows the palette. Discord used to carry its brand blurple
-// (#a3adf6) as a literal, which is a light violet: fine on the dark palettes,
-// 1.98:1 on the light one.
-const VARIANT_COLOR: Record<string, string> = {
-  discord: "var(--neon-3)",
-  insta: "var(--neon-1)",
-  fb: "var(--neon-2)",
-  rss: "var(--neon-4)",
-};
+/** The social tile grid: every channel in `SOCIAL_CHANNELS`, then the RSS feed. */
+export function SocialTiles() {
+  return (
+    <div className="socials-grid">
+      {[...SOCIAL_CHANNELS, RSS_CHANNEL].map((t) => (
+        <a
+          key={t.label}
+          href={t.href}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="social-tile"
+          style={{ color: t.color }}
+        >
+          <div className="social-tile__mark">{t.mark}</div>
+          <div className="social-tile__name">{t.label.toUpperCase()}</div>
+          <div className="social-tile__handle">{t.handle}</div>
+        </a>
+      ))}
+    </div>
+  );
+}
 
 export default function SocialSection() {
   return (
@@ -59,22 +31,7 @@ export default function SocialSection() {
           <h2>CONNECT WITH US</h2>
         </div>
       </div>
-      <div className="socials-grid">
-        {TILES.map((t) => (
-          <a
-            key={t.name}
-            href={t.href}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="social-tile"
-            style={{ color: VARIANT_COLOR[t.variant] }}
-          >
-            <div className="social-tile__mark">{t.mark}</div>
-            <div className="social-tile__name">{t.name}</div>
-            <div className="social-tile__handle">{t.handle}</div>
-          </a>
-        ))}
-      </div>
+      <SocialTiles />
     </section>
   );
 }

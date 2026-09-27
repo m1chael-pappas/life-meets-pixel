@@ -193,7 +193,7 @@ export default async function NewsPage({ searchParams }: NewsPageProps) {
           <span
             style={{
               fontFamily: "var(--font-press-start-2p)",
-              fontSize: 10,
+              fontSize: 11,
               color: "var(--ink-mute)",
             }}
           >

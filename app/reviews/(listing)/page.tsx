@@ -136,7 +136,7 @@ function EmptyState({
       <h3 className="empty-state__title">NOTHING HERE YET</h3>
       <p className="empty-state__body">
         {type
-          ? `No ${CAT_TYPE_LABEL[type].toLowerCase()} reviewed yet — we're working on it.`
+          ? `No ${CAT_TYPE_LABEL[type].toLowerCase()} reviewed yet. We're working on it.`
           : "No reviews published yet."}
       </p>
       {/* Always an exit. This panel is reached by a chip the page itself

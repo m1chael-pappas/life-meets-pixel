@@ -53,7 +53,7 @@ export default async function HeroSection() {
               <h2 className="hero-feature__title">{hero.title}</h2>
               <p className="hero-feature__sub">
                 {item.title}
-                {studio && ` — ${studio}`}
+                {studio && ` · ${studio}`}
               </p>
               <div className="hero-feature__meta">
                 <span

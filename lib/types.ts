@@ -134,6 +134,8 @@ export interface Review {
     score: number;
   }>;
   publishedAt: string;
+  /** Sanity `_updatedAt`; projected only by the single-document queries. */
+  updatedAt?: string;
   featured: boolean;
   reviewableItem: ReviewableItem;
   author: Author;
@@ -157,6 +159,8 @@ export interface NewsPost {
   /** Prose word count from `pt::text`, used for the thin-content noindex check. */
   wordCount?: number;
   publishedAt: string;
+  /** Sanity `_updatedAt`; projected only by the single-document queries. */
+  updatedAt?: string;
   breaking: boolean;
   featuredImage: {
     asset: {

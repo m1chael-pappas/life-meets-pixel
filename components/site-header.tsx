@@ -1,11 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState, useSyncExternalStore } from "react";
 
 import dynamic from "next/dynamic";
 import Link from "next/link";
 
 import { NavGlyph, type NavGlyphName } from "@/components/retro/sprites";
+import { TweaksPanel } from "@/components/retro/tweaks-panel";
 
 // NEXT_PUBLIC_* is inlined at build time; without Clerk keys the auth
 // controls simply don't render and no Clerk context is required.
@@ -48,15 +49,18 @@ function formatClock(d: Date) {
   return `${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
 }
 
-export function SiteHeader({ currentPage = "home" }: SiteHeaderProps) {
-  const [time, setTime] = useState<string>("");
-  const [navOpen, setNavOpen] = useState(false);
+/** `useSyncExternalStore` subscription that ticks once a second. */
+function subscribeClock(onTick: () => void) {
+  const t = setInterval(onTick, 1000);
+  return () => clearInterval(t);
+}
 
-  useEffect(() => {
-    setTime(formatClock(new Date()));
-    const t = setInterval(() => setTime(formatClock(new Date())), 1000);
-    return () => clearInterval(t);
-  }, []);
+const clockSnapshot = () => formatClock(new Date());
+const serverClockSnapshot = () => "";
+
+export function SiteHeader({ currentPage }: SiteHeaderProps) {
+  const time = useSyncExternalStore(subscribeClock, clockSnapshot, serverClockSnapshot);
+  const [navOpen, setNavOpen] = useState(false);
 
   return (
     <header className="lmp-header">
@@ -70,9 +74,9 @@ export function SiteHeader({ currentPage = "home" }: SiteHeaderProps) {
               <span className="dot" aria-hidden="true"></span>SYSTEM ONLINE
             </span>
             <span>P1 READY</span>
-            <span>HI-SCORE 999900</span>
+            <span className="lmp-header__hiscore">HI-SCORE 999900</span>
           </div>
-          <div className="lmp-header__status">
+          <div className="lmp-header__status lmp-header__status--meta">
             <span suppressHydrationWarning>{time || "--:--:--"}</span>
             <span>v2.6.18</span>
             {/* 2025, not 2026. The site's own /about page says "publishing
@@ -80,6 +84,7 @@ export function SiteHeader({ currentPage = "home" }: SiteHeaderProps) {
                 deliberately-fictional arcade flavour (HI-SCORE, P1 READY) is
                 what makes a reader unsure which of these numbers are real. */}
             <span style={{ color: "var(--neon-3)" }}>EST. 2025</span>
+            <TweaksPanel />
           </div>
         </div>
       </div>
@@ -122,6 +127,7 @@ export function SiteHeader({ currentPage = "home" }: SiteHeaderProps) {
                 key={l.id}
                 href={l.href}
                 className={currentPage === l.id ? "is-active" : ""}
+                aria-current={currentPage === l.id ? "page" : undefined}
                 onClick={() => setNavOpen(false)}
               >
                 <span className="lmp-nav__icon" aria-hidden="true">

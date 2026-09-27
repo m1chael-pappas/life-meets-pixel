@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 import { currentYear } from "@/lib/clock";
-import { SITE_CONFIG } from "@/lib/constants";
+import { SOCIAL_CHANNELS } from "@/lib/constants";
 
 export async function SiteFooter() {
   const year = await currentYear();
@@ -61,21 +61,13 @@ export async function SiteFooter() {
           <div className="footer-col">
             <h3>CONNECT</h3>
             <ul>
-              <li>
-                <a href={SITE_CONFIG.social.discord} target="_blank" rel="noopener noreferrer">
-                  Discord
-                </a>
-              </li>
-              <li>
-                <a href={SITE_CONFIG.social.instagram} target="_blank" rel="noopener noreferrer">
-                  Instagram
-                </a>
-              </li>
-              <li>
-                <a href={SITE_CONFIG.social.facebook} target="_blank" rel="noopener noreferrer">
-                  Facebook
-                </a>
-              </li>
+              {SOCIAL_CHANNELS.map((c) => (
+                <li key={c.label}>
+                  <a href={c.href} target="_blank" rel="noopener noreferrer">
+                    {c.label}
+                  </a>
+                </li>
+              ))}
               <li>
                 {/* Plain anchor, not Link. As a Link, Next prefetched it on
                     every page that renders the footer — 27kb of XML downloaded
@@ -88,30 +80,32 @@ export async function SiteFooter() {
         </div>
         <div className="footer-bot">
           <span>
-            © {year} LIFE MEETS PIXEL · INSERT COIN TO CONTINUE ·{" "}
-            <a
-              href="https://onthedot.au/?utm_source=life-meets-pixel&utm_medium=built-by&utm_campaign=footer"
-              target="_blank"
-              rel="noopener"
-            >
-              Built by OnTheDot.
-            </a>
+            © {year} LIFE MEETS PIXEL · INSERT COIN TO CONTINUE{" "}
+            <span className="footer-credit">
+              <span className="footer-credit__sep" aria-hidden="true">
+                ·{" "}
+              </span>
+              <a
+                href="https://onthedot.au/?utm_source=life-meets-pixel&utm_medium=built-by&utm_campaign=footer"
+                target="_blank"
+                rel="noopener"
+              >
+                Built by OnTheDot.
+              </a>
+            </span>
           </span>
           <div className="socials">
-            <a href={SITE_CONFIG.social.discord} aria-label="DC: Discord" target="_blank" rel="noopener noreferrer">
-              DC
-            </a>
-            <a
-              href={SITE_CONFIG.social.instagram}
-              aria-label="IG: Instagram"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              IG
-            </a>
-            <a href={SITE_CONFIG.social.facebook} aria-label="FB: Facebook" target="_blank" rel="noopener noreferrer">
-              FB
-            </a>
+            {SOCIAL_CHANNELS.map((c) => (
+              <a
+                key={c.label}
+                href={c.href}
+                aria-label={`${c.mark}: ${c.label}`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {c.mark}
+              </a>
+            ))}
           </div>
         </div>
       </div>

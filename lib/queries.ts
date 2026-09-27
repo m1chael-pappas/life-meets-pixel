@@ -477,6 +477,7 @@ export const REVIEW_QUERY = `*[
   && slug.current == $slug
 ][0]{
   _id,
+  "updatedAt": _updatedAt,
   title,
   slug,
   reviewScore,
@@ -705,6 +706,7 @@ export const NEWS_POST_QUERY = `*[
   && slug.current == $slug
 ][0]{
   _id,
+  "updatedAt": _updatedAt,
   title,
   slug,
   excerpt,

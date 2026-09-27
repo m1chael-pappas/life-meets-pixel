@@ -103,7 +103,7 @@ export async function GET() {
 
   const items: Item[] = [
     ...reviews.map((r) => ({
-      title: `${r.title} — ${r.reviewScore.toFixed(1)}/10`,
+      title: `${r.title} · ${r.reviewScore.toFixed(1)}/10`,
       link: `${siteUrl}/reviews/${r.slug.current}`,
       description: r.summary,
       pubDate: new Date(r.publishedAt).toUTCString(),
@@ -147,7 +147,7 @@ export async function GET() {
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/elements/1.1/">
   <channel>
-    <title>Life Meets Pixel — Reviews &amp; News</title>
+    <title>Life Meets Pixel: Reviews &amp; News</title>
     <link>${siteUrl}</link>
     <atom:link href="${siteUrl}/feed.xml" rel="self" type="application/rss+xml" />
     <description>Honest reviews of games, movies, books, anime, board games, and tech. No sponsors. No PR fluff. This public feed carries excerpts; members get a personal full-text feed at ${siteUrl}/membership</description>

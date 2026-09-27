@@ -78,6 +78,7 @@ export const organizationSchema = () => ({
   sameAs: [
     SITE_CONFIG.social.facebook,
     SITE_CONFIG.social.instagram,
+    SITE_CONFIG.social.steam,
     `https://twitter.com/${SITE_CONFIG.social.twitter.replace("@", "")}`,
   ],
 });

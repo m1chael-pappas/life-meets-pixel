@@ -44,11 +44,9 @@ export default function LegalPage() {
             <p className="text-sm text-muted-foreground mb-4 leading-relaxed">
               Learn how we collect, use, and protect your personal information.
             </p>
-            <Link href="/legal/privacy">
-              <Button variant="outline" className="w-full font-mono">
-                READ MORE →
-              </Button>
-            </Link>
+            <Button asChild variant="outline" className="w-full font-mono">
+              <Link href="/legal/privacy">READ MORE →</Link>
+            </Button>
           </div>
 
           {/* Terms of Use */}
@@ -61,11 +59,9 @@ export default function LegalPage() {
               Review the terms and conditions for using our website and
               services.
             </p>
-            <Link href="/legal/terms">
-              <Button variant="outline" className="w-full font-mono">
-                READ MORE →
-              </Button>
-            </Link>
+            <Button asChild variant="outline" className="w-full font-mono">
+              <Link href="/legal/terms">READ MORE →</Link>
+            </Button>
           </div>
 
           {/* Affiliate Disclosure */}
@@ -78,11 +74,9 @@ export default function LegalPage() {
               Information about our affiliate relationships and sponsored
               content.
             </p>
-            <Link href="/legal/affiliate-disclosure">
-              <Button variant="outline" className="w-full font-mono">
-                READ MORE →
-              </Button>
-            </Link>
+            <Button asChild variant="outline" className="w-full font-mono">
+              <Link href="/legal/affiliate-disclosure">READ MORE →</Link>
+            </Button>
           </div>
         </div>
 

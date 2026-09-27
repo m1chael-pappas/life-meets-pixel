@@ -17,7 +17,7 @@ export async function Ticker() {
     items = recent
       .filter((r) => r.slug)
       .map((r) => ({
-        text: `${r.title} — ${r.reviewScore.toFixed(1)}/10`,
+        text: `${r.title} · ${r.reviewScore.toFixed(1)}/10`,
         href: `/reviews/${r.slug}`,
       }));
   } catch {

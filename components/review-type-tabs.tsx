@@ -25,6 +25,7 @@ export default function ReviewTypeTabs({ currentType, counts }: ReviewTypeTabsPr
         const cat = itemTypeToCat(t);
         const label = CAT_LABELS[cat];
         const count = counts?.[t];
+        if (count === 0 && currentType !== t) return null;
         return (
           <Link
             key={t}

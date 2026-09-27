@@ -362,16 +362,11 @@ Two tiers sit outside that ramp on purpose, and neither is text:
 parse is **11px**. Press Start 2P is a bitmap face with no anti-aliasing
 headroom, so 10px is not a smaller version of the type, it is a broken one.
 
-**What actually ships is 10px on 24 rules** — field labels, HP row heads, filter
-chips, tweaks-panel options, comment authors, category badges, terminal chrome,
-stat-row keys. That is recorded here because the design system should not
-describe a site that does not exist, **not because it is endorsed**. It is an
-open item: either those 24 come up to 11px or the reasoning for each is written
-down. Do not cite this paragraph as licence to add a 25th.
-
-Check the responsive blocks when raising a base size — there are five of them,
-and `.about-pill` and `.hp-row__head` were both fixed once and are back at 10px,
-so the regression path is real.
+Every readable rule now meets it (raised from 8, 9 and 10px on 2026-09-27).
+The only declarations under 11px are the decorative glyphs in
+`.lmp-ticker__item::before` and `.footer-col a::before`, which carry no text.
+Check the responsive blocks when raising a base size: there are five of them,
+and a base-size fix that misses one regresses at that breakpoint.
 
 **The Press-Start-Is-A-Label-Font Rule.** Press Start 2P never sets a paragraph. It sets headings, labels, numbers and buttons. Any run of pixel type longer than about eight words is a defect — the reader's eye stalls and the nostalgia turns into work.
 

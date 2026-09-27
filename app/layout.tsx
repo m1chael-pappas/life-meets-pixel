@@ -13,7 +13,6 @@ import { JsonLd } from "@/components/seo/json-ld";
 import { graph, organizationSchema, websiteSchema } from "@/lib/schema";
 import { clerkAppearance } from "@/lib/clerk-appearance";
 import { SoundEffects } from "@/components/retro/sound-effects";
-import { TweaksPanel } from "@/components/retro/tweaks-panel";
 import { SiteFooter } from "@/components/site-footer";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import { Analytics } from "@vercel/analytics/next";
@@ -182,7 +181,6 @@ export default function RootLayout({
       >
         {children}
         <SiteFooter />
-        <TweaksPanel />
         <KonamiEasterEgg />
         <SoundEffects />
         <Analytics />

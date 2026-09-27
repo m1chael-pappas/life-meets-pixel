@@ -313,6 +313,7 @@ export default async function ReviewPage({ params }: { params: Promise<{ slug: s
       summary: review.summary,
       reviewScore: review.reviewScore,
       publishedAt: review.publishedAt,
+      updatedAt: review.updatedAt,
       author: review.author,
       item: {
         title: item.title,
@@ -503,17 +504,6 @@ export default async function ReviewPage({ params }: { params: Promise<{ slug: s
                 <span className="lbl">Type</span>
                 <span className="val">{CAT_LABELS[cat]}</span>
               </div>
-              {item.itemType === "videogame" && item.platforms?.length ? (
-                <div className="stat-row">
-                  <span className="lbl">Platform</span>
-                  <span className="val">
-                    {item.platforms
-                      .map((p) => p.title.toUpperCase())
-                      .slice(0, 4)
-                      .join(" · ")}
-                  </span>
-                </div>
-              ) : null}
               {item.creator && (
                 <div className="stat-row">
                   <span className="lbl">{getCreatorLabel(item.itemType)}</span>
@@ -646,7 +636,7 @@ export default async function ReviewPage({ params }: { params: Promise<{ slug: s
                   )}
                 </div>
                 {item.affiliateLink && (
-                  <p style={{ fontSize: 10, color: "var(--ink-mute)", marginTop: 10, textAlign: "center" }}>
+                  <p style={{ fontSize: 11, color: "var(--ink-mute)", marginTop: 10, textAlign: "center" }}>
                     {item.affiliatePartner === "gmg"
                       ? "via Green Man Gaming"
                       : item.affiliatePartner === "gearup"

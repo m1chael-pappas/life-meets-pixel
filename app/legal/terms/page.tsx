@@ -27,7 +27,7 @@ export default function TermsOfUsePage() {
         <div className="mb-8">
           <Link
             href="/legal"
-            className="text-sm text-primary hover:text-primary/80 font-mono"
+            className="inline-flex min-h-6 items-center text-sm text-primary hover:text-primary/80 font-mono"
           >
             ← Back to Legal
           </Link>

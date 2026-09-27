@@ -2,6 +2,7 @@ import { Metadata } from "next";
 import Link from "next/link";
 
 import { ContactForm } from "@/components/retro/contact-form";
+import { SocialTiles } from "@/components/sections/social-section";
 import { SiteHeader } from "@/components/site-header";
 import { SITE_CONFIG, OG_IMAGE } from "@/lib/constants";
 import { authorInitial, authorLevel } from "@/lib/mappings";
@@ -14,26 +15,19 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://lifemeetspixel.com"
 export const metadata: Metadata = {
   title: "Contact",
   description:
-    "Drop us a line — review requests, news tips, collabs, or just to say g'day.",
+    "Drop us a line with review requests, news tips, collabs, or just to say g'day.",
   alternates: { canonical: `${siteUrl}/contact` },
   openGraph: {
     // Next.js REPLACES a parent openGraph object rather than merging it,
     // so the locale has to be restated on every page that defines its own.
     locale: "en_AU",
     title: "Contact | Life Meets Pixel",
-    description: "Drop us a line — review requests, news tips, collabs.",
+    description: "Drop us a line with review requests, news tips and collabs.",
     url: `${siteUrl}/contact`,
     type: "website",
     images: [OG_IMAGE],
   },
 };
-
-const SOCIAL_TILES = [
-  { name: "DISCORD", mark: "DC", handle: "life_meets_pixel", href: SITE_CONFIG.social.discord, color: "#a3adf6" },
-  { name: "INSTAGRAM", mark: "IG", handle: "@life_meets_pixel", href: SITE_CONFIG.social.instagram, color: "var(--neon-1)" },
-  { name: "FACEBOOK", mark: "FB", handle: "Life Meets Pixel", href: SITE_CONFIG.social.facebook, color: "var(--neon-2)" },
-  { name: "RSS", mark: "RSS", handle: "/feed.xml", href: "/feed.xml", color: "var(--neon-4)" },
-];
 
 export default async function ContactPage() {
   const authors = await client.fetch<Author[]>(ALL_AUTHORS_QUERY, {}, fetchOptions);
@@ -47,7 +41,7 @@ export default async function ContactPage() {
             <div>
               <h1 className="contact-hero__title">DROP US A LINE</h1>
               <p className="contact-hero__sub">
-                Review requests, news tips, collab pitches, or just a friendly g&apos;day — we read{" "}
+                Review requests, news tips, collab pitches, or just a friendly g&apos;day. We read{" "}
                 <strong>every</strong> message. No PR fluff, please.
               </p>
             </div>
@@ -94,7 +88,7 @@ export default async function ContactPage() {
             ))}
 
             <div className="inbox-card">
-              <h3>◆ INBOX STATUS</h3>
+              <h2>◆ INBOX STATUS</h2>
               <div className="inbox-row">
                 <span className="lbl">RESPONSE TIME</span>
                 <span className="val good">&lt; 48H</span>
@@ -112,7 +106,7 @@ export default async function ContactPage() {
                 <span className="val">
                   <a
                     href={`mailto:${SITE_CONFIG.contact.email}`}
-                    style={{ color: "var(--neon-2)", fontFamily: "var(--font-press-start-2p)" }}
+                    style={{ color: "var(--neon-2)", fontFamily: "var(--font-press-start-2p)", display: "inline-block", paddingBlock: 6 }}
                   >
                     {SITE_CONFIG.contact.email}
                   </a>
@@ -129,22 +123,7 @@ export default async function ContactPage() {
               <h2>OR CATCH US ON THE GRID</h2>
             </div>
           </div>
-          <div className="socials-grid">
-            {SOCIAL_TILES.map((t) => (
-              <a
-                key={t.name}
-                href={t.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="social-tile"
-                style={{ color: t.color }}
-              >
-                <div className="social-tile__mark">{t.mark}</div>
-                <div className="social-tile__name">{t.name}</div>
-                <div className="social-tile__handle">{t.handle}</div>
-              </a>
-            ))}
-          </div>
+          <SocialTiles />
           <p style={{ fontSize: 11, color: "var(--ink-mute)", marginTop: 16, textAlign: "center" }}>
             Want to buy us a coffee instead?{" "}
             <Link href="/" style={{ color: "var(--neon-2)" }}>
