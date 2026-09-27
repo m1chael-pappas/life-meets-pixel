@@ -44,7 +44,7 @@ Unless the subject is clearly in Jenna's lane (K-drama, UX/design reads, cozy st
 - Use Australian English ("colour", "flavour", "organise") unless it's a proper noun.
 - **Be opinionated.** Don't sit on the fence. Reviews that say "it's fine" are the worst reviews.
 - **Be honest about flaws.** Every review needs real cons. "It's too good" is not a con.
-- **No emoji overload.** Occasional emoji fine in the body (1-2 per section max), none in the title or h2 headings.
+- **No emoji.** Not in the title, headings or body. The voice skill bans them everywhere.
 - **Length target:** 800-1200 words of prose (not counting pros/cons/sidebar). 5-8 `h2` sections.
 - **No AI tells.** Avoid "In conclusion", "It's worth noting", "Delve", "Tapestry", "Vibrant", "In this article we will explore". Read the existing reviews in Sanity before drafting if you need a style reference (use `query_documents` to pull a sample).
 - **FTC-safe:** no unverifiable superlatives ("the best game ever made"). No uncited quotes from developers unless actually found via research.
@@ -196,7 +196,7 @@ Pick **4-5 criteria**. Scores should vary around `reviewScore` — some above, s
    - **Books/comics:** publisher cover art and preview pages.
    - **Gadgets:** manufacturer press images.
 
-   **Always VIEW each candidate with the Read tool before uploading.** Pick images that match the specific section they will sit under (a boss fight for the difficulty section, a build screen for the progression section) rather than dropping in the first four. Write a caption for each that says something the prose does not; the caption is also used as the alt text by the frontend renderer.
+   **Always VIEW each candidate with the Read tool before uploading.** Pick images that match the specific section they will sit under (a boss fight for the difficulty section, a build screen for the progression section) rather than dropping in the first four. Write a caption for each that says something the prose does not, plus a separate `alt` that plainly describes what is in the frame (who, where, what they are doing). The caption is commentary and credit; the alt is for screen readers and SEO.
 
 7. **Upload and attach the media** via a Node script using the repo's `@sanity/client` and `SANITY_API_TOKEN` parsed from `.env.local`. Two hard-won gotchas:
    - **`NODE_PATH=<repo>/node_modules node script.mjs` does NOT work.** ESM resolution ignores `NODE_PATH`. Copy the script to the repo root, run it there, then delete it.
@@ -207,7 +207,7 @@ Pick **4-5 criteria**. Scores should vary around `reviewScore` — some above, s
 8. **Create the `review` draft**, referencing the reviewableItem by published `_ref`.
 
 9. **Insert inline body images and the trailer into the Portable Text `content` array.** Anchor each insert to an existing block `_key` with `insert('after', 'content[_key=="<key>"]', [...])` so placement survives reordering. Block shapes:
-   - Image: `{_type: 'image', _key, asset: {_type: 'reference', _ref}, caption}`. The schema defines **`caption` only, no `alt` field**; the review page renders `alt={value.caption}`. Do not add an `alt` key, it shows as an unknown field in Studio.
+   - Image: `{_type: 'image', _key, asset: {_type: 'reference', _ref}, alt, caption}`. The schema requires `alt` (validation fails without it) and the review page renders `alt={value.alt || value.caption}`, so always set both.
    - Video: `{_type: 'videoEmbed', _key, url, caption}` under a "Watch the Trailer" h2 near the end, before the Verdict section. YouTube watch URLs work; verify the trailer URL actually resolves to the right video before embedding it (fetch the page and check the title). Steam's own trailers are DASH/HLS only and will not embed, so prefer the publisher's YouTube upload.
 
 10. **Do not publish the review.** Stop at the draft. Tell the user the draft is ready + give the Studio URL: `https://lmp.sanity.studio/desk/review;<reviewDocId>`, and list what media you attached.
@@ -242,7 +242,7 @@ Score: X.X/10
 
 <3 lines of pros — one per line prefixed with ►>
 
-Full review: lifemeetspixel.com/reviews/<slug>
+Full review: link in bio
 
 
 — Instagram story tagline (one line, ≤60 chars) —
@@ -254,7 +254,7 @@ Full review: lifemeetspixel.com/reviews/<slug>
 ═════════════════════════════════════════════════
 ```
 
-**NEVER use hashtags. Not one, on any platform.** Instagram ranks captions on search keywords now, and a hashtag block reads as spam. Work the searchable terms (title, itemType, studio/publisher, platform, genre, year) into natural sentences instead, strongest phrase first.
+**NEVER use hashtags. Not one, on any platform.** Instagram ranks captions on search keywords now, and a hashtag block reads as spam. Work the searchable terms (title, itemType, studio/publisher, platform, genre, year) into natural sentences instead, strongest phrase first. NEVER put a raw URL in the IG caption (not clickable, and IG demotes it): the CTA is always "link in bio". Facebook links are clickable, so the full URL goes there.
 
 ## Guardrails
 

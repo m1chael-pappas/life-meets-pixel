@@ -35,7 +35,7 @@ Default to **Michael** unless the story is clearly in Jenna's lane.
 - **Be skeptical.** If a publisher's announcement is clearly spin, say so. Don't parrot marketing copy.
 - **Attribute clearly.** "Bungie confirmed in a dev blog that…", "The studio posted on X that…", "According to reporting by Kotaku…". Link to sources using Portable Text link marks.
 - **Length target:** 300-600 words of prose. 3-5 `h2` sections for longer stories, 2-3 for short ones. Breaking news can be 200-300 words.
-- **No emoji overload.** 1 per section max; none in the title.
+- **No emoji.** Not in the title, headings or body. The voice skill bans them everywhere.
 - **No AI tells.** Avoid "In conclusion", "It's worth noting", "Delve", "Tapestry", "Vibrant", "In this article we will explore".
 - **FTC-safe:** no unverifiable claims. No fake quotes. Only use quotes you find in the primary source.
 
