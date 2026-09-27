@@ -1,4 +1,4 @@
-import { TICKER_QUERY, fetchOptions } from "@/lib/queries";
+import { TICKER_QUERY, fetchOptions } from "@/lib/content/queries";
 import { client } from "@/sanity/client";
 
 import { TickerBar, type TickerItem } from "./ticker-bar";

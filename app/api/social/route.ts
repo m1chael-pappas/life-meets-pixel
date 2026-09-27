@@ -8,7 +8,7 @@ import {
   postToSocials,
   processSocialQueue,
   queueForSocials,
-} from '@/lib/social';
+} from '@/lib/pipeline/social';
 import { writeClient } from '@/sanity/write-client';
 
 // Copy generation + headless render + Graph API posting.

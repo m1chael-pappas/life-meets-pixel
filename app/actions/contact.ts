@@ -2,7 +2,7 @@
 
 import { Resend } from "resend";
 
-import { SITE_CONFIG } from "@/lib/constants";
+import { SITE_CONFIG } from "@/lib/site/constants";
 
 type ActionResult = { ok: true } | { ok: false; error: string };
 

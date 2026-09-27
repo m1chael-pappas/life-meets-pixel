@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
-import { commentsEnabled, db, ensureSchema } from "@/lib/comments-db";
-import { getMembership } from "@/lib/membership";
+import { commentsEnabled, db, ensureSchema } from "@/lib/members/comments-db";
+import { getMembership } from "@/lib/members/membership";
 
 // Voting requires sign-in but not a paid membership: reacting is the free
 // on-ramp, posting is the perk.

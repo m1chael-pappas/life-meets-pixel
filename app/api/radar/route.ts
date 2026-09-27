@@ -11,11 +11,11 @@ import {
   getRadarSources,
   RankedStory,
   rankStories,
-} from '@/lib/radar';
+} from '@/lib/pipeline/radar';
 import {
   sendCandidateCard,
   sendMessage,
-} from '@/lib/telegram';
+} from '@/lib/pipeline/telegram';
 import { writeClient } from '@/sanity/write-client';
 
 // Fluid compute: feed fetches + the ranking call can take a couple of minutes.

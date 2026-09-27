@@ -8,11 +8,11 @@ import {
   db,
   ensureSchema,
   type CommentRow,
-} from "@/lib/comments-db";
-import { SITE_CONFIG } from "@/lib/constants";
-import { getMembership, MEMBER_FEATURES } from "@/lib/membership";
-import { COMMENT_TARGET_QUERY } from "@/lib/queries";
-import { escapeHtml, sendMessage } from "@/lib/telegram";
+} from "@/lib/members/comments-db";
+import { SITE_CONFIG } from "@/lib/site/constants";
+import { getMembership, MEMBER_FEATURES } from "@/lib/members/membership";
+import { COMMENT_TARGET_QUERY } from "@/lib/content/queries";
+import { escapeHtml, sendMessage } from "@/lib/pipeline/telegram";
 import { client } from "@/sanity/client";
 
 const MAX_BODY = 2000;

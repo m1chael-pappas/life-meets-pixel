@@ -1,4 +1,4 @@
-import { RSS_CHANNEL, SOCIAL_CHANNELS } from "@/lib/constants";
+import { RSS_CHANNEL, SOCIAL_CHANNELS } from "@/lib/site/constants";
 
 /** The social tile grid: every channel in `SOCIAL_CHANNELS`, then the RSS feed. */
 export function SocialTiles() {

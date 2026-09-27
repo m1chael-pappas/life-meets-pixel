@@ -5,7 +5,7 @@ import {
 } from 'next/server';
 import { waitUntil } from '@vercel/functions';
 
-import { draftFromCandidate } from '@/lib/drafting';
+import { draftFromCandidate } from '@/lib/pipeline/drafting';
 import { writeClient } from '@/sanity/write-client';
 
 // Drafting runs as two chained invocations (research, then write) because the

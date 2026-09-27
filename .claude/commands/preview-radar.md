@@ -27,7 +27,7 @@ The best find is a game with genuine momentum that the big outlets have not satu
 
 ## Sources
 
-Read `lib/news-radar-sources.json`. Use the **`_upcoming`** key, which the news radar ignores:
+Read `lib/pipeline/news-radar-sources.json`. Use the **`_upcoming`** key, which the news radar ignores:
 
 ```json
 "_upcoming": {
@@ -44,7 +44,7 @@ Also pull from the `press` and `anime` RSS groups in the same config, but filter
 
 ## Execution steps
 
-1. **Read the source config**: `lib/news-radar-sources.json`.
+1. **Read the source config**: `lib/pipeline/news-radar-sources.json`.
 2. **Fetch in parallel**, in a single turn:
    - `_upcoming.calendars` (Steam Upcoming, Top Wishlisted, Popular Upcoming, Next Fest if live).
    - `_upcoming.anime_calendars` if the filter includes anime or is absent.

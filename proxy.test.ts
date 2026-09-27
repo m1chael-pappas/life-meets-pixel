@@ -11,7 +11,7 @@ const ROOT = __dirname;
 /** Names whose call needs clerkMiddleware() on the request, by the module they come from. */
 const SESSION_READERS: Record<string, string[]> = {
   "@clerk/nextjs/server": ["auth", "currentUser"],
-  "@/lib/membership": ["getMembership", "requireAdmin"],
+  "@/lib/members/membership": ["getMembership", "requireAdmin"],
 };
 
 function walk(dir: string): string[] {

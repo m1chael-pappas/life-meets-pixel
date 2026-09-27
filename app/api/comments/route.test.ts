@@ -23,17 +23,17 @@ vi.mock("next/server", async (importOriginal) => ({
   ...(await importOriginal<typeof import("next/server")>()),
   after: vi.fn(),
 }));
-vi.mock("@/lib/comments-db", () => ({
+vi.mock("@/lib/members/comments-db", () => ({
   commentsEnabled: () => true,
   ensureSchema: async () => undefined,
   db: () => mocks.sql,
 }));
-vi.mock("@/lib/membership", () => ({
+vi.mock("@/lib/members/membership", () => ({
   getMembership: mocks.getMembership,
   MEMBER_FEATURES: { adFree: "ad_free", comments: "comments", fullRss: "full_rss", memberPosts: "member_posts" },
 }));
 vi.mock("@clerk/nextjs/server", () => ({ currentUser: mocks.currentUser }));
-vi.mock("@/lib/telegram", () => ({ escapeHtml: (s: string) => s, sendMessage: vi.fn() }));
+vi.mock("@/lib/pipeline/telegram", () => ({ escapeHtml: (s: string) => s, sendMessage: vi.fn() }));
 vi.mock("@/sanity/client", () => ({ client: { fetch: vi.fn() } }));
 
 type Features = string[];

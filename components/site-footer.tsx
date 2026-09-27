@@ -1,7 +1,7 @@
 import Link from "next/link";
 
-import { currentYear } from "@/lib/clock";
-import { SOCIAL_CHANNELS } from "@/lib/constants";
+import { currentYear } from "@/lib/site/clock";
+import { SOCIAL_CHANNELS } from "@/lib/site/constants";
 
 export async function SiteFooter() {
   const year = await currentYear();

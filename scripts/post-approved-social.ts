@@ -4,7 +4,7 @@
 // point is that what ships is what was signed off.
 //
 // Renders with a locally installed chrome-headless-shell against the dev
-// server, because @sparticuz/chromium-min in lib/social.ts targets Vercel's
+// server, because @sparticuz/chromium-min in lib/pipeline/social.ts targets Vercel's
 // Lambda environment.
 //
 //   RENDER_ONLY=1 pnpm tsx scripts/post-approved-social.ts   # render + preview, no posting
@@ -137,7 +137,7 @@ async function main() {
   }
 
   const { metaConfigured, postCarouselToInstagram, postPhotosToFacebook } = await import(
-    '../lib/meta'
+    '../lib/pipeline/meta'
   );
   if (!metaConfigured()) throw new Error('Meta not configured');
 

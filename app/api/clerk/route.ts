@@ -2,7 +2,7 @@
 import { verifyWebhook } from "@clerk/nextjs/webhooks";
 import { NextRequest, NextResponse } from "next/server";
 
-import { escapeHtml, sendMessage } from "@/lib/telegram";
+import { escapeHtml, sendMessage } from "@/lib/pipeline/telegram";
 
 // Clerk webhook receiver: pings Telegram when somebody signs up or when a
 // membership starts, churns or goes past due. Without this the site is silent

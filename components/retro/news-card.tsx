@@ -2,8 +2,8 @@ import { format } from "date-fns";
 import Image from "next/image";
 import Link from "next/link";
 
-import { paletteAccent } from "@/lib/mappings";
-import type { NewsPost } from "@/lib/types";
+import { paletteAccent } from "@/lib/content/mappings";
+import type { NewsPost } from "@/lib/content/types";
 
 export function NewsCard({
   post,

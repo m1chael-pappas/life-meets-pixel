@@ -1,9 +1,9 @@
 import Image from "next/image";
 import Link from "next/link";
 
-import { relativeFromNow } from "@/lib/clock";
-import { itemTypeToCat } from "@/lib/mappings";
-import type { Review } from "@/lib/types";
+import { relativeFromNow } from "@/lib/site/clock";
+import { itemTypeToCat } from "@/lib/content/mappings";
+import type { Review } from "@/lib/content/types";
 
 import { AuthorChip } from "./author-chip";
 import { CatBadge } from "./cat-badge";

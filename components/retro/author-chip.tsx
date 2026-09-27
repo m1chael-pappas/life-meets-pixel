@@ -1,4 +1,4 @@
-import { authorAccent, authorInitial } from "@/lib/mappings";
+import { authorAccent, authorInitial } from "@/lib/content/mappings";
 
 export function AuthorChip({
   name,

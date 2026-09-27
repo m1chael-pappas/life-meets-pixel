@@ -4,7 +4,7 @@ import { join } from "node:path";
 import { NextRequest } from "next/server";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import { PUBLISH_TAGS, TAGS } from "@/lib/cache-tags";
+import { PUBLISH_TAGS, TAGS } from "@/lib/content/cache-tags";
 
 const cache = vi.hoisted(() => ({ revalidatePath: vi.fn(), revalidateTag: vi.fn() }));
 vi.mock("next/cache", () => cache);

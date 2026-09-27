@@ -305,7 +305,7 @@ Three complete re-mappings ship alongside Midnight Neon, switched by `data-palet
 
 **The Both-Ways Rule.** Any token used as both a foreground and a background needs its counterpart tokenised too. Text sitting on a neon fill is `var(--on-accent)`, never `#000` — when Candy's accents were darkened for legibility as *text*, black-on-accent fell to 3.32:1 as a *background*. The same trap runs the other way: the hard chips that sit on imagery (score box, category badge, social mark, author avatar) hardcoded a `#000` *ground* under a tokenised `color`, which put Candy's deliberately-darkened accents at 3.31:1 on black. Those grounds are now `var(--chip-ground)`, defined once as `var(--bg-0)` so it re-resolves per palette without an override. After changing any colour token, grep for it as a `background:` value, not just as a `color:` value.
 
-**The No-CMS-Colour Rule.** A colour that arrives from Sanity is a literal hex and knows nothing about the palette. An author's `accentColor` was applied inline and rendered `#3ee8ff` on every palette — 1.24:1 on Candy — and no CSS audit could ever find it, because the value never appears in a stylesheet. Stored colours are snapped to the nearest accent token with `paletteAccent()` in `lib/mappings.ts` before they reach a `style` prop. Brand colours are subject to the same rule: Discord's blurple is a token here, not `#a3adf6`.
+**The No-CMS-Colour Rule.** A colour that arrives from Sanity is a literal hex and knows nothing about the palette. An author's `accentColor` was applied inline and rendered `#3ee8ff` on every palette — 1.24:1 on Candy — and no CSS audit could ever find it, because the value never appears in a stylesheet. Stored colours are snapped to the nearest accent token with `paletteAccent()` in `lib/content/mappings.ts` before they reach a `style` prop. Brand colours are subject to the same rule: Discord's blurple is a token here, not `#a3adf6`.
 
 **The Focus Ring Is Not An Accent Rule.** `--focus-ring` is its own token and must never be pointed at `--neon-*`. The accent that reads on a dark ground is invisible on the light one; Candy's focus ring is near-black by design.
 
@@ -480,7 +480,7 @@ Tactile and clicky: these are physical hardware, and they move.
 
 **The HP Bar.** The core editorial artifact. A labelled row per score component, with a 20-cell discrete meter at 12px tall and 2px gaps — filled cells take lime, gold or damage red from the same `scoreTone` thresholds the score box uses, unfilled cells stay `--bg-3`. It carries a real `role="progressbar"` with `aria-valuenow`/`min`/`max` and a spoken label; the cells themselves are `aria-hidden`. Rows are separated by 1px dotted rules. **Never render a smooth or gradient-filled progress bar in this system** — the discreteness is the point, and it is the visual expression of "the breakdown matters more than the headline figure."
 
-**The Score Box.** Black fill, 2px border, Press Start 2P 14px, one decimal place, colour-coded by tone with border and text always matching. `scoreTone()` in `lib/mappings.ts` is the single source of truth: **lime ≥8.0, gold 6.0–7.9, damage red <6.0**. These three tones group the six named bands published on `/about`, so the colour channel and the written scale stay in agreement — change one and you must change the other. Anchored bottom-right of a card's media well.
+**The Score Box.** Black fill, 2px border, Press Start 2P 14px, one decimal place, colour-coded by tone with border and text always matching. `scoreTone()` in `lib/content/mappings.ts` is the single source of truth: **lime ≥8.0, gold 6.0–7.9, damage red <6.0**. These three tones group the six named bands published on `/about`, so the colour channel and the written scale stay in agreement — change one and you must change the other. Anchored bottom-right of a card's media well.
 
 **The Heart Row.** Five hand-plotted 9×9 pixel hearts rendering the same score in halves — full, half, empty. It is redundant with the score box on purpose: the number is for the reader who wants precision, the hearts for the reader scanning.
 
@@ -502,7 +502,7 @@ Tactile and clicky: these are physical hardware, and they move.
 - **Do** keep body copy in JetBrains Mono at ≤72ch, and reserve Press Start 2P for headings, labels, numbers and buttons.
 - **Do** pair every hover transform with its shadow change (`-2px` / deeper offset), and give pressable things a real `:active` state (`+2px` / no offset).
 - **Do** use border weight as hierarchy: 1px divides, 2px trims a control, 3px builds a card, 4px frames an article, 6px is the CRT.
-- **Do** render new iconography as pixel-grid sprites in `components/retro/sprites.tsx` and new item types through `lib/mappings.ts` — one card component serves all eight types.
+- **Do** render new iconography as pixel-grid sprites in `components/retro/sprites.tsx` and new item types through `lib/content/mappings.ts` — one card component serves all eight types.
 - **Do** give focusable elements a visible ring; the global `:where(…):focus-visible` rule at `3px solid var(--focus-ring)` with a 2px offset is the floor, and components that clear the UA outline must restore it explicitly.
 - **Do** state a score in more than one channel — number, colour tone, and meter fill — so the verdict never depends on colour alone.
 

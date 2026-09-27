@@ -54,7 +54,7 @@ This is the claim the owner would defend hardest, and it is the one a neighbouri
 **Technical constraints**
 
 - Next.js 15 App Router + React 19; Sanity Studio is a separate React 18 workspace and is not to be unified with the frontend.
-- All GROQ lives in `lib/queries.ts`. One card component renders all eight item types; per-type forks are prohibited — extend `lib/mappings.ts` and `components/retro/sprites.tsx` instead.
+- All GROQ lives in `lib/content/queries.ts`. One card component renders all eight item types; per-type forks are prohibited — extend `lib/content/mappings.ts` and `components/retro/sprites.tsx` instead.
 - Cache invalidation is webhook-driven `revalidatePath`, not tag-based. A new Sanity `_type` requires updating the switch in `app/api/revalidate/route.ts`.
 - Every optional integration degrades to *absent*, not broken: without Clerk keys, membership is disabled and no auth UI renders; without AdSense keys, no ad slots render; without `DATABASE_URL`, comments and member RSS hide. Designs must hold up in the degraded state.
 - pnpm workspace. Vercel build is the only CI gate; there are no automated tests.
@@ -79,7 +79,7 @@ This is the claim the owner would defend hardest, and it is the one a neighbouri
 - **Real site statistics** rendered live on `/about` from `SITE_STATS_QUERY` — total reviews, total news, average score, publishing since 2025. These are queried, never hardcoded.
 - **A published editorial standards page** at `/about` covering the scoring scale, how a review gets made, image and video sourcing, affiliate and ad policy, corrections, and who writes here. This is the site's proof asset and it is already written; future surfaces should link to it rather than restating claims.
 - **Real legal pages** at `/legal/affiliate-disclosure`, `/legal/privacy`, `/legal/terms`.
-- **Real social presence:** Instagram `@life_meets_pixel`, a Facebook page, and a Discord invite, all in `lib/constants.ts`.
+- **Real social presence:** Instagram `@life_meets_pixel`, a Facebook page, and a Discord invite, all in `lib/site/constants.ts`.
 - **Absences future work must not fabricate:** there are no testimonials, no reader quotes, no press mentions, no traffic or subscriber numbers, no awards, no partner or publisher logos, and no member count. The site launched in 2025 and is self-funded by one person. Do not invent social proof, and do not design a surface whose structure requires it.
 
 ## Product Principles

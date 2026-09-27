@@ -5,7 +5,7 @@ import {
   NextResponse,
 } from 'next/server';
 
-import { PUBLISH_TAGS, TAGS } from '@/lib/cache-tags';
+import { PUBLISH_TAGS, TAGS } from '@/lib/content/cache-tags';
 
 // Secret token to secure the webhook
 const REVALIDATE_SECRET = process.env.REVALIDATE_SECRET;

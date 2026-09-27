@@ -17,7 +17,7 @@ const nextConfig: NextConfig = {
     // transformation costs entirely (remotePatterns are unused with a
     // custom loader).
     loader: "custom",
-    loaderFile: "./lib/image-loader.ts",
+    loaderFile: "./lib/site/image-loader.ts",
   },
 
   // The webpack() hook that used to live here is gone. Next 16 builds with

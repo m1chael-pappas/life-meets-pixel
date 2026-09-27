@@ -1,4 +1,4 @@
-import type { RetroCat } from "@/lib/mappings";
+import type { RetroCat } from "@/lib/content/mappings";
 
 type SpriteProps = { size?: number };
 

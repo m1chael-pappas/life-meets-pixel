@@ -15,19 +15,19 @@ const mocks = vi.hoisted(() => ({
 vi.mock("@/sanity/write-client", () => ({
   writeClient: { fetch: vi.fn(), patch: vi.fn(), createIfNotExists: vi.fn() },
 }));
-vi.mock("@/lib/radar", () => ({
+vi.mock("@/lib/pipeline/radar", () => ({
   fetchRecentItems: vi.fn(),
   getRadarSources: mocks.getRadarSources,
   rankStories: vi.fn(),
 }));
-vi.mock("@/lib/social", () => ({
+vi.mock("@/lib/pipeline/social", () => ({
   postToSocials: vi.fn(),
   processSocialQueue: mocks.processSocialQueue,
   queueForSocials: vi.fn(),
 }));
-vi.mock("@/lib/drafting", () => ({ draftFromCandidate: vi.fn() }));
+vi.mock("@/lib/pipeline/drafting", () => ({ draftFromCandidate: vi.fn() }));
 vi.mock("@vercel/functions", () => ({ waitUntil: mocks.waitUntil }));
-vi.mock("@/lib/telegram", () => ({
+vi.mock("@/lib/pipeline/telegram", () => ({
   answerCallbackQuery: vi.fn(),
   editMessageText: vi.fn(),
   escapeHtml: (s: string) => s,

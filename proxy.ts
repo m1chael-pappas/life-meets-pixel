@@ -2,14 +2,14 @@ import { NextResponse, type NextRequest } from "next/server";
 
 import { clerkMiddleware } from "@clerk/nextjs/server";
 
-import { isPageOutOfRange } from "@/lib/page-bounds";
+import { isPageOutOfRange } from "@/lib/content/page-bounds";
 
 // Renamed from middleware.ts in the Next 16 upgrade. The `middleware`
 // convention is deprecated in favour of `proxy`, which makes the network
 // boundary explicit — and which runs on the Node.js runtime, not edge.
 //
 // Clerk only attaches auth context here — nothing is blocked at the boundary.
-// Route protection lives with the routes themselves (lib/membership.ts).
+// Route protection lives with the routes themselves (lib/members/membership.ts).
 // Without Clerk keys that half is a no-op so the site runs unchanged.
 const clerkEnabled = Boolean(
   process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY && process.env.CLERK_SECRET_KEY
@@ -76,10 +76,10 @@ export default proxy;
  * public page is a CLIENT hook (`useAuth`/`useUser` in the ad slot and comment
  * UI) reading session state through `ClerkProvider` in the root layout, which
  * works without any middleware. The site header touches Clerk not at all.
- * Server-side Clerk exists in exactly three places: `lib/membership.ts` (called
+ * Server-side Clerk exists in exactly three places: `lib/members/membership.ts` (called
  * by `/account`, `/admin`, `/api/comments` and `/api/rss-token`),
  * `app/api/comments/route.ts`,
- * and `lib/rss.ts`. Any new route that calls `auth()` must be listed below, or
+ * and `lib/members/rss.ts`. Any new route that calls `auth()` must be listed below, or
  * Clerk throws and the route answers 500.
  *
  * So the list below is: the routes that read auth on the server, Clerk's own

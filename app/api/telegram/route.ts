@@ -14,7 +14,7 @@ import {
   parseCallbackData,
   sendMessage,
   StoryCandidateCard,
-} from '@/lib/telegram';
+} from '@/lib/pipeline/telegram';
 import { writeClient } from '@/sanity/write-client';
 
 // Telegram sends this header when the webhook was registered with a secret_token.

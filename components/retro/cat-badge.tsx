@@ -1,4 +1,4 @@
-import { CAT_LABELS, type RetroCat } from "@/lib/mappings";
+import { CAT_LABELS, type RetroCat } from "@/lib/content/mappings";
 
 import { CatSprite } from "./sprites";
 

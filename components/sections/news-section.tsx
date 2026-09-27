@@ -1,8 +1,8 @@
 import Link from "next/link";
 
 import { NewsCard } from "@/components/retro/news-card";
-import { NEWS_QUERY, fetchOptions } from "@/lib/queries";
-import type { NewsPost } from "@/lib/types";
+import { NEWS_QUERY, fetchOptions } from "@/lib/content/queries";
+import type { NewsPost } from "@/lib/content/types";
 import { client } from "@/sanity/client";
 
 export default async function NewsSection() {

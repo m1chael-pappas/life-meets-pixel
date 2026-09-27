@@ -10,8 +10,8 @@ import { ClerkProvider } from "@clerk/nextjs";
 
 import { KonamiEasterEgg } from "@/components/retro/konami";
 import { JsonLd } from "@/components/seo/json-ld";
-import { graph, organizationSchema, websiteSchema } from "@/lib/schema";
-import { clerkAppearance } from "@/lib/clerk-appearance";
+import { graph, organizationSchema, websiteSchema } from "@/lib/content/schema";
+import { clerkAppearance } from "@/lib/members/clerk-appearance";
 import { SoundEffects } from "@/components/retro/sound-effects";
 import { SiteFooter } from "@/components/site-footer";
 import { GoogleAnalytics } from "@next/third-parties/google";

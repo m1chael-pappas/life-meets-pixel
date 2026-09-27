@@ -2,8 +2,8 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { HeartRow } from "@/components/retro/heart-row";
-import { getHeroPool } from "@/lib/hero-pool";
-import { itemTypeToCat, scoreTone } from "@/lib/mappings";
+import { getHeroPool } from "@/lib/content/hero-pool";
+import { itemTypeToCat, scoreTone } from "@/lib/content/mappings";
 
 export default async function HeroSection() {
   const { feature: hero, topTen } = await getHeroPool();

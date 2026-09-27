@@ -1,7 +1,7 @@
 import Link from "next/link";
 
-import { CAT_LABELS, ITEM_TYPES, itemTypeToCat } from "@/lib/mappings";
-import type { ReviewableItem } from "@/lib/types";
+import { CAT_LABELS, ITEM_TYPES, itemTypeToCat } from "@/lib/content/mappings";
+import type { ReviewableItem } from "@/lib/content/types";
 
 type Counts = Partial<Record<ReviewableItem["itemType"] | "all", number>>;
 

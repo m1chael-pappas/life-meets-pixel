@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 
-import { getMembership, MEMBER_FEATURES } from "@/lib/membership";
-import { getOrCreateRssToken, rotateRssToken, rssFeedsEnabled } from "@/lib/rss";
+import { getMembership, MEMBER_FEATURES } from "@/lib/members/membership";
+import { getOrCreateRssToken, rotateRssToken, rssFeedsEnabled } from "@/lib/members/rss";
 
 async function requireFullRssMember() {
   const membership = await getMembership();

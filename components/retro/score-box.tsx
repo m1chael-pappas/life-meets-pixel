@@ -1,4 +1,4 @@
-import { scoreTone } from "@/lib/mappings";
+import { scoreTone } from "@/lib/content/mappings";
 
 export function ScoreBox({
   score,

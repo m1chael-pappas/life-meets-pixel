@@ -22,8 +22,8 @@ Any decision, convention, performance finding, or gotcha discovered during a ses
 
 ## Non-negotiable rules
 
-- **All GROQ lives in `lib/queries.ts`.** Don't inline GROQ in components/pages (sitemap + one-off scripts excepted).
-- **`components/retro/review-card.tsx` renders all 8 item types.** Don't fork per-type cards — extend `lib/mappings.ts` + `components/retro/sprites.tsx`.
+- **All GROQ lives in `lib/content/queries.ts`.** Don't inline GROQ in components/pages (sitemap + one-off scripts excepted).
+- **`components/retro/review-card.tsx` renders all 8 item types.** Don't fork per-type cards — extend `lib/content/mappings.ts` + `components/retro/sprites.tsx`.
 - **`/api/revalidate` is gated on `REVALIDATE_SECRET`.** If you add a new Sanity `_type`, update the `switch` in `app/api/revalidate/route.ts` or edits won't reflect until the 30s cache window lapses.
 - **Every affiliate surface links to `/legal/affiliate-disclosure`.** FTC + ACL requirement.
 - **Studio (`studio/`) is React 18 + Sanity 3.99.** Frontend is React 19. Don't try to unify.
@@ -54,7 +54,7 @@ Upload with `@sanity/client` `assets.upload('image', stream, {filename})`, then 
 - Bad: `Marvel dropped the slate. #LifeMeetsPixel #Marvel #MCU #ComicCon`
 - Good: `The Avengers: Doomsday slate after San Diego Comic-Con 2026 is four Marvel movies in three years.`
 
-Searchable terms worth weaving in: title, studio/publisher, platform, genre, year, event name. This applies to the `igCaption` and `fbMessage` in `lib/social.ts`, and to the social pack in `.claude/commands/draft-news.md` and `draft-review.md`. Keep all four in sync.
+Searchable terms worth weaving in: title, studio/publisher, platform, genre, year, event name. This applies to the `igCaption` and `fbMessage` in `lib/pipeline/social.ts`, and to the social pack in `.claude/commands/draft-news.md` and `draft-review.md`. Keep all four in sync.
 
 The CTA in an Instagram caption is always "link in bio". Never a raw URL (not clickable, and IG demotes it). Facebook links are clickable, so the full URL goes there.
 
