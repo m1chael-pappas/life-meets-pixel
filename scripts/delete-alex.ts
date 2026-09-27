@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import { createClient } from '@sanity/client';
 import { config } from 'dotenv';
 import { resolve } from 'path';

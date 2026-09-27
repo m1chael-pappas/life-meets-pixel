@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 import { useAuth, useUser } from "@clerk/nextjs";
 
@@ -20,16 +21,19 @@ interface Comment {
   my_vote: number | null;
 }
 
+/** The comments on `postId`, or null when the API answers with an error. */
+async function fetchComments(postId: string): Promise<Comment[] | null> {
+  const res = await fetch(`/api/comments?postId=${encodeURIComponent(postId)}`);
+  return res.ok ? (await res.json()).comments : null;
+}
+
 export default function CommentSection({ postId }: { postId: string }) {
   const [comments, setComments] = useState<Comment[] | null>(null);
 
-  const load = useCallback(async () => {
-    const res = await fetch(`/api/comments?postId=${encodeURIComponent(postId)}`);
-    if (res.ok) {
-      const data = await res.json();
-      setComments(data.comments);
-    }
-  }, [postId]);
+  const load = useCallback(
+    () => fetchComments(postId).then((next) => next && setComments(next)),
+    [postId],
+  );
 
   useEffect(() => {
     load();
@@ -117,10 +121,11 @@ function CommentItem({
   const [likes, setLikes] = useState(comment.likes ?? 0);
   const [dislikes, setDislikes] = useState(comment.dislikes ?? 0);
   const [myVote, setMyVote] = useState<number | null>(comment.my_vote ?? null);
+  const router = useRouter();
 
   const vote = async (v: 1 | -1) => {
     if (!signedIn) {
-      window.location.href = "/sign-in";
+      router.push("/sign-in");
       return;
     }
     const next = myVote === v ? 0 : v; // clicking your own vote retracts it

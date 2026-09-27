@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 // One-off poster for a carousel that Michael has already approved slide by
 // slide in /social-preview. Deliberately does NOT call generateCopy: the whole
 // point is that what ships is what was signed off.

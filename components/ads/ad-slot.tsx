@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 
 import { useAuth, useUser } from "@clerk/nextjs";
 
@@ -42,17 +42,17 @@ function MemberGate({ adSlot }: { adSlot?: string }) {
 
 function AdUnit({ adSlot }: { adSlot?: string }) {
   const ref = useRef<HTMLModElement>(null);
-  const [pushed, setPushed] = useState(false);
+  const pushed = useRef(false);
 
   useEffect(() => {
-    if (!ADSENSE_CLIENT || !adSlot || pushed || !ref.current) return;
+    if (!ADSENSE_CLIENT || !adSlot || pushed.current || !ref.current) return;
     try {
       (window.adsbygoogle = window.adsbygoogle || []).push({});
-      setPushed(true);
+      pushed.current = true;
     } catch {
       // AdSense script blocked or not loaded yet; leave the slot empty.
     }
-  }, [adSlot, pushed]);
+  }, [adSlot]);
 
   if (!ADSENSE_CLIENT || !adSlot) {
     if (DEV) {

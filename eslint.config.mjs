@@ -43,20 +43,12 @@ const eslintConfig = [
       'prefer-const': 'error',
       'react-hooks/exhaustive-deps': 'warn',
       'react/display-name': 'off',
-
-      // New in eslint-config-next 16, from the React Compiler rule set. It
-      // fires on four components — the header clock, the tweaks panel, the
-      // comment gate and the ad slot — and in every case the setState is the
-      // hydration-safe pattern, not a cascading render: the value cannot exist
-      // during SSR (Date.now(), localStorage, window.adsbygoogle) so it has to
-      // be set after mount or the markup mismatches.
-      //
-      // Kept as a warning rather than silenced: useSyncExternalStore is the
-      // right long-term answer for the localStorage ones. Downgraded rather
-      // than fixed because rewriting working effects is a refactor, not part
-      // of a version upgrade.
-      'react-hooks/set-state-in-effect': 'warn',
     },
+  },
+  {
+    // CLI scripts report through stdout.
+    files: ['scripts/**'],
+    rules: { 'no-console': 'off' },
   },
 ];
 
