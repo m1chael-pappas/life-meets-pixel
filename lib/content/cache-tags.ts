@@ -5,7 +5,7 @@
  * Under Cache Components, `cacheLife` is only the self-heal fallback; the
  * webhook is what actually makes content appear. That is the same division of
  * labour the old `revalidatePath` setup had, and the same rule applies: if you
- * add a Sanity `_type`, give it a tag here AND wire it into the switch in
+ * add a Sanity `_type` that renders on the site, add it to `RENDERED_TYPES` in
  * `app/api/revalidate/route.ts`, or edits will not surface until the fallback
  * window lapses.
  *

@@ -1,10 +1,10 @@
-import { readdirSync, readFileSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 
 import { NextRequest } from "next/server";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import { PUBLISH_TAGS, TAGS } from "@/lib/content/cache-tags";
+import { PUBLISH_TAGS } from "@/lib/content/cache-tags";
 
 const cache = vi.hoisted(() => ({ revalidatePath: vi.fn(), revalidateTag: vi.fn() }));
 vi.mock("next/cache", () => cache);
@@ -13,6 +13,7 @@ vi.mock("next/cache", () => cache);
 const NOT_RENDERED = new Set(["storyCandidate"]);
 
 const SCHEMA_DIR = join(__dirname, "../../../studio/schemaTypes");
+const APP_DIR = join(__dirname, "../..");
 
 /** Every `type: 'document'` declared in the Studio schema, by name. */
 function studioDocumentTypes(): string[] {
@@ -37,8 +38,14 @@ function webhook(body: unknown, secret = "right") {
   });
 }
 
-const paths = () => cache.revalidatePath.mock.calls.map(([p]) => p);
 const tags = () => cache.revalidateTag.mock.calls.map(([t]) => t);
+const expiredEveryRoute = () => cache.revalidatePath.mock.calls.some(([p, type]) => p === "/" && type === "layout");
+
+/** True when a typed `revalidatePath` names a real route folder, route groups included. */
+function namesRouteFolder(path: string, type: "page" | "layout"): boolean {
+  const dir = join(APP_DIR, path);
+  return type === "layout" ? existsSync(dir) : ["page.tsx", "page.ts", "route.ts"].some((f) => existsSync(join(dir, f)));
+}
 
 beforeEach(() => vi.stubEnv("REVALIDATE_SECRET", "right"));
 
@@ -59,37 +66,45 @@ describe("/api/revalidate", () => {
     expect(cache.revalidatePath).not.toHaveBeenCalled();
   });
 
-  it("refreshes a review, its listing, the homepage and both feeds", async () => {
-    const { POST } = await loadRoute();
-    await POST(webhook({ _type: "review", slug: { current: "lost-judgment-review" } }));
-    expect(paths()).toEqual(
-      expect.arrayContaining(["/reviews/lost-judgment-review", "/reviews", "/", "/sitemap.xml", "/feed.xml"]),
-    );
-    expect(tags()).toEqual(expect.arrayContaining([TAGS.reviews, TAGS.feeds]));
-  });
-
-  it("refreshes a news post, its listing, the homepage and both feeds", async () => {
-    const { POST } = await loadRoute();
-    await POST(webhook({ _type: "newsPost", slug: { current: "some-post" } }));
-    expect(paths()).toEqual(expect.arrayContaining(["/news/some-post", "/news", "/", "/sitemap.xml", "/feed.xml"]));
-    expect(tags()).toEqual(expect.arrayContaining([TAGS.news, TAGS.feeds]));
-  });
-
-  it("refreshes an author page and every tag", async () => {
-    const { POST } = await loadRoute();
-    await POST(webhook({ _type: "author", slug: { current: "michael" } }));
-    expect(paths()).toEqual(expect.arrayContaining(["/author/michael", "/"]));
-    expect(tags()).toEqual(expect.arrayContaining([...PUBLISH_TAGS]));
-  });
-
   it.each(studioDocumentTypes().filter((t) => !NOT_RENDERED.has(t)))(
-    "handles the Studio document type %s explicitly, not through the homepage-only fallback",
+    "expires every route and every tag when a published %s changes",
     async (type) => {
       const { POST } = await loadRoute();
-      await POST(webhook({ _type: type, slug: { current: "x" } }));
-      expect(paths()).not.toEqual(["/"]);
+      await POST(webhook({ _id: "abc", _type: type, slug: { current: "x" } }));
+      expect(expiredEveryRoute()).toBe(true);
+      expect(tags()).toEqual(expect.arrayContaining([...PUBLISH_TAGS]));
     },
   );
+
+  it("expires only the homepage and the tags for a type the site never renders", async () => {
+    const { POST } = await loadRoute();
+    await POST(webhook({ _id: "abc", _type: "storyCandidate" }));
+    expect(expiredEveryRoute()).toBe(false);
+    expect(cache.revalidatePath).toHaveBeenCalledWith("/");
+  });
+
+  it("ignores draft mutations, which the tokenless read client never sees", async () => {
+    const { POST } = await loadRoute();
+    const res = await POST(webhook({ _id: "drafts.abc", _type: "review", slug: { current: "x" } }));
+    expect(res.status).toBe(200);
+    expect(cache.revalidatePath).not.toHaveBeenCalled();
+    expect(cache.revalidateTag).not.toHaveBeenCalled();
+  });
+
+  it("only passes typed paths that name a real route folder under app/", async () => {
+    const { POST } = await loadRoute();
+    for (const type of [...studioDocumentTypes(), "unknownType"]) {
+      await POST(webhook({ _id: "abc", _type: type, slug: { current: "x" } }));
+    }
+    const typed = cache.revalidatePath.mock.calls.filter(([, type]) => type);
+    expect(typed.length).toBeGreaterThan(0);
+    for (const [path, type] of typed) expect(namesRouteFolder(path, type), `${path} (${type})`).toBe(true);
+  });
+
+  it("recognises a typed path that misses a route group", () => {
+    expect(namesRouteFolder("/reviews", "page")).toBe(false);
+    expect(namesRouteFolder("/(site)/reviews/(listing)", "page")).toBe(true);
+  });
 
   it("finds the Studio schema, so the check above is not vacuous", () => {
     expect(studioDocumentTypes()).toEqual(expect.arrayContaining(["review", "newsPost", "author", "storyCandidate"]));
