@@ -57,3 +57,6 @@ __pycache__/
 # critique snapshots are tracked, these are machine-local)
 .impeccable/hook.cache.json
 .impeccable/live/
+
+# Claude Code agent worktrees (isolated checkouts, never committed)
+.claude/worktrees/

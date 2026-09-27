@@ -19,6 +19,7 @@ const eslintConfig = [
       'build/**',
       'dist/**',
       'studio/**',
+      '.claude/worktrees/**',
       'next-env.d.ts',
       // A library of reference snippets for Sanity operations, not executed
       // code — every export is unused by design. `next lint` never saw it
