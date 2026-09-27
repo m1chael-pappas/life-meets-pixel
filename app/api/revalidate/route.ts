@@ -107,12 +107,6 @@ export async function POST(request: NextRequest) {
         expire(TAGS.reviews, TAGS.feeds);
         break;
 
-      case "siteStats":
-        // Revalidate homepage (shows stats)
-        revalidatePath("/");
-        expire(TAGS.reviews);
-        break;
-
       default:
         // For any other document type, revalidate homepage
         revalidatePath("/");
