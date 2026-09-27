@@ -73,11 +73,13 @@ export const metadata: Metadata = {
 
 function HeroSkeleton() {
   return (
-    <section className="hero">
-      <div className="crt-frame" style={{ minHeight: 420 }}>
-        <div className="hero-grid">
-          <div style={{ minHeight: 420, background: "var(--bg-2)" }} />
-          <div style={{ minHeight: 420, background: "var(--bg-2)" }} />
+    <section className="boss-hero" aria-hidden="true">
+      <div className="lmp-container boss-hero__grid">
+        <div className="arcade-bezel arcade-bezel--cyan">
+          <div className="arcade-screen boss-screen" />
+        </div>
+        <div className="arcade-bezel arcade-bezel--pink">
+          <div className="arcade-screen hs-board" />
         </div>
       </div>
     </section>
@@ -101,7 +103,7 @@ export default function HomePage() {
       <Suspense fallback={<div className="lmp-ticker" style={{ height: 32 }} />}>
         <Ticker />
       </Suspense>
-      <main id="main-content" className="lmp-container">
+      <main id="main-content">
         <h1 className="sr-only">Life Meets Pixel: Reviews &amp; News</h1>
         <Suspense fallback={<HeroSkeleton />}>
           <HeroSection />
@@ -112,19 +114,29 @@ export default function HomePage() {
             on a 390px screen and asked for money before the site had shown any
             work. The reader is here to browse reviews; the bio and the pitch
             are what they read after being convinced, not before. */}
-        <Suspense fallback={<GridSkeleton />}>
-          <ReviewsSection />
-        </Suspense>
+        <div className="lmp-container">
+          <Suspense fallback={<GridSkeleton />}>
+            <ReviewsSection />
+          </Suspense>
+        </div>
 
-        <Suspense fallback={<GridSkeleton />}>
+        <Suspense
+          fallback={
+            <div className="lmp-container">
+              <GridSkeleton />
+            </div>
+          }
+        >
           <NewsSection />
         </Suspense>
 
-        <AdBreak />
+        <div className="lmp-container">
+          <AdBreak />
 
-        <AboutStrip />
+          <AboutStrip />
 
-        <SupportSection />
+          <SupportSection />
+        </div>
 
         <SocialSection />
       </main>

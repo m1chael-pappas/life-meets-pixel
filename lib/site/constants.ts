@@ -25,23 +25,23 @@ export interface SocialChannel {
 }
 
 /**
- * Outbound social channels in display order. Drives the social tiles on the
- * homepage and contact page and both link rows in the footer.
+ * Outbound social channels in display order. Drives the social cartridges on
+ * the homepage and contact page and both link rows in the footer.
  */
 export const SOCIAL_CHANNELS: readonly SocialChannel[] = [
-  { label: "Discord", mark: "DC", handle: "life_meets_pixel", href: SITE_CONFIG.social.discord, color: "var(--neon-3)" },
-  { label: "Instagram", mark: "IG", handle: "@life_meets_pixel", href: SITE_CONFIG.social.instagram, color: "var(--neon-1)" },
-  { label: "Facebook", mark: "FB", handle: "Life Meets Pixel", href: SITE_CONFIG.social.facebook, color: "var(--neon-2)" },
-  { label: "Steam", mark: "ST", handle: "Curator page", href: SITE_CONFIG.social.steam, color: "var(--ink)" },
+  { label: "Discord", mark: "DC", handle: "life_meets_pixel", href: SITE_CONFIG.social.discord, color: "var(--neon-1)" },
+  { label: "Instagram", mark: "IG", handle: "@life_meets_pixel", href: SITE_CONFIG.social.instagram, color: "var(--neon-2)" },
+  { label: "Facebook", mark: "FB", handle: "Life Meets Pixel", href: SITE_CONFIG.social.facebook, color: "var(--neon-3)" },
+  { label: "Steam", mark: "ST", handle: "Curator page", href: SITE_CONFIG.social.steam, color: "var(--neon-4)" },
 ];
 
-/** The site feed, rendered as the last social tile. */
+/** The site feed, rendered as the last social cartridge. */
 export const RSS_CHANNEL: SocialChannel = {
   label: "RSS Feed",
   mark: "RSS",
   handle: "/feed.xml",
   href: "/feed.xml",
-  color: "var(--neon-4)",
+  color: "var(--neon-1)",
 };
 
 /**

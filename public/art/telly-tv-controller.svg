@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 250 310" width="250" height="310"><defs><filter id="shadow" x="-5%" y="-5%" width="115%" height="115%"><feDropShadow dx="5" dy="5" stdDeviation="0" flood-color="#000" flood-opacity="1"/></filter></defs><g filter="url(#shadow)">
+<path d="M92 214 C88 246 74 262 62 280 M150 214 C156 246 170 262 184 278" fill="none" stroke="#f5f0ff" stroke-width="18" stroke-linecap="round"></path>
+<path d="M92 214 C88 246 74 262 62 280 M150 214 C156 246 170 262 184 278" fill="none" stroke="#000" stroke-width="11" stroke-linecap="round"></path>
+<ellipse cx="52" cy="284" rx="28" ry="12" fill="#000" stroke="#f5f0ff" stroke-width="4"></ellipse>
+<ellipse cx="194" cy="282" rx="28" ry="12" fill="#000" stroke="#f5f0ff" stroke-width="4"></ellipse>
+<path d="M36 170 C16 190 40 226 90 232 M206 170 C226 190 202 226 152 232" fill="none" stroke="#f5f0ff" stroke-width="18" stroke-linecap="round"></path>
+<path d="M36 170 C16 190 40 226 90 232 M206 170 C226 190 202 226 152 232" fill="none" stroke="#000" stroke-width="11" stroke-linecap="round"></path>
+<path d="M100 76 L64 18 M140 76 L168 12" stroke="#000" stroke-width="7" stroke-linecap="round"></path>
+<circle cx="62" cy="14" r="10" fill="#aaff3d" stroke="#000" stroke-width="4"></circle>
+<circle cx="170" cy="10" r="10" fill="#ffd23d" stroke="#000" stroke-width="4"></circle>
+<rect x="30" y="72" width="186" height="148" rx="30" fill="#ff3d8b" stroke="#f5f0ff" stroke-width="14"></rect>
+<rect x="30" y="72" width="186" height="148" rx="30" fill="#ff3d8b" stroke="#000" stroke-width="6"></rect>
+<rect x="48" y="90" width="120" height="104" rx="22" fill="#0a0820" stroke="#000" stroke-width="5"></rect>
+<path d="M76 118 L98 126 M140 118 L118 126" stroke="#3ee8ff" stroke-width="6" stroke-linecap="round"></path>
+<ellipse cx="90" cy="140" rx="8" ry="12" fill="#3ee8ff"></ellipse>
+<ellipse cx="126" cy="140" rx="8" ry="12" fill="#3ee8ff"></ellipse>
+<path d="M92 166 Q108 176 124 166" fill="none" stroke="#3ee8ff" stroke-width="6" stroke-linecap="round"></path>
+<circle cx="192" cy="112" r="11" fill="#ffd23d" stroke="#000" stroke-width="4"></circle>
+<circle cx="192" cy="146" r="11" fill="#aaff3d" stroke="#000" stroke-width="4"></circle>
+<path d="M84 222 C84 212 94 210 102 212 L140 212 C148 210 158 212 158 222 L161 244 C163 254 154 258 148 251 L143 245 L99 245 L94 251 C88 258 79 254 81 244 Z" fill="#3ee8ff" stroke="#000" stroke-width="5" stroke-linejoin="round"></path>
+<rect x="92" y="224" width="14" height="5" fill="#000"></rect><rect x="96.5" y="219.5" width="5" height="14" fill="#000"></rect>
+<circle cx="140" cy="224" r="4" fill="#ff3d8b" stroke="#000" stroke-width="2"></circle><circle cx="148" cy="232" r="4" fill="#aaff3d" stroke="#000" stroke-width="2"></circle>
+<circle cx="90" cy="236" r="13" fill="#f5f0ff" stroke="#000" stroke-width="5"></circle>
+<circle cx="152" cy="236" r="13" fill="#f5f0ff" stroke="#000" stroke-width="5"></circle>
+</g></svg>

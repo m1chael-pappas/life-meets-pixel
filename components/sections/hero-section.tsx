@@ -1,85 +1,140 @@
-import Image from "next/image";
+import { Fragment, type CSSProperties } from "react";
+
 import Link from "next/link";
 
-import { HeartRow } from "@/components/retro/heart-row";
+import { CabArcadeBoss, ScoreStarburst, Sunburst, TwinkleStar } from "@/components/retro/arcade-art";
+import { PixelHeart } from "@/components/retro/sprites";
 import { getHeroPool } from "@/lib/content/hero-pool";
-import { itemTypeToCat, scoreTone } from "@/lib/content/mappings";
+import { reviewTagline } from "@/lib/content/mappings";
 
+/** Arcade rank labels for the ten High Scores rows, in rank order. */
+const ORDINALS = ["1ST", "2ND", "3RD", "4TH", "5TH", "6TH", "7TH", "8TH", "9TH", "10TH"];
+
+/**
+ * Inline custom properties `.boss-title` sizes itself from: the longest word
+ * (`--title-word`) and the total length (`--title-len`), both in characters.
+ */
+function titleFit(title: string): CSSProperties {
+  const longestWord = Math.max(...title.split(/\s+/).map((word) => word.length));
+  return { "--title-word": longestWord, "--title-len": title.length } as CSSProperties;
+}
+
+/**
+ * The homepage hero: a boss screen for the feature review beside a High
+ * Scores board of the all-time top ten, both from `getHeroPool()`. Renders
+ * nothing when there is no feature review.
+ */
 export default async function HeroSection() {
-  const { feature: hero, topTen } = await getHeroPool();
+  const { feature, topTen } = await getHeroPool();
 
-  if (!hero) {
+  if (!feature) {
     return null;
   }
 
-  const item = hero.reviewableItem;
-  const cat = itemTypeToCat(item.itemType);
-  const studio = item.publisher || item.creator || "";
-  const tone = scoreTone(hero.reviewScore);
-  const toneColor =
-    tone === "low"
-      ? "var(--heart)"
-      : tone === "mid"
-        ? "var(--neon-4)"
-        : "var(--neon-3)";
+  const item = feature.reviewableItem;
+  const gameTitle = item.title.trim();
+  const publisher = (item.publisher || item.creator || "").trim();
+  const score = feature.reviewScore;
+  const hp = Math.round(score * 10);
+  const meta = [gameTitle, publisher, `reviewed by ${feature.author.name}`].filter(Boolean);
+  const tagline = reviewTagline(feature);
 
   return (
-    <section className="hero">
-      <div className="crt-frame">
-        <div className="hero-grid">
-          <Link href={`/reviews/${hero.slug.current}`} className="hero-feature">
-            <div className="hero-feature__media">
-              {item.coverImage?.asset?.url && (
-                <Image
-                  src={item.coverImage.asset.url}
-                  alt={item.coverImage.alt || item.title}
-                  fill
-                  priority
-                  sizes="(max-width: 980px) 100vw, 60vw"
-                />
-              )}
+    <section className="boss-hero" aria-labelledby="boss-title">
+      <Sunburst className="boss-hero__rays" />
+      <div className="lmp-container boss-hero__grid">
+        <div className="arcade-bezel arcade-bezel--cyan">
+          <div className="arcade-screen boss-screen">
+            <Sunburst className="arcade-screen__rays" />
+            <div className="bricks" aria-hidden="true" />
+
+            <div className="boss-hud">
+              <span className="boss-hud__label" aria-hidden="true">
+                BOSS
+              </span>
+              <div className="hp-bar" role="img" aria-label={`Score ${score.toFixed(1)} out of 10`}>
+                <div className="hp-bar__fill" style={{ width: `${hp}%` }} />
+              </div>
+              <span className="boss-hud__pct" aria-hidden="true">
+                {hp}%
+              </span>
             </div>
-            <div className="hero-feature__body">
-              <div className="hero-feature__overline">★ TOP RATED · {cat.toUpperCase()}</div>
-              <h2 className="hero-feature__title">{hero.title}</h2>
-              <p className="hero-feature__sub">
-                {item.title}
-                {studio && ` · ${studio}`}
+
+            <div className="boss-copy">
+              <p className="boss-kicker">
+                ★ TOP RATED<span className="boss-kicker__sep"> · </span>BOSS STAGE
               </p>
-              <div className="hero-feature__meta">
-                <span
-                  className="hero-feature__score"
-                  style={{ color: toneColor, borderColor: toneColor }}
-                >
-                  {hero.reviewScore.toFixed(1)}
-                </span>
-                <span className="hero-feature__hearts">
-                  <HeartRow score={hero.reviewScore} size={18} />
-                </span>
-                <span style={{ color: "var(--ink-dim)", fontSize: 12 }}>
-                  by {hero.author.name}
-                </span>
+              <h2 id="boss-title" className="extruded-title extruded-title--pink boss-title" style={titleFit(gameTitle)}>
+                {gameTitle}
+              </h2>
+              <div className="score-burst" aria-hidden="true">
+                <ScoreStarburst />
+                <span className="score-burst__value">{score.toFixed(1)}</span>
+                <span className="score-burst__label">SCORE</span>
+              </div>
+              {tagline && <p className="boss-quote">&quot;{tagline}&quot;</p>}
+              <p className="boss-meta">
+                {meta.map((part, i) => (
+                  <Fragment key={i}>
+                    {i > 0 && "\u00a0· "}
+                    <span className="boss-meta__part">{part}</span>
+                  </Fragment>
+                ))}
+              </p>
+              <div className="boss-actions">
+                <Link href={`/reviews/${feature.slug.current}`} className="retro-btn retro-btn--magenta retro-btn--solid">
+                  ► PRESS START<span className="sr-only">: read the {gameTitle} review</span>
+                </Link>
+                <Link href="/reviews" className="retro-btn">
+                  ALL REVIEWS
+                </Link>
               </div>
             </div>
-          </Link>
 
-          <aside className="hero-side">
-            <h2 className="hero-side__head">
-              <span>◆ TOP 10 · ALL TIME</span>
-              <span className="blink">●</span>
-            </h2>
-            <ol className="hero-top10">
+            <CabArcadeBoss className="boss-character" />
+            <TwinkleStar className="twinkle twinkle--a" />
+            <TwinkleStar className="twinkle twinkle--b" />
+
+            <div className="p1-hud" aria-hidden="true">
+              <span className="p1-hud__box">
+                P1
+                <span className="p1-hud__hearts">
+                  <PixelHeart size={18} />
+                  <PixelHeart size={18} />
+                  <PixelHeart size={18} />
+                </span>
+              </span>
+              <span className="p1-hud__box p1-hud__credits">CREDITS 01</span>
+            </div>
+            <div className="scanlines" aria-hidden="true" />
+          </div>
+        </div>
+
+        <div className="arcade-bezel arcade-bezel--pink">
+          <div className="arcade-screen hs-board">
+            <p className="hs-board__kicker">◆ ALL-TIME TOP 10 ◆</p>
+            <h2 className="extruded-title extruded-title--gold hs-board__title">HIGH SCORES</h2>
+            <div className="hs-row hs-row--head" aria-hidden="true">
+              <span>RANK</span>
+              <span>GAME</span>
+              <span>PTS</span>
+            </div>
+            <ol className="hs-list">
               {topTen.map((pick, i) => (
                 <li key={pick._id}>
-                  <Link href={`/reviews/${pick.slug.current}`} className="hero-side-item">
-                    <span className="hero-side-item__num">{String(i + 1).padStart(2, "0")}</span>
-                    <span className="hero-side-item__title">{pick.reviewableItem.title}</span>
-                    <span className="hero-side-item__score">{pick.reviewScore.toFixed(1)}</span>
+                  <Link href={`/reviews/${pick.slug.current}`} className="hs-row">
+                    <span>{ORDINALS[i]}</span>
+                    <span>{pick.reviewableItem.title.trim()}</span>
+                    <span>{pick.reviewScore.toFixed(1)}</span>
                   </Link>
                 </li>
               ))}
             </ol>
-          </aside>
+            <Link href="/reviews?sort=score" className="hs-board__more">
+              ► FULL TABLE
+            </Link>
+            <div className="scanlines" aria-hidden="true" />
+          </div>
         </div>
       </div>
     </section>

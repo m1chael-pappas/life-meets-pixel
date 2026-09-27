@@ -153,7 +153,7 @@ typography:
     letterSpacing: "0.1em"
   micro-label:
     fontFamily: "Press Start 2P, system-ui, monospace"
-    fontSize: "10px"
+    fontSize: "11px"
     fontWeight: 400
     lineHeight: 1.4
     letterSpacing: "0.1em"
@@ -247,16 +247,20 @@ components:
 
 This is a newsstand games magazine that happens to be rendered in pixels. Not an arcade cabinet, not a nostalgia gag — a publication. The density is editorial: numbered section headers, boxed sidebars, ruled dividers, pull quotes, a scored verdict with its workings printed alongside. Every surface behaves like a page that was laid out by someone with an opinion and a deadline, then reproduced on a CRT instead of on paper.
 
-The mood is **warm and nostalgic, playful and irreverent**. The pixels are affection, not costume — the system loves the era it borrows from and never winks at it. That affection shows up as craft (a 9×9 hand-plotted sprite for every category, hearts that render in halves, a score meter built from twenty discrete cells) and the irreverence shows up as voice (`◆ NPC ENCOUNTER ◆` stamped on the about strip, a `► TELL US WE ARE WRONG` button, a Konami code, an optional scanline overlay you can switch off). The distinction matters more than any single token: **an era rendered with care reads as design; an era rendered as a joke reads as kitsch, and kitsch is a confirmed anti-reference.**
+The homepage is the one place the system plays the game it borrows from.
+Its set pieces (the boss screen and High Scores cabinets, the hills band behind News & Previews, the character bio, the versus screen and the cartridge links) are arcade and platformer furniture, and they hold the only rounded shapes and soft light in the system.
+Every page past the homepage stays a publication.
 
-The system is built to survive a full palette swap. Four complete palettes — Midnight Neon, Gameboy, Amber and Candy — swap under identical markup via `data-palette` on `<html>`, and Candy inverts the whole thing to a light ground. Nothing in the system may assume a dark background, a light accent, or a specific hue. That single constraint explains most of the token architecture below: `--on-accent`, `--scrim-rgb`, `--shadow-hard`, `--frame-ground` and `--focus-ring` all exist because a literal colour that worked on Midnight broke on Candy.
+The mood is **warm and nostalgic, playful and irreverent**. The pixels are affection, not costume — the system loves the era it borrows from and never winks at it. That affection shows up as craft (a 9×9 hand-plotted sprite for every category, hearts that render in halves, a score meter built from twenty discrete cells) and the irreverence shows up as voice (a `CHARACTER BIO` that maxes out honesty and zeroes out sponsors, a `► TELL US WE ARE WRONG` button, a Konami code, an optional scanline overlay you can switch off). The distinction matters more than any single token: **an era rendered with care reads as design; an era rendered as a joke reads as kitsch, and kitsch is a confirmed anti-reference.**
+
+The system is built to survive a full palette swap. Four complete palettes — Midnight Neon, Gameboy, Amber and Candy — swap under identical markup via `data-palette` on `<html>`, and Candy inverts the whole thing to a light ground. Nothing in the system may assume a dark background, a light accent, or a specific hue. That single constraint explains most of the token architecture below: `--on-accent`, `--scrim-rgb`, `--shadow-hard` and `--focus-ring` all exist because a literal colour that worked on Midnight broke on Candy.
 
 Confirmed anti-references, all three binding: **modern SaaS minimalism** (soft gradients, rounded cards, glassmorphism, thin grey type on white), **mainstream games press** (IGN/GameSpot chrome, red-and-white brand bars, dense ad rails, autoplay video), and **nostalgia kitsch** (Comic Sans, star fields, spinning GIFs, "under construction" gags).
 
 **Key Characteristics:**
 
-- Zero radius everywhere — not one rounded corner in the system
-- Three fonts with three strictly separate jobs: Press Start 2P labels and headings, JetBrains Mono body, VT323 pull quotes only
+- Zero radius everywhere except the homepage arcade set pieces: the cabinet bezels and the VS coin
+- Four fonts with four strictly separate jobs: Press Start 2P headings and labels, IBM Plex Sans prose, JetBrains Mono data, VT323 pull quotes only
 - Hard, un-blurred, pure-black offset shadows as the entire depth model
 - Four complete palettes under one markup, each independently WCAG AA
 - Border weight (1 / 2 / 3 / 4 / 6px) encodes hierarchy the way a magazine uses rules
@@ -301,7 +305,7 @@ Three complete re-mappings ship alongside Midnight Neon, switched by `data-palet
 
 ### Named Rules
 
-**The Palette-Agnostic Rule.** Never hardcode a colour that already exists as a token. Four palettes swap under identical markup, so a literal `rgba(10, 8, 32, …)` in a scrim is not a shortcut, it is a defect on the other three — this exact mistake put the hero headline at 1.31:1 on Candy. Scrims use `rgba(var(--scrim-rgb), …)`, hard shadows use `var(--shadow-hard)`, media frames use `var(--frame-ground)`.
+**The Palette-Agnostic Rule.** Never hardcode a colour that already exists as a token. Four palettes swap under identical markup, so a literal `rgba(10, 8, 32, …)` in a scrim is not a shortcut, it is a defect on the other three — this exact mistake put the hero headline at 1.31:1 on Candy. Scrims use `rgba(var(--scrim-rgb), …)`, hard shadows use `var(--shadow-hard)`, and darker accent shades use `--neon-1-deep` to `--neon-4-deep`, which mix each palette's own accent 72% with black.
 
 **The Both-Ways Rule.** Any token used as both a foreground and a background needs its counterpart tokenised too. Text sitting on a neon fill is `var(--on-accent)`, never `#000` — when Candy's accents were darkened for legibility as *text*, black-on-accent fell to 3.32:1 as a *background*. The same trap runs the other way: the hard chips that sit on imagery (score box, category badge, social mark, author avatar) hardcoded a `#000` *ground* under a tokenised `color`, which put Candy's deliberately-darkened accents at 3.31:1 on black. Those grounds are now `var(--chip-ground)`, defined once as `var(--bg-0)` so it re-resolves per palette without an override. After changing any colour token, grep for it as a `background:` value, not just as a `color:` value.
 
@@ -328,7 +332,7 @@ The text ramp is 11 · 12 · 13 · 14 · 15 · 16 · 17 · 18 · 20 · 22 · 24 
 
 Two tiers sit outside that ramp on purpose, and neither is text:
 
-- **Display tier** (32 · 44 · 52 · 64px, Press Start 2P): single characters used as artwork — the portrait initial on the about strip, the badge glyph on the contact and about heroes. These are shapes, not words, so the reading ramp does not apply.
+- **Display tier** (32 · 44 · 52 · 64px, Press Start 2P): single characters used as artwork — the badge glyph on the contact and about heroes. These are shapes, not words, so the reading ramp does not apply.
 - **Glyph tier** (8 · 9px, JetBrains Mono): the `◆` and `▸` marks in `::before` pseudo-elements. Decorative punctuation standing in as a bullet, never a label a reader has to parse.
 
 **Anything a reader reads sits on the text ramp, at 11px or above.** If a value between 10px and the glyph tier appears, it is a defect rather than a new step.
@@ -338,17 +342,19 @@ Two tiers sit outside that ramp on purpose, and neither is text:
 - **Display** (VT323 400, 26px, 1.4): pull quotes inside article body copy. Nowhere else, and VT323 appears nowhere else either.
 - **Headline** (24px, 1.4, `text-shadow: 4px 4px 0 var(--shadow-hard)`): the article title in the hero. The offset text shadow is part of the role, not decoration.
 - **Title** (22px, 1.4): page `h1` and article-body `h2` (magenta, 2px dashed bottom rule).
-- **Title-md** (20px): the homepage hero feature title.
-- **Subhead** (16px): `h2`, article-body `h3`, the hero feature's score.
+- **Extruded** (24 · 32 · 40 · 48 · 56 · 64px, `.extruded-title`): the homepage set-piece titles, meaning the boss title, HIGH SCORES, MULTIPLAYER and PRESS START. Two accent bands and a hard rule step down-right at 1/20 of the size, snapped to whole pixels.
+- **Subhead** (16px): `h2`, article-body `h3`, the versus screen's lead and VS coin.
 - **Subhead-sm** (14px, 1.5): `h3`, card titles, score boxes.
 - **Label-lg** (12px, 0.1em): nav links, buttons, section numerals, stat keys.
 - **Label** (11px, 0.1em): badges, field labels, HP row heads, breadcrumbs, section-header actions. The most-used role in the system by count.
 
-**JetBrains Mono (everything read as prose):**
+**IBM Plex Sans (running prose):**
 
 - **Lede** (20px, 1.6, max 34em): the article standfirst, rendered from `review.summary`.
 - **Body** (18px, 1.7, max 34em): article copy. Renders ~68 characters per line.
-- **Body-lg** (16px, 1.55): the hero feature subtitle.
+
+**JetBrains Mono (everything read as data):**
+
 - **Body-ui** (15px, 1.55): the document base size.
 - **Body-sm** (14px): card excerpts, footer links, form inputs.
 - **Caption** (13px): card subjects, stat rows, author bios.
@@ -384,7 +390,9 @@ Spacing is built on a 4px pixel unit (`--pixel: 4px`) and stays on multiples of 
 
 | Region | ≥1281px | ≤1280px | ≤1024px | ≤640px |
 |---|---|---|---|---|
-| Hero | `1.6fr 1fr` | `1.4fr 1fr` | `1fr` | `1fr` |
+| Hero | `1.85fr 1fr`, 32px | `1.85fr 1fr` | `1fr` | `1fr` |
+| Character bio | `256px 1fr` | `256px 1fr` | `192px 1fr` | `1fr` |
+| Versus screen | `1fr 1fr` | `1fr 1fr` | `1fr`, divider turns sideways | `1fr` |
 | Reviews grid | `repeat(3, 1fr)`, 20px | 16px gap | `1fr 1fr` | `1fr` |
 | News grid | `1.4fr 1fr 1fr`, 16px | 14px gap | `1fr 1fr` | `1fr` |
 | Article body | `1fr 320px`, 40px | `1fr 300px`, 28px | `1fr`, 32px | `1fr` |
@@ -400,22 +408,23 @@ Breakpoints in use: **1280** (laptop tightening), **1024** (tablet: hero and gri
 
 ## Elevation & Depth
 
-Hybrid, and the split is strict: **hard offset shadows are the depth model for every UI surface; soft light is reserved exclusively for the CRT frame's inner bloom and the sticky header's drop.** There is no ambient elevation, no blurred card shadow, no glow on hover. Depth reads as a solid black shape offset down-and-right, exactly as a sticker sits above a board — which is also why the whole system survives on a light palette by swapping `--shadow-hard` to a white glow instead.
+Hybrid, and the split is strict: **hard offset shadows are the depth model for every UI surface; soft light is reserved exclusively for the arcade screens' inner glow and the sticky header's drop.** There is no ambient elevation, no blurred card shadow, no glow on hover. Depth reads as a solid black shape offset down-and-right, exactly as a sticker sits above a board — which is also why the whole system survives on a light palette by swapping `--shadow-hard` to a white glow instead.
 
 Layering is otherwise tonal: four ground steps (`#0a0820` → `#2a2350`) do the work that blur would do in a soft system.
 
 ### Shadow Vocabulary
 
 - **Rest** (`box-shadow: 4px 4px 0 var(--shadow-hard)`): the default for cards, buttons, stat blocks, article panels and body images.
-- **Raised** (`box-shadow: 6px 6px 0 var(--shadow-hard)`): the about strip, the about hero, the article cover plate — surfaces that outrank an ordinary card.
+- **Raised** (`box-shadow: 6px 6px 0 var(--shadow-hard)`): the about hero, the article cover plate — surfaces that outrank an ordinary card.
 - **Hover** (`box-shadow: 6px 6px 0` on buttons, `8px 8px 0` on cards, paired with a negative translate): the offset deepens because the element moved toward you, not because a new shadow appeared.
 - **Pressed** (`box-shadow: 0 0 0 var(--shadow-hard)` + `translate(2px, 2px)`): the shadow is consumed as the element goes down.
 - **Structural** (`box-shadow: 0 4px 0 0 #000, 0 8px 24px rgba(0,0,0,0.5)` on the sticky header): the only place a hard offset and a blurred drop are stacked, because the header floats over scrolling content.
-- **CRT bloom** (`inset 0 0 60px rgba(255,61,139,0.15), 0 0 0 2px var(--neon-1), 8px 8px 0 #000`): the hero frame only.
+- **Heavy** (`var(--hard-shadow-lg)`, `12px 12px 0 var(--shadow-hard)`): the homepage set pieces, meaning the arcade cabinets, the character bio and the versus screen.
+- **Screen glow** (`inset 0 0 90px` and `70px` of the bezel accent through `color-mix`): the two arcade screens only.
 
 ### Named Rules
 
-**The No-Blur Rule.** A UI shadow has a blur radius of zero and is pure black. Blur exists in exactly two places in this system — the header drop and the CRT inner bloom — and adding a third is a defect, not a refinement.
+**The No-Blur Rule.** A UI shadow has a blur radius of zero and is pure black. Blur exists in exactly two places in this system — the header drop and the arcade screen glow — and adding a third is a defect, not a refinement.
 
 **The Lift-And-Press Rule.** Interactive surfaces move. Hover is `translate(-2px, -2px)` (cards: `-3px`) with a deeper offset; active is `translate(2px, 2px)` with the offset removed. The shadow and the transform always change together — a shadow change without movement reads as a glow, which this system does not have.
 
@@ -423,8 +432,8 @@ Layering is otherwise tonal: four ground steps (`#0a0820` → `#2a2350`) do the 
 
 Rectangles. The form language is a magazine page: boxes, rules and borders, with border *weight* carrying hierarchy the way a printed spread uses hairlines and heavy rules.
 
-- **Radius: 0, everywhere.** `--radius: 0`, and Tailwind's `--radius-sm/md/lg/xl` are all mapped to `0` so utility classes cannot reintroduce a corner. Even the focus ring sets `border-radius: 0`.
-- **Border weights** are a scale: **1px** hairline dividers and inner frame lines · **2px** chips, badges, small controls, section rules, inputs · **3px** cards, buttons, panels, the header's bottom rule · **4px** the article hero and cover plate · **6px** the CRT frame.
+- **Radius: 0, everywhere.** `--radius: 0`, and Tailwind's `--radius-sm/md/lg/xl` are all mapped to `0` so utility classes cannot reintroduce a corner. Even the focus ring sets `border-radius: 0`. The homepage arcade set pieces are the one exception (see the Zero-Radius Rule).
+- **Border weights** are a scale: **1px** hairline dividers and inner frame lines · **2px** chips, badges, small controls, section rules, inputs · **3px** cards, buttons, panels, the header's bottom rule · **4px** the article hero and cover plate · **6px** the arcade cabinet bezels.
 - **Border style** carries meaning: solid for structure, **dashed** for internal editorial dividers (article `h2` underlines, stat-block heads, card footers), **dotted** for list-row separators (HP rows, stat rows).
 - **Pixel sprites** are the icon language: category glyphs and hearts are hand-plotted character grids (9×9 for hearts, uniform 9×9 for nav glyphs) rendered as `<rect>` SVGs with `shape-rendering: crispEdges` and `image-rendering: pixelated`. They scale to any size without softening.
 - **Media wells** are 16:9 for cards, 3:4 for the article cover plate, with images at `saturate(1.1)` and a bottom-up scrim gradient.
@@ -432,8 +441,15 @@ Rectangles. The form language is a magazine page: boxes, rules and borders, with
 ### Named Rules
 
 **The Zero-Radius Rule.** Nothing in this system is rounded — no card, no button, no input, no avatar, no focus ring. A single `border-radius` above 0 breaks the whole material premise, and there is no exception for third-party embeds; Clerk's UI is overridden to match.
+The homepage arcade set pieces are the one deliberate exception: the cabinet bezels and screens (`--bezel-radius`, `--screen-radius`) and the round VS coin.
+Nothing outside them gets a corner.
 
 **The Pixel-Icon Rule.** Site-facing iconography is the sprite system, never a vector icon set. Lucide exists in the repo for one shadcn primitive's internals and must not migrate into site chrome — a smooth 24px stroke icon next to a 9×9 sprite instantly reads as a different product.
+
+**The No-Rotation Rule.** Never rotate an element that holds text.
+The one exception is the score burst on the boss screen, which tilts 12° with its text by design; the yellow kicker above the boss title tilts only its plate.
+Any angle that is not a multiple of 90° resamples the glyphs, and pixel type loses its hard edges first.
+Tilt the shape and keep the label upright, as the cartridge links do: only `.cart-tile__shell` carries `--tilt`.
 
 ## Components
 
@@ -484,11 +500,30 @@ Tactile and clicky: these are physical hardware, and they move.
 
 **The Heart Row.** Five hand-plotted 9×9 pixel hearts rendering the same score in halves — full, half, empty. It is redundant with the score box on purpose: the number is for the reader who wants precision, the hearts for the reader scanning.
 
-**The CRT Frame.** The homepage hero housing: 6px `--bg-3` border on `--frame-ground`, a 1px inset cyan rule 14px in, a magenta inner bloom, a `8px 8px 0` offset, and a repeating 1px scanline overlay. It is a **media frame** — it houses imagery and the featured verdict, and must not be used to wrap long-form text, which flattens a thousand words into one undifferentiated slab.
+**The Arcade Cabinets.** The homepage hero: two rounded bezels (6px `--shadow-hard` border, `--bezel-radius`, a 4px inset rule in the bezel accent, `--hard-shadow-lg`) housing the boss screen and the High Scores board.
+The boss screen shows the feature review from `getHeroPool()`: the extruded game title, the score starburst, a quote from `reviewTagline()`, and a segmented HP bar filled to the score.
+The High Scores board lists the all-time top ten from the same pool.
+Scanlines sit under the text, never over it, because they slice pixel glyphs.
+
+**The Hills Band.** The News & Previews backdrop: a full-bleed `--bg-1` band with 4px `--shadow-hard` rules top and bottom, two rolling hill bands in `--bg-2` and `--bg-3`, a black road with `--neon-4` dots, a cloud by the heading and one in the sky, and the smiling hill, all `aria-hidden` behind the unchanged news grid.
+The scenery is pinned to the band's bottom edge, and the band carries extra bottom padding so the landscape shows below the cards.
+Latest Reviews above it stays on the plain page ground, so the homepage alternates plain and scenic sections.
+
+**The Multiplayer Band.** The homepage's last section: a full-bleed `--bg-1` band with faint `--bg-2` rays rising from its bottom edge, a black top rule, and the walking cartridge beside the MULTIPLAYER title (hidden below 400px).
+It runs flush into the footer, whose pink rule is its bottom edge.
+
+**The Character Bio.** The about card: a P1 portrait panel of `--bg-3` rays on `--bg-2` with the smiling gamepad, the `G'DAY, PLAYER.` heading, a line of prose, and four joke stat bars that reuse `.hp-bar` with the `--stat` modifier.
+The bars are solid because they are not scores.
+
+**The Versus Screen.** The membership pitch: P1 (the site's promise) on `--bg-1` against P2 (the reader) on `--neon-1` rays, split by a slanted `--neon-4` divider with black edges and a VS coin on its midpoint.
+The pink ground's edge, the divider and the coin all derive from `--vs-lean` and `--vs-slash`, so the dark and pink edges run parallel to the divider at every width.
+Below 1024px the panels stack and the divider runs sideways.
+The waving P2 heart stands on the floor of the pink side.
+
+**The Cartridge Links.** One cartridge per social channel plus RSS, each in its channel's colour from `SOCIAL_CHANNELS`, on the homepage and the contact page.
+Only the shell tilts, and the label stays upright (see the No-Rotation Rule).
 
 **The Ticker.** A 32px marquee: a magenta label block with `--on-accent` text, then a 60s linear-scrolling monospace track of headlines separated by `◆` diamonds in cyan. The label carries a pause toggle, and the track also pauses on hover and on `:focus-within` — an infinite marquee with no stop control is a WCAG 2.2.2 failure at **Level A**, and `prefers-reduced-motion` is not a substitute because it only reaches readers who set the OS flag. The track is tripled for a seamless wrap, so the two duplicate sequences are `aria-hidden`; otherwise a screen reader wades through 30 headline strings before reaching `<main>`. The toggle is the one control in the system exempt from the 44px target: a 32px bar cannot hold one, so it meets WCAG 2.2 AA 2.5.8 (24×24) instead.
-
-**The Score Key.** A bordered panel closing the hero's right column, pairing each tone swatch with its band (`8.0+` / `6.0–7.9` / `<6.0`) and linking `/about`. It exists because the homepage showed seven colour-coded scores with no legend and no route to the published scale — on a site whose positioning is auditable scoring. **Any surface that renders a score without the breakdown should carry a route to the scale.**
 
 **The Tweaks Panel.** A user-facing control surface exposing palette (Midnight / Gameboy / Amber / Candy), the scanline overlay, and sound effects, persisted to `localStorage`. Its existence is a system constraint: **any new surface must be checked in all four palettes and with scanlines on.**
 
@@ -496,25 +531,26 @@ Tactile and clicky: these are physical hardware, and they move.
 
 ### Do:
 
-- **Do** reach for a token before a literal. `--on-accent` for text on an accent fill, `rgba(var(--scrim-rgb), …)` for scrims, `var(--shadow-hard)` for offsets, `var(--frame-ground)` for media frames.
+- **Do** reach for a token before a literal. `--on-accent` for text on an accent fill, `rgba(var(--scrim-rgb), …)` for scrims, `var(--shadow-hard)` for offsets, `--neon-N-deep` for a darker accent.
 - **Do** verify every new surface in all four palettes, with scanlines on, before calling it finished. Candy is the one that breaks things — it is the only light ground.
 - **Do** check contrast against all four ground tokens (`--bg-0` … `--bg-3`), and check accents in both roles, as text and as fill.
-- **Do** keep body copy in JetBrains Mono at ≤72ch, and reserve Press Start 2P for headings, labels, numbers and buttons.
+- **Do** keep running prose in IBM Plex Sans at the 34em measure (see the Measure Rule), and reserve Press Start 2P for headings, labels, numbers and buttons.
 - **Do** pair every hover transform with its shadow change (`-2px` / deeper offset), and give pressable things a real `:active` state (`+2px` / no offset).
-- **Do** use border weight as hierarchy: 1px divides, 2px trims a control, 3px builds a card, 4px frames an article, 6px is the CRT.
+- **Do** use border weight as hierarchy: 1px divides, 2px trims a control, 3px builds a card, 4px frames an article, 6px is an arcade bezel.
 - **Do** render new iconography as pixel-grid sprites in `components/retro/sprites.tsx` and new item types through `lib/content/mappings.ts` — one card component serves all eight types.
 - **Do** give focusable elements a visible ring; the global `:where(…):focus-visible` rule at `3px solid var(--focus-ring)` with a 2px offset is the floor, and components that clear the UA outline must restore it explicitly.
 - **Do** state a score in more than one channel — number, colour tone, and meter fill — so the verdict never depends on colour alone.
 
 ### Don't:
 
-- **Don't** introduce a border radius. Anywhere. Including third-party embedded UI, which is overridden to match.
-- **Don't** add a blurred shadow. The header drop and the CRT bloom are the only two in the system; everything else is a zero-blur black offset.
+- **Don't** introduce a border radius outside the homepage arcade set pieces. That includes third-party embedded UI, which is overridden to match.
+- **Don't** add a blurred shadow. The header drop and the arcade screen glow are the only two in the system; everything else is a zero-blur black offset.
 - **Don't** set body copy, or any run longer than roughly eight words, in Press Start 2P.
 - **Don't** hardcode `#000` as the text colour on a neon fill, or `rgba(10, 8, 32, …)` in a gradient. Both break the moment the palette changes.
 - **Don't** point `--focus-ring` at an accent token, or drop a focus indicator to the UA default — that default resolves from the element's own `color` and produced an invisible hairline on the largest target on the site.
 - **Don't** bring in a vector icon set (Lucide, Heroicons, react-icons) for site-facing chrome. Smooth strokes beside 9×9 sprites read as two different products.
-- **Don't** render a score as a smooth or gradient-filled bar; the meter is 20 discrete cells.
-- **Don't** wrap long-form text in `.crt-frame`. It is a media frame, and it turns an article into a slab.
+- **Don't** render a score as a smooth or gradient-filled bar; the meter is 20 discrete cells. The character bio's joke stats are solid bars because they are not scores.
+- **Don't** wrap long-form text in an arcade cabinet. It is a set piece, and it turns an article into a slab.
+- **Don't** rotate an element that holds text. Tilt the shape and keep the label upright.
 - **Don't** let any route scroll horizontally between 320px and 1280px — test the 721–831px band specifically, and give grid children that hold unbreakable strings an explicit `min-width: 0`.
 - **Don't** reach for SaaS-minimal, mainstream-games-press, or kitsch-retro moves: soft gradients and glassmorphism, red-and-white brand bars and ad rails, or star fields, spinning GIFs and joke fonts.

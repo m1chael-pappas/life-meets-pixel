@@ -113,6 +113,28 @@ export function scoreBand(score: number) {
   return SCORE_BANDS.find((b) => score >= b.min) ?? SCORE_BANDS[SCORE_BANDS.length - 1];
 }
 
+/**
+ * The editorial half of a review title: the text after a leading
+ * `<item title>`, an optional `review`, and a `:`, `-`, en dash or em dash
+ * separator, matched case-insensitively against the trimmed item title.
+ *
+ * Returns the trimmed `summary` when the title does not open with the item
+ * title or nothing follows the separator.
+ */
+export function reviewTagline(review: {
+  title: string;
+  summary?: string;
+  reviewableItem: { title: string };
+}): string {
+  const title = review.title.trim();
+  const item = review.reviewableItem.title.trim();
+  const fallback = (review.summary ?? "").trim();
+  if (!item || !title.toLowerCase().startsWith(item.toLowerCase())) return fallback;
+  const rest = title.slice(item.length).replace(/^\s+review\b/i, "");
+  const tagline = /^\s*[:\u2013\u2014-]\s*(.+)$/.exec(rest)?.[1].trim();
+  return tagline || fallback;
+}
+
 export function authorInitial(name: string): string {
   return name.trim().charAt(0).toUpperCase() || "?";
 }

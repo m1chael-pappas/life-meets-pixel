@@ -9,9 +9,9 @@ import { getSound } from "./sound-engine";
 const INTERACTIVE = [
   ".review-card",
   ".news-card",
-  ".hero-feature",
-  ".hero-side-item",
-  ".social-tile",
+  ".hs-row",
+  ".hs-board__more",
+  ".cart-tile",
   ".retro-btn",
   ".filter-btn",
   ".topic-opt",
