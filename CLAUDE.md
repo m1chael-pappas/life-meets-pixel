@@ -153,9 +153,10 @@ NEXT_PUBLIC_GOOGLE_ADS_ID=AW-...
 ```bash
 # Frontend (pnpm — this is a pnpm workspace, not npm)
 pnpm dev                # Next dev server
-pnpm build
+pnpm build              # runs `vitest run` first; a failing test fails the Vercel build
 pnpm start
-pnpm lint               # Vercel is the only CI gate — run this locally before push
+pnpm lint               # not part of the build; run it locally before push
+pnpm test               # Vitest unit tests (*.test.ts next to the code they test)
 
 # Sanity Studio
 pnpm studio             # http://localhost:3333

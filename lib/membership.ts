@@ -1,3 +1,5 @@
+import { notFound } from "next/navigation";
+
 import { auth, currentUser } from "@clerk/nextjs/server";
 
 /**
@@ -73,4 +75,16 @@ export async function getMembership(): Promise<Membership> {
       hasFeature(MEMBER_FEATURES.fullRss) ||
       hasFeature(MEMBER_FEATURES.memberPosts),
   };
+}
+
+/**
+ * Gate for admin-only surfaces. Resolves only when the visitor's Clerk
+ * `publicMetadata.role` is exactly `"admin"`; everyone else, including paying
+ * members with every feature, and every visitor while membership is disabled,
+ * gets `notFound()`.
+ */
+export async function requireAdmin(): Promise<void> {
+  if (!membershipEnabled()) notFound();
+  const { isAdmin } = await getMembership();
+  if (!isAdmin) notFound();
 }
