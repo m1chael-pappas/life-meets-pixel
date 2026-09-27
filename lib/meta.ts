@@ -13,6 +13,45 @@ export function metaConfigured() {
   return Boolean(IG_USER_ID && PAGE_ID && ACCESS_TOKEN);
 }
 
+export type SocialPlatform = 'instagram' | 'facebook';
+
+const HASHTAG = /(?:^|[^\p{L}\p{N}_&#])#[\p{L}\p{N}_]*\p{L}[\p{L}\p{N}_]*/u;
+const EM_DASH = /\u2014/;
+const RAW_URL = /https?:\/\/|\bwww\.|\b[\w-]+\.(?:com|net|org|au|io|gg|tv|co)\/\S/i;
+const SITE_LINK = /\b(?:https?:\/\/)?(?:www\.)?lifemeetspixel\.com\/\S+/;
+/** Instagram Graph API caption limit. */
+const IG_CAPTION_MAX = 2200;
+
+/**
+ * Every house-rule violation in a caption (CLAUDE.md "Social copy"), as
+ * readable reasons; empty when the copy is clean. Both platforms: no hashtag,
+ * no em dash. Instagram: no raw URL, a "link in bio" CTA, at most 2200
+ * characters. Facebook: a lifemeetspixel.com article link (Facebook makes it clickable).
+ */
+export function captionViolations(text: string, platform: SocialPlatform): string[] {
+  const problems: string[] = [];
+  const hashtag = text.match(HASHTAG);
+  if (hashtag) problems.push(`has a hashtag (${hashtag[0].trim()})`);
+  if (EM_DASH.test(text)) problems.push('has an em dash');
+  if (platform === 'instagram') {
+    if (RAW_URL.test(text)) problems.push('has a raw URL, which Instagram will not link; use "link in bio"');
+    if (!/link in bio/i.test(text)) problems.push('is missing the "link in bio" call to action');
+    if (text.length > IG_CAPTION_MAX) problems.push(`is ${text.length} characters, over Instagram's ${IG_CAPTION_MAX}`);
+  } else if (!SITE_LINK.test(text)) {
+    problems.push('is missing the lifemeetspixel.com article link');
+  }
+  return problems;
+}
+
+/** Throws, naming every violation, when `text` breaks a house rule for `platform`. */
+export function assertCaptionRules(text: string, platform: SocialPlatform): void {
+  const problems = captionViolations(text, platform);
+  if (problems.length > 0) {
+    const label = platform === 'instagram' ? 'Instagram caption' : 'Facebook post';
+    throw new Error(`${label} ${problems.join('; ')}`);
+  }
+}
+
 async function graph<T = Record<string, unknown>>(
   path: string,
   payload: Record<string, string>
@@ -33,6 +72,7 @@ async function graph<T = Record<string, unknown>>(
 // processing the image (it's asynchronous; publishing too early fails with
 // "Media ID is not available"), then publish it.
 export async function postToInstagram(imageUrl: string, caption: string): Promise<string> {
+  assertCaptionRules(caption, 'instagram');
   const container = await graph<{ id: string }>(`${IG_USER_ID}/media`, {
     image_url: imageUrl,
     caption,
@@ -47,6 +87,7 @@ export async function postCarouselToInstagram(
   imageUrls: string[],
   caption: string
 ): Promise<string> {
+  assertCaptionRules(caption, 'instagram');
   if (imageUrls.length < 2) return postToInstagram(imageUrls[0], caption);
   const children: string[] = [];
   for (const url of imageUrls.slice(0, 10)) {
@@ -99,6 +140,7 @@ async function waitForContainer(creationId: string) {
 }
 
 export async function postToFacebook(imageUrl: string, message: string): Promise<string> {
+  assertCaptionRules(message, 'facebook');
   const post = await graph<{ post_id?: string; id: string }>(`${PAGE_ID}/photos`, {
     url: imageUrl,
     message,
@@ -112,6 +154,7 @@ export async function postPhotosToFacebook(
   imageUrls: string[],
   message: string
 ): Promise<string> {
+  assertCaptionRules(message, 'facebook');
   if (imageUrls.length < 2) return postToFacebook(imageUrls[0], message);
   const mediaIds: string[] = [];
   for (const url of imageUrls.slice(0, 10)) {

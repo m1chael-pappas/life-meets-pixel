@@ -21,6 +21,7 @@ const CHROMIUM_PACK =
   'https://github.com/Sparticuz/chromium/releases/download/v149.0.0/chromium-v149.0.0-pack.x64.tar';
 
 import {
+  assertCaptionRules,
   metaConfigured,
   postCarouselToInstagram,
   postPhotosToFacebook,
@@ -242,6 +243,8 @@ export async function postToSocials(
       igCaption = copy.igCaption;
       fbMessage = copy.fbMessage;
     }
+    assertCaptionRules(igCaption, 'instagram');
+    assertCaptionRules(fbMessage, 'facebook');
     const slides = await renderSlides(deck);
 
     const slideUrls: string[] = [];

@@ -82,9 +82,7 @@ const igCaption = `Xbox console exclusives are back, and the timing could not be
 
 Full story: link in bio
 
-When did you last actually PAY for an Xbox game?
-
-#LifeMeetsPixel #GamingNews #Xbox #GamePass #GearsOfWar`;
+When did you last actually PAY for an Xbox game?`;
 
 const fbMessage = `Xbox says permanent exclusives are back, while reporting suggests its own studio bosses have turned on day-one Game Pass. Both are true at once, and Gears of War: E-Day still lands on Game Pass day one in October. ${LINK}`;
 
