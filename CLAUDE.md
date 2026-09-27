@@ -157,6 +157,9 @@ pnpm build              # runs `vitest run` first; a failing test fails the Verc
 pnpm start
 pnpm lint               # not part of the build; run it locally before push
 pnpm test               # Vitest unit tests (*.test.ts next to the code they test)
+pnpm test:e2e           # Playwright: admin access with real Clerk dev-instance test users, and layout
+                        # rules at 390/820/1440px, on a fresh production build (E2E_BASE_URL=http://localhost:3000
+                        # reuses the dev server instead). Dev-instance keys only; never part of the Vercel build
 
 # Sanity Studio
 pnpm studio             # http://localhost:3333

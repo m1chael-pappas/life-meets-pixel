@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "eslint .",
     "test": "vitest run",
+    "test:e2e": "playwright test",
     "studio": "cd studio && npm run dev",
     "studio:build": "cd studio && npm run build",
     "studio:deploy": "cd studio && npm run deploy",
@@ -47,7 +48,9 @@
     "tailwind-merge": "^3.3.0"
   },
   "devDependencies": {
+    "@clerk/testing": "^2.2.39",
     "@eslint/eslintrc": "^3",
+    "@playwright/test": "^1.63.0",
     "@sanity/client": "^6.15.0",
     "@tailwindcss/postcss": "^4",
     "@tailwindcss/typography": "^0.5.16",
