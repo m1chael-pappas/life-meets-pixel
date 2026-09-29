@@ -5,7 +5,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 const mocks = vi.hoisted(() => ({
   sendMessage: vi.fn(async () => undefined),
-  getRadarSources: vi.fn(async () => {
+  getRadarSources: vi.fn(() => {
     throw new Error("radar ran");
   }),
   processSocialQueue: vi.fn(async () => 0),
