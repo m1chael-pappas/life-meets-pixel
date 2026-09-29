@@ -1046,7 +1046,11 @@ a:hover { color: var(--neon-1); }
   color: var(--ink);
   text-decoration: none;
 }
-.hs-row > span:nth-child(2) { overflow-wrap: anywhere; }
+.hs-row > span:nth-child(2) {
+  overflow-wrap: anywhere;
+  text-wrap: balance;
+}
+.hs-row__sub { display: inline-block; }
 .hs-row > span:last-child { text-align: right; }
 .hs-row--head {
   color: var(--ink-mute);

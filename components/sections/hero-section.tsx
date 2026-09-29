@@ -20,6 +20,22 @@ function titleFit(title: string): CSSProperties {
 }
 
 /**
+ * A High Scores game name. Text after the first `": "` renders in an
+ * inline-block `.hs-row__sub`, so a name that wraps breaks at its colon first.
+ */
+function ScoreName({ title }: { title: string }) {
+  const cut = title.indexOf(": ");
+  if (cut < 0) {
+    return <span>{title}</span>;
+  }
+  return (
+    <span>
+      {title.slice(0, cut + 1)} <span className="hs-row__sub">{title.slice(cut + 2)}</span>
+    </span>
+  );
+}
+
+/**
  * The homepage hero: a boss screen for the feature review beside a High
  * Scores board of the all-time top ten, both from `getHeroPool()`. Renders
  * nothing when there is no feature review.
@@ -124,7 +140,7 @@ export default async function HeroSection() {
                 <li key={pick._id}>
                   <Link href={`/reviews/${pick.slug.current}`} className="hs-row">
                     <span>{ORDINALS[i]}</span>
-                    <span>{pick.reviewableItem.title.trim()}</span>
+                    <ScoreName title={pick.reviewableItem.title.trim()} />
                     <span>{pick.reviewScore.toFixed(1)}</span>
                   </Link>
                 </li>
