@@ -6,6 +6,10 @@ const nextConfig: NextConfig = {
   // stream in. Nothing is cached unless it says 'use cache'.
   cacheComponents: true,
 
+  experimental: {
+    turbopackFileSystemCacheForBuild: false,
+  },
+
   // Headless Chromium (social template renderer) must not be bundled;
   // chromium-min downloads its binary pack to /tmp at cold start, so no
   // file-tracing includes are needed (pnpm symlinks break those anyway).
