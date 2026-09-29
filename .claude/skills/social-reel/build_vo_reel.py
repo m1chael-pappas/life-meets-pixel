@@ -9,8 +9,11 @@ Timeline comes from the measured VO clip lengths plus an explicit silence after
 each sentence, so the read has real pauses instead of running together.
 """
 import json, os, re, subprocess, numpy as np, soundfile as sf, imageio_ffmpeg
+import config
 from config import (TOTAL, BED_START, LEAD, GAPS, SEGS, CARD_GROUPS,
                     CHUNKS, SPOKEN, REVEAL_LINE, TITLE, SCORE, SITE)
+
+SLOW_SRC = getattr(config, "SLOW_SRC", None)
 
 D = os.path.dirname(os.path.abspath(__file__))
 FF = imageio_ffmpeg.get_ffmpeg_exe()
@@ -44,17 +47,21 @@ def run(args):
 # --- 1. picture: one cut per idea, each to its own file first -----------------
 print("step 1: cutting segments")
 seg_files = []
-for i, (t0, t1, src) in enumerate(SEGS):
+for i, (t0, t1, src, *rest) in enumerate(SEGS):
+    speed = rest[0] if rest else 1.0
     # frames from cumulative reel time so the concatenated total is exact
     nframes = int(round(t1 * FPS)) - int(round(t0 * FPS))
     f = f"{D}/seg{i}.mp4"
-    run([FF, "-hide_banner", "-loglevel", "error", "-ss", str(src), "-i", SRC,
-         "-frames:v", str(nframes), "-an",
+    slow = ["-vf", f"setpts=PTS/{speed}"] if speed != 1.0 else []
+    source = SLOW_SRC if speed != 1.0 and SLOW_SRC else SRC
+    run([FF, "-hide_banner", "-loglevel", "error", "-ss", str(src), "-i", source,
+         *slow, "-frames:v", str(nframes), "-an",
          "-c:v", "libx264", "-preset", "veryfast", "-crf", "18", "-r", str(FPS),
          "-g", "30", "-pix_fmt", "yuv420p", "-avoid_negative_ts", "make_zero",
          "-reset_timestamps", "1", f, "-y"])
     seg_files.append(f)
-    print(f"  seg{i} {t1-t0:5.2f}s ({nframes}f) from {src}s")
+    print(f"  seg{i} {t1-t0:5.2f}s ({nframes}f) from {src}s"
+          + (f" at {speed}x, source {src}-{src + (t1 - t0) * speed:.2f}s" if speed != 1.0 else ""))
 open(f"{D}/list.txt", "w").write("".join(f"file '{f}'\n" for f in seg_files))
 run([FF, "-hide_banner", "-loglevel", "error", "-f", "concat", "-safe", "0",
      "-i", f"{D}/list.txt", "-c", "copy", f"{D}/picture.mp4", "-y"])

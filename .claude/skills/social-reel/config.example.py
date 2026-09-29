@@ -6,7 +6,13 @@ BED_START = 0.60  # one continuous audio pull from the trailer's own music
 LEAD = 0.25
 GAPS = [0.35, 0.30, 0.45, 0.45, 0.45, 0.45, 0.35, 0.45, 0.50, 0.00]
 
-# (reel_t0, reel_t1, source_start). The trailer only carries ~29s of usable
+# (reel_t0, reel_t1, source_start[, speed]). An optional speed below 1.0 slows
+# the segment to hold a short but near-static shot longer; it then reads
+# (reel_t1 - reel_t0) * speed seconds of source. Slowed segments read SLOW_SRC when
+# it is set: point it at the 60fps download, and 0.5x turns each source frame into
+# one output frame, so a pan stays smooth instead of stepping on repeated frames.
+# SLOW_SRC = "/path/to/trailer_60fps.mp4"
+# The trailer only carries ~29s of usable
 # footage before its own logo card, and the reel runs 33.5s, so two cuts step
 # back into the fight they just left. Both land inside busy combat where a
 # rewind reads as another exchange rather than a repeat.

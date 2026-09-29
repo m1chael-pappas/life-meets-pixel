@@ -39,19 +39,22 @@ curl -sSL -o PressStart2P.ttf \
 
 ## 1. Find the trailer
 
-1. **Steam** is the best source for games. `https://store.steampowered.com/api/appdetails?appids=<appid>&cc=au&l=en` returns `data.movies[]` (trailer name + thumbnail) and `data.screenshots[].path_full`. Note Steam's own trailer URLs are **DASH/HLS only** and will not download simply, so use them only to confirm a trailer exists.
-2. **Get the publisher's YouTube upload** and download from there. Search `"<title>" launch trailer <publisher>`.
-3. **Verify the URL actually is the right video** before using it: fetch the page and check the title. Do not trust a search snippet.
-
-```bash
-python3 -m yt_dlp --ffmpeg-location "$FF" \
-  -f "bv*[height<=1080]+ba/b[height<=1080]" --merge-output-format mp4 \
-  -o "trailer.%(ext)s" "<youtube url>"
-```
+1. **Steam** is the best source for games. `https://store.steampowered.com/api/appdetails?appids=<appid>&cc=au&l=en` returns `data.movies[]` (trailer name, thumbnail and `hls_h264`) and `data.screenshots[].path_full`.
+2. **Download from Steam's HLS stream.** YouTube downloads 403 mid-stream from this machine (yt-dlp 2026.07.04, every player client), and ffmpeg cannot open Steam's playlist directly. The playlists are plain lists of fMP4 chunks, so `curl` them yourself. `hls_264_0_video.m3u8` is 1080p video only and the audio is a separate playlist (`hls_264_4_audio.m3u8`) named in the master; concatenate each playlist's `#EXT-X-MAP` init segment and its chunks into one file, remux with `-c copy`, then mux the two.
+   ```bash
+   B=<hls_h264 URL without the file name>
+   for p in hls_264_0_video hls_264_4_audio; do
+     curl -s "$B/$p.m3u8" > $p.m3u8
+     { curl -s "$B/$(grep -oE 'URI="[^"]+"' $p.m3u8 | cut -d'"' -f2)"
+       for s in $(grep -vE '^#' $p.m3u8); do curl -s "$B/$s"; done; } > $p.mp4
+   done
+   "$FF" -i hls_264_0_video.mp4 -i hls_264_4_audio.mp4 -map 0:v -map 1:a -c copy trailer.mp4
+   ```
+3. **Embed the publisher's YouTube upload** in the article, not an outlet reupload. Check the `"author"` on the watch page: GameTrailers reuploads often rank first.
 
 ## 2. Normalise the source
 
-yt-dlp merges AV1 video + Opus audio into mp4, which seeks badly. Convert once to H.264 + AAC with a keyframe every second:
+Steam's stream is 60fps with a keyframe every few seconds, which seeks badly. Convert once to 30fps H.264 + AAC with a keyframe every second:
 
 ```bash
 "$FF" -i trailer.mp4 -c:v libx264 -preset veryfast -crf 18 -r 30 -g 30 \
@@ -193,7 +196,7 @@ curl -sL -O https://github.com/thewh1teagle/kokoro-onnx/releases/download/model-
 
 Kokoro needs `espeak-ng` and there is no sudo on this machine, so use the **`espeakng-loader` pip wheel**, which ships the shared library: set `ESPEAK_DATA_PATH` and `PHONEMIZER_ESPEAK_LIBRARY` from it before importing. Do not `pip install kokoro` (the non-ONNX package): its `misaki` -> `spacy` chain fails to build on Python 3.13.
 
-**Voice: `bm_fable`, not `bm_lewis`.** Lewis was the earlier default and Michael called the read a "continuous monotone". Measuring pitch spread (autocorrelation F0, p10-p90) across the British and American male voices settled it: fable 82 Hz, george 77, lewis 62, michael 55, daniel 50. Pair it with one clip per sentence and a real 0.3-0.55s silence between them, longest before a punchline: generating the whole script as one clip is what made it run together in the first place.
+**Voice: `bm_lewis`.** Michael picked it by ear over `bm_fable` on the Graveyard Keeper 2 reel (2026-09-29), calling it "the original". An earlier read of Lewis was called a "continuous monotone", but that came from generating the whole script as one clip. Generate one clip per sentence with a real 0.25-0.55s silence between them, longest before a punchline, and Lewis reads fine. For reference, pitch spread (autocorrelation F0, p10-p90): fable 82 Hz, george 77, lewis 62, michael 55, daniel 50.
 
 **There is no Australian voice. Do not go looking for one again.** Chatterbox has no voice bank at all: one default American voice, and everything else is zero-shot cloning from an audio prompt (`SUPPORTED_LANGUAGES` is languages, not accents). Kokoro's 54 voices cover American, British, Spanish, French, Hindi, Italian, Japanese, Portuguese and Chinese only. **`bm_lewis`** (British male) is the settled default: it reads far less wrong than American on an Australian site, and it was the only British voice whose lines all fit inside a 3.8s beat at speed 1.0. Cloning Michael's own voice with Chatterbox is the only real route to an Australian accent and needs him to record a sample first.
 
@@ -202,6 +205,7 @@ Budget roughly **8 to 10 words per 3.8s beat**, generate each line separately, a
 ### Audio
 
 - Keep the trailer's own audio as the bed. With VO, normalise the music to **-17 LUFS** rather than -14 so the voice has somewhere to sit.
+- **With VO, pull the bed from a window with no in-game dialogue**, or the game's voice actors talk over ours. Silero VAD lists the trailer's speech in seconds (`torch.hub.load('snakers4/silero-vad', 'silero_vad', trust_repo=True)` on a 16 kHz mono pull). Graveyard Keeper 2's trailer only spoke between 61.35s and 71.10s, so the bed started at 72.8s and its closing logo hit landed on the name reveal.
 - **Duck and mix in numpy, not in ffmpeg.** `sidechaincompress` into `amix` silently truncated the mixed stream by ~0.55s on this build, which cut the tail off the name reveal, and `apad` would only have hidden it. Build the duck envelope yourself (-9dB under each line, 15ms attack / 350ms release), add the VO, limit, then `assert len(mix) == int(TOTAL*SR)`.
 - **With VO, the tail fade goes on the MUSIC ONLY.** The reveal line runs to ~22.95s and the music fade starts at 21.8s, so fading the mixed bus swallows the game's name, which is the one thing the reel exists to deliver. Apply the fade to the music array before adding the voice, then put a 120ms safety fade on the very end.
 - **Set the VO gain from the MEASURED ducked bed, never a fixed multiplier.** Kokoro's output is quiet, and `vo * 1.30` over a -17 LUFS bed ducked 9 dB left only **1.8 dB** of separation, which is a voice fighting the music. Measure and solve for the gain, targeting 13 dB:
