@@ -5,7 +5,7 @@ import { ContactForm } from "@/components/retro/contact-form";
 import { SocialTiles } from "@/components/sections/social-section";
 import { SiteHeader } from "@/components/site-header";
 import { SITE_CONFIG, OG_IMAGE } from "@/lib/site/constants";
-import { authorInitial, authorLevel } from "@/lib/content/mappings";
+import { authorAccent, authorInitial, authorLevel } from "@/lib/content/mappings";
 import { ALL_AUTHORS_QUERY, fetchOptions } from "@/lib/content/queries";
 import type { Author } from "@/lib/content/types";
 import { client } from "@/sanity/client";
@@ -56,20 +56,15 @@ export default async function ContactPage() {
 
           <aside className="contact-side">
             {authors.slice(0, 4).map((a) => (
-              <div
-                key={a._id}
-                className="staff-card"
-                style={{ color: a.accentColor || "var(--neon-2)" }}
-              >
-                <div
-                  className="staff-card__avatar"
-                  style={{ color: a.accentColor || "var(--neon-2)" }}
-                >
+              <div key={a._id} className="staff-card" style={{ color: authorAccent(a.accentColor) }}>
+                <div className="staff-card__avatar" aria-hidden="true">
                   {authorInitial(a.name)}
                 </div>
                 <div>
-                  <div className="staff-card__name" style={{ color: "var(--ink)" }}>
-                    {a.name}
+                  <div className="staff-card__name">
+                    <Link href={`/author/${a.slug.current}`} className="staff-card__link">
+                      {a.name}
+                    </Link>
                     <span className="staff-card__lvl">
                       LV {authorLevel(a.reviewCount, a.newsCount)} · CRITIC
                     </span>
@@ -77,10 +72,8 @@ export default async function ContactPage() {
                   <div className="staff-card__role">Reviewer</div>
                   {a.bio && <p className="staff-card__bio">{a.bio}</p>}
                   {a.email && (
-                    <p className="staff-card__bio" style={{ marginTop: 6 }}>
-                      <a href={`mailto:${a.email}`} style={{ color: "var(--neon-2)" }}>
-                        {a.email}
-                      </a>
+                    <p className="staff-card__email">
+                      <a href={`mailto:${a.email}`}>{a.email}</a>
                     </p>
                   )}
                 </div>

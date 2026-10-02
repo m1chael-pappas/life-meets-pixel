@@ -1966,6 +1966,7 @@ textarea.field-input { min-height: 140px; resize: vertical; line-height: 1.6; }
 }
 .contact-side { display: flex; flex-direction: column; gap: 16px; }
 .staff-card {
+  position: relative;
   background: var(--bg-1);
   border: 3px solid var(--bg-3);
   box-shadow: 4px 4px 0 var(--shadow-hard);
@@ -1993,11 +1994,13 @@ textarea.field-input { min-height: 140px; resize: vertical; line-height: 1.6; }
   font-size: 14px;
   color: var(--ink);
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 8px;
   margin-bottom: 4px;
 }
 .staff-card__lvl {
+  white-space: nowrap;
   font-family: var(--font-press-start-2p), system-ui, monospace;
   font-size: 11px;
   color: var(--neon-3);
@@ -2013,10 +2016,39 @@ textarea.field-input { min-height: 140px; resize: vertical; line-height: 1.6; }
   letter-spacing: 0.1em;
   margin-bottom: 6px;
 }
+/* The author's name links to their page, and the link covers the whole card. */
+.staff-card__link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+  color: inherit;
+}
+.staff-card__link::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+.staff-card:hover .staff-card__link,
+.staff-card__link:focus-visible { color: var(--neon-2); }
 .staff-card__bio {
   font-family: var(--font-jetbrains-mono), ui-monospace, monospace;
-  font-size: 13px;
+  font-size: 15px;
   color: var(--ink-dim);
+  line-height: 1.6;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+/* Above the card link, so the address stays its own target. */
+.staff-card__email {
+  position: relative;
+  z-index: 1;
+  width: fit-content;
+  margin-top: 8px;
+  font-family: var(--font-jetbrains-mono), ui-monospace, monospace;
+  font-size: 14px;
   line-height: 1.55;
 }
 .inbox-card {
@@ -3400,7 +3432,8 @@ main:has(> .multiplayer-band:last-child) + .lmp-footer { margin-top: 0; }
   .staff-card__avatar { width: 56px; height: 56px; font-size: 18px; border-width: 2px; }
   .staff-card__name { font-size: 11px; }
   .staff-card__role { font-size: 11px; }
-  .staff-card__bio { font-size: 11px; }
+  .staff-card__bio { font-size: 13px; }
+  .staff-card__email { font-size: 13px; }
   .staff-card__lvl { font-size: 11px; padding: 2px 5px; }
 
   .inbox-card { padding: 14px; }
