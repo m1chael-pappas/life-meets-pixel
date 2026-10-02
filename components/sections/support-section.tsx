@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-import { HeartPlayerTwo, Sunburst } from "@/components/retro/arcade-art";
+import { HeartPlayerTwo, MarqueeWords, Sunburst } from "@/components/retro/arcade-art";
 
 /**
  * The homepage membership pitch as a versus screen: P1 (the site's promise)
@@ -35,7 +35,8 @@ export default function SupportSection() {
           <div className="vs-card__copy">
             <span className="player-tag player-tag--dark">P2 · ???</span>
             <h2 id="vs-title" className="extruded-title extruded-title--on-pink vs-card__title">
-              <span className="sr-only">Player 2 wanted: </span>PRESS START
+              <span className="sr-only">Player 2 wanted: </span>
+              <MarqueeWords text="PRESS START" />
             </h2>
             <div className="vs-card__actions">
               <Link href="/membership" className="retro-btn retro-btn--dark">

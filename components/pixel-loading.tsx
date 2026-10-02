@@ -15,8 +15,8 @@
 // (Pixel-Icon Rule), three `rounded-full` elements and a `rounded-full`
 // progress bar (Zero-Radius Rule), `font-bold` on a face that ships one weight
 // (No-Weight Rule), and shadcn semantic tokens that never respond to
-// `data-palette` (Palette-Agnostic Rule) — so on the Gameboy and Amber
-// palettes it was the only full-colour thing on screen.
+// `data-palette` (Palette-Agnostic Rule) — so on the Amber palette it was
+// the only full-colour thing on screen.
 
 import { PixelHeart } from "@/components/retro/sprites";
 

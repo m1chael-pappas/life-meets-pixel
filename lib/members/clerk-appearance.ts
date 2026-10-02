@@ -5,6 +5,8 @@
  * and text renders near-invisible. Values are the Midnight Neon palette
  * (Clerk chrome intentionally stays midnight even when the palette switches).
  * `elements` rules go straight to CSS, so var() is fine there.
+ * `fontSize` and `spacing` are in px: Clerk's rem defaults resolve against the
+ * site's 15px root and render body text at 12px.
  */
 export const clerkAppearance = {
   // Both variable generations on purpose: the runtime clerk-js (CDN) reads
@@ -28,6 +30,8 @@ export const clerkAppearance = {
     colorWarning: "#ffd23d",
     borderRadius: "0px",
     fontFamily: "var(--font-jetbrains-mono), monospace",
+    fontSize: "16px",
+    spacing: "18px",
   },
   elements: {
     card: {
@@ -36,13 +40,17 @@ export const clerkAppearance = {
     },
     headerTitle: {
       fontFamily: "var(--font-press-start-2p), monospace",
-      fontSize: "14px",
+      fontSize: "16px",
       lineHeight: "1.6",
     },
     formButtonPrimary: {
       fontFamily: "var(--font-press-start-2p), monospace",
-      fontSize: "11px",
+      fontSize: "12px",
       textTransform: "uppercase",
+    },
+    userButtonAvatarBox: {
+      width: "36px",
+      height: "36px",
     },
   },
 } as const;

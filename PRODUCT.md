@@ -43,13 +43,13 @@ This is the claim the owner would defend hardest, and it is the one a neighbouri
 - Author profile pages; site-wide stats (total reviews, total news, average score, publishing since 2025).
 - Membership via Clerk — one "Player 2" plan holding four *features*: `ad_free`, `comments`, `full_rss`, `member_posts`. Gating is always feature-based, never plan-based, so tiers and pricing stay a dashboard decision.
 - Comments (Neon Postgres), member RSS tokens, contact form (Resend), display advertising (AdSense), affiliate storefront links.
-- Four switchable colour palettes (default, `gameboy`, `amber`, `candy`) selected via `data-palette` on `<html>`, plus a tweaks panel, sound effects and a Konami code easter egg.
+- Three switchable colour palettes (default, `amber`, and `candy`, the light mode) selected via `data-palette` on `<html>`, plus a tweaks panel, sound effects and a Konami code easter egg.
 
 **Non-negotiable product facts**
 
 1. **Articles are never paywalled.** Membership buys perks — ad-free reading, comments, full RSS, member posts — never access to a review or news post. Free site, paid perks. Any design that gates editorial content behind sign-in is wrong.
 2. **The 10-point score plus its 3–5 component breakdown is the core editorial artifact.** It must stay legible and prominent on every surface that carries a review. The breakdown matters more than the headline figure and should never be demoted to a footnote or hidden behind interaction.
-3. **The retro-arcade identity is binding.** Press Start 2P / JetBrains Mono / VT323, scanline overlay, CRT hero frame, pixel sprites, HP-bar score meters, four switchable palettes. This is not up for replacement — only for being executed better. See Brand Commitments.
+3. **The retro-arcade identity is binding.** Press Start 2P / JetBrains Mono / VT323, New Spirit for running prose, scanline overlay, CRT hero frame, pixel sprites, HP-bar score meters, three switchable palettes. This is not up for replacement — only for being executed better. See Brand Commitments.
 
 **Technical constraints**
 
@@ -67,7 +67,7 @@ This is the claim the owner would defend hardest, and it is the one a neighbouri
 ## Brand Commitments
 
 - **Name:** Life Meets Pixel. **Domain:** lifemeetspixel.com. **Voice:** first-person plural editorial, plain-spoken, Australian English, no marketing register. Representative lines already shipped: "We do not round up to be kind. If a review lands at 5, that is the review." / "► TELL US WE ARE WRONG".
-- **Retro-arcade visual world is a binding brand commitment**, confirmed by the owner. Fonts, scanlines, CRT framing, sprites, HP bars and the four palettes are identity, not decoration.
+- **Retro-arcade visual world is a binding brand commitment**, confirmed by the owner. Fonts, scanlines, CRT framing, sprites, HP bars and the three palettes are identity, not decoration.
 - **Real imagery only.** Every image is official key art, press-kit material, storefront screenshots or publisher stills, credited in the caption. **No AI-generated images, ever.** No lifting another outlet's screenshots, and nothing with another outlet's watermark. Trailers embed only from the publisher's own channel, never a reupload. This is stated publicly at `/about`, so it is a promise to readers, not an internal preference.
 - **No image is reused across articles**, and an image must depict what its section is actually about.
 - **Social copy uses search keywords woven into natural sentences — never hashtags**, on any platform. Instagram CTA is always "link in bio", never a raw URL.
@@ -92,6 +92,6 @@ This is the claim the owner would defend hardest, and it is the one a neighbouri
 
 ## Accessibility & Inclusion
 
-WCAG AA contrast is treated as a hard requirement in this codebase, not an aspiration: `app/globals.css` carries per-token contrast-ratio annotations and documented remediations (for example the `candy` palette's `--neon-1` moved from `#ff3d8b` to `#bf004d` to clear 4.5:1 on `--bg-0`, and a note that a token used as both foreground and background must clear the bar in both roles). A skip link targets `#main-content`, and decorative sprites are `aria-hidden`.
+WCAG AA contrast is treated as a hard requirement in this codebase, not an aspiration: `app/globals.css` carries per-token contrast-ratio annotations and documented remediations (for example the `candy` palette's `--neon-1` is `#c8005a` rather than Midnight's `#ff3d8b`, to clear 4.5:1 on `--bg-0`, and a note that a token used as both foreground and background must clear the bar in both roles). A skip link targets `#main-content`, and decorative sprites are `aria-hidden`.
 
-This matters more than usual here because the identity is a high-contrast neon-on-dark arcade aesthetic with a scanline overlay and four swappable palettes — every palette must independently clear AA for both text and non-text roles. `prefers-reduced-motion: reduce` is already honoured in `app/globals.css` and in the sound engine, and any new motion or CRT effect is expected to honour it too. Recorded from code evidence; no additional user-specific accessibility requirement was established in interview.
+This matters more than usual here because the identity is a high-contrast neon-on-dark arcade aesthetic with a scanline overlay and three swappable palettes — every palette must independently clear AA for both text and non-text roles. `prefers-reduced-motion: reduce` is already honoured in `app/globals.css` and in the sound engine, and any new motion or CRT effect is expected to honour it too. Recorded from code evidence; no additional user-specific accessibility requirement was established in interview.

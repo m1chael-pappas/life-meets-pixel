@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import { MarqueeWords } from "@/components/retro/arcade-art";
 import { ReviewCard } from "@/components/retro/review-card";
 import { getHeroFeatureId } from "@/lib/content/hero-pool";
 import { REVIEWS_QUERY, fetchOptions } from "@/lib/content/queries";
@@ -24,8 +25,9 @@ export default async function ReviewsSection() {
     <section className="lmp-section">
       <div className="section-head">
         <div className="section-head__title">
-          <span className="num">01</span>
-          <h2>LATEST REVIEWS</h2>
+          <h2 className="extruded-title extruded-title--pink section-title">
+            <MarqueeWords text="LATEST REVIEWS" />
+          </h2>
         </div>
         <Link href="/reviews" className="section-head__action">
           VIEW ALL

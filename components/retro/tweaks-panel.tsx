@@ -4,11 +4,10 @@ import { useEffect, useState } from "react";
 
 import { getSound } from "./sound-engine";
 
-type Palette = "midnight" | "gameboy" | "amber" | "candy";
+type Palette = "midnight" | "amber" | "candy";
 
 const PALETTES: Array<{ id: Palette; label: string }> = [
   { id: "midnight", label: "MIDNIGHT" },
-  { id: "gameboy", label: "GAMEBOY" },
   { id: "amber", label: "AMBER" },
   { id: "candy", label: "CANDY" },
 ];
@@ -16,10 +15,11 @@ const PALETTES: Array<{ id: Palette; label: string }> = [
 const LS_PALETTE = "lmp_palette";
 const LS_SCANLINES = "lmp_scanlines";
 
-/** Saved palette, or `midnight` on the server and before anything is saved. */
+/** Saved palette when it is still offered; otherwise `midnight`, as on the server. */
 function readPalette(): Palette {
   if (typeof window === "undefined") return "midnight";
-  return (localStorage.getItem(LS_PALETTE) as Palette) || "midnight";
+  const saved = localStorage.getItem(LS_PALETTE);
+  return PALETTES.find((p) => p.id === saved)?.id ?? "midnight";
 }
 
 /** Saved scanline preference; `false` on the server. */

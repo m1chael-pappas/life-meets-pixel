@@ -1,6 +1,6 @@
 import type { SVGProps } from "react";
 
-import { Sunburst, WalkingCartridge } from "@/components/retro/arcade-art";
+import { MarqueeWords, Sunburst } from "@/components/retro/arcade-art";
 import { RSS_CHANNEL, SOCIAL_CHANNELS } from "@/lib/site/constants";
 
 /**
@@ -88,15 +88,10 @@ export default function SocialSection() {
         <Sunburst className="multiplayer-band__rays" />
       </div>
       <div className="lmp-container">
-        <div className="multiplayer-band__head">
-          <div>
-            <p className="section-kicker">03 · CONNECT WITH US</p>
-            <h2 id="mp-title" className="extruded-title extruded-title--lime multiplayer-title">
-              MULTIPLAYER
-            </h2>
-          </div>
-          <WalkingCartridge className="multiplayer-band__walker" />
-        </div>
+        <p className="section-kicker">CONNECT WITH US</p>
+        <h2 id="mp-title" className="extruded-title extruded-title--lime multiplayer-title">
+          <MarqueeWords text="MULTIPLAYER" />
+        </h2>
         <SocialTiles />
       </div>
     </section>

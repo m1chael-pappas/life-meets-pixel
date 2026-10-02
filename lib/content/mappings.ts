@@ -140,8 +140,8 @@ export function authorInitial(name: string): string {
 }
 
 /** The four palette accents, with the hue each one sits at in the default
- *  palette. Hue is the only stable thing across palettes: gameboy's "magenta"
- *  is a green, but it is still the token that means the same thing. */
+ *  palette. Hue is the only stable thing across palettes: amber's "magenta"
+ *  is an orange, but it is still the token that means the same thing. */
 const ACCENT_HUES: Array<{ hue: number; token: string }> = [
   { hue: 338, token: "var(--neon-1)" },
   { hue: 189, token: "var(--neon-2)" },

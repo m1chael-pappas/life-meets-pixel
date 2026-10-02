@@ -92,25 +92,25 @@ typography:
     lineHeight: 1.5
     letterSpacing: "0.02em"
   lede:
-    fontFamily: "IBM Plex Sans, system-ui, sans-serif"
+    fontFamily: "New Spirit, Georgia, serif"
     fontSize: "20px"
     fontWeight: 400
     lineHeight: 1.6
     letterSpacing: "normal"
   body:
-    fontFamily: "IBM Plex Sans, system-ui, sans-serif"
+    fontFamily: "New Spirit, Georgia, serif"
     fontSize: "18px"
     fontWeight: 400
     lineHeight: 1.7
     letterSpacing: "normal"
   body-article:
-    fontFamily: "IBM Plex Sans, system-ui, sans-serif"
+    fontFamily: "New Spirit, Georgia, serif"
     fontSize: "17px"
     fontWeight: 400
     lineHeight: 1.7
     letterSpacing: "normal"
   body-lg:
-    fontFamily: "IBM Plex Sans, system-ui, sans-serif"
+    fontFamily: "New Spirit, Georgia, serif"
     fontSize: "16px"
     fontWeight: 400
     lineHeight: 1.55
@@ -245,7 +245,7 @@ components:
 
 **Creative North Star: "The 1998 Games Magazine"**
 
-This is a newsstand games magazine that happens to be rendered in pixels. Not an arcade cabinet, not a nostalgia gag — a publication. The density is editorial: numbered section headers, boxed sidebars, ruled dividers, pull quotes, a scored verdict with its workings printed alongside. Every surface behaves like a page that was laid out by someone with an opinion and a deadline, then reproduced on a CRT instead of on paper.
+This is a newsstand games magazine that happens to be rendered in pixels. Not an arcade cabinet, not a nostalgia gag — a publication. The density is editorial: ruled section headers, boxed sidebars, ruled dividers, pull quotes, a scored verdict with its workings printed alongside. Every surface behaves like a page that was laid out by someone with an opinion and a deadline, then reproduced on a CRT instead of on paper.
 
 The homepage is the one place the system plays the game it borrows from.
 Its set pieces (the boss screen and High Scores cabinets, the hills band behind News & Previews, the character bio, the versus screen and the cartridge links) are arcade and platformer furniture, and they hold the only rounded shapes and soft light in the system.
@@ -253,16 +253,16 @@ Every page past the homepage stays a publication.
 
 The mood is **warm and nostalgic, playful and irreverent**. The pixels are affection, not costume — the system loves the era it borrows from and never winks at it. That affection shows up as craft (a 9×9 hand-plotted sprite for every category, hearts that render in halves, a score meter built from twenty discrete cells) and the irreverence shows up as voice (a `CHARACTER BIO` that maxes out honesty and zeroes out sponsors, a `► TELL US WE ARE WRONG` button, a Konami code, an optional scanline overlay you can switch off). The distinction matters more than any single token: **an era rendered with care reads as design; an era rendered as a joke reads as kitsch, and kitsch is a confirmed anti-reference.**
 
-The system is built to survive a full palette swap. Four complete palettes — Midnight Neon, Gameboy, Amber and Candy — swap under identical markup via `data-palette` on `<html>`, and Candy inverts the whole thing to a light ground. Nothing in the system may assume a dark background, a light accent, or a specific hue. That single constraint explains most of the token architecture below: `--on-accent`, `--scrim-rgb`, `--shadow-hard` and `--focus-ring` all exist because a literal colour that worked on Midnight broke on Candy.
+The system is built to survive a full palette swap. Three complete palettes (Midnight Neon, Amber and Candy) swap under identical markup via `data-palette` on `<html>`, and Candy is the light mode: a white page with ink type and hard ink shadows. Nothing in the system may assume a dark background, a light accent, or a specific hue. That single constraint explains most of the token architecture below: `--on-accent`, `--scrim-rgb`, `--shadow-hard`, `--type-shadow` and `--focus-ring` all exist because a literal colour that worked on Midnight broke on Candy.
 
 Confirmed anti-references, all three binding: **modern SaaS minimalism** (soft gradients, rounded cards, glassmorphism, thin grey type on white), **mainstream games press** (IGN/GameSpot chrome, red-and-white brand bars, dense ad rails, autoplay video), and **nostalgia kitsch** (Comic Sans, star fields, spinning GIFs, "under construction" gags).
 
 **Key Characteristics:**
 
 - Zero radius everywhere except the homepage arcade set pieces: the cabinet bezels and the VS coin
-- Four fonts with four strictly separate jobs: Press Start 2P headings and labels, IBM Plex Sans prose, JetBrains Mono data, VT323 pull quotes only
+- Four fonts with four strictly separate jobs: Press Start 2P headings and labels, New Spirit prose, JetBrains Mono data, VT323 pull quotes only
 - Hard, un-blurred, pure-black offset shadows as the entire depth model
-- Four complete palettes under one markup, each independently WCAG AA
+- Three complete palettes under one markup, each independently WCAG AA
 - Border weight (1 / 2 / 3 / 4 / 6px) encodes hierarchy the way a magazine uses rules
 - Hand-plotted pixel sprites, never a vector icon set
 - Controls are tactile: they lift toward you on hover and depress on click
@@ -297,15 +297,14 @@ Neon on near-black with a magenta/cyan lead and lime reserved for good news — 
 
 ### Alternate Palettes
 
-Three complete re-mappings ship alongside Midnight Neon, switched by `data-palette` on `<html>` and persisted to `localStorage`:
+Two complete re-mappings ship alongside Midnight Neon, switched by `data-palette` on `<html>` and persisted to `localStorage`:
 
-- **Gameboy** — DMG green, ground `#0f380f` through `#4a7c4a`, ink `#9bbc0f`. Accents collapse to two greens; the palette deliberately has less colour information than the others. Note that the four *authentic* DMG shades cannot serve as both grounds and inks and still clear AA — `--bg-2` was darkened to `#1f421f` and `--ink-dim`/`--neon-2` lifted to `#a8c818` for exactly that reason. `--bg-3` remains a border colour and is still below AA as a text ground on `.hero-side-item:hover`.
-- **Amber** — monochrome phosphor terminal, ground `#0d0700`, ink `#ffb000`, with `#ff5252` as the only contrasting accent.
-- **Candy** — the light palette, ground `#fdf4ff`, ink `#2a1a3d`. Its accents are **not** the Midnight accents; every one was independently darkened for legibility on a light ground (`#bf004d`, `#006979`, `#346c20`, `#914f00`), and `--shadow-hard` becomes a white glow rather than black.
+- **Amber** — monochrome phosphor terminal, ground `#0d0700`, ink `#ffb000`, with `#ff5252` as the only contrasting accent. Like Candy, its lit surfaces stay Midnight and its character art and marquee lettering keep the bright `--pop-*` accents.
+- **Candy** — the light mode. Page `#ffffff`, panels `#f6f3fc` and `#ebe5f7`, border `#cdc3e6`, ink `#14112e`. Its accents are **not** the Midnight accents; each is dark enough to clear 4.5:1 as text on the three grounds and as a fill under white type (`#c8005a`, `#006f84`, `#2b7318`, `#a14c00`). `--shadow-hard` is the ink colour, so cards keep a hard dark offset shadow, and `--type-shadow` is white. Three kinds of surface stay lit and keep the Midnight tokens inside a Candy or Amber page: the homepage cabinet screens, the contact terminal and Clerk's cards. Card images carry no foot fade on Candy (`--media-fade: transparent`); on the dark palettes the fade is the palette scrim. Marquee lettering and character art use `--pop-1` to `--pop-4`, `--art-paper` and `--art-shade`, which hold the bright accents and the light and dark body colours in every palette.
 
 ### Named Rules
 
-**The Palette-Agnostic Rule.** Never hardcode a colour that already exists as a token. Four palettes swap under identical markup, so a literal `rgba(10, 8, 32, …)` in a scrim is not a shortcut, it is a defect on the other three — this exact mistake put the hero headline at 1.31:1 on Candy. Scrims use `rgba(var(--scrim-rgb), …)`, hard shadows use `var(--shadow-hard)`, and darker accent shades use `--neon-1-deep` to `--neon-4-deep`, which mix each palette's own accent 72% with black.
+**The Palette-Agnostic Rule.** Never hardcode a colour that already exists as a token. Three palettes swap under identical markup, so a literal `rgba(10, 8, 32, …)` in a scrim is not a shortcut, it is a defect on the other two — this exact mistake put the hero headline at 1.31:1 on Candy. Scrims use `rgba(var(--scrim-rgb), …)`, hard box shadows use `var(--shadow-hard)`, hard type shadows use `var(--type-shadow)`, and darker accent shades use `--neon-1-deep` to `--neon-4-deep`, which mix each palette's own accent 72% with black.
 
 **The Both-Ways Rule.** Any token used as both a foreground and a background needs its counterpart tokenised too. Text sitting on a neon fill is `var(--on-accent)`, never `#000` — when Candy's accents were darkened for legibility as *text*, black-on-accent fell to 3.32:1 as a *background*. The same trap runs the other way: the hard chips that sit on imagery (score box, category badge, social mark, author avatar) hardcoded a `#000` *ground* under a tokenised `color`, which put Candy's deliberately-darkened accents at 3.31:1 on black. Those grounds are now `var(--chip-ground)`, defined once as `var(--bg-0)` so it re-resolves per palette without an override. After changing any colour token, grep for it as a `background:` value, not just as a `color:` value.
 
@@ -313,18 +312,18 @@ Three complete re-mappings ship alongside Midnight Neon, switched by `data-palet
 
 **The Focus Ring Is Not An Accent Rule.** `--focus-ring` is its own token and must never be pointed at `--neon-*`. The accent that reads on a dark ground is invisible on the light one; Candy's focus ring is near-black by design.
 
-**The Four-Ground Audit Rule.** Contrast is checked against every background token the colour can land on (`--bg-0` through `--bg-3`), not just the page ground. Checking `--bg-0` alone is how `--ink-dim` on `--bg-2` shipped at 2.75:1 in Gameboy — body copy inside every card.
+**The Four-Ground Audit Rule.** Contrast is checked against every background token the colour can land on (`--bg-0` through `--bg-3`), not just the page ground. Checking `--bg-0` alone is how body copy inside every card once shipped at 2.75:1 on a retired palette.
 
 ## Typography
 
 **Display Font:** VT323 (with `monospace`)
-**Prose Font:** IBM Plex Sans (with `system-ui, sans-serif`)
+**Prose Font:** New Spirit, served by Adobe Fonts (with `Georgia, "Times New Roman", serif`)
 **Data/Label Font:** JetBrains Mono (with `ui-monospace, monospace`)
 **Heading Font:** Press Start 2P (with `system-ui, monospace`)
 
-**Character:** Four fonts, four jobs, no overlap. Press Start 2P is the magazine's cover type — chunky, all-caps by habit, and physically unreadable in a paragraph. IBM Plex Sans carries running prose. JetBrains Mono carries everything that is *read as data*: summaries, stat rows, scores, tags, timestamps, metadata, code. VT323 appears exactly once in the vocabulary, as the pull-quote voice, which is why it still feels like an event.
+**Character:** Four fonts, four jobs, no overlap. Press Start 2P is the magazine's cover type — chunky, all-caps by habit, and physically unreadable in a paragraph. New Spirit carries running prose. JetBrains Mono carries everything that is *read as data*: summaries, stat rows, scores, tags, timestamps, metadata, code. VT323 appears exactly once in the vocabulary, as the pull-quote voice, which is why it still feels like an event.
 
-**Why prose left the mono.** Until 2026-08-07 JetBrains Mono set every word on the site, which meant monospace signalled nothing — a TL;DR block read with exactly the texture of the paragraph beneath it. Measured on a real review at the 651px column, mono at 17px rendered **64 characters per line**: below the healthy 65–75 band and below this system's own 72ch cap, because monospace is wide by construction. Plex Sans at 18px lands on **72** in the identical column and runs 9% shorter. Plex Sans specifically because it is the sans sibling of a mono superfamily and sits beside JetBrains Mono without argument; not Inter, which walks into the SaaS-minimalism anti-reference; not a serif, which pulls toward a broadsheet arts page.
+**The prose face.** New Spirit replaced IBM Plex Sans on 2026-10-02 at the owner's direction. It is an Adobe Fonts family, loaded from the web project named in `NEXT_PUBLIC_ADOBE_FONTS_KIT_ID` and exposed to CSS as `--font-prose`. Without the kit the stack falls back to Georgia. Labels that used the old prose face at 600 weight (cartridge names, player tags, the bio kicker and stat labels) are JetBrains Mono 700, the system's label voice.
 
 ### Hierarchy
 
@@ -342,16 +341,16 @@ Two tiers sit outside that ramp on purpose, and neither is text:
 - **Display** (VT323 400, 26px, 1.4): pull quotes inside article body copy. Nowhere else, and VT323 appears nowhere else either.
 - **Headline** (24px, 1.4, `text-shadow: 4px 4px 0 var(--shadow-hard)`): the article title in the hero. The offset text shadow is part of the role, not decoration.
 - **Title** (22px, 1.4): page `h1` and article-body `h2` (magenta, 2px dashed bottom rule).
-- **Extruded** (24 · 32 · 40 · 48 · 56 · 64px, `.extruded-title`): the homepage set-piece titles, meaning the boss title, HIGH SCORES, MULTIPLAYER and PRESS START. Two accent bands and a hard rule step down-right at 1/20 of the size, snapped to whole pixels.
+- **Extruded** (24 · 32 · 40 · 48 · 56 · 64px, `.extruded-title`): the homepage set-piece titles, meaning the boss title, HIGH SCORES, MULTIPLAYER and PRESS START. Arcade marquee lettering: a per-line vertical gradient face with a white band, a thin edge ring, then three stacked copies each darker than the last over a hard shadow, stepping down-right at 9% of the size snapped to whole pixels. Letters are tracked 0.12em so one letter's layers clear the next. Titles are set word by word with `MarqueeWords` (`components/retro/arcade-art.tsx`): each `.extruded-word` draws its face in `::after` from `data-text`, and a word whose first glyph has a left side bearing in Press Start 2P (I, L, T, Y, 1 and some punctuation) is pulled back to the cell edge so wrapped lines share one left edge. The homepage section titles (LATEST REVIEWS, NEWS & PREVIEWS) use the same lettering at 24px, with no section numbers.
 - **Subhead** (16px): `h2`, article-body `h3`, the versus screen's lead and VS coin.
 - **Subhead-sm** (14px, 1.5): `h3`, card titles, score boxes.
 - **Label-lg** (12px, 0.1em): nav links, buttons, section numerals, stat keys.
 - **Label** (11px, 0.1em): badges, field labels, HP row heads, breadcrumbs, section-header actions. The most-used role in the system by count.
 
-**IBM Plex Sans (running prose):**
+**New Spirit (running prose):**
 
 - **Lede** (20px, 1.6, max 34em): the article standfirst, rendered from `review.summary`.
-- **Body** (18px, 1.7, max 34em): article copy. Renders ~68 characters per line.
+- **Body** (19px, 1.7): article copy, in `--ink`, running the full width of the article column.
 
 **JetBrains Mono (everything read as data):**
 
@@ -378,7 +377,7 @@ and a base-size fix that misses one regresses at that breakpoint.
 
 **The No-Weight Rule.** Press Start 2P and VT323 ship at 400 only, and headings explicitly set `font-weight: normal`. Hierarchy is built from size, colour and tracking, never from weight. JetBrains Mono loads 400/500/700 and is the only place a bold is available.
 
-**The Measure Rule.** Body copy is capped at **34em** on the prose face (18px x 34 = 612px, which measures ~68 characters). It is NOT capped in `ch`. `ch` is the advance of the character `0`: on a monospace face that equals one character, but on a proportional face it is much narrower than the average glyph, so the inherited `72ch` rendered **95 characters** at 1024px+ and 39 at 390px — further from the 65-75 band than the 64 of the mono it replaced. Any surface still set in JetBrains Mono may keep `ch`; anything on IBM Plex Sans uses `em`. **When a face changes, every `ch`-based cap silently stops meaning what it says.**
+**The Measure Rule.** Article body copy runs the full width of its column (owner's direction, 2026-10-02); the standfirst keeps a **34em** cap. Caps on the prose face are set in `em`, never `ch`. `ch` is the advance of the character `0`: on a monospace face that equals one character, but on a proportional face it is much narrower than the average glyph, so an inherited `72ch` rendered 95 characters. Any surface still set in JetBrains Mono may keep `ch`. **When a face changes, every `ch`-based cap silently stops meaning what it says.**
 
 ## Layout
 
@@ -447,7 +446,7 @@ Nothing outside them gets a corner.
 **The Pixel-Icon Rule.** Site-facing iconography is the sprite system, never a vector icon set. Lucide exists in the repo for one shadcn primitive's internals and must not migrate into site chrome — a smooth 24px stroke icon next to a 9×9 sprite instantly reads as a different product.
 
 **The No-Rotation Rule.** Never rotate an element that holds text.
-The one exception is the score burst on the boss screen, which tilts 12° with its text by design; the yellow kicker above the boss title tilts only its plate.
+The one exception is the score burst on the boss screen, which tilts 12° with its text by design. The yellow kicker above the boss title sits level: a tilted plate behind a single line of upright text read as crooked text.
 Any angle that is not a multiple of 90° resamples the glyphs, and pixel type loses its hard edges first.
 Tilt the shape and keep the label upright, as the cartridge links do: only `.cart-tile__shell` carries `--tilt`.
 
@@ -501,18 +500,20 @@ Tactile and clicky: these are physical hardware, and they move.
 **The Heart Row.** Five hand-plotted 9×9 pixel hearts rendering the same score in halves — full, half, empty. It is redundant with the score box on purpose: the number is for the reader who wants precision, the hearts for the reader scanning.
 
 **The Arcade Cabinets.** The homepage hero: two rounded bezels (6px `--shadow-hard` border, `--bezel-radius`, a 4px inset rule in the bezel accent, `--hard-shadow-lg`) housing the boss screen and the High Scores board.
-The boss screen shows the feature review from `getHeroPool()`: the extruded game title, the score starburst, a quote from `reviewTagline()`, and a segmented HP bar filled to the score.
+The boss screen shows the feature review from `getHeroPool()`: the extruded game title, the score starburst, a quote from `reviewTagline()`, a segmented HP bar filled to the score, and the cabinet mascot holding a sword.
 The High Scores board lists the all-time top ten from the same pool.
 Scanlines sit under the text, never over it, because they slice pixel glyphs.
 
 **The Hills Band.** The News & Previews backdrop: a full-bleed `--bg-1` band with 4px `--shadow-hard` rules top and bottom, two rolling hill bands in `--bg-2` and `--bg-3`, a black road with `--neon-4` dots, a cloud by the heading and one in the sky, and the smiling hill, all `aria-hidden` behind the unchanged news grid.
+The hill swaps to a surprised face and stretches 6% while the pointer is on its body.
 The scenery is pinned to the band's bottom edge, and the band carries extra bottom padding so the landscape shows below the cards.
 Latest Reviews above it stays on the plain page ground, so the homepage alternates plain and scenic sections.
 
-**The Multiplayer Band.** The homepage's last section: a full-bleed `--bg-1` band with faint `--bg-2` rays rising from its bottom edge, a black top rule, and the walking cartridge beside the MULTIPLAYER title (hidden below 400px).
+**The Multiplayer Band.** The homepage's last section: a full-bleed `--bg-1` band with faint `--bg-2` rays rising from its bottom edge, a black top rule, and the MULTIPLAYER title under a CONNECT WITH US label.
 It runs flush into the footer, whose pink rule is its bottom edge.
 
 **The Character Bio.** The about card: a P1 portrait panel of `--bg-3` rays on `--bg-2` with the smiling gamepad, the `G'DAY, PLAYER.` heading, a line of prose, and four joke stat bars that reuse `.hp-bar` with the `--stat` modifier.
+It idles: the rays turn once every 90 seconds, the stat bars fill as the card scrolls into view, and the gamepad runs a 2.4s wave loop timed after SVGator's "fire morphing" flame (a fast body pulse, a lean to the left, an arm that slides out of the right grip and waves, squinting eyes, and two twinkles rising). The loop is eased rather than stepped, by the owner's request. All of it stops under `prefers-reduced-motion`.
 The bars are solid because they are not scores.
 
 **The Versus Screen.** The membership pitch: P1 (the site's promise) on `--bg-1` against P2 (the reader) on `--neon-1` rays, split by a slanted `--neon-4` divider with black edges and a VS coin on its midpoint.
@@ -525,16 +526,16 @@ Only the shell tilts, and the label stays upright (see the No-Rotation Rule).
 
 **The Ticker.** A 32px marquee: a magenta label block with `--on-accent` text, then a 60s linear-scrolling monospace track of headlines separated by `◆` diamonds in cyan. The label carries a pause toggle, and the track also pauses on hover and on `:focus-within` — an infinite marquee with no stop control is a WCAG 2.2.2 failure at **Level A**, and `prefers-reduced-motion` is not a substitute because it only reaches readers who set the OS flag. The track is tripled for a seamless wrap, so the two duplicate sequences are `aria-hidden`; otherwise a screen reader wades through 30 headline strings before reaching `<main>`. The toggle is the one control in the system exempt from the 44px target: a 32px bar cannot hold one, so it meets WCAG 2.2 AA 2.5.8 (24×24) instead.
 
-**The Tweaks Panel.** A user-facing control surface exposing palette (Midnight / Gameboy / Amber / Candy), the scanline overlay, and sound effects, persisted to `localStorage`. Its existence is a system constraint: **any new surface must be checked in all four palettes and with scanlines on.**
+**The Tweaks Panel.** A user-facing control surface exposing palette (Midnight / Amber / Candy), the scanline overlay, and sound effects, persisted to `localStorage`. Its existence is a system constraint: **any new surface must be checked in all three palettes and with scanlines on.**
 
 ## Do's and Don'ts
 
 ### Do:
 
 - **Do** reach for a token before a literal. `--on-accent` for text on an accent fill, `rgba(var(--scrim-rgb), …)` for scrims, `var(--shadow-hard)` for offsets, `--neon-N-deep` for a darker accent.
-- **Do** verify every new surface in all four palettes, with scanlines on, before calling it finished. Candy is the one that breaks things — it is the only light ground.
+- **Do** verify every new surface in all three palettes, with scanlines on, before calling it finished. Candy is the one that breaks things — it is the only light ground.
 - **Do** check contrast against all four ground tokens (`--bg-0` … `--bg-3`), and check accents in both roles, as text and as fill.
-- **Do** keep running prose in IBM Plex Sans at the 34em measure (see the Measure Rule), and reserve Press Start 2P for headings, labels, numbers and buttons.
+- **Do** keep running prose in New Spirit (see the Measure Rule), and reserve Press Start 2P for headings, labels, numbers and buttons.
 - **Do** pair every hover transform with its shadow change (`-2px` / deeper offset), and give pressable things a real `:active` state (`+2px` / no offset).
 - **Do** use border weight as hierarchy: 1px divides, 2px trims a control, 3px builds a card, 4px frames an article, 6px is an arcade bezel.
 - **Do** render new iconography as pixel-grid sprites in `components/retro/sprites.tsx` and new item types through `lib/content/mappings.ts` — one card component serves all eight types.

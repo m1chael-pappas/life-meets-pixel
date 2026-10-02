@@ -2,7 +2,7 @@ import { Fragment, type CSSProperties } from "react";
 
 import Link from "next/link";
 
-import { CabArcadeBoss, ScoreStarburst, Sunburst, TwinkleStar } from "@/components/retro/arcade-art";
+import { CabArcadeBoss, MarqueeWords, ScoreStarburst, Sunburst, TwinkleStar } from "@/components/retro/arcade-art";
 import { PixelHeart } from "@/components/retro/sprites";
 import { getHeroPool } from "@/lib/content/hero-pool";
 import { reviewTagline } from "@/lib/content/mappings";
@@ -81,7 +81,7 @@ export default async function HeroSection() {
                 ★ TOP RATED<span className="boss-kicker__sep"> · </span>BOSS STAGE
               </p>
               <h2 id="boss-title" className="extruded-title extruded-title--pink boss-title" style={titleFit(gameTitle)}>
-                {gameTitle}
+                <MarqueeWords text={gameTitle} />
               </h2>
               <div className="score-burst" aria-hidden="true">
                 <ScoreStarburst />
@@ -129,7 +129,9 @@ export default async function HeroSection() {
         <div className="arcade-bezel arcade-bezel--pink">
           <div className="arcade-screen hs-board">
             <p className="hs-board__kicker">◆ ALL-TIME TOP 10 ◆</p>
-            <h2 className="extruded-title extruded-title--gold hs-board__title">HIGH SCORES</h2>
+            <h2 className="extruded-title extruded-title--gold hs-board__title">
+              <MarqueeWords text="HIGH SCORES" />
+            </h2>
             <div className="hs-row hs-row--head" aria-hidden="true">
               <span>RANK</span>
               <span>GAME</span>

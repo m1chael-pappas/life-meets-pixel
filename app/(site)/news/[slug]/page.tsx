@@ -251,11 +251,10 @@ export default async function NewsPostPage({ params }: NewsPostPageProps) {
               )}
               <h1 className="article-meta__title">{post.title}</h1>
               <p className="article-meta__lead">{post.excerpt}</p>
-              <div style={{ display: "flex", alignItems: "center", gap: 16, flexWrap: "wrap" }}>
+              <div className="article-byline">
                 <AuthorChip name={post.author.name} accentColor={post.author.accentColor} />
                 <time
                   dateTime={post.publishedAt}
-                  style={{ fontFamily: "var(--font-jetbrains-mono)", fontSize: 11, color: "var(--ink-mute)" }}
                 >
                   {relativeDate}
                 </time>

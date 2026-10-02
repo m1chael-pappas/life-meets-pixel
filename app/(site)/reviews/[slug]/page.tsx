@@ -401,14 +401,13 @@ export default async function ReviewPage({ params }: { params: Promise<{ slug: s
                 </span>
               </div>
 
-              <div style={{ display: "flex", alignItems: "center", gap: 16, flexWrap: "wrap" }}>
+              <div className="article-byline">
                 <AuthorChip
                   name={review.author.name}
                   accentColor={review.author.accentColor}
                 />
                 <time
                   dateTime={review.publishedAt}
-                  style={{ fontFamily: "var(--font-jetbrains-mono)", fontSize: 11, color: "var(--ink-mute)" }}
                 >
                   {relativeDate}
                 </time>

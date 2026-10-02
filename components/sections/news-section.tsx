@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-import { SmilingCloud, SmilingHill } from "@/components/retro/arcade-art";
+import { MarqueeWords, SmilingCloud, SmilingHill } from "@/components/retro/arcade-art";
 import { NewsCard } from "@/components/retro/news-card";
 import { NEWS_QUERY, fetchOptions } from "@/lib/content/queries";
 import type { NewsPost } from "@/lib/content/types";
@@ -43,8 +43,9 @@ export default async function NewsSection() {
       <div className="lmp-container">
         <div className="section-head">
           <div className="section-head__title">
-            <span className="num">02</span>
-            <h2>NEWS &amp; PREVIEWS</h2>
+            <h2 className="extruded-title extruded-title--pink section-title">
+              <MarqueeWords text="NEWS & PREVIEWS" />
+            </h2>
             <SmilingCloud className="section-head__cloud" />
           </div>
           <Link href="/news" className="section-head__action">

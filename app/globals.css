@@ -2,8 +2,11 @@
 @import "tw-animate-css";
 
 /* ===== RETRO DESIGN TOKENS ===== */
-/* Default palette: Midnight Neon */
-:root {
+/* Default palette: Midnight Neon. The same block re-applies on the alternate
+   palettes inside the surfaces that stay lit: cabinet screens, the contact
+   terminal and Clerk's cards, whose colours are fixed midnight hex values. */
+:root,
+:is([data-palette="amber"], [data-palette="candy"]) :is(.arcade-screen, .terminal, .cl-rootBox, .cl-userButtonPopoverCard, .cl-modalContent) {
   --bg-0: #0a0820;
   --bg-1: #14112e;
   --bg-2: #1f1a3d;
@@ -18,22 +21,20 @@
   --heart: #ff5275;
   --grid: rgba(62, 232, 255, 0.05);
 
-  --pixel: 4px;
-  --radius: 0;
   /* Focus ring is its own token because the accent that works on a dark ground
      is invisible on the light one. Never point this at --neon-* directly. */
   --focus-ring: #3ee8ff;
   --on-accent: #0a0820;
   /* Ground for the hard chips that sit on top of imagery: score boxes, category
-     badges, social marks. Defined as the palette's own ground rather than a
-     literal #000, so it re-resolves per palette without a per-palette override.
-     Black was fine while every accent was light; candy deliberately darkens its
-     accents for a light page, which put dark-green-on-black at 3.31:1. */
+     badges, social marks. The palette's own ground, so it re-resolves per
+     palette. */
   --chip-ground: var(--bg-0);
-  /* Scrim + hard shadow follow the palette's own ground. Hardcoding midnight's
-     #0a0820 here is what put the hero headline at 1.31:1 on the light palette. */
+  /* Scrim, hard box shadow and hard type shadow each follow the palette. */
   --scrim-rgb: 10, 8, 32;
   --shadow-hard: #000;
+  --type-shadow: #000;
+  /* Fade at the foot of a card image, under the score chip. */
+  --media-fade: rgba(var(--scrim-rgb), 0.88);
 
   /* Accent shades for extruded type and cabinet art, derived per palette. */
   --neon-1-deep: color-mix(in srgb, var(--neon-1) 72%, black);
@@ -41,52 +42,35 @@
   --neon-3-deep: color-mix(in srgb, var(--neon-3) 72%, black);
   --neon-4-deep: color-mix(in srgb, var(--neon-4) 72%, black);
 
+  /* Marquee lettering faces: the accents at full brightness in every palette. */
+  --pop-1: var(--neon-1);
+  --pop-2: var(--neon-2);
+  --pop-3: var(--neon-3);
+  --pop-4: var(--neon-4);
+  /* Character art: the light glove-and-body colour and the dark body colour. */
+  --art-paper: var(--ink);
+  --art-shade: var(--bg-0);
+}
+
+:root {
+  --pixel: 4px;
+  --radius: 0;
+
   /* Homepage hero arcade cabinets: the only rounded surfaces. */
   --bezel-radius: 40px;
   --screen-radius: 28px;
   --hard-shadow-lg: 12px 12px 0 var(--shadow-hard);
+
+  /* Running prose. Adobe Fonts serves "new-spirit" when the kit is configured. */
+  --font-prose: "new-spirit", Georgia, "Times New Roman", serif;
 }
 
 /* Alternate palettes — switched via data-palette on <html> */
-[data-palette="gameboy"] {
-  /* --neon-1 equals --ink here, so the pink title's first band would merge
-     into its letter face. */
-  --pink-title-band: var(--neon-1-deep);
-  --on-accent: #0f380f;
-  --scrim-rgb: 15, 56, 15;
-  --shadow-hard: #0f380f;
-  --focus-ring: #c4dd5a;
-  --bg-0: #0f380f;
-  --bg-1: #173e17;
-  /* #1f421f, was #306230. The four authentic DMG shades cannot serve as both
-     grounds and inks and still clear AA: --ink-dim (#8bac0f) sat at 2.75:1 on
-     the old --bg-2, which is the ground under every card tag, about pill and
-     footer social. Darkened until --ink-dim clears 4.5:1.
-     --bg-3 stays light because it is a border colour. */
-  --bg-2: #1f421f;
-  --bg-3: #4a7c4a;
-  --ink: #9bbc0f;
-  /* #a8c818, was #8bac0f. Paired with the darkened --bg-2 above: the authentic
-     mid shade landed at 4.31:1 there, and darkening --bg-2 any further would
-     have collapsed its tonal step against --bg-1. Lifting the ink instead
-     keeps four distinct ground levels and clears AA with margin (5.3:1). */
-  --ink-dim: #a8c818;
-  --ink-mute: #c4dd5a; /* ≥4.5:1 on bg-0/1/2 (WCAG AA) */
-  --neon-1: #9bbc0f;
-  /* Lifted with --ink-dim above, and for the same reason: as the link and
-     numeral colour it lands on --bg-2 constantly, where the authentic mid
-     shade measured 4.31:1. */
-  --neon-2: #a8c818;
-  --neon-3: #c4dd5a;
-  --neon-4: #c4dd5a;
-  --heart: #c4dd5a;
-  --grid: rgba(155, 188, 15, 0.06);
-}
-
 [data-palette="amber"] {
   --on-accent: #0d0700;
   --scrim-rgb: 13, 7, 0;
   --shadow-hard: #0d0700;
+  --type-shadow: #0d0700;
   --focus-ring: #ffd23d;
   --bg-0: #0d0700;
   --bg-1: #1a0f00;
@@ -101,26 +85,46 @@
   --neon-4: #ff5252;
   --heart: #ff5252;
   --grid: rgba(255, 176, 0, 0.06);
+  --pop-1: #ff3d8b;
+  --pop-2: #3ee8ff;
+  --pop-3: #aaff3d;
+  --pop-4: #ffd23d;
+  --art-paper: #fff3d6;
+  --art-shade: #0d0700;
 }
 
+/* Candy is the light mode: white page, ink type, hard ink shadows. Every
+   accent clears 4.5:1 as text on bg-0/1/2 and as a fill under white type. */
 [data-palette="candy"] {
-  --on-accent: #fdf4ff;
-  --scrim-rgb: 253, 244, 255;
-  --shadow-hard: rgba(255,255,255,0.9);
-  --focus-ring: #2a1a3d;
-  --bg-0: #fdf4ff;
-  --bg-1: #f5e8ff;
-  --bg-2: #ead0ff;
-  --bg-3: #d4b0ff;
-  --ink: #2a1a3d;
-  --ink-dim: #5a4a7a;
-  --ink-mute: #64587d; /* ≥4.5:1 on bg-0/1/2 (WCAG AA) */
-  --neon-1: #bf004d;  /* was #ff3d8b, 3.1:1 on bg-0 */
-  --neon-2: #006979;  /* was #00b8d4, 2.2:1 on bg-0 */
-  --neon-3: #346c20;  /* was #6bc94a, 1.9:1 on bg-0 */
-  --neon-4: #914f00;  /* was #ff8a00, 2.2:1 on bg-0 */
-  --heart: #bf004d;  /* was #ff3d8b, 3.1:1 on bg-0 */
-  --grid: rgba(42, 26, 61, 0.04);
+  --on-accent: #ffffff;
+  --scrim-rgb: 255, 255, 255;
+  --shadow-hard: #14112e;
+  --type-shadow: #ffffff;
+  --focus-ring: #14112e;
+  --bg-0: #ffffff;
+  --bg-1: #f6f3fc;
+  --bg-2: #ebe5f7;
+  --bg-3: #cdc3e6;
+  --ink: #14112e;
+  --ink-dim: #3a3360;
+  --ink-mute: #5c5485;
+  --neon-1: #c8005a;
+  --neon-2: #006f84;
+  --neon-3: #2b7318;
+  --neon-4: #a14c00;
+  --heart: #c8005a;
+  --grid: rgba(20, 17, 46, 0.05);
+  --pop-1: #ff3d8b;
+  --pop-2: #3ee8ff;
+  --pop-3: #aaff3d;
+  --pop-4: #ffd23d;
+  --art-paper: #ffffff;
+  --art-shade: #14112e;
+  --media-fade: transparent;
+}
+/* A lit surface sets its own ink, so text that inherits colour follows it. */
+:is([data-palette="amber"], [data-palette="candy"]) :is(.arcade-screen, .terminal, .cl-rootBox, .cl-userButtonPopoverCard, .cl-modalContent) {
+  color: var(--ink);
 }
 
 /* ===== TAILWIND V4 THEME — map retro tokens into utility layer ===== */
@@ -221,29 +225,87 @@ h2 { font-size: 16px; }
 h3 { font-size: 14px; }
 h4 { font-size: 12px; }
 
-/* Pixel display type extruded down-right in two accent bands and a hard rule.
-   The step is 1/20 of the font size, snapped to whole pixels. The modifier
-   sets the band colours. */
+/* Arcade marquee lettering, set word by word (MarqueeWords). Each word's own
+   glyphs supply the edge ring and three stacked layers, each darker than the
+   last, over a hard shadow; its ::after draws the face from `data-text` as a
+   vertical gradient with a white band. Steps snap to whole pixels. The
+   modifier sets the face and layer colours. */
 .extruded-title {
-  --extrude-step: round(nearest, 0.05em, 1px);
+  --extrude-step: round(nearest, 0.09em, 1px);
+  --face-ring: round(nearest, 0.03em, 1px);
+  --face-inset: calc((1lh - 1em) / 2);
+  --face-band: calc(var(--face-inset) + 0.47em);
+  --face-stripe: max(1px, 0.032em);
+  --face-edge: var(--ink);
+  --layer-1: color-mix(in srgb, var(--layer-base) 62%, black);
+  --layer-2: color-mix(in srgb, var(--layer-base) 40%, black);
+  --layer-3: color-mix(in srgb, var(--layer-base) 24%, black);
   margin: 0;
   font-family: var(--font-press-start-2p), system-ui, monospace;
   font-weight: normal;
+  line-height: 1.35;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--ink);
+  color: var(--face-edge);
   text-shadow:
-    var(--extrude-step) var(--extrude-step) 0 var(--extrude-front),
-    calc(var(--extrude-step) * 2) calc(var(--extrude-step) * 2) 0 var(--extrude-front),
-    calc(var(--extrude-step) * 3) calc(var(--extrude-step) * 3) 0 var(--extrude-back),
-    calc(var(--extrude-step) * 4) calc(var(--extrude-step) * 4) 0 var(--extrude-back),
-    calc(var(--extrude-step) * 5 + 1px) calc(var(--extrude-step) * 5 + 1px) 0 var(--shadow-hard);
+    var(--face-ring) 0 0 var(--face-edge),
+    calc(var(--face-ring) * -1) 0 0 var(--face-edge),
+    0 var(--face-ring) 0 var(--face-edge),
+    0 calc(var(--face-ring) * -1) 0 var(--face-edge),
+    var(--face-ring) var(--face-ring) 0 var(--face-edge),
+    var(--face-ring) calc(var(--face-ring) * -1) 0 var(--face-edge),
+    calc(var(--face-ring) * -1) var(--face-ring) 0 var(--face-edge),
+    calc(var(--face-ring) * -1) calc(var(--face-ring) * -1) 0 var(--face-edge),
+    var(--extrude-step) var(--extrude-step) 0 var(--layer-1),
+    calc(var(--extrude-step) * 2) calc(var(--extrude-step) * 2) 0 var(--layer-2),
+    calc(var(--extrude-step) * 3) calc(var(--extrude-step) * 3) 0 var(--layer-3),
+    calc(var(--extrude-step) * 4) calc(var(--extrude-step) * 4) 0 var(--shadow-hard);
 }
-.extruded-title--pink { --extrude-front: var(--pink-title-band, var(--neon-1)); --extrude-back: var(--neon-1-deep); }
-.extruded-title--lime { --extrude-front: var(--neon-3-deep); --extrude-back: var(--shadow-hard); }
+.extruded-word {
+  position: relative;
+  display: inline-block;
+  margin-left: calc(var(--bearing, 0) * -0.125em);
+  white-space: nowrap;
+}
+.extruded-word::after {
+  content: attr(data-text);
+  content: attr(data-text) / "";
+  position: absolute;
+  inset: 0;
+  color: transparent;
+  text-shadow: none;
+  background-image: linear-gradient(
+    to bottom,
+    var(--face-top) var(--face-inset),
+    var(--face-mid) var(--face-band),
+    #fff 0 calc(var(--face-band) + var(--face-stripe)),
+    var(--face-mid) 0 calc(var(--face-band) + var(--face-stripe) * 2),
+    #fff 0 calc(var(--face-band) + var(--face-stripe) * 3),
+    var(--face-mid) 0 calc(var(--face-band) + var(--face-stripe) * 4),
+    #fff 0 calc(var(--face-band) + var(--face-stripe) * 4 + 0.1em),
+    var(--face-bottom) 0
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  pointer-events: none;
+}
+.extruded-title--pink {
+  --face-top: var(--pop-1);
+  --face-mid: color-mix(in srgb, var(--pop-1), var(--pop-4) 55%);
+  --face-bottom: var(--pop-4);
+  --layer-base: var(--pop-1);
+}
+.extruded-title--lime {
+  --face-top: var(--pop-2);
+  --face-mid: color-mix(in srgb, var(--pop-2), var(--pop-3) 55%);
+  --face-bottom: var(--pop-3);
+  --layer-base: var(--pop-3);
+}
 .extruded-title--gold {
-  --extrude-front: var(--neon-4-deep);
-  --extrude-back: var(--neon-4-deep);
-  color: var(--neon-4);
+  --face-top: color-mix(in srgb, var(--pop-4), #fff 45%);
+  --face-mid: var(--pop-4);
+  --face-bottom: color-mix(in srgb, var(--pop-4), var(--pop-1) 45%);
+  --layer-base: color-mix(in srgb, var(--pop-4), var(--pop-1) 45%);
 }
 
 a { color: var(--neon-2); text-decoration: none; }
@@ -391,7 +453,7 @@ a:hover { color: var(--neon-1); }
 .lmp-nav a {
   font-family: var(--font-press-start-2p), system-ui, monospace;
   font-size: 12px;
-  color: var(--ink-dim);
+  color: var(--ink);
   padding: 12px 14px;
   display: inline-flex;
   align-items: center;
@@ -542,8 +604,7 @@ a:hover { color: var(--neon-1); }
   content: '';
   position: absolute;
   inset: 0;
-  /* Tokenised: this hardcoded midnight and so rendered identically on candy. */
-  background: linear-gradient(180deg, transparent 45%, rgba(var(--scrim-rgb), 0.88) 100%);
+  background: linear-gradient(180deg, transparent 45%, var(--media-fade) 100%);
   pointer-events: none;
 }
 
@@ -671,15 +732,15 @@ a:hover { color: var(--neon-1); }
   align-items: center;
   gap: 6px;
   font-family: var(--font-jetbrains-mono), ui-monospace, monospace;
-  font-size: 12px;
+  font-size: 14px;
   color: var(--ink-dim);
 }
 /* Ground is --chip-ground, not --bg-3: the initial sits in the author's accent
    colour, and an accent on the lighter panel ground measured 4.33:1 at 10px.
    Dropping to the page ground clears AA in every palette. */
 .author-chip__avatar {
-  width: 22px;
-  height: 22px;
+  width: 24px;
+  height: 24px;
   background: var(--chip-ground);
   border: 2px solid currentColor;
   display: grid;
@@ -709,6 +770,10 @@ a:hover { color: var(--neon-1); }
   background: var(--neon-1);
 }
 .section-head__title { display: flex; align-items: center; gap: 12px; }
+.section-title { font-size: 24px; }
+@media (max-width: 639.98px) {
+  .section-title { font-size: 16px; }
+}
 .section-kicker { display: inline-block; margin: 0; }
 .section-head__title .num,
 .section-kicker {
@@ -801,7 +866,7 @@ a:hover { color: var(--neon-1); }
 /* ---------- Boss screen ---------- */
 .boss-screen {
   --boss-art-width: 320px;
-  --boss-burst-zone: 206px;
+  --boss-burst-zone: 216px;
   container: boss-screen / inline-size;
 }
 .bricks {
@@ -855,7 +920,6 @@ a:hover { color: var(--neon-1); }
   gap: 20px;
   container-type: inline-size;
 }
-/* The plate tilts; the text stays upright (No-Rotation Rule). */
 .boss-kicker {
   position: relative;
   isolation: isolate;
@@ -876,7 +940,6 @@ a:hover { color: var(--neon-1); }
   background: var(--neon-4);
   border: 3px solid var(--shadow-hard);
   box-shadow: 4px 4px 0 var(--shadow-hard);
-  rotate: -2deg;
 }
 .boss-title {
   font-size: 40px;
@@ -884,12 +947,11 @@ a:hover { color: var(--neon-1); }
     16px,
     min(
       var(--boss-title-max),
-      round(down, 100cqi / var(--title-word), 8px),
-      round(down, 300cqi / var(--title-len), 8px)
+      round(down, 100cqi / (var(--title-word) * 1.12), 8px),
+      round(down, 300cqi / (var(--title-len) * 1.12), 8px)
     )
   );
-  line-height: 1.1;
-  overflow-wrap: anywhere;
+  text-wrap: balance;
 }
 .boss-quote,
 .boss-meta,
@@ -928,8 +990,8 @@ a:hover { color: var(--neon-1); }
   position: absolute;
   top: 22px;
   left: calc(100% + 16px);
-  width: 150px;
-  height: 150px;
+  width: 184px;
+  height: 184px;
   display: grid;
   place-items: center;
   transform: rotate(12deg);
@@ -1023,7 +1085,6 @@ a:hover { color: var(--neon-1); }
 .hs-board__title {
   align-self: center;
   font-size: 24px;
-  line-height: 1.4;
   text-align: center;
 }
 .hs-list {
@@ -1127,6 +1188,7 @@ a.hs-row:focus-visible { outline-offset: -3px; }
     left: 20px;
     gap: 12px;
   }
+  .boss-meta__part { white-space: normal; }
   .boss-kicker { line-height: 1.5; }
   .boss-kicker__sep {
     display: block;
@@ -1439,7 +1501,7 @@ a.hs-row:focus-visible { outline-offset: -3px; }
   font-size: 24px;
   line-height: 1.4;
   color: var(--ink);
-  text-shadow: 4px 4px 0 var(--shadow-hard);
+  text-shadow: 4px 4px 0 var(--type-shadow);
 }
 .article-meta__sub {
   font-family: var(--font-jetbrains-mono), ui-monospace, monospace;
@@ -1469,13 +1531,24 @@ a.hs-row:focus-visible { outline-offset: -3px; }
 .article-meta__hpwrap .label {
   font-family: var(--font-press-start-2p), system-ui, monospace;
   font-size: 11px;
-  color: var(--ink-dim);
+  color: var(--ink);
 }
 .article-meta__hpwrap .score {
   font-family: var(--font-press-start-2p), system-ui, monospace;
   font-size: 16px;
   color: var(--neon-3);
 }
+.article-byline {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  font-family: var(--font-jetbrains-mono), ui-monospace, monospace;
+  font-size: 16px;
+}
+.article-byline .author-chip { gap: 10px; font-size: 16px; }
+.article-byline .author-chip__avatar { width: 32px; height: 32px; font-size: 16px; }
+.article-byline time { color: var(--ink-dim); }
 .article-tag-row { display: flex; flex-wrap: wrap; gap: 6px; }
 .article-body {
   display: grid;
@@ -1491,16 +1564,13 @@ a.hs-row:focus-visible { outline-offset: -3px; }
   font-family: var(--font-jetbrains-mono), ui-monospace, monospace;
   font-size: 17px;
   line-height: 1.8;
-  color: var(--ink-dim);
-}
-.article-content p {
-  max-width: 72ch;
+  color: var(--ink);
 }
 .article-content h2 {
   font-family: var(--font-press-start-2p), system-ui, monospace;
   font-size: 22px;
   line-height: 1.4;
-  color: var(--neon-1);
+  color: var(--ink);
   margin: 40px 0 20px;
   padding-bottom: 12px;
   border-bottom: 2px dashed var(--bg-3);
@@ -1509,11 +1579,11 @@ a.hs-row:focus-visible { outline-offset: -3px; }
   font-family: var(--font-press-start-2p), system-ui, monospace;
   font-size: 16px;
   line-height: 1.4;
-  color: var(--neon-2);
+  color: var(--ink);
   margin: 32px 0 16px;
 }
 .article-content h2:first-child { margin-top: 0; }
-.article-content p { margin-bottom: 16px; color: var(--ink-dim); }
+.article-content p { margin-bottom: 16px; color: var(--ink); }
 .article-content p strong { color: var(--ink); }
 .article-content a { color: var(--neon-2); border-bottom: 1px dashed var(--neon-2); }
 .article-content a:hover { color: var(--neon-1); border-color: var(--neon-1); }
@@ -1726,7 +1796,7 @@ a.hs-row:focus-visible { outline-offset: -3px; }
   font-size: 28px;
   line-height: 1.4;
   color: var(--ink);
-  text-shadow: 4px 4px 0 var(--shadow-hard);
+  text-shadow: 4px 4px 0 var(--type-shadow);
   margin-bottom: 16px;
 }
 .contact-hero__sub {
@@ -1981,7 +2051,6 @@ textarea.field-input { min-height: 140px; resize: vertical; line-height: 1.6; }
   margin: 16px 0 44px;
   font-size: 40px;
   font-size: clamp(24px, round(down, 4vw, 8px), 40px);
-  line-height: 1.2;
 }
 .cart-grid {
   --cart-cols: 5;
@@ -2040,9 +2109,9 @@ textarea.field-input { min-height: 140px; resize: vertical; line-height: 1.6; }
   line-height: 1;
 }
 .cart-tile__name {
-  font-family: var(--font-plex-sans), system-ui, sans-serif;
+  font-family: var(--font-jetbrains-mono), ui-monospace, monospace;
   font-size: 13px;
-  font-weight: 600;
+  font-weight: 700;
   letter-spacing: 0.08em;
   line-height: 1.4;
   color: var(--ink);
@@ -2132,6 +2201,17 @@ textarea.field-input { min-height: 140px; resize: vertical; line-height: 1.6; }
   width: 72px;
   filter: drop-shadow(4px 4px 0 var(--shadow-hard));
 }
+/* The hill looks surprised while the pointer is on its body. */
+.scenery__blob { transform-origin: 50% 100%; transition: transform 0.12s; }
+.scenery__blob .hill-body { pointer-events: auto; }
+.scenery__blob .hill-face--surprised { display: none; }
+.scenery__blob:hover { transform: scaleY(1.06); }
+.scenery__blob:hover .hill-face--calm { display: none; }
+.scenery__blob:hover .hill-face--surprised { display: inline; }
+@media (prefers-reduced-motion: reduce) {
+  .scenery__blob { transition: none; }
+  .scenery__blob:hover { transform: none; }
+}
 
 /* ===== MULTIPLAYER BAND (homepage socials) ===== */
 .multiplayer-band {
@@ -2158,26 +2238,15 @@ main:has(> .multiplayer-band:last-child) + .lmp-footer { margin-top: 0; }
   height: 2400px;
   translate: -50% -50%;
 }
-.multiplayer-band__head {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 24px;
-}
-.multiplayer-band__walker {
-  flex: none;
-  width: 112px;
-  filter: drop-shadow(5px 5px 0 var(--shadow-hard));
-}
 
 /* ===== PLAYER TAGS ===== */
 .player-tag {
   display: inline-block;
   align-self: flex-start;
   padding: 4px 10px;
-  font-family: var(--font-plex-sans), system-ui, sans-serif;
+  font-family: var(--font-jetbrains-mono), ui-monospace, monospace;
   font-size: 13px;
-  font-weight: 600;
+  font-weight: 700;
   line-height: 1.4;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -2217,6 +2286,7 @@ main:has(> .multiplayer-band:last-child) + .lmp-footer { margin-top: 0; }
   left: 50%;
   width: 176px;
   translate: -50% -50%;
+  overflow: visible;
   filter: drop-shadow(5px 5px 0 var(--shadow-hard));
 }
 .bio-card__body {
@@ -2227,9 +2297,9 @@ main:has(> .multiplayer-band:last-child) + .lmp-footer { margin-top: 0; }
 }
 .bio-card__kicker {
   margin: 0;
-  font-family: var(--font-plex-sans), system-ui, sans-serif;
+  font-family: var(--font-jetbrains-mono), ui-monospace, monospace;
   font-size: 13px;
-  font-weight: 600;
+  font-weight: 700;
   letter-spacing: 0.08em;
   color: var(--ink-mute);
 }
@@ -2248,7 +2318,7 @@ main:has(> .multiplayer-band:last-child) + .lmp-footer { margin-top: 0; }
 .bio-card__text {
   margin: 0;
   max-width: 72ch;
-  font-family: var(--font-plex-sans), system-ui, sans-serif;
+  font-family: var(--font-prose);
   font-size: 16px;
   line-height: 1.6;
   color: var(--ink-dim);
@@ -2266,9 +2336,9 @@ main:has(> .multiplayer-band:last-child) + .lmp-footer { margin-top: 0; }
   gap: 16px;
 }
 .bio-stat dt {
-  font-family: var(--font-plex-sans), system-ui, sans-serif;
+  font-family: var(--font-jetbrains-mono), ui-monospace, monospace;
   font-size: 13px;
-  font-weight: 600;
+  font-weight: 700;
   letter-spacing: 0.08em;
   color: var(--ink);
 }
@@ -2288,6 +2358,119 @@ main:has(> .multiplayer-band:last-child) + .lmp-footer { margin-top: 0; }
   box-shadow: none;
 }
 .hp-bar--stat .hp-bar__fill { display: block; background: currentColor; }
+
+/* ---------- Character bio: idle motion ---------- */
+@keyframes rays-turn {
+  to { rotate: 360deg; }
+}
+@keyframes stat-fill {
+  from { width: 0; }
+}
+.bio-card__rays { animation: rays-turn 90s linear infinite; }
+@supports (animation-timeline: view()) {
+  .bio-stat .hp-bar__fill {
+    animation: stat-fill linear both;
+    animation-timeline: view();
+    animation-range: entry 0% cover 20%;
+  }
+}
+
+/* ---------- Smiling gamepad: wave loop ----------
+   One 2.4s loop, timed after SVGator's "fire morphing" flame: the body pulses
+   throughout; from 0.6s to 1.8s the pad leans, the arm slides out and waves,
+   the face lifts and the eyes squint; each twinkle rises and shrinks twice per
+   loop, the right one 0.3s behind the left.
+   Lengths are viewBox units (0 0 224 172). */
+.pad-lean,
+.pad-body,
+.pad-arm,
+.pad-spark { transform-box: view-box; }
+.pad-lean,
+.pad-body { transform-origin: 112px 166px; }
+.pad-arm { transform-origin: 198px 60px; opacity: 0; }
+.pad-spark { transform-origin: 0 0; scale: 0; }
+
+@keyframes pad-pulse {
+  to { scale: 0.96; }
+}
+@keyframes pad-lean {
+  0%, 25% { rotate: 0deg; animation-timing-function: cubic-bezier(0.42, 0, 0.355, 0.995); }
+  33.33% { rotate: -9deg; animation-timing-function: linear; }
+  66.67% { rotate: -12deg; animation-timing-function: cubic-bezier(0.42, 0, 0.355, 0.995); }
+  75%, 100% { rotate: 0deg; }
+}
+@keyframes pad-arm-slide {
+  0%, 25% { translate: 0 0; opacity: 0; animation-timing-function: cubic-bezier(0.42, 0, 0.355, 0.995); }
+  29.17% { opacity: 1; }
+  33.33% { translate: 16px -14px; animation-timing-function: linear; }
+  66.67% { translate: 18px -20px; animation-timing-function: cubic-bezier(0.42, 0, 0.355, 0.995); }
+  70.83% { opacity: 1; }
+  75%, 100% { translate: 0 0; opacity: 0; }
+}
+@keyframes pad-arm-wave {
+  0%, 25% { rotate: 0deg; }
+  31.67% { rotate: -135deg; }
+  37.5% { rotate: -105deg; }
+  43.75% { rotate: -138deg; }
+  50% { rotate: -108deg; }
+  56.25% { rotate: -142deg; }
+  62.5% { rotate: -108deg; }
+  68.75% { rotate: -142deg; }
+  75%, 100% { rotate: 0deg; }
+}
+@keyframes pad-face-lift {
+  0%, 25% { translate: 0 0; animation-timing-function: cubic-bezier(0.42, 0, 0.355, 0.995); }
+  33.33% { translate: 0 -4px; animation-timing-function: linear; }
+  66.67% { translate: 0 -6px; animation-timing-function: cubic-bezier(0.42, 0, 0.355, 0.995); }
+  75%, 100% { translate: 0 0; }
+}
+@keyframes pad-squint {
+  0%, 25% { clip-path: inset(0 0 0 0) fill-box; animation-timing-function: cubic-bezier(0.42, 0, 0.355, 0.995); }
+  33.33% { clip-path: inset(0 0 16% 0) fill-box; animation-timing-function: linear; }
+  66.67% { clip-path: inset(0 0 24% 0) fill-box; animation-timing-function: cubic-bezier(0.42, 0, 0.355, 0.995); }
+  75%, 100% { clip-path: inset(0 0 0 0) fill-box; }
+}
+@keyframes pad-spark-rise {
+  0%, 4.16% { translate: var(--spark-from); }
+  4.17% { translate: var(--spark-from); animation-timing-function: cubic-bezier(0.115, 0.605, 0.385, 0.945); }
+  20.83%, 49.99% { translate: var(--spark-to); }
+  50% { translate: var(--spark-from); animation-timing-function: cubic-bezier(0.115, 0.605, 0.385, 0.945); }
+  66.67%, 100% { translate: var(--spark-to); }
+}
+@keyframes pad-spark-shrink {
+  0%, 4.16% { scale: 0; }
+  4.17% { scale: var(--spark-size); }
+  20.83%, 49.99% { scale: 0; }
+  50% { scale: var(--spark-size); }
+  66.67%, 100% { scale: 0; }
+}
+.pad-body { animation: pad-pulse 0.2s ease-in-out infinite alternate; }
+.pad-lean { animation: pad-lean 2.4s infinite; }
+.pad-arm {
+  animation:
+    pad-arm-slide 2.4s infinite,
+    pad-arm-wave 2.4s cubic-bezier(0.445, 0.05, 0.55, 0.95) infinite;
+}
+.pad-face { animation: pad-face-lift 2.4s infinite; }
+.pad-eyes { animation: pad-squint 2.4s infinite; }
+.pad-spark {
+  animation:
+    pad-spark-rise 2.4s linear infinite,
+    pad-spark-shrink 2.4s linear infinite;
+}
+.pad-spark--left { --spark-from: 14px 112px; --spark-to: 38px -28px; --spark-size: 1; }
+.pad-spark--right { --spark-from: 212px 78px; --spark-to: 214px -36px; --spark-size: 1.3; animation-delay: 0.3s; }
+
+@media (prefers-reduced-motion: reduce) {
+  .bio-card__rays,
+  .bio-stat .hp-bar__fill,
+  .pad-body,
+  .pad-lean,
+  .pad-arm,
+  .pad-face,
+  .pad-eyes,
+  .pad-spark { animation: none; }
+}
 
 /* ===== VERSUS (homepage membership pitch) ===== */
 /* The pink ground, the divider and the coin share --vs-lean (half the
@@ -2323,7 +2506,7 @@ main:has(> .multiplayer-band:last-child) + .lmp-footer { margin-top: 0; }
 .vs-card__text {
   margin: 0;
   max-width: 44ch;
-  font-family: var(--font-plex-sans), system-ui, sans-serif;
+  font-family: var(--font-prose);
   font-size: 16px;
   line-height: 1.6;
   color: var(--ink-dim);
@@ -2401,8 +2584,15 @@ main:has(> .multiplayer-band:last-child) + .lmp-footer { margin-top: 0; }
   align-items: flex-start;
   gap: 16px;
 }
-.vs-card__title { font-size: 32px; line-height: 1.25; }
-.extruded-title--on-pink { --extrude-front: var(--bg-0); --extrude-back: var(--bg-0); }
+.vs-card__title { font-size: 32px; }
+/* Sits on the accent ground in every palette, so the face is literal light. */
+.extruded-title--on-pink {
+  --face-top: #fff;
+  --face-mid: #fff3c2;
+  --face-bottom: #ffd23d;
+  --face-edge: var(--shadow-hard);
+  --layer-base: var(--neon-1);
+}
 .vs-card__actions {
   display: flex;
   flex-direction: column;
@@ -2478,7 +2668,6 @@ main:has(> .multiplayer-band:last-child) + .lmp-footer { margin-top: 0; }
   }
   .bio-card__body { padding: 24px 20px; }
   .bio-card__pad { width: 136px; }
-  .multiplayer-band__walker { width: 80px; }
   .bio-card__title { font-size: 16px; line-height: 1.5; }
   .bio-stat { grid-template-columns: 104px minmax(0, 1fr); gap: 12px; }
 
@@ -2486,9 +2675,6 @@ main:has(> .multiplayer-band:last-child) + .lmp-footer { margin-top: 0; }
   .vs-card__p2 { padding: 64px 20px 184px; }
   .vs-card__rays { left: 50%; }
   .vs-card__hero { right: 16px; width: 128px; }
-}
-@media (max-width: 399.98px) {
-  .multiplayer-band__walker { display: none; }
 }
 
 /* ===== TWEAKS PANEL ===== */
@@ -2587,10 +2773,8 @@ main:has(> .multiplayer-band:last-child) + .lmp-footer { margin-top: 0; }
   color: var(--on-accent);
   border-color: var(--on-accent);
 }
-/* Was `opacity: 0.4`, which drove this to 2.44:1 (midnight), 1.88:1 (candy) and
-   2.25:1 (gameboy) — the colour alone passes; the opacity was the whole defect.
-   Disabled still has to be readable: it is the only thing telling a reader they
-   are on page 1. */
+/* Colour, not opacity: disabled still has to be readable, it is the only thing
+   telling a reader they are on page 1. */
 .retro-pagination .disabled { color: var(--ink-mute); cursor: not-allowed; }
 
 /* ===== A11Y (2026-07-16 audit) ===== */
@@ -2635,6 +2819,12 @@ main:has(> .multiplayer-band:last-child) + .lmp-footer { margin-top: 0; }
   border: 3px solid var(--bg-3) !important;
   border-radius: 0 !important;
   box-shadow: 6px 6px 0 rgba(0, 0, 0, 0.35) !important;
+}
+
+/* User menu: wide enough for a full email address at the larger type size */
+.cl-userButtonPopoverCard {
+  width: 420px !important;
+  max-width: calc(100vw - 32px) !important;
 }
 
 /* Account (UserProfile) must fill the page and shrink on small screens */
@@ -2805,25 +2995,26 @@ main:has(> .multiplayer-band:last-child) + .lmp-footer { margin-top: 0; }
 
 /* ===== RSS FEED CARD (account page) ===== */
 .rss-card {
-  max-width: 880px;
   margin: 0 auto 88px;
   border: 3px solid var(--bg-3);
   background: var(--bg-1);
-  padding: 24px;
+  padding: 32px;
+  box-shadow: 6px 6px 0 var(--shadow-hard);
 }
 
 .rss-card h2 {
   font-family: var(--font-press-start-2p), system-ui, monospace;
-  font-size: 12px;
+  font-size: 16px;
   color: var(--ink);
-  margin-bottom: 12px;
+  margin-bottom: 16px;
 }
 
 .rss-card p {
-  font-size: 14px;
+  max-width: 44em;
+  font-size: 17px;
   line-height: 1.7;
   color: var(--ink-dim);
-  margin-bottom: 14px;
+  margin-bottom: 20px;
 }
 
 .rss-card__url {
@@ -2832,18 +3023,19 @@ main:has(> .multiplayer-band:last-child) + .lmp-footer { margin-top: 0; }
   border: 2px solid var(--bg-3);
   color: var(--neon-2);
   font-family: var(--font-jetbrains-mono), monospace;
-  font-size: 12px;
-  padding: 10px 12px;
+  font-size: 15px;
+  padding: 14px 16px;
   overflow-x: auto;
   white-space: nowrap;
-  margin-bottom: 14px;
+  margin-bottom: 20px;
 }
 
 .rss-card__actions {
   display: flex;
-  gap: 12px;
+  gap: 16px;
   flex-wrap: wrap;
 }
+.rss-card__actions .retro-btn { font-size: 16px; padding: 16px 24px; }
 
 /* ===== AD SLOTS ===== */
 .ad-slot {
@@ -3134,7 +3326,7 @@ main:has(> .multiplayer-band:last-child) + .lmp-footer { margin-top: 0; }
   .article-hero__inner { padding: 18px 16px; gap: 16px; }
   .article-cover { width: 160px; border-width: 3px; box-shadow: 4px 4px 0 var(--shadow-hard); }
   .article-meta { gap: 12px; }
-  .article-meta__title { font-size: 15px; text-shadow: 2px 2px 0 var(--shadow-hard); }
+  .article-meta__title { font-size: 15px; text-shadow: 2px 2px 0 var(--type-shadow); }
   .article-meta__sub { font-size: 14px; }
   .article-meta__lead { font-size: 14px; line-height: 1.6; }
   .article-meta__hpwrap { padding: 10px 12px; gap: 12px; flex-wrap: wrap; }
@@ -3184,7 +3376,7 @@ main:has(> .multiplayer-band:last-child) + .lmp-footer { margin-top: 0; }
   }
   .contact-hero::before { left: 16px; font-size: 11px; padding: 0 10px; }
   .contact-hero__grid { gap: 16px; }
-  .contact-hero__title { font-size: 16px; margin-bottom: 12px; text-shadow: 2px 2px 0 var(--shadow-hard); }
+  .contact-hero__title { font-size: 16px; margin-bottom: 12px; text-shadow: 2px 2px 0 var(--type-shadow); }
   .contact-hero__sub { font-size: 13px; line-height: 1.65; }
   .contact-hero__badge { width: 72px; height: 72px; font-size: 32px; border-width: 3px; justify-self: start; }
   .contact-hero__badge::after { inset: -6px; }
@@ -3383,7 +3575,7 @@ main:has(> .multiplayer-band:last-child) + .lmp-footer { margin-top: 0; }
   font-size: 40px;
   line-height: 1.35;
   color: var(--ink);
-  text-shadow: 4px 4px 0 var(--shadow-hard);
+  text-shadow: 4px 4px 0 var(--type-shadow);
   margin: 0 0 16px;
 }
 .about-hero__sub {
@@ -3602,7 +3794,7 @@ main:has(> .multiplayer-band:last-child) + .lmp-footer { margin-top: 0; }
   }
   .about-hero__title {
     font-size: 18px;
-    text-shadow: 2px 2px 0 var(--shadow-hard);
+    text-shadow: 2px 2px 0 var(--type-shadow);
   }
   .about-hero__badge {
     width: 96px;
@@ -3787,20 +3979,9 @@ a.lmp-ticker__item:focus-visible {
    fixed at its own line rather than shadowed from here. */
 .hp-row__head { font-size: 11px; }
 
-/* ===== PROSE FACE (2026-08-07) =====
-   Running prose moves to IBM Plex Sans; everything structured stays JetBrains
-   Mono. The site used one monospace face for every word, which meant monospace
-   signalled nothing — a TL;DR block read with exactly the texture of the
-   paragraph beneath it. Now the mono means something: this is data, a summary,
-   a label.
-
-   Measured on a real review at the 651px column: mono 17px rendered 64
-   characters per line, below the healthy 65-75 band and below the 72ch cap
-   this system asks for, because monospace is wide by construction. Plex Sans
-   at 18px lands on 72 in the identical column and runs 9% shorter.
-
-   Scope is deliberately narrow. Anything tabular, labelled, numeric or
-   metadata keeps the mono. */
+/* ===== PROSE FACE =====
+   Running prose is New Spirit (--font-prose); labels, data and metadata stay
+   JetBrains Mono. */
 .article-content,
 .article-content p,
 .article-content li,
@@ -3813,24 +3994,18 @@ a.lmp-ticker__item:focus-visible {
 .reviewed-by__bio,
 .review-card__excerpt,
 .news-card__excerpt {
-  /* The next/font variable directly, with explicit fallbacks, the way every
-     other rule in this file references a face. Routing it through a `--font-prose`
-     alias in Tailwind's @theme did not work: the theme block tree-shakes and the
-     alias computed to an empty string on the element, which silently invalidated
-     the whole declaration and left the text inheriting the body's mono. */
-  font-family: var(--font-plex-sans), system-ui, sans-serif;
+  /* Declared on :root, not in Tailwind's @theme, which tree-shakes the alias. */
+  font-family: var(--font-prose);
 }
 
 .article-content,
 .article-content p,
 .article-content li {
-  font-size: 18px;
+  font-size: 19px;
   line-height: 1.7;
 }
 
-/* The standfirst keeps its step above body, now on the prose face. 20px, not
-   19: 19 is not a step on the documented ramp, and inventing one to get a
-   slightly smaller lede is how a type scale stops being a scale. */
+/* The standfirst sits one step above body. */
 .article-meta__lead { font-size: 20px; line-height: 1.6; }
 
 /* Pull quotes stay VT323 and body-adjacent blocks stay mono: the contrast is
@@ -3863,13 +4038,8 @@ h1 { font-size: 24px; }
 /* ===== CRITIQUE FIXES: LISTING + ARTICLE (2026-08-07) ===== */
 
 /* ---------- Reading measure ----------
-   `max-width: 72ch` was carried over from the mono era. `ch` is the advance of
-   the character `0`; on a proportional face that renders ~90-95 REAL characters,
-   so the prose measured 95 median at 1024+ and 39 at 390 — further from the
-   65-75 band than the 64 of the monospace it replaced. `em` is the honest unit
-   for a proportional face: 34em at 18px = 612px, which measures ~68. */
-.article-content p,
-.article-content li,
+   Body paragraphs run the full width of the article column. The standfirst
+   keeps a 34em cap. */
 .article-meta__lead { max-width: 34em; }
 
 /* The single-column grid belongs at the phone breakpoint, not the drawer one. */
@@ -3893,7 +4063,7 @@ h1 { font-size: 24px; }
    at 18px while these were mono at 14. */
 .pros ul li,
 .cons ul li {
-  font-family: var(--font-plex-sans), system-ui, sans-serif;
+  font-family: var(--font-prose);
   font-size: 16px;
 }
 /* The author bio sits inside an all-mono stat block. */
@@ -3921,7 +4091,7 @@ h1 { font-size: 24px; }
    rendered — this rule existed and matched nothing, which is also why the hero
    carried ~120px of empty scrim under the meta column. */
 .article-meta__lead {
-  font-family: var(--font-plex-sans), system-ui, sans-serif;
+  font-family: var(--font-prose);
 }
 
 /* ---------- Score band chip ----------
@@ -3973,7 +4143,7 @@ h1 { font-size: 24px; }
 .empty-state__sprite { display: grid; place-items: center; margin-bottom: 16px; }
 .empty-state__title { color: var(--neon-1); margin-bottom: 10px; }
 .empty-state__body {
-  font-family: var(--font-plex-sans), system-ui, sans-serif;
+  font-family: var(--font-prose);
   color: var(--ink-dim);
   font-size: 15px;
   max-width: 46em;
@@ -4010,7 +4180,7 @@ h1 { font-size: 24px; }
 .score-breakdown__rows { display: grid; grid-template-columns: 1fr 1fr; gap: 0 32px; }
 @media (max-width: 720px) { .score-breakdown__rows { grid-template-columns: 1fr; } }
 .score-breakdown__missing {
-  font-family: var(--font-plex-sans), system-ui, sans-serif;
+  font-family: var(--font-prose);
   font-size: 15px;
   color: var(--ink-dim);
   margin: 0;
