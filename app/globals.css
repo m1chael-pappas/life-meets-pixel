@@ -61,8 +61,6 @@
   --screen-radius: 28px;
   --hard-shadow-lg: 12px 12px 0 var(--shadow-hard);
 
-  /* Running prose. Adobe Fonts serves "new-spirit" when the kit is configured. */
-  --font-prose: "new-spirit", Georgia, "Times New Roman", serif;
 }
 
 /* Alternate palettes — switched via data-palette on <html> */
@@ -171,6 +169,10 @@ html, body {
 }
 
 body {
+  /* Running prose: Fraunces with its serifs fully softened. Declared here, not
+     on :root, because next/font defines --font-fraunces on <body>. */
+  --font-prose: var(--font-fraunces), Georgia, "Times New Roman", serif;
+  font-variation-settings: "SOFT" 100;
   background-image:
     radial-gradient(circle at 20% -10%, rgba(255, 61, 139, 0.10), transparent 50%),
     radial-gradient(circle at 95% 5%, rgba(62, 232, 255, 0.08), transparent 45%),
@@ -3980,7 +3982,7 @@ a.lmp-ticker__item:focus-visible {
 .hp-row__head { font-size: 11px; }
 
 /* ===== PROSE FACE =====
-   Running prose is New Spirit (--font-prose); labels, data and metadata stay
+   Running prose is Fraunces (--font-prose); labels, data and metadata stay
    JetBrains Mono. */
 .article-content,
 .article-content p,
@@ -3994,7 +3996,6 @@ a.lmp-ticker__item:focus-visible {
 .reviewed-by__bio,
 .review-card__excerpt,
 .news-card__excerpt {
-  /* Declared on :root, not in Tailwind's @theme, which tree-shakes the alias. */
   font-family: var(--font-prose);
 }
 

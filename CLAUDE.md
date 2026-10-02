@@ -1,6 +1,6 @@
 # Life Meets Pixel — Claude Context
 
-Public-facing geek-culture review site (games, movies, books, anime, board games, tech). Next.js 15 (App Router) + React 19 + Sanity CMS. Retro-gaming aesthetic — Press Start 2P / JetBrains Mono / VT323 fonts with New Spirit (Adobe Fonts) for prose, 3 switchable palettes (midnight, amber, candy as the light mode), scanline overlay, CRT hero frame, HP-bar score breakdown. Deployed on Vercel.
+Public-facing geek-culture review site (games, movies, books, anime, board games, tech). Next.js 15 (App Router) + React 19 + Sanity CMS. Retro-gaming aesthetic — Press Start 2P / JetBrains Mono / VT323 fonts with Fraunces for prose, 3 switchable palettes (midnight, amber, candy as the light mode), scanline overlay, CRT hero frame, HP-bar score breakdown. Deployed on Vercel.
 
 ## Read this first
 
@@ -146,10 +146,6 @@ META_PAGE_ACCESS_TOKEN=...           # long-lived Page token: pages_manage_posts
 # Analytics (optional)
 NEXT_PUBLIC_GA_MEASUREMENT_ID=G-...
 NEXT_PUBLIC_GOOGLE_ADS_ID=AW-...
-
-# Adobe Fonts (optional — the web project that serves New Spirit, the prose face;
-# without it prose falls back to Georgia)
-NEXT_PUBLIC_ADOBE_FONTS_KIT_ID=abc1234   # the code in https://use.typekit.net/<id>.css
 ```
 
 ## Commands

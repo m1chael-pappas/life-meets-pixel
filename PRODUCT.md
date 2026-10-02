@@ -49,7 +49,7 @@ This is the claim the owner would defend hardest, and it is the one a neighbouri
 
 1. **Articles are never paywalled.** Membership buys perks — ad-free reading, comments, full RSS, member posts — never access to a review or news post. Free site, paid perks. Any design that gates editorial content behind sign-in is wrong.
 2. **The 10-point score plus its 3–5 component breakdown is the core editorial artifact.** It must stay legible and prominent on every surface that carries a review. The breakdown matters more than the headline figure and should never be demoted to a footnote or hidden behind interaction.
-3. **The retro-arcade identity is binding.** Press Start 2P / JetBrains Mono / VT323, New Spirit for running prose, scanline overlay, CRT hero frame, pixel sprites, HP-bar score meters, three switchable palettes. This is not up for replacement — only for being executed better. See Brand Commitments.
+3. **The retro-arcade identity is binding.** Press Start 2P / JetBrains Mono / VT323, Fraunces for running prose, scanline overlay, CRT hero frame, pixel sprites, HP-bar score meters, three switchable palettes. This is not up for replacement — only for being executed better. See Brand Commitments.
 
 **Technical constraints**
 

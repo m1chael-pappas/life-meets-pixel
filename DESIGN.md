@@ -92,25 +92,25 @@ typography:
     lineHeight: 1.5
     letterSpacing: "0.02em"
   lede:
-    fontFamily: "New Spirit, Georgia, serif"
+    fontFamily: "Fraunces, Georgia, serif"
     fontSize: "20px"
     fontWeight: 400
     lineHeight: 1.6
     letterSpacing: "normal"
   body:
-    fontFamily: "New Spirit, Georgia, serif"
+    fontFamily: "Fraunces, Georgia, serif"
     fontSize: "18px"
     fontWeight: 400
     lineHeight: 1.7
     letterSpacing: "normal"
   body-article:
-    fontFamily: "New Spirit, Georgia, serif"
+    fontFamily: "Fraunces, Georgia, serif"
     fontSize: "17px"
     fontWeight: 400
     lineHeight: 1.7
     letterSpacing: "normal"
   body-lg:
-    fontFamily: "New Spirit, Georgia, serif"
+    fontFamily: "Fraunces, Georgia, serif"
     fontSize: "16px"
     fontWeight: 400
     lineHeight: 1.55
@@ -260,7 +260,7 @@ Confirmed anti-references, all three binding: **modern SaaS minimalism** (soft g
 **Key Characteristics:**
 
 - Zero radius everywhere except the homepage arcade set pieces: the cabinet bezels and the VS coin
-- Four fonts with four strictly separate jobs: Press Start 2P headings and labels, New Spirit prose, JetBrains Mono data, VT323 pull quotes only
+- Four fonts with four strictly separate jobs: Press Start 2P headings and labels, Fraunces prose, JetBrains Mono data, VT323 pull quotes only
 - Hard, un-blurred, pure-black offset shadows as the entire depth model
 - Three complete palettes under one markup, each independently WCAG AA
 - Border weight (1 / 2 / 3 / 4 / 6px) encodes hierarchy the way a magazine uses rules
@@ -317,13 +317,13 @@ Two complete re-mappings ship alongside Midnight Neon, switched by `data-palette
 ## Typography
 
 **Display Font:** VT323 (with `monospace`)
-**Prose Font:** New Spirit, served by Adobe Fonts (with `Georgia, "Times New Roman", serif`)
+**Prose Font:** Fraunces, variable, with the SOFT axis at 100 (with `Georgia, "Times New Roman", serif`)
 **Data/Label Font:** JetBrains Mono (with `ui-monospace, monospace`)
 **Heading Font:** Press Start 2P (with `system-ui, monospace`)
 
-**Character:** Four fonts, four jobs, no overlap. Press Start 2P is the magazine's cover type — chunky, all-caps by habit, and physically unreadable in a paragraph. New Spirit carries running prose. JetBrains Mono carries everything that is *read as data*: summaries, stat rows, scores, tags, timestamps, metadata, code. VT323 appears exactly once in the vocabulary, as the pull-quote voice, which is why it still feels like an event.
+**Character:** Four fonts, four jobs, no overlap. Press Start 2P is the magazine's cover type — chunky, all-caps by habit, and physically unreadable in a paragraph. Fraunces carries running prose. JetBrains Mono carries everything that is *read as data*: summaries, stat rows, scores, tags, timestamps, metadata, code. VT323 appears exactly once in the vocabulary, as the pull-quote voice, which is why it still feels like an event.
 
-**The prose face.** New Spirit replaced IBM Plex Sans on 2026-10-02 at the owner's direction. It is an Adobe Fonts family, loaded from the web project named in `NEXT_PUBLIC_ADOBE_FONTS_KIT_ID` and exposed to CSS as `--font-prose`. Without the kit the stack falls back to Georgia. Labels that used the old prose face at 600 weight (cartridge names, player tags, the bio kicker and stat labels) are JetBrains Mono 700, the system's label voice.
+**The prose face.** Fraunces, loaded through `next/font/google` as a variable font with the `SOFT` and `opsz` axes, and set with `font-variation-settings: "SOFT" 100` so its serifs are rounded. It replaced IBM Plex Sans on 2026-10-02. The owner's first choice was New Spirit, which Adobe Fonts only serves to websites on a paid Creative Cloud plan; Fraunces is the free face closest to it. `--font-prose` is declared on `body`, where next/font defines `--font-fraunces`. Labels that used the old prose face at 600 weight (cartridge names, player tags, the bio kicker and stat labels) are JetBrains Mono 700, the system's label voice.
 
 ### Hierarchy
 
@@ -347,7 +347,7 @@ Two tiers sit outside that ramp on purpose, and neither is text:
 - **Label-lg** (12px, 0.1em): nav links, buttons, section numerals, stat keys.
 - **Label** (11px, 0.1em): badges, field labels, HP row heads, breadcrumbs, section-header actions. The most-used role in the system by count.
 
-**New Spirit (running prose):**
+**Fraunces (running prose):**
 
 - **Lede** (20px, 1.6, max 34em): the article standfirst, rendered from `review.summary`.
 - **Body** (19px, 1.7): article copy, in `--ink`, running the full width of the article column.
@@ -535,7 +535,7 @@ Only the shell tilts, and the label stays upright (see the No-Rotation Rule).
 - **Do** reach for a token before a literal. `--on-accent` for text on an accent fill, `rgba(var(--scrim-rgb), …)` for scrims, `var(--shadow-hard)` for offsets, `--neon-N-deep` for a darker accent.
 - **Do** verify every new surface in all three palettes, with scanlines on, before calling it finished. Candy is the one that breaks things — it is the only light ground.
 - **Do** check contrast against all four ground tokens (`--bg-0` … `--bg-3`), and check accents in both roles, as text and as fill.
-- **Do** keep running prose in New Spirit (see the Measure Rule), and reserve Press Start 2P for headings, labels, numbers and buttons.
+- **Do** keep running prose in Fraunces (see the Measure Rule), and reserve Press Start 2P for headings, labels, numbers and buttons.
 - **Do** pair every hover transform with its shadow change (`-2px` / deeper offset), and give pressable things a real `:active` state (`+2px` / no offset).
 - **Do** use border weight as hierarchy: 1px divides, 2px trims a control, 3px builds a card, 4px frames an article, 6px is an arcade bezel.
 - **Do** render new iconography as pixel-grid sprites in `components/retro/sprites.tsx` and new item types through `lib/content/mappings.ts` — one card component serves all eight types.

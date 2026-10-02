@@ -1,7 +1,7 @@
 import "./globals.css";
 
 import type { Metadata } from "next";
-import { JetBrains_Mono, Press_Start_2P, VT323 } from "next/font/google";
+import { Fraunces, JetBrains_Mono, Press_Start_2P, VT323 } from "next/font/google";
 import Script from "next/script";
 
 import dynamic from "next/dynamic";
@@ -32,10 +32,16 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 /**
- * Adobe Fonts web project that serves New Spirit, the running-prose face
- * (`--font-prose` in globals.css). Unset, prose falls back to the serif stack.
+ * Running prose (`--font-prose` in globals.css). Variable, with the SOFT axis
+ * for rounded serifs and optical sizing.
  */
-const ADOBE_FONTS_KIT = process.env.NEXT_PUBLIC_ADOBE_FONTS_KIT_ID;
+const fraunces = Fraunces({
+  variable: "--font-fraunces",
+  subsets: ["latin"],
+  style: ["normal", "italic"],
+  axes: ["SOFT", "opsz"],
+  display: "swap",
+});
 
 // Loaded only when AdSense is configured; skips the script for ad_free members.
 const AdSenseLoader = dynamic(() => import("@/components/ads/adsense-loader"));
@@ -165,15 +171,9 @@ export default function RootLayout({
         {/* Organization + WebSite, emitted once sitewide. Every per-page graph
             references these by @id instead of restating the publisher. */}
         <JsonLd data={graph(organizationSchema(), websiteSchema())} />
-        {ADOBE_FONTS_KIT && (
-          <>
-            <link rel="preconnect" href="https://use.typekit.net" crossOrigin="anonymous" />
-            <link rel="stylesheet" href={`https://use.typekit.net/${ADOBE_FONTS_KIT}.css`} />
-          </>
-        )}
       </head>
       <body
-        className={`${pressStart2P.variable} ${jetbrainsMono.variable} ${vt323.variable} antialiased`}
+        className={`${pressStart2P.variable} ${jetbrainsMono.variable} ${fraunces.variable} ${vt323.variable} antialiased`}
         data-scanlines="off"
       >
         {children}
