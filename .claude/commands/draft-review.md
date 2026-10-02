@@ -76,7 +76,7 @@ Unless the subject is clearly in Jenna's lane (K-drama, UX/design reads, cozy st
   "creator": "director/developer/author",
   "publisher": "publisher/studio/network",
   "officialWebsite": "https://..." | undefined,
-  "coverImage": undefined  // omit here; you upload + attach real press art in the Media step below.
+  "coverImage": { "_type": "image", "asset": { "_type": "reference", "_ref": "<uploaded asset id>" }, "alt": "..." }  // required; upload real press art first (Media step below).
   // Type-specific fields (only include the ones relevant to itemType):
   // videogame: esrbRating
   // boardgame: playerCount, playTime
@@ -184,14 +184,14 @@ Pick **4-5 criteria**. Scores should vary around `reviewScore` — some above, s
 
    If it exists, **reuse its `_id`** — don't create a duplicate.
 
-4. **Create the `reviewableItem` draft** (if new) via `create_documents_from_json`. Use `drafts.<uuid>` as the `_id` or let Sanity auto-assign (then prefix with `drafts.` when referencing).
+4. **Create the `reviewableItem` draft** (if new) via `create_documents`. The schema requires `coverImage`, so source and upload the cover first (steps 6-7) and include it, with its `alt`, in this create call. Use `drafts.<uuid>` as the `_id` or let Sanity auto-assign (then prefix with `drafts.` when referencing).
 
 5. **Publish the `reviewableItem` immediately.** Sanity's strong-reference validation blocks a draft review from pointing at a non-existent published `reviewableItem`. So: create the reviewableItem as a draft, then call `publish_documents` on it right away. The reviewableItem represents "this thing exists in the catalogue" and is benign to publish. The review itself stays a draft.
 
 6. **Source the media set up front. A text-only draft is not a finished draft.** Every review ships with a cover image, 3-5 inline body images, and a trailer embed where one exists. Do NOT call `mcp__Sanity__generate_image` and never generate images with any other tool: the site only uses real, existing press material.
 
    **Where to get it:**
-   - **Games (best source by far):** `https://store.steampowered.com/api/appdetails?appids=<appid>&cc=au&l=en` returns `data.screenshots[].path_full` (full-res 1920x1080 stills) and `data.movies[]` (trailer name + thumbnail). This is the canonical grab. Cover art: `https://cdn.cloudflare.steamstatic.com/steam/apps/<appid>/library_hero.jpg` (note: `header.jpg` and `capsule_616x353.jpg` 404 on newer app IDs).
+   - **Games (best source by far):** `https://store.steampowered.com/api/appdetails?appids=<appid>&cc=au&l=en` returns `data.screenshots[].path_full` (full-res 1920x1080 stills) and `data.movies[]` (trailer name + thumbnail). This is the canonical grab. Cover art: ask `https://api.steampowered.com/IStoreBrowseService/GetItems/v1/?input_json={"ids":[{"appid":<appid>}],"context":{"language":"english","country_code":"AU"},"data_request":{"include_assets":true}}` for the `library_hero_2x` filename (3840x1240, served under `https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/<appid>/`) and crop it to 16:9 (2204x1240) around the subject. The unhashed `library_hero.jpg`, `header.jpg` and `capsule_616x353.jpg` paths 404 on newer app IDs, and the 1x hero is only 620px tall.
    - **Movies/TV/anime:** TMDB stills, official press kits, studio media pages.
    - **Books/comics:** publisher cover art and preview pages.
    - **Gadgets:** manufacturer press images.
@@ -199,14 +199,14 @@ Pick **4-5 criteria**. Scores should vary around `reviewScore` — some above, s
    **Always VIEW each candidate with the Read tool before uploading.** Pick images that match the specific section they will sit under (a boss fight for the difficulty section, a build screen for the progression section) rather than dropping in the first four. Write a caption for each that says something the prose does not, plus a separate `alt` that plainly describes what is in the frame (who, where, what they are doing). The caption is commentary and credit; the alt is for screen readers and SEO.
 
 7. **Upload and attach the media** via a Node script using the repo's `@sanity/client` and `SANITY_API_TOKEN` parsed from `.env.local`. Two hard-won gotchas:
-   - **`NODE_PATH=<repo>/node_modules node script.mjs` does NOT work.** ESM resolution ignores `NODE_PATH`. Copy the script to the repo root, run it there, then delete it.
+   - **`NODE_PATH=<repo>/node_modules node script.mjs` does NOT work.** ESM resolution ignores `NODE_PATH`. Keep the script in the scratchpad and load the client with `createRequire('<repo>/package.json')('@sanity/client')`, which resolves from the repo's `node_modules` without writing anything into the repo.
    - **A Sanity patch object holds only ONE `insert`.** Chaining `.insert()` calls on a single patch silently keeps only the last one. Commit one patch per inserted block, or use a transaction.
 
-   Cover: `client.assets.upload('image', stream, {filename})`, then patch `coverImage` with the asset reference and a descriptive `alt`.
+   Upload every image (cover and inline) with `client.assets.upload('image', stream, {filename})` before creating any document, and check `*[references($assetId)]` is empty for each, since Sanity dedupes by content hash and a hit means the image is already used elsewhere on the site.
 
-8. **Create the `review` draft**, referencing the reviewableItem by published `_ref`.
+8. **Create the `review` draft**, referencing the reviewableItem by published `_ref`, with the image blocks and the trailer already in the `content` array.
 
-9. **Insert inline body images and the trailer into the Portable Text `content` array.** Anchor each insert to an existing block `_key` with `insert('after', 'content[_key=="<key>"]', [...])` so placement survives reordering. Block shapes:
+9. **Media block shapes.** When adding media to a draft that already exists, anchor each insert to an existing block `_key` with `insert('after', 'content[_key=="<key>"]', [...])` so placement survives reordering.
    - Image: `{_type: 'image', _key, asset: {_type: 'reference', _ref}, alt, caption}`. The schema requires `alt` (validation fails without it) and the review page renders `alt={value.alt || value.caption}`, so always set both.
    - Video: `{_type: 'videoEmbed', _key, url, caption}` under a "Watch the Trailer" h2 near the end, before the Verdict section. YouTube watch URLs work; verify the trailer URL actually resolves to the right video before embedding it (fetch the page and check the title). Steam's own trailers are DASH/HLS only and will not embed, so prefer the publisher's YouTube upload.
 
